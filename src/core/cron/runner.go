@@ -39,6 +39,12 @@ func StartCron() error {
 		return err
 	}
 
+	//每10分钟检查理智提醒 0 0/10 * * * ?
+	_, err = crontab.AddFunc("0 0/10 * * * ?", sign.CheckApRemind)
+	if err != nil {
+		return err
+	}
+
 	//清理消息 0/1 * * * * ?
 	_, err = crontab.AddFunc("0/1 * * * * ?", messagecleaner.DelMsg)
 	if err != nil {

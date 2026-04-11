@@ -11,6 +11,7 @@ import (
 	gonanoid "github.com/matoous/go-nanoid/v2"
 	"github.com/spf13/viper"
 	"log"
+	"strconv"
 )
 
 // SignHandle 森空岛签到
@@ -52,12 +53,45 @@ func SignHandle(update tgbotapi.Update) error {
 	}
 
 	if param != "" {
-		if param == "auto" {
+		switch param {
+		case "auto":
 			// 开启自动签到
 			autoSign(update)
-		} else if param == "stop" {
+		case "stop":
 			// 关闭自动签到
 			stopSign(update)
+		case "notify_all":
+			// 设置通知模式为全部通知
+			setNotifyMode(update, 0)
+		case "notify_fail":
+			// 设置通知模式为仅失败通知
+			setNotifyMode(update, 1)
+		case "notify_success":
+			// 设置通知模式为仅成功通知
+			setNotifyMode(update, 2)
+		case "ap_on":
+			// 开启理智提醒
+			setApRemind(update, 1)
+		case "ap_off":
+			// 关闭理智提醒
+			setApRemind(update, 0)
+		default:
+			// 尝试解析 ap_threshold 参数
+			if len(param) > 13 && param[:13] == "ap_threshold " {
+				thresholdStr := param[13:]
+				threshold, err := strconv.Atoi(thresholdStr)
+				if err != nil || threshold < 1 || threshold > 100 {
+					sendMessage := tgbotapi.NewMessage(chatId, "理智提醒阈值请输入1-100之间的整数！")
+					sendMessage.ReplyToMessageID = messageId
+					msg, err := bot.Arknights.Send(sendMessage)
+					if err != nil {
+						return err
+					}
+					messagecleaner.AddDelQueue(msg.Chat.ID, msg.MessageID, bot.MsgDelDelay)
+					return nil
+				}
+				setApThreshold(update, threshold)
+			}
 		}
 		return nil
 	}
@@ -141,9 +175,13 @@ func autoSign(update tgbotapi.Update) {
 	}
 	id, _ := gonanoid.New(32)
 	userSign = UserSign{
-		Id:         id,
-		UserName:   message.From.FullName(),
-		UserNumber: userId,
+		Id:          id,
+		UserName:    message.From.FullName(),
+		UserNumber:  userId,
+		NotifyMode:  0,
+		ApRemind:    0,
+		ApThreshold: 80,
+		ApNotified:  0,
 	}
 
 	bot.DBEngine.Table("user_sign").Create(&userSign)
@@ -167,6 +205,119 @@ func stopSign(update tgbotapi.Update) {
 	bot.DBEngine.Exec("delete from user_sign where user_number = ?", userId)
 
 	sendMessage := tgbotapi.NewMessage(chatId, "已关闭自动签到！")
+	sendMessage.ReplyToMessageID = messageId
+	msg, err := bot.Arknights.Send(sendMessage)
+	if err != nil {
+		return
+	}
+	messagecleaner.AddDelQueue(msg.Chat.ID, msg.MessageID, bot.MsgDelDelay)
+}
+
+// 设置签到通知模式
+func setNotifyMode(update tgbotapi.Update, mode int) {
+	message := update.Message
+	userId := message.From.ID
+	chatId := message.Chat.ID
+	messageId := message.MessageID
+
+	var userSign UserSign
+	res := utils.GetAutoSignByUserId(userId).Scan(&userSign)
+	if res.RowsAffected == 0 {
+		sendMessage := tgbotapi.NewMessage(chatId, "请先开启自动签到！(/sign auto)")
+		sendMessage.ReplyToMessageID = messageId
+		msg, err := bot.Arknights.Send(sendMessage)
+		if err != nil {
+			return
+		}
+		messagecleaner.AddDelQueue(msg.Chat.ID, msg.MessageID, bot.MsgDelDelay)
+		return
+	}
+
+	bot.DBEngine.Exec("update user_sign set notify_mode = ? where user_number = ?", mode, userId)
+
+	var modeText string
+	switch mode {
+	case 0:
+		modeText = "全部通知"
+	case 1:
+		modeText = "仅失败时通知"
+	case 2:
+		modeText = "仅成功时通知"
+	}
+
+	sendMessage := tgbotapi.NewMessage(chatId, fmt.Sprintf("签到通知模式已设置为：%s", modeText))
+	sendMessage.ReplyToMessageID = messageId
+	msg, err := bot.Arknights.Send(sendMessage)
+	if err != nil {
+		return
+	}
+	messagecleaner.AddDelQueue(msg.Chat.ID, msg.MessageID, bot.MsgDelDelay)
+}
+
+// 设置理智提醒开关
+func setApRemind(update tgbotapi.Update, status int) {
+	message := update.Message
+	userId := message.From.ID
+	chatId := message.Chat.ID
+	messageId := message.MessageID
+
+	var userSign UserSign
+	res := utils.GetAutoSignByUserId(userId).Scan(&userSign)
+	if res.RowsAffected == 0 {
+		sendMessage := tgbotapi.NewMessage(chatId, "请先开启自动签到！(/sign auto)")
+		sendMessage.ReplyToMessageID = messageId
+		msg, err := bot.Arknights.Send(sendMessage)
+		if err != nil {
+			return
+		}
+		messagecleaner.AddDelQueue(msg.Chat.ID, msg.MessageID, bot.MsgDelDelay)
+		return
+	}
+
+	bot.DBEngine.Exec("update user_sign set ap_remind = ?, ap_notified = 0 where user_number = ?", status, userId)
+
+	var text string
+	if status == 1 {
+		text = fmt.Sprintf("理智提醒已开启！当理智恢复到 %d%% 时将发送通知。", userSign.ApThreshold)
+		if userSign.ApThreshold == 0 {
+			text = "理智提醒已开启！当理智恢复到 80% 时将发送通知。"
+		}
+	} else {
+		text = "理智提醒已关闭！"
+	}
+
+	sendMessage := tgbotapi.NewMessage(chatId, text)
+	sendMessage.ReplyToMessageID = messageId
+	msg, err := bot.Arknights.Send(sendMessage)
+	if err != nil {
+		return
+	}
+	messagecleaner.AddDelQueue(msg.Chat.ID, msg.MessageID, bot.MsgDelDelay)
+}
+
+// 设置理智提醒阈值
+func setApThreshold(update tgbotapi.Update, threshold int) {
+	message := update.Message
+	userId := message.From.ID
+	chatId := message.Chat.ID
+	messageId := message.MessageID
+
+	var userSign UserSign
+	res := utils.GetAutoSignByUserId(userId).Scan(&userSign)
+	if res.RowsAffected == 0 {
+		sendMessage := tgbotapi.NewMessage(chatId, "请先开启自动签到！(/sign auto)")
+		sendMessage.ReplyToMessageID = messageId
+		msg, err := bot.Arknights.Send(sendMessage)
+		if err != nil {
+			return
+		}
+		messagecleaner.AddDelQueue(msg.Chat.ID, msg.MessageID, bot.MsgDelDelay)
+		return
+	}
+
+	bot.DBEngine.Exec("update user_sign set ap_threshold = ?, ap_notified = 0 where user_number = ?", threshold, userId)
+
+	sendMessage := tgbotapi.NewMessage(chatId, fmt.Sprintf("理智提醒阈值已设置为 %d%%", threshold))
 	sendMessage.ReplyToMessageID = messageId
 	msg, err := bot.Arknights.Send(sendMessage)
 	if err != nil {
