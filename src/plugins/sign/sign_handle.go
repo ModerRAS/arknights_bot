@@ -12,6 +12,7 @@ import (
 	"github.com/spf13/viper"
 	"log"
 	"strconv"
+	"strings"
 )
 
 // SignHandle 森空岛签到
@@ -77,8 +78,8 @@ func SignHandle(update tgbotapi.Update) error {
 			setApRemind(update, 0)
 		default:
 			// 尝试解析 ap_threshold 参数
-			if len(param) > 13 && param[:13] == "ap_threshold " {
-				thresholdStr := param[13:]
+			if strings.HasPrefix(param, "ap_threshold ") {
+				thresholdStr := strings.TrimPrefix(param, "ap_threshold ")
 				threshold, err := strconv.Atoi(thresholdStr)
 				if err != nil || threshold < 1 || threshold > 100 {
 					sendMessage := tgbotapi.NewMessage(chatId, "理智提醒阈值请输入1-100之间的整数！")
@@ -278,10 +279,11 @@ func setApRemind(update tgbotapi.Update, status int) {
 
 	var text string
 	if status == 1 {
-		text = fmt.Sprintf("理智提醒已开启！当理智恢复到 %d%% 时将发送通知。", userSign.ApThreshold)
-		if userSign.ApThreshold == 0 {
-			text = "理智提醒已开启！当理智恢复到 80% 时将发送通知。"
+		displayThreshold := userSign.ApThreshold
+		if displayThreshold == 0 {
+			displayThreshold = 80
 		}
+		text = fmt.Sprintf("理智提醒已开启！当理智恢复到 %d%% 时将发送通知。", displayThreshold)
 		ScheduleNextApCheck(userId)
 	} else {
 		text = "理智提醒已关闭！"

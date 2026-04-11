@@ -70,7 +70,8 @@ func performApCheckAndReschedule(userNumber int64) {
 	}
 
 	// Iterate all bound players; use the first successful AP fetch for scheduling.
-	var scheduleDelay time.Duration = -1
+	var scheduleDelay time.Duration
+	hasSchedule := false
 	for _, player := range players {
 		var skAccount skland.Account
 		var userAccount account.UserAccount
@@ -117,8 +118,9 @@ func performApCheckAndReschedule(userNumber int64) {
 				bot.DBEngine.Exec("update user_sign set ap_notified = 1 where user_number = ?", user.UserNumber)
 			}
 			// AP is at or above threshold; poll again later to detect when it drops.
-			if scheduleDelay < 0 {
+			if !hasSchedule {
 				scheduleDelay = apFallbackCheckInterval
+				hasSchedule = true
 			}
 		} else {
 			if user.ApNotified == 1 {
@@ -126,34 +128,41 @@ func performApCheckAndReschedule(userNumber int64) {
 				bot.DBEngine.Exec("update user_sign set ap_notified = 0 where user_number = ?", user.UserNumber)
 			}
 			// Calculate exactly when AP will reach thresholdAp.
-			// At time ap.LastApAddTime, AP was ap.Current; it increases by 1 every apRecoverySeconds.
+			// ap.Current is AP at ap.LastApAddTime; it increases by 1 every apRecoverySeconds.
+			// Guard: ap.Current may already be at or above thresholdAp (e.g. via items) even if
+			// the time-adjusted currentAp calculation put us in the else branch due to rounding.
 			apNeeded := thresholdAp - ap.Current
+			if apNeeded <= 0 {
+				// Should not happen normally, but fall back to a short retry.
+				if !hasSchedule {
+					scheduleDelay = time.Minute
+					hasSchedule = true
+				}
+				continue
+			}
 			targetUnix := int64(ap.LastApAddTime) + int64(apNeeded)*apRecoverySeconds
 			delay := time.Until(time.Unix(targetUnix, 0)) + 30*time.Second
-			if delay < 0 {
-				delay = 0
+			if delay < time.Minute {
+				// Ensure a minimum delay to avoid a tight retry loop.
+				delay = time.Minute
 			}
-			if scheduleDelay < 0 || delay < scheduleDelay {
+			if !hasSchedule || delay < scheduleDelay {
 				scheduleDelay = delay
+				hasSchedule = true
 			}
 		}
 	}
 
-	if scheduleDelay < 0 {
+	if !hasSchedule {
 		// Could not determine a schedule (all players failed) – retry in 30 minutes.
 		scheduleDelay = 30 * time.Minute
 	}
 
-	if scheduleDelay == 0 {
-		// Re-check immediately (threshold already passed).
-		go performApCheckAndReschedule(userNumber)
-	} else {
-		log.Printf("理智提醒：用户 %d 下次检查时间：%s",
-			userNumber, time.Now().Add(scheduleDelay).Format("2006-01-02 15:04:05"))
-		timer := time.AfterFunc(scheduleDelay, func() {
-			performApCheckAndReschedule(userNumber)
-		})
-		apTimers.Store(userNumber, timer)
-	}
+	log.Printf("理智提醒：用户 %d 下次检查时间：%s",
+		userNumber, time.Now().Add(scheduleDelay).Format("2006-01-02 15:04:05"))
+	timer := time.AfterFunc(scheduleDelay, func() {
+		performApCheckAndReschedule(userNumber)
+	})
+	apTimers.Store(userNumber, timer)
 }
 
