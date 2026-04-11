@@ -59,7 +59,7 @@ func sign(user UserSign) {
 					log.Println(player.PlayerName, err)
 					return
 				}
-				// 今日已完成签到 - notify_mode: 0(全部通知) 或 1(仅失败通知) 时发送
+				// 今日已完成签到 - notify_mode: 0(全部通知) 时发送
 				if hasSigned {
 					if user.NotifyMode == 0 {
 						sendMessage := tgbotapi.NewMessage(user.UserNumber, fmt.Sprintf("角色 %s 今天已经签到过了", player.PlayerName))
