@@ -282,8 +282,10 @@ func setApRemind(update tgbotapi.Update, status int) {
 		if userSign.ApThreshold == 0 {
 			text = "理智提醒已开启！当理智恢复到 80% 时将发送通知。"
 		}
+		ScheduleNextApCheck(userId)
 	} else {
 		text = "理智提醒已关闭！"
+		CancelApTimer(userId)
 	}
 
 	sendMessage := tgbotapi.NewMessage(chatId, text)
@@ -316,6 +318,11 @@ func setApThreshold(update tgbotapi.Update, threshold int) {
 	}
 
 	bot.DBEngine.Exec("update user_sign set ap_threshold = ?, ap_notified = 0 where user_number = ?", threshold, userId)
+
+	// Reschedule so the new threshold is used for the next check.
+	if userSign.ApRemind == 1 {
+		ScheduleNextApCheck(userId)
+	}
 
 	sendMessage := tgbotapi.NewMessage(chatId, fmt.Sprintf("理智提醒阈值已设置为 %d%%", threshold))
 	sendMessage.ReplyToMessageID = messageId
