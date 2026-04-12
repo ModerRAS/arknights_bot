@@ -20,13 +20,13 @@ var userSignMigrations = []migrationColumn{
 		table:  "user_sign",
 		column: "notify_mode",
 		alterSQL: "ALTER TABLE user_sign ADD COLUMN notify_mode INT NOT NULL DEFAULT 0" +
-			" COMMENT '签到通知模式0全部通知1仅失败通知2仅成功通知'",
+			" COMMENT '签到通知模式 0-全部通知 1-仅失败通知 2-仅成功通知'",
 	},
 	{
 		table:  "user_sign",
 		column: "ap_remind",
 		alterSQL: "ALTER TABLE user_sign ADD COLUMN ap_remind INT NOT NULL DEFAULT 0" +
-			" COMMENT '理智提醒开关0关闭1开启'",
+			" COMMENT '理智提醒开关 0-关闭 1-开启'",
 	},
 	{
 		table:  "user_sign",
@@ -38,7 +38,7 @@ var userSignMigrations = []migrationColumn{
 		table:  "user_sign",
 		column: "ap_notified",
 		alterSQL: "ALTER TABLE user_sign ADD COLUMN ap_notified INT NOT NULL DEFAULT 0" +
-			" COMMENT '理智提醒是否已通知0未通知1已通知'",
+			" COMMENT '理智提醒是否已通知 0-未通知 1-已通知'",
 	},
 }
 
