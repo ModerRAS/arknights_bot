@@ -14,8 +14,26 @@ import (
 	tgbotapi "github.com/ijnkawakaze/telegram-bot-api"
 )
 
-const apRecoverySeconds = 360 // 1 AP per 6 minutes
-const defaultApThreshold = 80 // default AP threshold percentage
+const apRecoverySeconds = 360   // 1 AP per 6 minutes
+const defaultApThreshold = 80   // default AP threshold percentage
+
+// calcCurrentAp returns the current AP accounting for the time elapsed since the
+// last AP recovery tick. It clamps the result to [0, maxAp] and silently skips
+// the elapsed calculation when lastApAddTime is invalid (zero or in the future).
+func calcCurrentAp(current, maxAp, lastApAddTime int, now int64) int {
+	elapsedAp := 0
+	if lastApAddTime > 0 {
+		elapsed := now - int64(lastApAddTime)
+		if elapsed > 0 {
+			elapsedAp = int(elapsed / apRecoverySeconds)
+		}
+	}
+	result := current + elapsedAp
+	if result > maxAp {
+		result = maxAp
+	}
+	return result
+}
 
 // ---------------------------------------------------------------------------
 // In-memory cache types (reduce DB queries)
@@ -315,17 +333,7 @@ func (s *apScheduler) checkUserAp(uc *apUserCache) {
 		thresholdAp := maxAp * threshold / 100
 
 		// Current AP accounting for time elapsed since last tick.
-		// Guard: if LastApAddTime is invalid (0, negative, or far future), skip elapsed calculation.
-		now := time.Now().Unix()
-		elapsed := now - int64(ap.LastApAddTime)
-		elapsedAp := 0
-		if elapsed > 0 && ap.LastApAddTime > 0 {
-			elapsedAp = int(elapsed / apRecoverySeconds)
-		}
-		currentAp := ap.Current + elapsedAp
-		if currentAp > maxAp {
-			currentAp = maxAp
-		}
+		currentAp := calcCurrentAp(ap.Current, maxAp, ap.LastApAddTime, time.Now().Unix())
 		apPercent := currentAp * 100 / maxAp
 
 		if currentAp >= thresholdAp {

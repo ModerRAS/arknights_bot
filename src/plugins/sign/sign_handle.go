@@ -181,7 +181,7 @@ func autoSign(update tgbotapi.Update) {
 		UserNumber:  userId,
 		NotifyMode:  0,
 		ApRemind:    0,
-		ApThreshold: 80,
+		ApThreshold: defaultApThreshold,
 		ApNotified:  0,
 	}
 
