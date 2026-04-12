@@ -85,6 +85,44 @@ func TestCalcCurrentAp_AlreadyFull(t *testing.T) {
 	}
 }
 
+func TestCalcCurrentAp_NegativeCurrent(t *testing.T) {
+	// Defensive: if the API ever returns a negative current, result should be 0.
+	now := int64(1_000_000)
+	got := calcCurrentAp(-5, 135, 0, now)
+	if got != 0 {
+		t.Errorf("want 0 for negative current, got %d", got)
+	}
+}
+
+func TestCalcCurrentAp_ZeroMaxAp(t *testing.T) {
+	// maxAp == 0 → result should be clamped to 0.
+	now := int64(1_000_000)
+	got := calcCurrentAp(50, 0, int(now-360), now)
+	if got != 0 {
+		t.Errorf("want 0 for zero maxAp, got %d", got)
+	}
+}
+
+func TestCalcCurrentAp_NegativeCurrentWithElapsed(t *testing.T) {
+	// Negative current but enough elapsed time to become positive.
+	now := int64(1_000_000)
+	// -3 + 5 elapsed = 2
+	got := calcCurrentAp(-3, 135, int(now-1800), now)
+	if got != 2 {
+		t.Errorf("want 2 for negative current + elapsed, got %d", got)
+	}
+}
+
+func TestCalcCurrentAp_NegativeCurrentNotEnoughElapsed(t *testing.T) {
+	// Negative current with not enough elapsed time → still negative → clamped to 0.
+	now := int64(1_000_000)
+	// -10 + 1 elapsed = -9 → 0
+	got := calcCurrentAp(-10, 135, int(now-360), now)
+	if got != 0 {
+		t.Errorf("want 0 for still-negative result, got %d", got)
+	}
+}
+
 // ── scheduleUser ─────────────────────────────────────────────────────────────
 
 func TestScheduleUser_AddsNewItem(t *testing.T) {

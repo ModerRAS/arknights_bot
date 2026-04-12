@@ -57,6 +57,9 @@ func TestUserSignMigrationsAlterSQL(t *testing.T) {
 		if !strings.Contains(upper, strings.ToUpper(m.column)) {
 			t.Errorf("column %q: alterSQL does not reference column name: %q", m.column, m.alterSQL)
 		}
+		if !strings.Contains(upper, "AFTER") {
+			t.Errorf("column %q: alterSQL does not contain AFTER clause for column positioning: %q", m.column, m.alterSQL)
+		}
 	}
 }
 
@@ -109,6 +112,42 @@ func TestMigrationColumnNoDuplicates(t *testing.T) {
 	for col, count := range seen {
 		if count > 1 {
 			t.Errorf("column %q appears %d times in migrations, want 1", col, count)
+		}
+	}
+}
+
+// TestUserSignMigrationsColumnOrder verifies that the AFTER clauses create
+// the correct column ordering: notify_mode → ap_remind → ap_threshold → ap_notified,
+// matching the order defined in arknights.sql and user_sign.go.
+func TestUserSignMigrationsColumnOrder(t *testing.T) {
+	wantAfter := map[string]string{
+		"notify_mode":  "AFTER USER_NUMBER",
+		"ap_remind":    "AFTER NOTIFY_MODE",
+		"ap_threshold": "AFTER AP_REMIND",
+		"ap_notified":  "AFTER AP_THRESHOLD",
+	}
+
+	for _, m := range userSignMigrations {
+		want, ok := wantAfter[m.column]
+		if !ok {
+			continue
+		}
+		if !strings.Contains(strings.ToUpper(m.alterSQL), want) {
+			t.Errorf("column %q: expected %q in alterSQL, got: %q", m.column, want, m.alterSQL)
+		}
+	}
+}
+
+// TestMigrateDBAllSameTable verifies that all migration entries target
+// the same table, which the table-existence check relies on to break early.
+func TestMigrateDBAllSameTable(t *testing.T) {
+	if len(userSignMigrations) == 0 {
+		t.Fatal("no migrations defined")
+	}
+	table := userSignMigrations[0].table
+	for _, m := range userSignMigrations[1:] {
+		if m.table != table {
+			t.Errorf("migration for %q targets table %q, want %q (same as first entry)", m.column, m.table, table)
 		}
 	}
 }

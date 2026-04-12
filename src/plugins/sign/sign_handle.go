@@ -92,6 +92,14 @@ func SignHandle(update tgbotapi.Update) error {
 					return nil
 				}
 				setApThreshold(update, threshold)
+			} else {
+				sendMessage := tgbotapi.NewMessage(chatId, "未知的签到指令参数，请使用 /help 查看使用说明。")
+				sendMessage.ReplyToMessageID = messageId
+				msg, err := bot.Arknights.Send(sendMessage)
+				if err != nil {
+					return err
+				}
+				messagecleaner.AddDelQueue(msg.Chat.ID, msg.MessageID, bot.MsgDelDelay)
 			}
 		}
 		return nil

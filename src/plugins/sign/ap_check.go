@@ -29,6 +29,9 @@ func calcCurrentAp(current, maxAp, lastApAddTime int, now int64) int {
 		}
 	}
 	result := current + elapsedAp
+	if result < 0 {
+		result = 0
+	}
 	if result > maxAp {
 		result = maxAp
 	}
