@@ -39,6 +39,12 @@ func StartCron() error {
 		return err
 	}
 
+	//每日1点30执行理智检查 0 30 1 * * ?
+	_, err = crontab.AddFunc("0 30 1 * * ?", sign.DailyApCheck)
+	if err != nil {
+		return err
+	}
+
 	//清理消息 0/1 * * * * ?
 	_, err = crontab.AddFunc("0/1 * * * * ?", messagecleaner.DelMsg)
 	if err != nil {

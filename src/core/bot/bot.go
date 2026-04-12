@@ -61,6 +61,7 @@ func Serve() {
 	b.NewCommandProcessor("ping", system.PingHandle)
 	b.NewCommandProcessor("tag", system.TagHandle)
 	b.NewCommandProcessor("sign", sign.SignHandle)
+	b.NewCommandProcessor("ap", sign.ApHandle)
 	b.NewCommandProcessor("state", player.PlayerHandle)
 	b.NewCommandProcessor("box", player.PlayerHandle)
 	b.NewCommandProcessor("box_detail", player.PlayerHandle)
