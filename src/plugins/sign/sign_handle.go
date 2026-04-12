@@ -203,6 +203,7 @@ func stopSign(update tgbotapi.Update) {
 	chatId := message.Chat.ID
 	messageId := message.MessageID
 
+	CancelApCheck(userId)
 	bot.DBEngine.Exec("delete from user_sign where user_number = ?", userId)
 
 	sendMessage := tgbotapi.NewMessage(chatId, "已关闭自动签到！")
@@ -287,7 +288,7 @@ func setApRemind(update tgbotapi.Update, status int) {
 		ScheduleNextApCheck(userId)
 	} else {
 		text = "理智提醒已关闭！"
-		CancelApTimer(userId)
+		CancelApCheck(userId)
 	}
 
 	sendMessage := tgbotapi.NewMessage(chatId, text)
