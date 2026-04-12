@@ -1,6 +1,7 @@
 package cron
 
 import (
+	"arknights_bot/plugins/apremind"
 	"arknights_bot/plugins/arknightsnews"
 	"arknights_bot/plugins/birthday"
 	"arknights_bot/plugins/datasource"
@@ -40,7 +41,7 @@ func StartCron() error {
 	}
 
 	//每日1点30执行理智检查 0 30 1 * * ?
-	_, err = crontab.AddFunc("0 30 1 * * ?", sign.DailyApCheck)
+	_, err = crontab.AddFunc("0 30 1 * * ?", apremind.DailyApCheck)
 	if err != nil {
 		return err
 	}
@@ -68,7 +69,7 @@ func StartCron() error {
 	log.Println("定时任务已启动")
 
 	//初始化理智提醒定时器（动态调度，不使用固定间隔轮询）
-	sign.InitApRemind()
+	apremind.InitApRemind()
 
 	return nil
 }
