@@ -15,6 +15,7 @@ import (
 )
 
 const apRecoverySeconds = 360 // 1 AP per 6 minutes
+const defaultApThreshold = 80 // default AP threshold percentage
 
 // ---------------------------------------------------------------------------
 // In-memory cache types (reduce DB queries)
@@ -152,7 +153,7 @@ func (s *apScheduler) loadUserCache(userNumber int64) {
 
 	threshold := user.ApThreshold
 	if threshold == 0 {
-		threshold = 80
+		threshold = defaultApThreshold
 	}
 
 	var players []account.UserPlayer
@@ -314,9 +315,13 @@ func (s *apScheduler) checkUserAp(uc *apUserCache) {
 		thresholdAp := maxAp * threshold / 100
 
 		// Current AP accounting for time elapsed since last tick.
+		// Guard: if LastApAddTime is invalid (0, negative, or far future), skip elapsed calculation.
 		now := time.Now().Unix()
 		elapsed := now - int64(ap.LastApAddTime)
-		elapsedAp := int(elapsed / apRecoverySeconds)
+		elapsedAp := 0
+		if elapsed > 0 && ap.LastApAddTime > 0 {
+			elapsedAp = int(elapsed / apRecoverySeconds)
+		}
 		currentAp := ap.Current + elapsedAp
 		if currentAp > maxAp {
 			currentAp = maxAp
@@ -345,6 +350,9 @@ func (s *apScheduler) checkUserAp(uc *apUserCache) {
 			bot.DBEngine.Exec("update user_sign set ap_notified = 0 where user_number = ?", uc.UserNumber)
 		}
 
+		// Edge case: ap.Current (from API, without elapsed-time adjustment) may already
+		// be at/above threshold even though the time-adjusted currentAp fell into the
+		// else branch due to rounding or stale LastApAddTime. Fall back to a short retry.
 		apNeeded := thresholdAp - ap.Current
 		if apNeeded <= 0 {
 			s.scheduleUser(uc.UserNumber, time.Now().Add(time.Minute))

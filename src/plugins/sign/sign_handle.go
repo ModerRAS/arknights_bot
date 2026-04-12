@@ -282,7 +282,7 @@ func setApRemind(update tgbotapi.Update, status int) {
 	if status == 1 {
 		displayThreshold := userSign.ApThreshold
 		if displayThreshold == 0 {
-			displayThreshold = 80
+			displayThreshold = defaultApThreshold
 		}
 		text = fmt.Sprintf("理智提醒已开启！当理智恢复到 %d%% 时将发送通知。", displayThreshold)
 		ScheduleNextApCheck(userId)
