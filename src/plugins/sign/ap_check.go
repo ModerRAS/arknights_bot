@@ -397,5 +397,3 @@ func (s *apScheduler) dailyCheck() {
 	}
 	log.Printf("理智提醒：每日检查添加了 %d 个用户到队列", len(toCheck))
 }
-
-

@@ -43,7 +43,7 @@ func Help(r *gin.Engine) {
 		publicCmds = append(publicCmds, Cmd{Cmd: "/sign", Desc: "全部通知", Param: "notify_all", IsBind: true})
 		publicCmds = append(publicCmds, Cmd{Cmd: "/sign", Desc: "仅失败时通知", Param: "notify_fail", IsBind: true})
 		publicCmds = append(publicCmds, Cmd{Cmd: "/sign", Desc: "仅成功时通知", Param: "notify_success", IsBind: true})
-		publicCmds = append(publicCmds, Cmd{Cmd: "/sign", Desc: "开启理智回满提醒", Param: "ap_on", IsBind: true})
+		publicCmds = append(publicCmds, Cmd{Cmd: "/sign", Desc: "开启理智提醒", Param: "ap_on", IsBind: true})
 		publicCmds = append(publicCmds, Cmd{Cmd: "/sign", Desc: "关闭理智回满提醒", Param: "ap_off", IsBind: true})
 		publicCmds = append(publicCmds, Cmd{Cmd: "/sign", Desc: "设置理智提醒阈值(1-100)", Param: "ap_threshold [1-100]", IsBind: true})
 		publicCmds = append(publicCmds, Cmd{Cmd: "/state", Desc: "当前状态", Param: "", IsBind: true})
