@@ -129,7 +129,7 @@ func migrateApRemindTable() error {
 		}
 		if oldColExists {
 			migrateSQL := `INSERT INTO user_ap_remind (id, user_name, user_number, ap_threshold, ap_notified, create_time, update_time)
-				SELECT CONCAT('ap_', SUBSTRING(id, 1, 29)), user_name, user_number, ap_threshold, ap_notified, create_time, update_time
+				SELECT REPLACE(UUID(), '-', ''), user_name, user_number, ap_threshold, ap_notified, create_time, update_time
 				FROM user_sign WHERE ap_remind = 1`
 			result := DBEngine.Exec(migrateSQL)
 			if result.Error != nil {
