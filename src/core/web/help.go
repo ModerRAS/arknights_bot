@@ -2,7 +2,6 @@ package web
 
 import (
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 type HelpCmd struct {
@@ -20,7 +19,6 @@ type Cmd struct {
 
 func Help(r *gin.Engine) {
 	r.GET("/help", func(c *gin.Context) {
-		r.LoadHTMLFiles("./template/Help.tmpl")
 		var helpCmd HelpCmd
 		var privateCmds []Cmd
 		var publicCmds []Cmd
@@ -86,6 +84,6 @@ func Help(r *gin.Engine) {
 		helpCmd.PrivateCmds = privateCmds
 		helpCmd.PublicCmds = publicCmds
 		helpCmd.AdminCmds = adminCmds
-		c.HTML(http.StatusOK, "Help.tmpl", helpCmd)
+		RenderSpec(c, "help", 660, 1366, helpCmd)
 	})
 }

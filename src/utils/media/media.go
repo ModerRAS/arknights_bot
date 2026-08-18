@@ -2,8 +2,6 @@ package media
 
 import (
 	"bytes"
-	"fmt"
-	"github.com/mxschmitt/playwright-go"
 	"github.com/spf13/viper"
 	"github.com/tidwall/gjson"
 	"golang.org/x/image/webp"
@@ -17,73 +15,6 @@ import (
 	"strings"
 	"time"
 )
-
-var browser playwright.Browser
-
-// Screenshot 屏幕截图
-func Screenshot(url string, waitTime float64, scale float64) ([]byte, error) {
-	if browser != nil && !browser.IsConnected() {
-		browser = nil
-	}
-	if browser == nil {
-		pw, err := playwright.Run()
-		if err != nil {
-			log.Println("未检测到playwright，开始自动安装...")
-			if installErr := playwright.Install(&playwright.RunOptions{Browsers: []string{"chromium"}}); installErr != nil {
-				return nil, fmt.Errorf("playwright安装失败: %w", installErr)
-			}
-			pw, err = playwright.Run()
-			if err != nil {
-				return nil, fmt.Errorf("playwright启动失败: %w", err)
-			}
-		}
-		browser, err = pw.Chromium.Launch()
-		if err != nil {
-			log.Println(err)
-			return nil, fmt.Errorf("playwright启动失败: %w", err)
-		}
-	}
-	page, err := browser.NewPage(playwright.BrowserNewPageOptions{DeviceScaleFactor: &scale})
-	if err != nil {
-		return nil, fmt.Errorf("创建页面失败: %w", err)
-	}
-	defer func() {
-		log.Println("关闭playwright")
-		page.Close()
-	}()
-	log.Println("开始进行截图...")
-	resp, err := page.Goto(url, playwright.PageGotoOptions{
-		WaitUntil: playwright.WaitUntilStateNetworkidle,
-	})
-	if err != nil {
-		return nil, fmt.Errorf("页面加载失败: %w", err)
-	}
-	if resp != nil && resp.Status() >= 400 {
-		return nil, fmt.Errorf("页面加载失败，状态码：%d", resp.Status())
-	}
-	// 等待所有图片和字体加载完成，避免远程图片资源还没加载完就截图
-	if _, err := page.WaitForFunction(`() => document.fonts.ready.then(() => Array.from(document.images).every(img => img.complete))`, nil, playwright.PageWaitForFunctionOptions{Timeout: playwright.Float(10000)}); err != nil {
-		log.Println("等待图片加载超时，继续截图:", err)
-	}
-	page.WaitForTimeout(waitTime)
-	locator := page.Locator("#main")
-	if v, err := locator.IsVisible(); err != nil || !v {
-		log.Println("元素未加载取消截图操作")
-		return nil, fmt.Errorf("元素未加载")
-	}
-	// 检测错误页，把错误文本作为截图失败原因返回
-	if class, _ := locator.GetAttribute("class"); strings.Contains(class, "error") {
-		if text, err := locator.InnerText(); err == nil && text != "" {
-			return nil, fmt.Errorf("%s", text)
-		}
-	}
-	screenshot, err := locator.Screenshot(playwright.LocatorScreenshotOptions{Type: playwright.ScreenshotTypeJpeg})
-	if err != nil {
-		return nil, fmt.Errorf("截图失败: %w", err)
-	}
-	log.Println("截图完成...")
-	return screenshot, nil
-}
 
 var imgClient = &http.Client{Timeout: 15 * time.Second}
 

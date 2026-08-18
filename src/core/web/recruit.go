@@ -5,7 +5,6 @@ import (
 	"arknights_bot/utils/model"
 	"arknights_bot/utils/search"
 	"github.com/gin-gonic/gin"
-	"net/http"
 	"sort"
 	"strings"
 )
@@ -17,7 +16,6 @@ type RecruitList struct {
 
 func Recruit(r *gin.Engine) {
 	r.GET("/recruit", func(c *gin.Context) {
-		r.LoadHTMLFiles("./template/Recruit.tmpl")
 		tags := strings.Split(c.Query("tags"), " ")
 		client := c.Query("client")
 		var recruitList []RecruitList
@@ -92,6 +90,6 @@ func Recruit(r *gin.Engine) {
 				recruitList = append(recruitList, recruit)
 			}
 		}
-		c.HTML(http.StatusOK, "Recruit.tmpl", recruitList)
+		RenderSpec(c, "recruit", 900, 356, recruitList)
 	})
 }

@@ -7,7 +7,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"log"
 	"math"
-	"net/http"
 	"sort"
 	"strconv"
 )
@@ -143,7 +142,6 @@ func init() {
 
 func Base(r *gin.Engine) {
 	r.GET("/base", func(c *gin.Context) {
-		r.LoadHTMLFiles("./template/Base.tmpl")
 		var playerBase PlayerBase
 		userId, _ := strconv.ParseInt(c.Query("userId"), 10, 64)
 		uid := c.Query("uid")
@@ -315,7 +313,7 @@ func Base(r *gin.Engine) {
 		}
 
 		playerBase.Dormitories = dormitories
-		c.HTML(http.StatusOK, "Base.tmpl", playerBase)
+		RenderSpec(c, "base", 1110, 612, playerBase)
 	})
 }
 
