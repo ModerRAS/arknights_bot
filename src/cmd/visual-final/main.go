@@ -72,28 +72,61 @@ type renderReport struct {
 
 type rect struct{ X, Y, Width, Height int }
 
+type globalOffset struct{ DX, DY int }
+
+type diffComponent struct {
+	BBox      rect    `json:"bbox"`
+	Pixels    int     `json:"pixels"`
+	MeanDelta float64 `json:"meanDelta"`
+}
+
+type imageComparison struct {
+	RawScore     float64
+	RawBBox      *rect
+	AlignedScore float64
+	AlignedBBox  *rect
+	Offset       globalOffset
+	Components   []diffComponent
+	LocalPass    bool
+}
+
+const registrationAlgorithm = "global-integer-sad-v1"
+const registrationMaxOffset = 16
+const componentDeltaThreshold = 32
+const minimumMeaningfulComponentPixels = 16
+const unmatchedComponentPixelLimit = 16
+
 type finalPage struct {
-	ID          string   `json:"id"`
-	Width       int      `json:"width"`
-	Height      int      `json:"height"`
-	OldWidth    int      `json:"oldWidth"`
-	OldHeight   int      `json:"oldHeight"`
-	NewWidth    int      `json:"newWidth"`
-	NewHeight   int      `json:"newHeight"`
-	Scale       float64  `json:"scale"`
-	OldFormat   string   `json:"oldFormat"`
-	NewFormat   string   `json:"newFormat"`
-	OldSHA256   string   `json:"oldSha256"`
-	NewSHA256   string   `json:"newSha256"`
-	OldGate     bool     `json:"oldGate"`
-	Similarity  *float64 `json:"similarity,omitempty"`
-	Pass        bool     `json:"pass"`
-	DiffBBox    *rect    `json:"diffBBox,omitempty"`
-	OldPath     string   `json:"oldPath"`
-	NewPath     string   `json:"newPath"`
-	DiffPath    string   `json:"diffPath"`
-	HeatmapPath string   `json:"heatmapPath"`
-	Error       string   `json:"error,omitempty"`
+	ID                  string          `json:"id"`
+	Width               int             `json:"width"`
+	Height              int             `json:"height"`
+	OldWidth            int             `json:"oldWidth"`
+	OldHeight           int             `json:"oldHeight"`
+	NewWidth            int             `json:"newWidth"`
+	NewHeight           int             `json:"newHeight"`
+	Scale               float64         `json:"scale"`
+	OldFormat           string          `json:"oldFormat"`
+	NewFormat           string          `json:"newFormat"`
+	OldSHA256           string          `json:"oldSha256"`
+	NewSHA256           string          `json:"newSha256"`
+	OldGate             bool            `json:"oldGate"`
+	Similarity          *float64        `json:"similarity,omitempty"`
+	RawSimilarity       *float64        `json:"rawSimilarity,omitempty"`
+	AlignedSimilarity   *float64        `json:"alignedSimilarity,omitempty"`
+	GlobalOffset        *globalOffset   `json:"globalOffset,omitempty"`
+	AlignmentAlgorithm  string          `json:"alignmentAlgorithm,omitempty"`
+	LocalPass           bool            `json:"localPass"`
+	DiffBBox            *rect           `json:"diffBBox,omitempty"`
+	AlignedDiffBBox     *rect           `json:"alignedDiffBBox,omitempty"`
+	UnmatchedComponents []diffComponent `json:"unmatchedComponents,omitempty"`
+	Pass                bool            `json:"pass"`
+	OldPath             string          `json:"oldPath"`
+	NewPath             string          `json:"newPath"`
+	DiffPath            string          `json:"diffPath"`
+	HeatmapPath         string          `json:"heatmapPath"`
+	AlignedDiffPath     string          `json:"alignedDiffPath"`
+	AlignedHeatmapPath  string          `json:"alignedHeatmapPath"`
+	Error               string          `json:"error,omitempty"`
 }
 
 type legacyCapture struct {
@@ -233,7 +266,7 @@ func compareBundle(out string, manifestData, resourceData []byte, clockErratum s
 	report := finalReport{SchemaVersion: 1, IDs: expected, Threshold: threshold, ManifestSHA256: sha256Hex(manifestData), ResourceManifestSHA256: sha256Hex(resourceData), ClockErratum: filepath.ToSlash(errataPath), ClockErratumSHA256: sha256Hex(errataData), LegacyCapture: legacyCapture{ScriptSHA256: sha256Hex(legacyScriptData), ClockBehavior: "Calendar/State fixed erratum clock; Gacha advancing fake clock anchored at erratum", Selector: "manifest entries; --id supports gacha-only diagnostic replay", DeviceScaleFactor: "manifest entry scale", JPEG: "Playwright locator screenshot type=jpeg, default quality", GachaSettleMS: 3000}, SpecFiles: hashes, Command: "visual-final -spec-dir <canonical-spec-dir> -out <final-dir> -baseline <baseline-manifest> -resource-manifest <resource-manifest> -clock-erratum <capture-clock-erratum> -legacy-script <legacy-capture.mjs>", RunNote: runNote}
 	for _, id := range expected {
 		entry, page := entries[id], pages[id]
-		item := finalPage{ID: id, Width: entry.PixelWidth, Height: entry.PixelHeight, OldWidth: entry.PixelWidth, OldHeight: entry.PixelHeight, NewWidth: entry.PixelWidth, NewHeight: entry.PixelHeight, Scale: page.Scale, OldFormat: entry.Format, NewFormat: "png", OldPath: filepath.ToSlash(filepath.Join("old", id+".jpg")), NewPath: filepath.ToSlash(filepath.Join("new", id+".png")), DiffPath: filepath.ToSlash(filepath.Join("compare", id+".diff.png")), HeatmapPath: filepath.ToSlash(filepath.Join("compare", id+".heatmap.png"))}
+		item := finalPage{ID: id, Width: entry.PixelWidth, Height: entry.PixelHeight, OldWidth: entry.PixelWidth, OldHeight: entry.PixelHeight, NewWidth: entry.PixelWidth, NewHeight: entry.PixelHeight, Scale: page.Scale, OldFormat: entry.Format, NewFormat: "png", OldPath: filepath.ToSlash(filepath.Join("old", id+".jpg")), NewPath: filepath.ToSlash(filepath.Join("new", id+".png")), DiffPath: filepath.ToSlash(filepath.Join("compare", id+".diff.png")), HeatmapPath: filepath.ToSlash(filepath.Join("compare", id+".heatmap.png")), AlignedDiffPath: filepath.ToSlash(filepath.Join("compare", id+".aligned.diff.png")), AlignedHeatmapPath: filepath.ToSlash(filepath.Join("compare", id+".aligned.heatmap.png"))}
 		oldData, oldErr := os.ReadFile(filepath.Join(out, item.OldPath))
 		newData, newErr := os.ReadFile(filepath.Join(out, item.NewPath))
 		if oldErr == nil {
@@ -250,12 +283,15 @@ func compareBundle(out string, manifestData, resourceData []byte, clockErratum s
 			item.Error = joinError(item.Error, newErr.Error())
 		}
 		if oldErr == nil && newErr == nil {
-			score, bbox, err := diffImages(oldData, newData, filepath.Join(out, item.DiffPath), filepath.Join(out, item.HeatmapPath))
+			comparison, err := compareImages(oldData, newData, filepath.Join(out, item.DiffPath), filepath.Join(out, item.HeatmapPath), filepath.Join(out, item.AlignedDiffPath), filepath.Join(out, item.AlignedHeatmapPath))
 			if err != nil {
 				item.Error = joinError(item.Error, err.Error())
 			} else {
-				item.Similarity, item.DiffBBox = &score, bbox
-				item.Pass = item.OldGate && score >= threshold
+				item.RawSimilarity, item.AlignedSimilarity, item.Similarity = &comparison.RawScore, &comparison.AlignedScore, &comparison.AlignedScore
+				item.DiffBBox, item.AlignedDiffBBox = comparison.RawBBox, comparison.AlignedBBox
+				item.GlobalOffset = &comparison.Offset
+				item.AlignmentAlgorithm, item.UnmatchedComponents, item.LocalPass = registrationAlgorithm, comparison.Components, comparison.LocalPass
+				item.Pass = item.OldGate && comparison.AlignedScore >= threshold && comparison.LocalPass
 			}
 		}
 		if item.Similarity != nil && (report.MinimumSimilarity == nil || *item.Similarity < *report.MinimumSimilarity) {
@@ -268,29 +304,144 @@ func compareBundle(out string, manifestData, resourceData []byte, clockErratum s
 		report.Pages = append(report.Pages, item)
 	}
 	sort.Strings(report.PassingIDs)
-	for _, page := range report.Pages {
-		if page.Error != "" || !page.OldGate {
-			return report, fmt.Errorf("final bundle gate failed for %s: %s", page.ID, page.Error)
-		}
+	if err := validateFinalReport(report); err != nil {
+		return report, err
 	}
 	return report, nil
 }
 
-func diffImages(oldData, newData []byte, diffPath, heatmapPath string) (float64, *rect, error) {
+func validateFinalReport(report finalReport) error {
+	for _, page := range report.Pages {
+		if page.Error != "" || !page.OldGate || !page.Pass {
+			return fmt.Errorf("final bundle gate failed for %s: %s", page.ID, page.Error)
+		}
+	}
+	return nil
+}
+
+func compareImages(oldData, newData []byte, rawDiffPath, rawHeatmapPath, alignedDiffPath, alignedHeatmapPath string) (imageComparison, error) {
 	oldImg, _, err := image.Decode(bytes.NewReader(oldData))
 	if err != nil {
-		return 0, nil, fmt.Errorf("decode old: %w", err)
+		return imageComparison{}, fmt.Errorf("decode old: %w", err)
 	}
 	newImg, _, err := image.Decode(bytes.NewReader(newData))
 	if err != nil {
-		return 0, nil, fmt.Errorf("decode new: %w", err)
+		return imageComparison{}, fmt.Errorf("decode new: %w", err)
 	}
-	oldBounds, newBounds := oldImg.Bounds(), newImg.Bounds()
-	if oldBounds.Dx() != newBounds.Dx() || oldBounds.Dy() != newBounds.Dy() {
-		return 0, nil, fmt.Errorf("dimension mismatch old=%dx%d new=%dx%d", oldBounds.Dx(), oldBounds.Dy(), newBounds.Dx(), newBounds.Dy())
+	if oldImg.Bounds().Size() != newImg.Bounds().Size() {
+		return imageComparison{}, fmt.Errorf("dimension mismatch old=%dx%d new=%dx%d", oldImg.Bounds().Dx(), oldImg.Bounds().Dy(), newImg.Bounds().Dx(), newImg.Bounds().Dy())
 	}
-	bounds := image.Rect(0, 0, oldBounds.Dx(), oldBounds.Dy())
+	rawScore, rawBBox, _, err := diffImagePair(oldImg, newImg, rawDiffPath, rawHeatmapPath)
+	if err != nil {
+		return imageComparison{}, err
+	}
+	background := canvasBackground(oldImg)
+	offset := selectFinalOffset(oldImg, newImg, registerOffset(oldImg, newImg, background), background)
+	aligned := translateImage(newImg, offset, background)
+	alignedScore, alignedBBox, components, err := diffImagePair(oldImg, aligned, alignedDiffPath, alignedHeatmapPath)
+	if err != nil {
+		return imageComparison{}, err
+	}
+	localPass := true
+	for _, component := range components {
+		if meaningfulComponent(component, oldImg.Bounds()) {
+			localPass = false
+			break
+		}
+	}
+	return imageComparison{RawScore: rawScore, RawBBox: rawBBox, AlignedScore: alignedScore, AlignedBBox: alignedBBox, Offset: offset, Components: components, LocalPass: localPass}, nil
+}
+
+func selectFinalOffset(oldImg, newImg image.Image, suggested globalOffset, background color.Color) globalOffset {
+	best := globalOffset{}
+	bestScore := imageSimilarity(oldImg, newImg)
+	for _, candidate := range []globalOffset{suggested, {}} {
+		score := imageSimilarity(oldImg, translateImage(newImg, candidate, background))
+		if score > bestScore || (score == bestScore && preferredOffset(candidate, best)) {
+			best, bestScore = candidate, score
+		}
+	}
+	return best
+}
+
+func preferredOffset(candidate, current globalOffset) bool {
+	candidateDistance := absInt(candidate.DX) + absInt(candidate.DY)
+	currentDistance := absInt(current.DX) + absInt(current.DY)
+	if candidateDistance != currentDistance {
+		return candidateDistance < currentDistance
+	}
+	if candidate == (globalOffset{}) {
+		return current != (globalOffset{})
+	}
+	if candidate.DX != current.DX {
+		return candidate.DX < current.DX
+	}
+	return candidate.DY < current.DY
+}
+
+func imageSimilarity(oldImg, newImg image.Image) float64 {
+	bounds := oldImg.Bounds()
+	var total uint64
+	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
+		for x := bounds.Min.X; x < bounds.Max.X; x++ {
+			total += pixelDelta(oldImg.At(x, y), newImg.At(x, y))
+		}
+	}
+	return 1 - float64(total)/float64(bounds.Dx()*bounds.Dy()*4*255)
+}
+
+func meaningfulComponent(component diffComponent, bounds image.Rectangle) bool {
+	minimum := maxInt(minimumMeaningfulComponentPixels, bounds.Dx()*bounds.Dy()/128)
+	return component.Pixels > maxInt(unmatchedComponentPixelLimit, minimum)
+}
+
+func registerOffset(oldImg, newImg image.Image, background color.Color) globalOffset {
+	bounds := oldImg.Bounds()
+	step := maxInt(1, maxInt(bounds.Dx(), bounds.Dy())/256)
+	best := globalOffset{}
+	bestScore := uint64(^uint64(0))
+	for dy := -registrationMaxOffset; dy <= registrationMaxOffset; dy++ {
+		for dx := -registrationMaxOffset; dx <= registrationMaxOffset; dx++ {
+			var score uint64
+			for y := bounds.Min.Y; y < bounds.Max.Y; y += step {
+				for x := bounds.Min.X; x < bounds.Max.X; x += step {
+					score += pixelDelta(oldImg.At(x, y), translatedAt(newImg, x-dx, y-dy, background))
+				}
+			}
+			if score < bestScore || (score == bestScore && absInt(dx)+absInt(dy) < absInt(best.DX)+absInt(best.DY)) {
+				bestScore, best = score, globalOffset{DX: dx, DY: dy}
+			}
+		}
+	}
+	return best
+}
+
+func translateImage(src image.Image, offset globalOffset, background color.Color) image.Image {
+	bounds := src.Bounds()
+	out := image.NewRGBA(bounds)
+	for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
+		for x := bounds.Min.X; x < bounds.Max.X; x++ {
+			out.Set(x, y, translatedAt(src, x-offset.DX, y-offset.DY, background))
+		}
+	}
+	return out
+}
+
+func canvasBackground(img image.Image) color.Color {
+	return img.At(img.Bounds().Min.X, img.Bounds().Min.Y)
+}
+
+func translatedAt(src image.Image, x, y int, background color.Color) color.Color {
+	if !image.Pt(x, y).In(src.Bounds()) {
+		return background
+	}
+	return src.At(x, y)
+}
+
+func diffImagePair(oldImg, newImg image.Image, diffPath, heatmapPath string) (float64, *rect, []diffComponent, error) {
+	bounds := oldImg.Bounds()
 	diff, heatmap := image.NewRGBA(bounds), image.NewRGBA(bounds)
+	peaks := make([]uint8, bounds.Dx()*bounds.Dy())
 	var total uint64
 	minX, minY, maxX, maxY := bounds.Dx(), bounds.Dy(), -1, -1
 	for y := 0; y < bounds.Dy(); y++ {
@@ -302,33 +453,88 @@ func diffImages(oldData, newData []byte, diffPath, heatmapPath string) (float64,
 			diff.SetRGBA(x, y, color.RGBA{dr, dg, db, 255})
 			peak := max8(max8(dr, dg), max8(db, da))
 			heatmap.SetRGBA(x, y, color.RGBA{peak, 0, 0, 255})
+			peaks[y*bounds.Dx()+x] = peak
 			if peak > 0 {
-				if x < minX {
-					minX = x
-				}
-				if y < minY {
-					minY = y
-				}
-				if x > maxX {
-					maxX = x
-				}
-				if y > maxY {
-					maxY = y
-				}
+				minX, minY, maxX, maxY = minInt(minX, x), minInt(minY, y), maxInt(maxX, x), maxInt(maxY, y)
 			}
 		}
 	}
 	if err := writePNG(diffPath, diff); err != nil {
-		return 0, nil, err
+		return 0, nil, nil, err
 	}
 	if err := writePNG(heatmapPath, heatmap); err != nil {
-		return 0, nil, err
+		return 0, nil, nil, err
 	}
 	score := 1 - float64(total)/float64(bounds.Dx()*bounds.Dy()*4*255)
-	if maxX < 0 {
-		return score, nil, nil
+	var bbox *rect
+	if maxX >= 0 {
+		bbox = &rect{X: minX, Y: minY, Width: maxX - minX + 1, Height: maxY - minY + 1}
 	}
-	return score, &rect{X: minX, Y: minY, Width: maxX - minX + 1, Height: maxY - minY + 1}, nil
+	return score, bbox, diffComponents(peaks, bounds.Dx(), bounds.Dy()), nil
+}
+
+func diffComponents(peaks []uint8, width, height int) []diffComponent {
+	seen := make([]bool, len(peaks))
+	var components []diffComponent
+	for start, peak := range peaks {
+		if seen[start] || peak < componentDeltaThreshold {
+			continue
+		}
+		queue := []int{start}
+		seen[start] = true
+		minX, minY, maxX, maxY, count, total := start%width, start/width, start%width, start/width, 0, uint64(0)
+		for len(queue) > 0 {
+			index := queue[0]
+			queue = queue[1:]
+			x, y := index%width, index/width
+			count++
+			total += uint64(peaks[index])
+			minX, minY, maxX, maxY = minInt(minX, x), minInt(minY, y), maxInt(maxX, x), maxInt(maxY, y)
+			for _, step := range [][2]int{{1, 0}, {-1, 0}, {0, 1}, {0, -1}} {
+				nx, ny := x+step[0], y+step[1]
+				if nx < 0 || nx >= width || ny < 0 || ny >= height {
+					continue
+				}
+				next := ny*width + nx
+				if !seen[next] && peaks[next] >= componentDeltaThreshold {
+					seen[next] = true
+					queue = append(queue, next)
+				}
+			}
+		}
+		components = append(components, diffComponent{BBox: rect{X: minX, Y: minY, Width: maxX - minX + 1, Height: maxY - minY + 1}, Pixels: count, MeanDelta: float64(total) / float64(count)})
+	}
+	return components
+}
+
+func pixelDelta(a, b color.Color) uint64 {
+	ar, ag, ab, aa := a.RGBA()
+	br, bg, bb, ba := b.RGBA()
+	return uint64(abs8(ar, br)) + uint64(abs8(ag, bg)) + uint64(abs8(ab, bb)) + uint64(abs8(aa, ba))
+}
+
+func absInt(v int) int {
+	if v < 0 {
+		return -v
+	}
+	return v
+}
+func minInt(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+func maxInt(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+func diffImages(oldData, newData []byte, diffPath, heatmapPath string) (float64, *rect, error) {
+	comparison, err := compareImages(oldData, newData, diffPath, heatmapPath, diffPath+".aligned", heatmapPath+".aligned")
+	return comparison.AlignedScore, comparison.AlignedBBox, err
 }
 
 func writePNG(path string, img image.Image) error {
