@@ -1,0 +1,607 @@
+{
+  "schemaVersion": 1,
+  "title": "PR #3 Playwright baseline versus selected current Satori outputs",
+  "generatedAt": "2026-08-21T13:12:17.348Z",
+  "selectionModel": "Per-page selected isolated candidates. This is not one integrated bundle.",
+  "immutableSourcePolicy": "Raw old JPEGs and selected new PNGs were copied byte-for-byte only after SHA-256 verification against their originating report page records.",
+  "sources": {
+    "cd60d312dbf3e92cd7833df516744bcefe5d5057ebbf14f731291852835e855b": {
+      "evidencePath": "evidence/pr-3-playwright-vs-satori-current/reports/cd60d312dbf3e92cd7833df516744bcefe5d5057ebbf14f731291852835e855b.json",
+      "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-b-base-enemy/base-a-shared-runtime-final/report.json",
+      "timestamp": "2026-08-21T08:31:22.317Z",
+      "label": "B current accepted Base/Enemy isolated output"
+    },
+    "162af0d1b87434c4abe6e58e401e25f331785f2e13f8c626b8fef700d15921e6": {
+      "evidencePath": "evidence/pr-3-playwright-vs-satori-current/reports/162af0d1b87434c4abe6e58e401e25f331785f2e13f8c626b8fef700d15921e6.json",
+      "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-d-box-missing-state/state-retained-normalization-A-20260821T102113Z/report.json",
+      "timestamp": "2026-08-21T10:24:09.373Z",
+      "label": "D no-edit normalization output with restored Box/Missing"
+    },
+    "64f9d7e03c9446edf6550aac6c7ebb11b8926b167063d23866f58569857bd3eb": {
+      "evidencePath": "evidence/pr-3-playwright-vs-satori-current/reports/64f9d7e03c9446edf6550aac6c7ebb11b8926b167063d23866f58569857bd3eb.json",
+      "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-c-card-operator-post-card-baseline-2/runs/post-card-A-current-retained-2/report.json",
+      "timestamp": "2026-08-21T10:12:51.662Z",
+      "label": "C normalization current retained baseline (Card/Operator and unaffected pages)"
+    },
+    "914c842df10b4dd00a60e18d02646d9bb1abffb4957f049fc01067c510ee285e": {
+      "evidencePath": "evidence/pr-3-playwright-vs-satori-current/reports/914c842df10b4dd00a60e18d02646d9bb1abffb4957f049fc01067c510ee285e.json",
+      "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-a-calendar-lottery/runs/calendar-A-runtimepatch-20260821T081500Z/report.json",
+      "timestamp": "2026-08-21T08:19:18.215Z",
+      "label": "A current accepted Calendar isolated output"
+    },
+    "00afc3f23981f0e42352b3b0eb3ee900d528d858f2df0a882a25739a52ba1e3f": {
+      "evidencePath": "evidence/pr-3-playwright-vs-satori-current/reports/00afc3f23981f0e42352b3b0eb3ee900d528d858f2df0a882a25739a52ba1e3f.json",
+      "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-a-calendar-lottery-lottery-B-corrected-20260821T092445Z/report.json",
+      "timestamp": "2026-08-21T09:27:30.321Z",
+      "label": "A current accepted Lottery isolated output"
+    },
+    "6d0e06222bdfe0512ff0804fa76d130dcb92d35f8dc15a29718528a6e7689382": {
+      "evidencePath": "evidence/pr-3-playwright-vs-satori-current/reports/6d0e06222bdfe0512ff0804fa76d130dcb92d35f8dc15a29718528a6e7689382.json",
+      "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-d-box-missing-state/state-tired-count-dy1-B-corrected-20260821T092000Z/report.json",
+      "timestamp": "2026-08-21T09:35:59.895Z",
+      "label": "D corrected State-only retained candidate"
+    }
+  },
+  "pages": [
+    {
+      "id": "base",
+      "status": "selected-current-best-isolated-candidate",
+      "selection": "B current accepted Base/Enemy isolated output",
+      "old": {
+        "label": "PLAYWRIGHT BASELINE (OLD)",
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-d-box-missing-state/frozen/old/base.jpg",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/raw/old/base.jpg",
+        "sha256": "3a82d70486f9da3a2c48261cc9f2bdd6c498ef31b3ba5260b519400c81495011",
+        "width": 1665,
+        "height": 918,
+        "format": "jpeg"
+      },
+      "new": {
+        "label": "SATORI CURRENT (NEW)",
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-b-base-enemy/base-a-shared-runtime-final/new/base.png",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/raw/new/base.png",
+        "sha256": "2f1152ee68437544fb48559b57852fc6ab2b5afd509abea5bbfe00b0308d9589",
+        "width": 1665,
+        "height": 918,
+        "format": "png"
+      },
+      "sheet": {
+        "label": "Side-by-side sheet: old left, new right",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/sheets/base.png"
+      },
+      "report": {
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-b-base-enemy/base-a-shared-runtime-final/report.json",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/reports/cd60d312dbf3e92cd7833df516744bcefe5d5057ebbf14f731291852835e855b.json",
+        "sha256": "cd60d312dbf3e92cd7833df516744bcefe5d5057ebbf14f731291852835e855b",
+        "timestamp": "2026-08-21T08:31:22.317Z",
+        "runNote": "actual Go HTTP RenderSpec -> media.ScreenshotPNG -> resident Node renderer",
+        "sourceLabel": "B current accepted Base/Enemy isolated output"
+      }
+    },
+    {
+      "id": "box",
+      "status": "selected-current-best-isolated-candidate",
+      "selection": "D no-edit normalization output with restored Box/Missing",
+      "old": {
+        "label": "PLAYWRIGHT BASELINE (OLD)",
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-d-box-missing-state/frozen/old/box.jpg",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/raw/old/box.jpg",
+        "sha256": "cf10f5d37fe6c3738eb19b77e3761861a5cda8d4448cc50b333d25ace4c1c8d9",
+        "width": 1050,
+        "height": 536,
+        "format": "jpeg"
+      },
+      "new": {
+        "label": "SATORI CURRENT (NEW)",
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-d-box-missing-state/state-retained-normalization-A-20260821T102113Z/new/box.png",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/raw/new/box.png",
+        "sha256": "c3f0d9811ae71003ad7ec16ea90e0e0c59dfd6bdc9152feefe41d8688cae8ed9",
+        "width": 1050,
+        "height": 536,
+        "format": "png"
+      },
+      "sheet": {
+        "label": "Side-by-side sheet: old left, new right",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/sheets/box.png"
+      },
+      "report": {
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-d-box-missing-state/state-retained-normalization-A-20260821T102113Z/report.json",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/reports/162af0d1b87434c4abe6e58e401e25f331785f2e13f8c626b8fef700d15921e6.json",
+        "sha256": "162af0d1b87434c4abe6e58e401e25f331785f2e13f8c626b8fef700d15921e6",
+        "timestamp": "2026-08-21T10:24:09.373Z",
+        "runNote": "Exp D no-edit normalization A; retained State top438->439; restored Box/Missing; canonical local inputs; network forbidden",
+        "sourceLabel": "D no-edit normalization output with restored Box/Missing"
+      }
+    },
+    {
+      "id": "box-detail",
+      "status": "selected-current-best-isolated-candidate",
+      "selection": "C normalization current retained baseline (Card/Operator and unaffected pages)",
+      "old": {
+        "label": "PLAYWRIGHT BASELINE (OLD)",
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-d-box-missing-state/frozen/old/box-detail.jpg",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/raw/old/box-detail.jpg",
+        "sha256": "047ad057ac193e97aed8ff3442ad29f8505b8cbdbf575837456e1fbd82e6e457",
+        "width": 722,
+        "height": 279,
+        "format": "jpeg"
+      },
+      "new": {
+        "label": "SATORI CURRENT (NEW)",
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-c-card-operator-post-card-baseline-2/runs/post-card-A-current-retained-2/new/box-detail.png",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/raw/new/box-detail.png",
+        "sha256": "0b1e1e5de2e8ce16ffc543fea18668d157782737541e5e6179b0737684abf9ae",
+        "width": 722,
+        "height": 279,
+        "format": "png"
+      },
+      "sheet": {
+        "label": "Side-by-side sheet: old left, new right",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/sheets/box-detail.png"
+      },
+      "report": {
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-c-card-operator-post-card-baseline-2/runs/post-card-A-current-retained-2/report.json",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/reports/64f9d7e03c9446edf6550aac6c7ebb11b8926b167063d23866f58569857bd3eb.json",
+        "sha256": "64f9d7e03c9446edf6550aac6c7ebb11b8926b167063d23866f58569857bd3eb",
+        "timestamp": "2026-08-21T10:12:51.662Z",
+        "runNote": "Post-Card baseline A fresh: retained Card height 190 and Operator bottom 40; own manifest; offline/no fallback",
+        "sourceLabel": "C normalization current retained baseline (Card/Operator and unaffected pages)"
+      }
+    },
+    {
+      "id": "box-summary",
+      "status": "selected-current-best-isolated-candidate",
+      "selection": "C normalization current retained baseline (Card/Operator and unaffected pages)",
+      "old": {
+        "label": "PLAYWRIGHT BASELINE (OLD)",
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-d-box-missing-state/frozen/old/box-summary.jpg",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/raw/old/box-summary.jpg",
+        "sha256": "6a4633e048410f14271b0b6728d14d4307c2b32af7411c5446a72cea8624f071",
+        "width": 1350,
+        "height": 723,
+        "format": "jpeg"
+      },
+      "new": {
+        "label": "SATORI CURRENT (NEW)",
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-c-card-operator-post-card-baseline-2/runs/post-card-A-current-retained-2/new/box-summary.png",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/raw/new/box-summary.png",
+        "sha256": "45e8ea34df9940e823016395214dfcbfc55edf9371b17185baecb579a0d6c136",
+        "width": 1350,
+        "height": 723,
+        "format": "png"
+      },
+      "sheet": {
+        "label": "Side-by-side sheet: old left, new right",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/sheets/box-summary.png"
+      },
+      "report": {
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-c-card-operator-post-card-baseline-2/runs/post-card-A-current-retained-2/report.json",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/reports/64f9d7e03c9446edf6550aac6c7ebb11b8926b167063d23866f58569857bd3eb.json",
+        "sha256": "64f9d7e03c9446edf6550aac6c7ebb11b8926b167063d23866f58569857bd3eb",
+        "timestamp": "2026-08-21T10:12:51.662Z",
+        "runNote": "Post-Card baseline A fresh: retained Card height 190 and Operator bottom 40; own manifest; offline/no fallback",
+        "sourceLabel": "C normalization current retained baseline (Card/Operator and unaffected pages)"
+      }
+    },
+    {
+      "id": "calendar",
+      "status": "selected-current-best-isolated-candidate",
+      "selection": "A current accepted Calendar isolated output",
+      "old": {
+        "label": "PLAYWRIGHT BASELINE (OLD)",
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-d-box-missing-state/frozen/old/calendar.jpg",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/raw/old/calendar.jpg",
+        "sha256": "80f31c1cfb132ff3781a3d940120cfdd31acf26aa1baf0e96c5fa75e68c4b00b",
+        "width": 2880,
+        "height": 1620,
+        "format": "jpeg"
+      },
+      "new": {
+        "label": "SATORI CURRENT (NEW)",
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-a-calendar-lottery/runs/calendar-A-runtimepatch-20260821T081500Z/new/calendar.png",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/raw/new/calendar.png",
+        "sha256": "ce0bc890f488c7ca0137f015a6eaa3c238858309fe919d297588594243b7f460",
+        "width": 2880,
+        "height": 1620,
+        "format": "png"
+      },
+      "sheet": {
+        "label": "Side-by-side sheet: old left, new right",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/sheets/calendar.png"
+      },
+      "report": {
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-a-calendar-lottery/runs/calendar-A-runtimepatch-20260821T081500Z/report.json",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/reports/914c842df10b4dd00a60e18d02646d9bb1abffb4957f049fc01067c510ee285e.json",
+        "sha256": "914c842df10b4dd00a60e18d02646d9bb1abffb4957f049fc01067c510ee285e",
+        "timestamp": "2026-08-21T08:19:18.215Z",
+        "runNote": "calendar A runtime-patch: exact approved shared runtime, own canonical manifest/cache, offline",
+        "sourceLabel": "A current accepted Calendar isolated output"
+      }
+    },
+    {
+      "id": "card",
+      "status": "selected-current-best-isolated-candidate",
+      "selection": "C normalization current retained baseline (Card/Operator and unaffected pages)",
+      "old": {
+        "label": "PLAYWRIGHT BASELINE (OLD)",
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-d-box-missing-state/frozen/old/card.jpg",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/raw/old/card.jpg",
+        "sha256": "75fea0acb6d2e20f52107a9310bc66e2e6228fa01811dc66445917a32d8de2a2",
+        "width": 1280,
+        "height": 720,
+        "format": "jpeg"
+      },
+      "new": {
+        "label": "SATORI CURRENT (NEW)",
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-c-card-operator-post-card-baseline-2/runs/post-card-A-current-retained-2/new/card.png",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/raw/new/card.png",
+        "sha256": "f293521074bca6ad00f894ad87cef1c352cfe9816cd9fc60635173e98e4748b3",
+        "width": 1280,
+        "height": 720,
+        "format": "png"
+      },
+      "sheet": {
+        "label": "Side-by-side sheet: old left, new right",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/sheets/card.png"
+      },
+      "report": {
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-c-card-operator-post-card-baseline-2/runs/post-card-A-current-retained-2/report.json",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/reports/64f9d7e03c9446edf6550aac6c7ebb11b8926b167063d23866f58569857bd3eb.json",
+        "sha256": "64f9d7e03c9446edf6550aac6c7ebb11b8926b167063d23866f58569857bd3eb",
+        "timestamp": "2026-08-21T10:12:51.662Z",
+        "runNote": "Post-Card baseline A fresh: retained Card height 190 and Operator bottom 40; own manifest; offline/no fallback",
+        "sourceLabel": "C normalization current retained baseline (Card/Operator and unaffected pages)"
+      }
+    },
+    {
+      "id": "depot",
+      "status": "selected-current-best-isolated-candidate",
+      "selection": "C normalization current retained baseline (Card/Operator and unaffected pages)",
+      "old": {
+        "label": "PLAYWRIGHT BASELINE (OLD)",
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-d-box-missing-state/frozen/old/depot.jpg",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/raw/old/depot.jpg",
+        "sha256": "d09c01dbd30062e6f876f0bc3af79d6458f0f4f698699d46250280a225cd98d7",
+        "width": 1275,
+        "height": 234,
+        "format": "jpeg"
+      },
+      "new": {
+        "label": "SATORI CURRENT (NEW)",
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-c-card-operator-post-card-baseline-2/runs/post-card-A-current-retained-2/new/depot.png",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/raw/new/depot.png",
+        "sha256": "c435cc13a35a993dfa5df920df80ea9069ecabfe9a822a15549e81ada00bc405",
+        "width": 1275,
+        "height": 234,
+        "format": "png"
+      },
+      "sheet": {
+        "label": "Side-by-side sheet: old left, new right",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/sheets/depot.png"
+      },
+      "report": {
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-c-card-operator-post-card-baseline-2/runs/post-card-A-current-retained-2/report.json",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/reports/64f9d7e03c9446edf6550aac6c7ebb11b8926b167063d23866f58569857bd3eb.json",
+        "sha256": "64f9d7e03c9446edf6550aac6c7ebb11b8926b167063d23866f58569857bd3eb",
+        "timestamp": "2026-08-21T10:12:51.662Z",
+        "runNote": "Post-Card baseline A fresh: retained Card height 190 and Operator bottom 40; own manifest; offline/no fallback",
+        "sourceLabel": "C normalization current retained baseline (Card/Operator and unaffected pages)"
+      }
+    },
+    {
+      "id": "enemy",
+      "status": "selected-current-best-isolated-candidate",
+      "selection": "B current accepted Base/Enemy isolated output",
+      "old": {
+        "label": "PLAYWRIGHT BASELINE (OLD)",
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-d-box-missing-state/frozen/old/enemy.jpg",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/raw/old/enemy.jpg",
+        "sha256": "7aae46ad6d8292139bf20d0032e2638bee920637e7de479d807fa5890fa6909b",
+        "width": 984,
+        "height": 477,
+        "format": "jpeg"
+      },
+      "new": {
+        "label": "SATORI CURRENT (NEW)",
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-b-base-enemy/base-a-shared-runtime-final/new/enemy.png",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/raw/new/enemy.png",
+        "sha256": "85369791e79def22917640a06ece13c24c3a4d127e17fca3eb3d332cbd45d9b6",
+        "width": 984,
+        "height": 477,
+        "format": "png"
+      },
+      "sheet": {
+        "label": "Side-by-side sheet: old left, new right",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/sheets/enemy.png"
+      },
+      "report": {
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-b-base-enemy/base-a-shared-runtime-final/report.json",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/reports/cd60d312dbf3e92cd7833df516744bcefe5d5057ebbf14f731291852835e855b.json",
+        "sha256": "cd60d312dbf3e92cd7833df516744bcefe5d5057ebbf14f731291852835e855b",
+        "timestamp": "2026-08-21T08:31:22.317Z",
+        "runNote": "actual Go HTTP RenderSpec -> media.ScreenshotPNG -> resident Node renderer",
+        "sourceLabel": "B current accepted Base/Enemy isolated output"
+      }
+    },
+    {
+      "id": "gacha",
+      "status": "selected-current-best-isolated-candidate",
+      "selection": "C normalization current retained baseline (Card/Operator and unaffected pages)",
+      "old": {
+        "label": "PLAYWRIGHT BASELINE (OLD)",
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-d-box-missing-state/frozen/old/gacha.jpg",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/raw/old/gacha.jpg",
+        "sha256": "b037cf55e967c61db80507ebcba9b55416f4b4aab5876d546a803ce117a131dc",
+        "width": 1500,
+        "height": 1323,
+        "format": "jpeg"
+      },
+      "new": {
+        "label": "SATORI CURRENT (NEW)",
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-c-card-operator-post-card-baseline-2/runs/post-card-A-current-retained-2/new/gacha.png",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/raw/new/gacha.png",
+        "sha256": "659d4d15a1680a14c4eefaf645d21ed4170dc53bf679fa1a16ff5ad83b81d40a",
+        "width": 1500,
+        "height": 1323,
+        "format": "png"
+      },
+      "sheet": {
+        "label": "Side-by-side sheet: old left, new right",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/sheets/gacha.png"
+      },
+      "report": {
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-c-card-operator-post-card-baseline-2/runs/post-card-A-current-retained-2/report.json",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/reports/64f9d7e03c9446edf6550aac6c7ebb11b8926b167063d23866f58569857bd3eb.json",
+        "sha256": "64f9d7e03c9446edf6550aac6c7ebb11b8926b167063d23866f58569857bd3eb",
+        "timestamp": "2026-08-21T10:12:51.662Z",
+        "runNote": "Post-Card baseline A fresh: retained Card height 190 and Operator bottom 40; own manifest; offline/no fallback",
+        "sourceLabel": "C normalization current retained baseline (Card/Operator and unaffected pages)"
+      }
+    },
+    {
+      "id": "headhunt",
+      "status": "selected-current-best-isolated-candidate",
+      "selection": "C normalization current retained baseline (Card/Operator and unaffected pages)",
+      "old": {
+        "label": "PLAYWRIGHT BASELINE (OLD)",
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-d-box-missing-state/frozen/old/headhunt.jpg",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/raw/old/headhunt.jpg",
+        "sha256": "879933afa3b94a80c08d37e0d8e053729639df59f01e47658944e48699434cf8",
+        "width": 1049,
+        "height": 576,
+        "format": "jpeg"
+      },
+      "new": {
+        "label": "SATORI CURRENT (NEW)",
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-c-card-operator-post-card-baseline-2/runs/post-card-A-current-retained-2/new/headhunt.png",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/raw/new/headhunt.png",
+        "sha256": "58dc824d0bf1894c82ed563bedfb228928d5d99e82a1d166db7728d9bdd69d97",
+        "width": 1049,
+        "height": 576,
+        "format": "png"
+      },
+      "sheet": {
+        "label": "Side-by-side sheet: old left, new right",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/sheets/headhunt.png"
+      },
+      "report": {
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-c-card-operator-post-card-baseline-2/runs/post-card-A-current-retained-2/report.json",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/reports/64f9d7e03c9446edf6550aac6c7ebb11b8926b167063d23866f58569857bd3eb.json",
+        "sha256": "64f9d7e03c9446edf6550aac6c7ebb11b8926b167063d23866f58569857bd3eb",
+        "timestamp": "2026-08-21T10:12:51.662Z",
+        "runNote": "Post-Card baseline A fresh: retained Card height 190 and Operator bottom 40; own manifest; offline/no fallback",
+        "sourceLabel": "C normalization current retained baseline (Card/Operator and unaffected pages)"
+      }
+    },
+    {
+      "id": "help",
+      "status": "selected-current-best-isolated-candidate",
+      "selection": "C normalization current retained baseline (Card/Operator and unaffected pages)",
+      "old": {
+        "label": "PLAYWRIGHT BASELINE (OLD)",
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-d-box-missing-state/frozen/old/help.jpg",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/raw/old/help.jpg",
+        "sha256": "43bcdee8554827959fb26b79196d57657f9ee4c85b04fa0354227bef49d9615b",
+        "width": 990,
+        "height": 2049,
+        "format": "jpeg"
+      },
+      "new": {
+        "label": "SATORI CURRENT (NEW)",
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-c-card-operator-post-card-baseline-2/runs/post-card-A-current-retained-2/new/help.png",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/raw/new/help.png",
+        "sha256": "42af048edf022383a5efa7f0aa663d1212409f4ec65e51456af72e1b15d394d2",
+        "width": 990,
+        "height": 2049,
+        "format": "png"
+      },
+      "sheet": {
+        "label": "Side-by-side sheet: old left, new right",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/sheets/help.png"
+      },
+      "report": {
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-c-card-operator-post-card-baseline-2/runs/post-card-A-current-retained-2/report.json",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/reports/64f9d7e03c9446edf6550aac6c7ebb11b8926b167063d23866f58569857bd3eb.json",
+        "sha256": "64f9d7e03c9446edf6550aac6c7ebb11b8926b167063d23866f58569857bd3eb",
+        "timestamp": "2026-08-21T10:12:51.662Z",
+        "runNote": "Post-Card baseline A fresh: retained Card height 190 and Operator bottom 40; own manifest; offline/no fallback",
+        "sourceLabel": "C normalization current retained baseline (Card/Operator and unaffected pages)"
+      }
+    },
+    {
+      "id": "lottery",
+      "status": "selected-current-best-isolated-candidate",
+      "selection": "A current accepted Lottery isolated output",
+      "old": {
+        "label": "PLAYWRIGHT BASELINE (OLD)",
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-d-box-missing-state/frozen/old/lottery.jpg",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/raw/old/lottery.jpg",
+        "sha256": "9f5588be88606af58fc86807bf734a45a51ecd205bdcd8bd72b0d295fba7f9c7",
+        "width": 1473,
+        "height": 1667,
+        "format": "jpeg"
+      },
+      "new": {
+        "label": "SATORI CURRENT (NEW)",
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-a-calendar-lottery-lottery-B-corrected-20260821T092445Z/new/lottery.png",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/raw/new/lottery.png",
+        "sha256": "34e8658c0e762284b10076048dacb9d76e615573286c617c5777d4413312a039",
+        "width": 1473,
+        "height": 1667,
+        "format": "png"
+      },
+      "sheet": {
+        "label": "Side-by-side sheet: old left, new right",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/sheets/lottery.png"
+      },
+      "report": {
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-a-calendar-lottery-lottery-B-corrected-20260821T092445Z/report.json",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/reports/00afc3f23981f0e42352b3b0eb3ee900d528d858f2df0a882a25739a52ba1e3f.json",
+        "sha256": "00afc3f23981f0e42352b3b0eb3ee900d528d858f2df0a882a25739a52ba1e3f",
+        "timestamp": "2026-08-21T09:27:30.321Z",
+        "runNote": "Boss-authorized corrected Lottery B: center watermark with legacy top:50% translateY(-50%)",
+        "sourceLabel": "A current accepted Lottery isolated output"
+      }
+    },
+    {
+      "id": "missing",
+      "status": "selected-current-best-isolated-candidate",
+      "selection": "D no-edit normalization output with restored Box/Missing",
+      "old": {
+        "label": "PLAYWRIGHT BASELINE (OLD)",
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-d-box-missing-state/frozen/old/missing.jpg",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/raw/old/missing.jpg",
+        "sha256": "cc58fea684f3c1a9fc879da163cf50e9438753b3ebcb7ecf3a5ef3b2f8a8ca47",
+        "width": 1050,
+        "height": 536,
+        "format": "jpeg"
+      },
+      "new": {
+        "label": "SATORI CURRENT (NEW)",
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-d-box-missing-state/state-retained-normalization-A-20260821T102113Z/new/missing.png",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/raw/new/missing.png",
+        "sha256": "d5b3d4c420b7135e34d940ecf4a24eedde594d3681c631846eae8db0ac12e043",
+        "width": 1050,
+        "height": 536,
+        "format": "png"
+      },
+      "sheet": {
+        "label": "Side-by-side sheet: old left, new right",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/sheets/missing.png"
+      },
+      "report": {
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-d-box-missing-state/state-retained-normalization-A-20260821T102113Z/report.json",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/reports/162af0d1b87434c4abe6e58e401e25f331785f2e13f8c626b8fef700d15921e6.json",
+        "sha256": "162af0d1b87434c4abe6e58e401e25f331785f2e13f8c626b8fef700d15921e6",
+        "timestamp": "2026-08-21T10:24:09.373Z",
+        "runNote": "Exp D no-edit normalization A; retained State top438->439; restored Box/Missing; canonical local inputs; network forbidden",
+        "sourceLabel": "D no-edit normalization output with restored Box/Missing"
+      }
+    },
+    {
+      "id": "operator",
+      "status": "selected-current-best-isolated-candidate",
+      "selection": "C normalization current retained baseline (Card/Operator and unaffected pages)",
+      "old": {
+        "label": "PLAYWRIGHT BASELINE (OLD)",
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-d-box-missing-state/frozen/old/operator.jpg",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/raw/old/operator.jpg",
+        "sha256": "2c2834c7e048ca29ba4d2aa7e34487a6005408cb4c345c229cf3be690ce2b1e5",
+        "width": 1800,
+        "height": 1200,
+        "format": "jpeg"
+      },
+      "new": {
+        "label": "SATORI CURRENT (NEW)",
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-c-card-operator-post-card-baseline-2/runs/post-card-A-current-retained-2/new/operator.png",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/raw/new/operator.png",
+        "sha256": "4c593be5cfe5de2cb9153279744ace300f62cf12b213f15a22664d9825f99fc6",
+        "width": 1800,
+        "height": 1200,
+        "format": "png"
+      },
+      "sheet": {
+        "label": "Side-by-side sheet: old left, new right",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/sheets/operator.png"
+      },
+      "report": {
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-c-card-operator-post-card-baseline-2/runs/post-card-A-current-retained-2/report.json",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/reports/64f9d7e03c9446edf6550aac6c7ebb11b8926b167063d23866f58569857bd3eb.json",
+        "sha256": "64f9d7e03c9446edf6550aac6c7ebb11b8926b167063d23866f58569857bd3eb",
+        "timestamp": "2026-08-21T10:12:51.662Z",
+        "runNote": "Post-Card baseline A fresh: retained Card height 190 and Operator bottom 40; own manifest; offline/no fallback",
+        "sourceLabel": "C normalization current retained baseline (Card/Operator and unaffected pages)"
+      }
+    },
+    {
+      "id": "recruit",
+      "status": "当前效果已接受，不再调整 / accepted as-is, waived from further tuning",
+      "selection": "C normalization current retained baseline (Card/Operator and unaffected pages)",
+      "old": {
+        "label": "PLAYWRIGHT BASELINE (OLD)",
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-d-box-missing-state/frozen/old/recruit.jpg",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/raw/old/recruit.jpg",
+        "sha256": "4a01136f4b12e9a17458998ec67d4285c73b1990fbaff7e11fef735c06fb5ffc",
+        "width": 1350,
+        "height": 534,
+        "format": "jpeg"
+      },
+      "new": {
+        "label": "SATORI CURRENT (NEW)",
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-c-card-operator-post-card-baseline-2/runs/post-card-A-current-retained-2/new/recruit.png",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/raw/new/recruit.png",
+        "sha256": "0d59c056b5cddca7b6f4c30685d689220a65a6c8aa58639cdb33cfd87e5d8328",
+        "width": 1350,
+        "height": 534,
+        "format": "png"
+      },
+      "sheet": {
+        "label": "Side-by-side sheet: old left, new right",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/sheets/recruit.png"
+      },
+      "report": {
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-c-card-operator-post-card-baseline-2/runs/post-card-A-current-retained-2/report.json",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/reports/64f9d7e03c9446edf6550aac6c7ebb11b8926b167063d23866f58569857bd3eb.json",
+        "sha256": "64f9d7e03c9446edf6550aac6c7ebb11b8926b167063d23866f58569857bd3eb",
+        "timestamp": "2026-08-21T10:12:51.662Z",
+        "runNote": "Post-Card baseline A fresh: retained Card height 190 and Operator bottom 40; own manifest; offline/no fallback",
+        "sourceLabel": "C normalization current retained baseline (Card/Operator and unaffected pages)"
+      }
+    },
+    {
+      "id": "state",
+      "status": "selected-current-best-isolated-candidate",
+      "selection": "D corrected State-only retained candidate",
+      "old": {
+        "label": "PLAYWRIGHT BASELINE (OLD)",
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-d-box-missing-state/frozen/old/state.jpg",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/raw/old/state.jpg",
+        "sha256": "2c3d37795bacf18c04d84b3ed72c2ef6532a4f2b9d25d629cb9555da0a721872",
+        "width": 1092,
+        "height": 510,
+        "format": "jpeg"
+      },
+      "new": {
+        "label": "SATORI CURRENT (NEW)",
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-d-box-missing-state/state-tired-count-dy1-B-corrected-20260821T092000Z/new/state.png",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/raw/new/state.png",
+        "sha256": "f38dedbf5463df23f5790da493021aceb438f6e77f815214dd75a00334062af1",
+        "width": 1092,
+        "height": 510,
+        "format": "png"
+      },
+      "sheet": {
+        "label": "Side-by-side sheet: old left, new right",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/sheets/state.png"
+      },
+      "report": {
+        "sourcePath": "C:/Users/ModerRAS/AppData/Local/Temp/satori-renderer-exp-d-box-missing-state/state-tired-count-dy1-B-corrected-20260821T092000Z/report.json",
+        "evidencePath": "evidence/pr-3-playwright-vs-satori-current/reports/6d0e06222bdfe0512ff0804fa76d130dcb92d35f8dc15a29718528a6e7689382.json",
+        "sha256": "6d0e06222bdfe0512ff0804fa76d130dcb92d35f8dc15a29718528a6e7689382",
+        "timestamp": "2026-08-21T09:35:59.895Z",
+        "runNote": "Exp D corrected State tired-count DY+1 B; own canonical manifest/cache; network forbidden",
+        "sourceLabel": "D corrected State-only retained candidate"
+      }
+    }
+  ]
+}
