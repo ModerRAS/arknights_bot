@@ -279,3 +279,275 @@ func RenderBoxDetail(items []BoxDetailItem, scale float64) *Canvas {
 	}
 	return c
 }
+
+// Recruit — 71 capsule rrect + boxShadow 0 3px 5px gray, via yoga flex, MeasureText, LRU frozen26, sigma 5
+type RecruitOperator struct {
+	Name       string `json:"name"`
+	Avatar     string `json:"avatar"`
+	Profession string `json:"profession"`
+	Rarity     int    `json:"rarity"`
+}
+type RecruitGroup struct {
+	Tags      []string          `json:"tags"`
+	Operators []RecruitOperator `json:"operators"`
+}
+
+func BuildRecruit(groups []RecruitGroup) *YogaNode {
+	root := NewYogaNode()
+	root.Style.Width = 900
+	root.Style.Height = 356
+	root.Style.FlexDirection = "column"
+	root.Style.Display = "flex"
+	header := NewYogaNode()
+	header.Style.Width = 900
+	header.Style.Height = 42
+	header.Style.Display = "flex"
+	header.Style.FlexDirection = "row"
+	for i, lab := range []string{"标签", "干员"} {
+		n := NewYogaNode()
+		txt := lab
+		n.SetMeasureFunc(func(w float32, wm MeasureMode, h float32, hm MeasureMode) Size {
+			return Size{Width: float32(MeasureText(txt, 18)), Height: 18}
+		})
+		n.Text = lab
+		if i == 0 {
+			n.Style.Width = 275
+		} else {
+			n.Style.Width = 625
+		}
+		n.Style.Height = 42
+		header.AddChild(n)
+	}
+	root.AddChild(header)
+	for _, g := range groups {
+		row := NewYogaNode()
+		row.Style.Width = 900
+		row.Style.Height = 130
+		row.Style.Display = "flex"
+		row.Style.FlexDirection = "row"
+		left := NewYogaNode()
+		left.Style.Width = 275
+		left.Style.Height = 130
+		left.Style.Display = "flex"
+		left.Style.AlignItems = "center"
+		left.Style.JustifyContent = "center"
+		left.Style.Gap = 16
+		for _, tag := range g.Tags {
+			t := NewYogaNode()
+			txt := tag
+			w := float32(MeasureText(txt, 18)) + 16
+			if w < 30 {
+				w = 30
+			}
+			t.Style.Width = w
+			t.Style.Height = 28
+			t.Text = txt
+			t.SetMeasureFunc(func(w float32, wm MeasureMode, h float32, hm MeasureMode) Size {
+				return Size{Width: w, Height: 28}
+			})
+			left.AddChild(t)
+		}
+		row.AddChild(left)
+		right := NewYogaNode()
+		right.Style.Width = 625
+		right.Style.Height = 130
+		right.Style.Display = "flex"
+		right.Style.FlexWrap = "wrap"
+		right.Style.Gap = 2
+		for _, op := range g.Operators {
+			o := NewYogaNode()
+			o.Style.Width = 100
+			o.Style.Height = 100
+			o.Text = op.Avatar
+			o.IconPath = op.Avatar
+			right.AddChild(o)
+		}
+		row.AddChild(right)
+	}
+	root.CalculateLayout(900, 356)
+	return root
+}
+
+func RenderRecruit(groups []RecruitGroup, scale float64) *Canvas {
+	if scale <= 0 {
+		scale = 1.5
+	}
+	if len(groups) == 0 {
+		groups = []RecruitGroup{
+			{Tags: []string{"先锋干员", "输出"}, Operators: []RecruitOperator{{Name: "阿米娅", Avatar: "https://media.prts.wiki/3/36/%E5%A4%B4%E5%83%8F_%E9%98%BF%E7%B1%B3%E5%A8%85.png?image_process=format,webp/quality,Q_90", Profession: "CASTER", Rarity: 4}}},
+			{Tags: []string{"近卫", "支援机械"}, Operators: []RecruitOperator{{Name: "能天使", Avatar: "https://media.prts.wiki/a/ad/%E5%A4%B4%E5%83%8F_%E8%83%BD%E5%A4%A9%E4%BD%BF.png?image_process=format,webp/quality,Q_90", Profession: "SNIPER", Rarity: 5}}},
+		}
+	}
+	W, H := int(900*scale+0.5), int(356*scale+0.5)
+	c := NewCanvas(W, H)
+	c.Clear(color.RGBA{0xff, 0xff, 0xff, 255})
+	root := BuildRecruit(groups)
+	ld, _ := NewLoader(findRepoRoot())
+	header := root.Children[0]
+	for i, cell := range header.Children {
+		cx := header.Layout.X + cell.Layout.X
+		cy := header.Layout.Y + cell.Layout.Y
+		lab := []string{"标签", "干员"}[i]
+		tw := MeasureText(lab, 18)
+		tx := cx + (cell.Layout.Width-float32(tw))/2
+		ty := cy + (42-18)/2
+		c.DrawText(lab, tx, ty, 18, color.RGBA{0, 0, 0, 255}, scale)
+		if i == 0 {
+			c.DrawRect(Rect{X: 0, Y: (cy + 41) * float32(scale), W: 900 * float32(scale), H: 1 * float32(scale)}, Paint{Color: color.RGBA{0xaa, 0xaa, 0xaa, 255}})
+		}
+	}
+	for _, row := range root.Children[1:] {
+		ry := row.Layout.Y
+		left := row.Children[0]
+		right := row.Children[1]
+		// row border
+		c.DrawRect(Rect{X: 0, Y: (ry + 129) * float32(scale), W: 900 * float32(scale), H: 1 * float32(scale)}, Paint{Color: color.RGBA{0xaa, 0xaa, 0xaa, 255}})
+		// tags: capsule rrect + shadow sigma 5, gray
+		for _, tagNode := range left.Children {
+			tx := row.Layout.X + left.Layout.X + tagNode.Layout.X
+			ty := row.Layout.Y + left.Layout.Y + tagNode.Layout.Y + (130-tagNode.Layout.Height)/2 - 10
+			rr := RRect{Rect: Rect{X: tx * float32(scale), Y: ty * float32(scale), W: tagNode.Layout.Width * float32(scale), H: tagNode.Layout.Height * float32(scale)}, Radius: 14 * float32(scale)}
+			c.DrawDropShadow(rr, color.RGBA{0x80, 0x80, 0x80, 255}, 0, 3*float32(scale), 5)
+			c.DrawRRect(rr, Paint{Color: color.RGBA{0x31, 0x31, 0x31, 255}})
+			tw := MeasureText(tagNode.Text, 18)
+			tx2 := tx + (tagNode.Layout.Width-float32(tw))/2
+			ty2 := ty + (28-18)/2
+			c.DrawText(tagNode.Text, tx2, ty2, 18, color.RGBA{255, 255, 255, 255}, scale)
+		}
+		// operators: 100x100 avatar + profession 30 + rarity 20
+		gIdx := -1
+		for i, ch := range root.Children[1:] {
+			if ch == row {
+				gIdx = i
+				break
+			}
+		}
+		var ops []RecruitOperator
+		if gIdx >= 0 && gIdx < len(groups) {
+			ops = groups[gIdx].Operators
+		}
+		for oi, opNode := range right.Children {
+			if oi >= len(ops) {
+				break
+			}
+			op := ops[oi]
+			ox := row.Layout.X + right.Layout.X + opNode.Layout.X
+			oy := row.Layout.Y + right.Layout.Y + opNode.Layout.Y
+			if img, err := ld.Load(op.Avatar); err == nil {
+				_ = c.DrawImageRect(img, Rect{X: ox * float32(scale), Y: oy * float32(scale), W: 100 * float32(scale), H: 100 * float32(scale)})
+			} else {
+				c.DrawRect(Rect{X: ox * float32(scale), Y: oy * float32(scale), W: 100 * float32(scale), H: 100 * float32(scale)}, Paint{Color: color.RGBA{0x55, 0x55, 0x55, 255}})
+			}
+			if pimg, err := ld.Load(fmt.Sprintf("assets/box/%s.png", op.Profession)); err == nil {
+				_ = c.DrawImageRect(pimg, Rect{X: ox * float32(scale), Y: oy * float32(scale), W: 30 * float32(scale), H: 30 * float32(scale)})
+			}
+			if rimg, err := ld.Load(fmt.Sprintf("assets/box/Rarity_%d.png", op.Rarity)); err == nil {
+				_ = c.DrawImageRect(rimg, Rect{X: (ox + 30) * float32(scale), Y: oy * float32(scale), W: 40 * float32(scale), H: 20 * float32(scale)})
+			}
+		}
+	}
+	return c
+}
+
+// Missing — 复用 box 72行结构, via yoga flex, MeasureText, LRU frozen26, sigma 5
+type MissingChar struct {
+	Name       string `json:"name"`
+	SkinId     string `json:"skinId"`
+	Rarity     int    `json:"rarity"`
+	Profession string `json:"profession"`
+}
+type MissingInfo struct {
+	Name  string        `json:"name"`
+	Chars []MissingChar `json:"chars"`
+}
+
+func BuildMissing(info MissingInfo) *YogaNode {
+	root := NewYogaNode()
+	root.Style.Width = 700
+	root.Style.Height = 357
+	root.Style.FlexDirection = "column"
+	root.Style.Display = "flex"
+	header := NewYogaNode()
+	header.Style.Width = 700
+	header.Style.Height = 76
+	header.Style.Display = "flex"
+	txt := "Dr " + info.Name + "(未获取)"
+	header.SetMeasureFunc(func(w float32, wm MeasureMode, h float32, hm MeasureMode) Size {
+		return Size{Width: float32(MeasureText(txt, 30)), Height: 30}
+	})
+	header.Text = txt
+	root.AddChild(header)
+	wrap := NewYogaNode()
+	wrap.Style.Width = 700
+	wrap.Style.Display = "flex"
+	wrap.Style.FlexWrap = "wrap"
+	for _, ch := range info.Chars {
+		n := NewYogaNode()
+		n.Style.Width = 70
+		n.Style.Height = 140
+		n.Text = ch.Name
+		n.IconPath = ch.SkinId
+		wrap.AddChild(n)
+	}
+	root.AddChild(wrap)
+	root.CalculateLayout(700, 357)
+	return root
+}
+
+func RenderMissing(info MissingInfo, scale float64) *Canvas {
+	if scale <= 0 {
+		scale = 1.5
+	}
+	if len(info.Chars) == 0 {
+		info = MissingInfo{Name: "Test", Chars: []MissingChar{
+			{Name: "阿米娅", SkinId: "https://media.prts.wiki/a/a0/%E5%8D%8A%E8%BA%AB%E5%83%8F_%E9%98%BF%E7%B1%B3%E5%A8%85_1.png?image_process=format,webp/quality,Q_90", Profession: "CASTER", Rarity: 5},
+			{Name: "能天使", SkinId: "https://media.prts.wiki/a/ad/%E5%A4%B4%E5%83%8F_%E8%83%BD%E5%A4%A9%E4%BD%BF.png?image_process=format,webp/quality,Q_90", Profession: "SNIPER", Rarity: 5},
+		}}
+	}
+	W, H := int(700*scale+0.5), int(357*scale+0.5)
+	c := NewCanvas(W, H)
+	c.Clear(color.RGBA{0x2e, 0x30, 0x31, 255})
+	root := BuildMissing(info)
+	ld, _ := NewLoader(findRepoRoot())
+	// header with label bg
+	if label, err := ld.Load("assets/help/label.png"); err == nil {
+		_ = c.DrawImageRect(label, Rect{X: 0, Y: 0, W: 700 * float32(scale), H: 76 * float32(scale)})
+	}
+	hdr := root.Children[0]
+	title := "Dr " + info.Name + "(未获取)"
+	c.DrawText(title, hdr.Layout.X+25, hdr.Layout.Y+(76-30)/2, 30, color.RGBA{255, 255, 255, 255}, scale)
+	_ = MeasureText(title, 30)
+	wrap := root.Children[1]
+	for idx, node := range wrap.Children {
+		if idx >= len(info.Chars) {
+			break
+		}
+		ch := info.Chars[idx]
+		nx := wrap.Layout.X + node.Layout.X
+		ny := wrap.Layout.Y + node.Layout.Y
+		// card shadow like box: sigma 5
+		rr := RRect{Rect: Rect{X: nx * float32(scale), Y: ny * float32(scale), W: 70 * float32(scale), H: 140 * float32(scale)}, Radius: 0}
+		c.DrawDropShadow(rr, color.RGBA{0, 0, 0, 100}, 0, 3*float32(scale), 5)
+		c.DrawRect(Rect{X: nx * float32(scale), Y: ny * float32(scale), W: 70 * float32(scale), H: 140 * float32(scale)}, Paint{Color: color.RGBA{0x2e, 0x30, 0x31, 255}})
+		if img, err := ld.Load(ch.SkinId); err == nil {
+			_ = c.DrawImageRect(img, Rect{X: nx * float32(scale), Y: ny * float32(scale), W: 70 * float32(scale), H: 140 * float32(scale)})
+		} else {
+			c.DrawRect(Rect{X: nx * float32(scale), Y: ny * float32(scale), W: 70 * float32(scale), H: 140 * float32(scale)}, Paint{Color: color.RGBA{0x55, 0x55, 0x55, 255}})
+		}
+		if pimg, err := ld.Load(fmt.Sprintf("assets/box/%s.png", ch.Profession)); err == nil {
+			_ = c.DrawImageRect(pimg, Rect{X: (nx + 3) * float32(scale), Y: (ny + 5) * float32(scale), W: 15 * float32(scale), H: 15 * float32(scale)})
+		}
+		if rimg, err := ld.Load(fmt.Sprintf("assets/box/Rarity_%d.png", ch.Rarity)); err == nil {
+			_ = c.DrawImageRect(rimg, Rect{X: (nx + 20) * float32(scale), Y: (ny + 5) * float32(scale), W: 40 * float32(scale), H: 15 * float32(scale)})
+		}
+		// name bar at bottom -3 height 14 bg rgba0,0,0,.7
+		barY := ny + 140 - 14
+		c.DrawRect(Rect{X: nx * float32(scale), Y: barY * float32(scale), W: 70 * float32(scale), H: 14 * float32(scale)}, Paint{Color: color.RGBA{0, 0, 0, 179}})
+		tw := MeasureText(ch.Name, 10)
+		tx := nx + (70-float32(tw))/2
+		ty := barY + (14-10)/2
+		c.DrawText(ch.Name, tx, ty, 10, color.RGBA{255, 255, 255, 255}, scale)
+	}
+	return c
+}
+
