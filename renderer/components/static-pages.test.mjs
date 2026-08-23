@@ -34,3 +34,24 @@ for (const [name, render, props] of pages) {
     assert.ok(vnode.props.children.length > 0);
   });
 }
+
+test('box-detail shares five fixed tracks between header and body', async () => {
+  const details = [{ ...char, id: 'char_002_amiya#1', skills: [{ id: 'skcom_magic_rage[3]', level: 10 }], equips: [{ id: 'original', level: 1 }] }];
+  const vnode = await boxDetail(details, { image });
+  const [header, row] = vnode.props.children;
+  assert.deepEqual(header.props.children.map((cell) => cell.props.style.width), [110, 62, 58, 150, 100]);
+  assert.deepEqual(row.props.children.map((cell) => cell.props.style.width), [110, 62, 58, 150, 100]);
+});
+
+test('box-summary centers metric cells without changing locked geometry', async () => {
+  const [, render, props] = pages.find(([name]) => name === 'box-summary');
+  const vnode = await render(props, { image });
+  const content = vnode.props.children[1];
+  const metricCell = content.props.children[1].props.children[0];
+  const avatarGrid = content.props.children.at(-1).props.children[1];
+  assert.equal(content.props.style.padding, '0 24px');
+  assert.equal(content.props.children[1].props.style.height, 38);
+  assert.equal(metricCell.props.style.width, 190);
+  assert.equal(metricCell.props.style.alignItems, 'center');
+  assert.equal(avatarGrid.props.style.gap, 5);
+});
