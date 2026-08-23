@@ -80,11 +80,19 @@ test('uses fallback and retains structured diagnostics', async () => {
   const load = loader({ onDiagnostic: (entry) => diagnostics.push(entry) });
   const value = await load('assets/does-not-exist.png', fixture);
   assert.match(value, /^data:image\/png;base64,/);
-  assert.equal(diagnostics.length, 1);
-  assert.equal(diagnostics[0].source, 'assets/does-not-exist.png');
-  assert.equal(diagnostics[0].code, 'ASSET_NOT_FOUND');
-  assert.equal(diagnostics[0].usedFallback, true);
-  assert.deepEqual(load.diagnostics(), diagnostics);
+  assert.deepEqual(diagnostics.map((entry) => entry.kind), ['asset_materialized', 'asset_fallback']);
+  assert.equal(diagnostics[0].source, fixture);
+  assert.match(diagnostics[0].materializedSha256, /^[a-f0-9]{64}$/);
+  const fallbackDiagnostics = diagnostics.filter((entry) => entry.kind === 'asset_fallback');
+  assert.equal(fallbackDiagnostics.length, 1);
+  assert.equal(fallbackDiagnostics[0].source, 'assets/does-not-exist.png');
+  assert.equal(fallbackDiagnostics[0].code, 'ASSET_NOT_FOUND');
+  assert.equal(fallbackDiagnostics[0].usedFallback, true);
+  assert.equal(fallbackDiagnostics[0].provenance, 'repository-local');
+  assert.match(fallbackDiagnostics[0].materializedSha256, /^[a-f0-9]{64}$/);
+  assert.equal(load.diagnostics().length, 1);
+  assert.equal(load.stats().failures, 1);
+  assert.equal(load.stats().fallbacks, 1);
 });
 
 test('reports fallback failure without leaking a VNode or raw response', async () => {

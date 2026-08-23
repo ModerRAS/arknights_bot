@@ -28,6 +28,7 @@ import (
 )
 
 const (
+	frozenAssetManifest     = "src/utils/media/testdata/visual/baseline/resource-manifest.json"
 	maxRenderWidth           = 4096
 	maxRenderHeight          = 4096
 	maxRenderPixels          = 16 * 1024 * 1024
@@ -368,6 +369,7 @@ func startRendererProcess() (*rendererProcess, error) {
 	}
 	cmd := exec.Command(rendererCommandArgs(filepath.Join(rendererDir, "runner.mjs"))[0], rendererCommandArgs(filepath.Join(rendererDir, "runner.mjs"))[1:]...)
 	cmd.Dir = root
+	cmd.Env = rendererEnvironment(root)
 	stdin, err := cmd.StdinPipe()
 	if err != nil {
 		return nil, err
@@ -388,6 +390,21 @@ func startRendererProcess() (*rendererProcess, error) {
 
 func rendererCommandArgs(entry string) []string {
 	return []string{"node", entry, "--ndjson"}
+}
+
+func rendererEnvironment(root string) []string {
+	manifest := os.Getenv("SATORI_ASSET_MANIFEST")
+	if manifest == "" {
+		manifest = filepath.Join(root, frozenAssetManifest)
+	}
+	env := make([]string, 0, len(os.Environ())+1)
+	for _, value := range os.Environ() {
+		if strings.HasPrefix(value, "SATORI_ASSET_MANIFEST=") {
+			continue
+		}
+		env = append(env, value)
+	}
+	return append(env, "SATORI_ASSET_MANIFEST="+manifest)
 }
 
 func decodeOneJSON(data []byte, target any) error {

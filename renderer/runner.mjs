@@ -25,7 +25,7 @@ const COMPONENTS = new Map([
 const modules = new Map();
 const assets = createAssetLoader({
   repoRoot: REPO_ROOT,
-  onDiagnostic: (entry) => process.stderr.write(`[asset_fallback] ${JSON.stringify(entry)}\n`),
+  onDiagnostic: (entry) => process.stderr.write(`[asset] ${JSON.stringify(entry)}\n`),
 });
 let fontPromise;
 

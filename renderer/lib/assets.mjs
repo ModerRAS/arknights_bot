@@ -33,6 +33,18 @@ const MIME_BY_EXTENSION = Object.freeze({
 
 const ALLOWED_MIME = /^(?:image\/(?:avif|gif|jpeg|png|svg\+xml|webp)|font\/(?:otf|ttf|woff2?))$/;
 
+// Fixture inputs are bounded aliases into the frozen cache, never network URLs.
+const FROZEN_FIXTURE_CACHE_ALIASES = Object.freeze({
+  'https://fixture-cache.invalid/card/secretary-painting.png': 'card-secretary-1024.png',
+  'https://fixture-cache.invalid/card/player-avatar.png': 'card-player-portrait-180x360.png',
+  'https://fixture-cache.invalid/operator/amiya-painting.png': 'operator-painting-1024.png',
+  'https://fixture-cache.invalid/operator/building-skill-icon.png': 'operator-building-36.png',
+  'https://fixture-cache.invalid/operator/skill-icon.png': 'operator-skill-128.png',
+  'https://fixture-cache.invalid/enemy/originium-slug.png': 'enemy-originium-slug-158.png',
+  'https://fixture-cache.invalid/recruit-amiya.png': 'amiya-avatar.webp',
+  'https://fixture-cache.invalid/depot-lmd.png': 'depot-lmd.png',
+});
+
 export class AssetError extends Error {
   constructor(code, message, { retryable = false, manifestFatal = false, cause } = {}) {
     super(message, { cause });
@@ -128,8 +140,17 @@ async function normalizeWebp(bytes, limits) {
 
 async function materialize(bytes, mime, limits) {
   const actualMime = validateImageBytes(bytes, mime);
-  if (actualMime === 'image/webp') return dataUri((await normalizeWebp(bytes, limits)).bytes, 'image/png');
-  return dataUri(bytes, actualMime);
+  let output = bytes;
+  let outputMime = actualMime;
+  if (actualMime === 'image/webp') {
+    const normalized = await normalizeWebp(bytes, limits);
+    output = normalized.bytes;
+    outputMime = normalized.mime;
+  }
+  return {
+    value: dataUri(output, outputMime),
+    sha256: createHash('sha256').update(output).digest('hex'),
+  };
 }
 
 function parseDataUri(source, limits) {
@@ -290,6 +311,7 @@ async function loadManifest(manifestSource, root) {
     throw error('ASSET_MANIFEST_INVALID', 'asset manifest must be frozen and contain 26 resources', { manifestFatal: true });
   }
   const aliases = new Map();
+  const cacheEntries = new Map();
   const cacheRoot = path.dirname(manifestPath);
   for (const entry of manifest.resources) {
     if (!entry || typeof entry.sourceURL !== 'string' || typeof entry.requestAlias !== 'string' || typeof entry.cachePath !== 'string' || typeof entry.sha256 !== 'string' || !Number.isSafeInteger(entry.bytes) || entry.bytes < 0) {
@@ -329,14 +351,28 @@ async function loadManifest(manifestSource, root) {
     } catch (cause) {
       throw error('ASSET_MANIFEST_MAGIC', `manifest cache MIME/magic mismatch: ${entry.cachePath}`, { manifestFatal: true, cause });
     }
-    const resolved = { bytes, mime };
+    const resolved = {
+      bytes,
+      mime,
+      cachePath,
+      sha256: entry.sha256.toLowerCase(),
+      byteLength: entry.bytes,
+      canonicalSource: entry.requestAlias,
+      provenance: 'frozen-manifest',
+    };
+    cacheEntries.set(path.basename(cachePath), resolved);
     for (const alias of [entry.sourceURL, entry.requestAlias]) {
       const prior = aliases.get(alias);
       if (prior && (prior.sha256 !== entry.sha256.toLowerCase() || prior.byteLength !== entry.bytes || prior.mime !== mime)) {
         throw error('ASSET_MANIFEST_INVALID', `manifest alias maps to conflicting content: ${alias}`, { manifestFatal: true });
       }
-      if (!prior) aliases.set(alias, { ...resolved, cachePath, sha256: entry.sha256.toLowerCase(), byteLength: entry.bytes });
+      if (!prior) aliases.set(alias, resolved);
     }
+  }
+  for (const [alias, cacheName] of Object.entries(FROZEN_FIXTURE_CACHE_ALIASES)) {
+    const resolved = cacheEntries.get(cacheName);
+    if (!resolved) throw error('ASSET_MANIFEST_INVALID', `fixture alias target is absent: ${cacheName}`, { manifestFatal: true });
+    aliases.set(alias, { ...resolved, provenance: 'frozen-manifest-fixture-alias' });
   }
   return aliases;
 }
@@ -359,6 +395,9 @@ export function createAssetLoader(options = {}) {
   const cache = new Map();
   const pending = new Map();
   const diagnostics = [];
+  const materializations = [];
+  let failures = 0;
+  let fallbacks = 0;
 
   const prune = () => {
     if (limits.maxCacheEntries === 0) return;
@@ -385,29 +424,41 @@ export function createAssetLoader(options = {}) {
       if (existing) return existing;
       const operation = (async () => {
         const manifest = await manifestPromise;
-        let value;
+        let result;
         const mapped = manifest?.get(source);
         if (mapped) {
-          value = await materialize(mapped.bytes, mapped.mime, limits);
-        } else if (manifest && source.startsWith('https://')) {
+          const materialized = await materialize(mapped.bytes, mapped.mime, limits);
+          result = { ...materialized, provenance: mapped.provenance, canonicalSource: mapped.canonicalSource, cachePath: mapped.cachePath, manifestSource };
+        } else if (manifest && /^[a-z][a-z\\d+.-]*:\/\//i.test(source)) {
           throw error('ASSET_MANIFEST_MISSING', 'remote asset is absent from the frozen manifest', { manifestFatal: true });
         } else if (source.startsWith('data:')) {
           const parsed = parseDataUri(source, limits);
-          value = await materialize(parsed.bytes, parsed.mime, limits);
+          result = { ...(await materialize(parsed.bytes, parsed.mime, limits)), provenance: 'data-uri', canonicalSource: source, manifestSource };
         } else if (source.startsWith('https://')) {
-          value = await readRemote(source, limits, fetchImpl);
-          value = await materialize(value.bytes, value.mime, limits);
+          const remote = await readRemote(source, limits, fetchImpl);
+          result = { ...(await materialize(remote.bytes, remote.mime, limits)), provenance: 'remote-network', canonicalSource: source, manifestSource };
         } else if (/^[a-z][a-z\\d+.-]*:/i.test(source) && !source.startsWith('file:')) {
           throw error('ASSET_REMOTE_PROTOCOL', 'only HTTPS remote assets are allowed');
         } else {
-          value = await readLocal(source, root, limits);
-          value = await materialize(value.bytes, value.mime, limits);
+          const local = await readLocal(source, root, limits);
+          result = { ...(await materialize(local.bytes, local.mime, limits)), provenance: 'repository-local', canonicalSource: source, manifestSource };
         }
+        const entry = {
+          kind: 'asset_materialized',
+          source,
+          canonicalSource: result.canonicalSource,
+          materializedSha256: result.sha256,
+          provenance: result.provenance,
+          manifestSource: result.manifestSource,
+          cachePath: result.cachePath,
+        };
+        materializations.push(entry);
+        options.onDiagnostic?.(entry);
         if (limits.maxCacheEntries > 0) {
           prune();
-          cache.set(source, { value, expiresAt: Date.now() + limits.cacheTtlMs });
+          cache.set(source, { value: result, expiresAt: Date.now() + limits.cacheTtlMs });
         }
-        return value;
+        return result;
       })();
       pending.set(source, operation);
       try {
@@ -418,20 +469,29 @@ export function createAssetLoader(options = {}) {
     };
 
     try {
-      return await resolve(primary ?? backup);
+      const result = await resolve(primary ?? backup);
+      return result.value;
     } catch (cause) {
+      failures += 1;
       if (!backup || backup === primary || cause.manifestFatal) throw cause;
       try {
-        const value = await resolve(backup);
+        const result = await resolve(backup);
+        fallbacks += 1;
         recordDiagnostic(diagnostics, options.onDiagnostic, {
+          kind: 'asset_fallback',
           source: primary,
           fallback: backup,
+          canonicalSource: result.canonicalSource,
+          materializedSha256: result.sha256,
+          provenance: result.provenance,
+          manifestSource: result.manifestSource,
+          cachePath: result.cachePath,
           code: cause.code ?? 'ASSET_FAILED',
           message: cause.message,
           retryable: cause.retryable === true,
           usedFallback: true,
         });
-        return value;
+        return result.value;
       } catch (fallbackCause) {
         throw error('ASSET_FALLBACK_FAILED', `asset and fallback failed: ${primary}`, {
           retryable: cause.retryable === true || fallbackCause.retryable === true,
@@ -444,7 +504,8 @@ export function createAssetLoader(options = {}) {
   load.clearCache = () => cache.clear();
   load.ready = () => manifestPromise;
   load.diagnostics = () => diagnostics.slice();
-  load.stats = () => ({ cacheEntries: cache.size, pending: pending.size, diagnostics: diagnostics.length });
+  load.materializations = () => materializations.slice();
+  load.stats = () => ({ cacheEntries: cache.size, pending: pending.size, diagnostics: diagnostics.length, materialized: materializations.length, failures, fallbacks, manifestSource });
   return load;
 }
 

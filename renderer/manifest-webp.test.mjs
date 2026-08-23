@@ -5,6 +5,8 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { test } from 'node:test';
 import { createAssetLoader } from './lib/assets.mjs';
+import renderCard from './components/card.mjs';
+import renderOperator from './components/operator.mjs';
 
 const repoRoot = path.resolve(fileURLToPath(new URL('..', import.meta.url)));
 const manifestPath = path.join(repoRoot, 'src/utils/media/testdata/visual/baseline/resource-manifest.json');
@@ -36,6 +38,51 @@ test('frozen manifest has 26 exact cache entries and aliases hit without fetch',
   }
   assert.equal(fetches, 0);
   assert.equal(load.stats().cacheEntries, new Set(manifest.resources.map((entry) => entry.requestAlias)).size);
+});
+
+test('Card and Operator fixture URLs use bounded frozen aliases without fallback', async () => {
+  const load = createAssetLoader({
+    repoRoot,
+    manifestPath,
+    fetch: async () => { throw new Error('network must not be used for Card or Operator'); },
+  });
+  const card = await renderCard({
+    secretary: 'https://fixture-cache.invalid/card/secretary-painting.png',
+    avatar: 'https://fixture-cache.invalid/card/player-avatar.png',
+    secretaryName: '阿米娅',
+    secretaryEnName: 'Amiya',
+    charCnt: 1,
+    level: 1,
+    name: 'Doctor',
+    uid: '1',
+    serverName: 'CN',
+    nationList: [],
+    assistChars: [{ skinId: 'char_002_amiya#1', level: 90 }],
+  }, { image: load });
+  const operator = await renderOperator({
+    painting: 'https://fixture-cache.invalid/operator/amiya-painting.png',
+    buildingSkills: [{ icon: 'https://fixture-cache.invalid/operator/building-skill-icon.png', name: 'building', desc: 'desc' }],
+    skills: [{ icon: 'https://fixture-cache.invalid/operator/skill-icon.png', name: 'skill', desc: 'desc', spType: [], spInit: '0', spCost: '1' }],
+    op: { name: '阿米娅', profession: 'CASTER', rarity: 5 },
+  }, { image: load });
+  assert.equal(card.type, 'div');
+  assert.equal(operator.type, 'div');
+  assert.equal(load.stats().failures, 0);
+  assert.equal(load.stats().fallbacks, 0);
+  for (const source of [
+    'https://fixture-cache.invalid/card/secretary-painting.png',
+    'https://fixture-cache.invalid/card/player-avatar.png',
+    'https://fixture-cache.invalid/operator/amiya-painting.png',
+    'https://fixture-cache.invalid/operator/building-skill-icon.png',
+    'https://fixture-cache.invalid/operator/skill-icon.png',
+  ]) {
+    const materialized = load.materializations().find((entry) => entry.source === source);
+    assert.ok(materialized, `missing materialization for ${source}`);
+    assert.equal(materialized.provenance, 'frozen-manifest-fixture-alias');
+    assert.match(materialized.canonicalSource, /^https:\/\//);
+    assert.match(materialized.materializedSha256, /^[a-f0-9]{64}$/);
+    assert.equal(materialized.manifestSource, manifestPath);
+  }
 });
 
 test('frozen WebP aliases normalize to lossless PNG with expected dimensions and cache', async () => {
@@ -81,8 +128,13 @@ async function makeManifestFixture() {
   const cache = path.join(dir, 'cache');
   await mkdir(cache);
   const entries = [];
+  const cacheNames = [
+    'card-secretary-1024.png', 'card-player-portrait-180x360.png', 'operator-painting-1024.png',
+    'operator-building-36.png', 'operator-skill-128.png', 'enemy-originium-slug-158.png',
+    'amiya-avatar.webp', 'depot-lmd.png',
+  ];
   for (let index = 0; index < 26; index += 1) {
-    const name = `fixture-${index}.png`;
+    const name = cacheNames[index] ?? `fixture-${index}.png`;
     const bytes = pngBytes;
     await writeFile(path.join(cache, name), bytes);
     entries.push({
@@ -137,6 +189,7 @@ test('manifest hash/path/missing aliases fail closed without network or fallback
 
     const missingLoader = createAssetLoader({ repoRoot, manifestPath: fixture.file, fetch: async () => { fetches += 1; } });
     await assert.rejects(missingLoader('https://fixture.test/not-listed.png', pngUri), (cause) => cause.code === 'ASSET_MANIFEST_MISSING' && cause.manifestFatal);
+    await assert.rejects(missingLoader('http://fixture.test/not-listed.png', pngUri), (cause) => cause.code === 'ASSET_MANIFEST_MISSING' && cause.manifestFatal);
     assert.equal(fetches, 0);
   } finally {
     await rm(fixture.dir, { recursive: true, force: true });
