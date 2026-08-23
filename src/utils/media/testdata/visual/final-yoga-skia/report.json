@@ -114,10 +114,10 @@
       "oldFormat": "jpeg",
       "newFormat": "png",
       "oldSha256": "047ad057ac193e97aed8ff3442ad29f8505b8cbdbf575837456e1fbd82e6e457",
-      "newSha256": "ad92c7355c97157694e01ef0abe593cfb3d42df8a7e7b14387f8d66b21f9ff55",
-      "similarity": 0.9647058823529412,
-      "rawSimilarity": 0.9647058823529412,
-      "alignedSimilarity": 0.9647058823529412,
+      "newSha256": "e16eb70346c5a948292584fa394659a6b3aba84c1bab85172e9f3d4971059f93",
+      "similarity": 0.9911764705882353,
+      "rawSimilarity": 0.9911764705882353,
+      "alignedSimilarity": 0.9911764705882353,
       "globalOffset": {
         "dx": 0,
         "dy": 0
@@ -135,7 +135,7 @@
         "width": 722,
         "height": 279
       },
-      "pass": false,
+      "pass": true,
       "oldPath": "images/box-detail.jpg",
       "newPath": "new/box-detail.png",
       "diffPath": "compare/box-detail.diff.png",
@@ -401,10 +401,10 @@
       "oldFormat": "jpeg",
       "newFormat": "png",
       "oldSha256": "879933afa3b94a80c08d37e0d8e053729639df59f01e47658944e48699434cf8",
-      "newSha256": "6cde6237941f702d9a61c161c152858e7c3abd9abfb64daf2d79b995fd340693",
-      "similarity": 0.9647058823529412,
-      "rawSimilarity": 0.9647058823529412,
-      "alignedSimilarity": 0.9647058823529412,
+      "newSha256": "b827845a07837ff16980c8d001b87b6461a79e81a3d19dc5c4064bb0b3844556",
+      "similarity": 0.9911764705882353,
+      "rawSimilarity": 0.9911764705882353,
+      "alignedSimilarity": 0.9911764705882353,
       "globalOffset": {
         "dx": 0,
         "dy": 0
@@ -422,7 +422,7 @@
         "width": 1049,
         "height": 576
       },
-      "pass": false,
+      "pass": true,
       "oldPath": "images/headhunt.jpg",
       "newPath": "new/headhunt.png",
       "diffPath": "compare/headhunt.diff.png",
