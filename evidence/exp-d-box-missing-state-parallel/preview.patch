@@ -1,0 +1,508 @@
+warning: in the working copy of 'renderer/assets.test.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'renderer/components/box-detail.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'renderer/components/box-summary.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'renderer/components/box.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'renderer/components/missing.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'renderer/components/state.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'renderer/components/static-pages.test.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'renderer/lib/assets.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'renderer/manifest-webp.test.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'renderer/runner.mjs', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/utils/media/runner.go', LF will be replaced by CRLF the next time Git touches it
+diff --git a/renderer/assets.test.mjs b/renderer/assets.test.mjs
+index 0e5f861..a39d6a9 100644
+--- a/renderer/assets.test.mjs
++++ b/renderer/assets.test.mjs
+@@ -80,11 +80,19 @@ test('uses fallback and retains structured diagnostics', async () => {
+   const load = loader({ onDiagnostic: (entry) => diagnostics.push(entry) });
+   const value = await load('assets/does-not-exist.png', fixture);
+   assert.match(value, /^data:image\/png;base64,/);
+-  assert.equal(diagnostics.length, 1);
+-  assert.equal(diagnostics[0].source, 'assets/does-not-exist.png');
+-  assert.equal(diagnostics[0].code, 'ASSET_NOT_FOUND');
+-  assert.equal(diagnostics[0].usedFallback, true);
+-  assert.deepEqual(load.diagnostics(), diagnostics);
++  assert.deepEqual(diagnostics.map((entry) => entry.kind), ['asset_materialized', 'asset_fallback']);
++  assert.equal(diagnostics[0].source, fixture);
++  assert.match(diagnostics[0].materializedSha256, /^[a-f0-9]{64}$/);
++  const fallbackDiagnostics = diagnostics.filter((entry) => entry.kind === 'asset_fallback');
++  assert.equal(fallbackDiagnostics.length, 1);
++  assert.equal(fallbackDiagnostics[0].source, 'assets/does-not-exist.png');
++  assert.equal(fallbackDiagnostics[0].code, 'ASSET_NOT_FOUND');
++  assert.equal(fallbackDiagnostics[0].usedFallback, true);
++  assert.equal(fallbackDiagnostics[0].provenance, 'repository-local');
++  assert.match(fallbackDiagnostics[0].materializedSha256, /^[a-f0-9]{64}$/);
++  assert.equal(load.diagnostics().length, 1);
++  assert.equal(load.stats().failures, 1);
++  assert.equal(load.stats().fallbacks, 1);
+ });
+ 
+ test('reports fallback failure without leaking a VNode or raw response', async () => {
+diff --git a/renderer/components/box-detail.mjs b/renderer/components/box-detail.mjs
+index 54a8459..3cf7d67 100644
+--- a/renderer/components/box-detail.mjs
++++ b/renderer/components/box-detail.mjs
+@@ -1,9 +1,10 @@
+ import { h } from '../lib/h.mjs';
+ 
+ const fallback = 'assets/common/amiya.png';
++const tracks = [110, 62, 58, 150, 100];
+ 
+-function iconColumn(items) {
+-  return h('div', { style: { display: 'flex' } }, items);
++function iconColumn(width, items) {
++  return h('div', { style: { width, display: 'flex' } }, items);
+ }
+ 
+ export default async function render(props, { image }) {
+@@ -15,14 +16,14 @@ export default async function render(props, { image }) {
+     skills: await Promise.all((item.skills ?? []).map(async (skill) => ({ ...skill, src: await image(`https://web.hycdn.cn/arknights/game/assets/char_skill/${encodeURIComponent(skill.id)}.png`, fallback) }))),
+     equips: await Promise.all((item.equips ?? []).map(async (equip) => ({ ...equip, src: await image(`https://web.hycdn.cn/arknights/game/assets/uniequip/type/icon/${encodeURIComponent(equip.id)}.png`, fallback) }))),
+   })));
+-  const header = h('div', { style: { height: 35, display: 'flex', alignItems: 'center', justifyContent: 'space-around', fontWeight: 700 } }, '干员', '等级', '潜能', '技能', '模组');
++  const header = h('div', { style: { height: 35, display: 'flex', alignItems: 'center', fontWeight: 700 } }, ['干员', '等级', '潜能', '技能', '模组'].map((label, index) => h('div', { style: { width: tracks[index], display: 'flex', justifyContent: 'center' } }, label)));
+   const body = rows.map(({ item, avatar, evolve, potential, skills, equips }) => {
+-    const operator = h('div', { style: { width: 110, display: 'flex', alignItems: 'center' } }, h('img', { src: avatar, width: 50, height: 50 }), h('span', { style: { marginLeft: 5 } }, item.name));
+-    const level = h('div', { style: { width: 62, display: 'flex', flexDirection: 'column', alignItems: 'center' } }, h('img', { src: evolve, width: 50 }), `LV${item.level}`);
+-    const potentialIcon = h('div', { style: { width: 58, display: 'flex', justifyContent: 'center' } }, h('img', { src: potential, width: 50 }));
+-    const skillIcons = iconColumn(skills.map((skill) => h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center' } }, h('img', { src: skill.src, width: 50, height: 50 }), `LV${skill.level}`)));
+-    const equipIcons = iconColumn(equips.map((equip) => h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center' } }, h('img', { src: equip.src, width: 50 }), `LV${equip.level}`)));
+-    return h('div', { style: { height: 75, borderTop: '1px solid #1f1f1f', display: 'flex', alignItems: 'center', justifyContent: 'space-around' } }, operator, level, potentialIcon, skillIcons, equipIcons);
++    const operator = h('div', { style: { width: tracks[0], display: 'flex', alignItems: 'center' } }, h('img', { src: avatar, width: 50, height: 50 }), h('span', { style: { marginLeft: 5 } }, item.name));
++    const level = h('div', { style: { width: tracks[1], display: 'flex', flexDirection: 'column', alignItems: 'center' } }, h('img', { src: evolve, width: 50 }), `LV${item.level}`);
++    const potentialIcon = h('div', { style: { width: tracks[2], display: 'flex', justifyContent: 'center' } }, h('img', { src: potential, width: 50 }));
++    const skillIcons = iconColumn(tracks[3], skills.map((skill) => h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center' } }, h('img', { src: skill.src, width: 50, height: 50 }), `LV${skill.level}`)));
++    const equipIcons = iconColumn(tracks[4], equips.map((equip) => h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center' } }, h('img', { src: equip.src, width: 50 }), `LV${equip.level}`)));
++    return h('div', { style: { height: 75, borderTop: '1px solid #1f1f1f', display: 'flex', alignItems: 'center' } }, operator, level, potentialIcon, skillIcons, equipIcons);
+   });
+   return h('div', { style: { width: 481, height: 186, display: 'flex', flexDirection: 'column', backgroundColor: '#2e3031', color: '#fff', fontFamily: 'NotoSansHans' } }, header, body);
+ }
+diff --git a/renderer/components/box-summary.mjs b/renderer/components/box-summary.mjs
+index b0cf906..15185d0 100644
+--- a/renderer/components/box-summary.mjs
++++ b/renderer/components/box-summary.mjs
+@@ -1,4 +1,4 @@
+ import { h } from '../lib/h.mjs';
+ const fallback='assets/common/amiya.png';
+ const metrics=[['招募干员数量','allCharCnt','star6CharCnt','star5CharCnt','star4CharCnt'],['精英阶段2干员','allEvolvePhase2Cnt','star6EvolvePhase2Cnt','star5EvolvePhase2Cnt','star4EvolvePhase2Cnt'],['专精三技能数量','allSkill10Cnt','star6Skill10Cnt','star5Skill10Cnt','star4Skill10Cnt'],['专精二技能数量','allSkill9Cnt','star6Skill9Cnt','star5Skill9Cnt','star4Skill9Cnt'],['专精一技能数量','allSkill8Cnt','star6Skill8Cnt','star5Skill8Cnt','star4Skill8Cnt'],['三级模组数量','allEquipStage3Cnt','star6EquipStage3Cnt','star5EquipStage3Cnt','star4EquipStage3Cnt'],['二级模组数量','allEquipStage2Cnt','star6EquipStage2Cnt','star5EquipStage2Cnt','star4EquipStage2Cnt'],['一级模组数量','allEquipStage1Cnt','star6EquipStage1Cnt','star5EquipStage1Cnt','star4EquipStage1Cnt']];
+-export default async function render(props,{image}) { const [label,avatars]=await Promise.all([image('assets/help/label.png',fallback),Promise.all((props.missingChars??[]).map(item=>image(item.skinId,fallback)))]); const heads=['全部干员','六星干员','五星干员','四星干员']; return h('div',{style:{width:900,height:482,display:'flex',flexDirection:'column',backgroundColor:'#2e3031',color:'#fff',fontFamily:'NotoSansHans'}},h('div',{style:{height:80,display:'flex',alignItems:'center',paddingLeft:25,fontSize:30,backgroundImage:`url(${label})`,backgroundSize:'100% 60px',backgroundRepeat:'no-repeat'}},`Dr ${props.name}`),h('div',{style:{display:'flex',flexDirection:'column',padding:'0 24px'}},h('div',{style:{height:34,display:'flex',justifyContent:'space-between',fontSize:20,fontWeight:700}},heads.map(x=>h('div',{style:{width:190,display:'flex',justifyContent:'center',textAlign:'center'}},x))),metrics.map(([title,...keys])=>h('div',{style:{height:38,display:'flex',justifyContent:'space-between'}},keys.map(key=>h('div',{style:{width:190,display:'flex',justifyContent:'space-between',borderBottom:'1px solid #fff',padding:'0 12px',fontSize:16}},h('span',null,title),h('span',null,String(props[key]??'')))))),h('div',{style:{display:'flex',flexDirection:'column',alignItems:'center',marginTop:6,fontSize:20,fontWeight:700}},'未招募干员',h('div',{style:{display:'flex',flexWrap:'wrap',width:850,gap:5,marginTop:6}},avatars.map(src=>h('img',{src,width:40,height:40})))))); }
++export default async function render(props,{image}) { const [label,avatars]=await Promise.all([image('assets/help/label.png',fallback),Promise.all((props.missingChars??[]).map(item=>image(item.skinId,fallback)))]); const heads=['全部干员','六星干员','五星干员','四星干员']; return h('div',{style:{width:900,height:482,display:'flex',flexDirection:'column',backgroundColor:'#2e3031',color:'#fff',fontFamily:'NotoSansHans'}},h('div',{style:{height:80,display:'flex',alignItems:'center',paddingLeft:25,fontSize:30,backgroundImage:`url(${label})`,backgroundSize:'100% 60px',backgroundRepeat:'no-repeat'}},`Dr ${props.name}`),h('div',{style:{display:'flex',flexDirection:'column',padding:'0 24px'}},h('div',{style:{height:34,display:'flex',justifyContent:'space-between',fontSize:20,fontWeight:700}},heads.map(x=>h('div',{style:{width:190,display:'flex',justifyContent:'center',textAlign:'center'}},x))),metrics.map(([title,...keys])=>h('div',{style:{height:38,display:'flex',justifyContent:'space-between'}},keys.map(key=>h('div',{style:{width:190,display:'flex',alignItems:'center',justifyContent:'space-between',borderBottom:'1px solid #fff',padding:'0 12px',fontSize:16}},h('span',null,title),h('span',null,String(props[key]??'')))))),h('div',{style:{display:'flex',flexDirection:'column',alignItems:'center',marginTop:6,fontSize:20,fontWeight:700}},'未招募干员',h('div',{style:{display:'flex',flexWrap:'wrap',width:850,gap:5,marginTop:6}},avatars.map(src=>h('img',{src,width:40,height:40})))))); }
+diff --git a/renderer/components/box.mjs b/renderer/components/box.mjs
+index 6948d46..59af871 100644
+--- a/renderer/components/box.mjs
++++ b/renderer/components/box.mjs
+@@ -3,5 +3,5 @@ const fallback = 'assets/common/amiya.png';
+ export default async function render(props, { image }) {
+   const label = await image('assets/help/label.png', fallback);
+   const cards = await Promise.all((props.chars ?? []).map(async (item) => ({ item, portrait: await image(`https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/${encodeURIComponent(item.skinId)}.png`, fallback), profession: await image(`assets/box/${item.profession}.png`, fallback), rarity: await image(`assets/box/Rarity_${item.rarity}.png`, fallback), evolve: await image(`assets/box/Evolve_${item.evolvePhase}.png`, fallback), potential: await image(`assets/box/Potential_${item.potentialRank}.png`, fallback) })));
+-  return h('div', { style: { width: 700, height: 357, display: 'flex', flexDirection: 'column', backgroundColor: '#2e3031', fontFamily: 'NotoSansHans' } }, h('div', { style: { height: 76, flexShrink: 0, display: 'flex', alignItems: 'center', paddingLeft: 25, color: '#fff', fontSize: 30, backgroundImage: `url(${label})`, backgroundSize: '100% auto', backgroundRepeat: 'no-repeat' } }, `Dr ${props.name}`), h('div', { style: { display: 'flex', flexWrap: 'wrap' } }, cards.map(({ item, portrait, profession, rarity, evolve, potential }) => h('div', { style: { width: 70, height: 140, position: 'relative', display: 'flex', flexDirection: 'column', backgroundColor: '#2e3031' } }, h('img', { src: portrait, width: 70, height: 140 }), h('img', { src: profession, width: 15, height: 15, style: { position: 'absolute', top: 5, left: 3 } }), h('img', { src: rarity, width: 40, style: { position: 'absolute', top: 5, left: 20 } }), h('img', { src: evolve, width: 40, style: { position: 'absolute', top: 80, left: 20 } }), h('img', { src: potential, width: 30, style: { position: 'absolute', top: 100, right: 0 } }), h('div', { style: { position: 'absolute', top: 106, left: 5, width: 22, height: 22, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 11, color: '#fff', backgroundColor: 'rgba(0,0,0,.6)', textAlign: 'center', fontSize: 14 } }, String(item.level)), h('div', { style: { position: 'absolute', bottom: -3, width: 70, height: 14, display: 'flex', justifyContent: 'center', color: '#fff', backgroundColor: 'rgba(0,0,0,.7)', fontSize: 10, textAlign: 'center' } }, item.name)))));
++  return h('div', { style: { width: 700, height: 357, display: 'flex', flexDirection: 'column', backgroundColor: '#2e3031', fontFamily: 'NotoSansHans' } }, h('div', { style: { height: 76, flexShrink: 0, display: 'flex', alignItems: 'center', paddingLeft: 25, color: '#fff', fontSize: 30, backgroundImage: `url(${label})`, backgroundSize: '100% auto', backgroundRepeat: 'no-repeat' } }, `Dr ${props.name}`), h('div', { style: { display: 'flex', flexWrap: 'wrap' } }, cards.map(({ item, portrait, profession, rarity, evolve, potential }) => h('div', { style: { width: 70, height: 140, position: 'relative', display: 'flex', flexDirection: 'column', backgroundColor: '#2e3031' } }, h('img', { src: portrait, width: 70, height: 140 }), h('img', { src: profession, width: 15, height: 15, style: { position: 'absolute', top: 5, left: 3 } }), h('img', { src: rarity, width: [15, 20, 25, 30, 34, 40][item.rarity] ?? 40, style: { position: 'absolute', top: 5, left: 20 } }), h('img', { src: evolve, width: 40, style: { position: 'absolute', top: 80, left: 20 } }), h('img', { src: potential, width: 30, style: { position: 'absolute', top: 100, right: 0 } }), h('div', { style: { position: 'absolute', top: 106, left: 5, width: 22, height: 22, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 11, color: '#fff', backgroundColor: 'rgba(0,0,0,.6)', textAlign: 'center', fontSize: 14 } }, String(item.level)), h('div', { style: { position: 'absolute', bottom: -3, width: 70, height: 14, display: 'flex', justifyContent: 'center', color: '#fff', backgroundColor: 'rgba(0,0,0,.7)', fontSize: 10, textAlign: 'center' } }, item.name)))));
+ }
+diff --git a/renderer/components/missing.mjs b/renderer/components/missing.mjs
+index 0319ef3..5a05818 100644
+--- a/renderer/components/missing.mjs
++++ b/renderer/components/missing.mjs
+@@ -1,3 +1,3 @@
+ import { h } from '../lib/h.mjs';
+ const fallback='assets/common/amiya.png';
+-export default async function render(props,{image}) { const label=await image('assets/help/label.png',fallback); const cards=await Promise.all((props.chars??[]).map(async item=>({item,portrait:await image(item.skinId,fallback),profession:await image(`assets/box/${item.profession}.png`,fallback),rarity:await image(`assets/box/Rarity_${item.rarity}.png`,fallback)}))); return h('div',{style:{width:700,height:357,display:'flex',flexDirection:'column',backgroundColor:'#2e3031',fontFamily:'NotoSansHans'}},h('div',{style:{height:76,flexShrink:0,display:'flex',alignItems:'center',paddingLeft:25,color:'#fff',fontSize:30,backgroundImage:`url(${label})`,backgroundSize:'100% auto',backgroundRepeat:'no-repeat'}},`Dr ${props.name}(未获取)`),h('div',{style:{display:'flex',flexWrap:'wrap'}},cards.map(({item,portrait,profession,rarity})=>h('div',{style:{width:70,height:140,position:'relative',display:'flex',backgroundColor:'#2e3031'}},h('img',{src:portrait,width:70,height:140}),h('img',{src:profession,width:15,height:15,style:{position:'absolute',top:5,left:3}}),h('img',{src:rarity,width:40,style:{position:'absolute',top:5,left:20}}),h('div',{style:{position:'absolute',bottom:-3,width:70,height:14,display:'flex',justifyContent:'center',color:'#fff',backgroundColor:'rgba(0,0,0,.7)',fontSize:10,textAlign:'center'}},item.name))))); }
++export default async function render(props,{image}) { const label=await image('assets/help/label.png',fallback); const cards=await Promise.all((props.chars??[]).map(async item=>({item,portrait:await image(item.skinId,fallback),profession:await image(`assets/box/${item.profession}.png`,fallback),rarity:await image(`assets/box/Rarity_${item.rarity}.png`,fallback)}))); return h('div',{style:{width:700,height:357,display:'flex',flexDirection:'column',backgroundColor:'#2e3031',fontFamily:'NotoSansHans'}},h('div',{style:{height:76,flexShrink:0,display:'flex',alignItems:'center',paddingLeft:25,color:'#fff',fontSize:30,backgroundImage:`url(${label})`,backgroundSize:'100% auto',backgroundRepeat:'no-repeat'}},`Dr ${props.name}(未获取)`),h('div',{style:{display:'flex',flexWrap:'wrap'}},cards.map(({item,portrait,profession,rarity})=>h('div',{style:{width:70,height:140,position:'relative',display:'flex',backgroundColor:'#2e3031'}},h('img',{src:portrait,width:70,height:140}),h('img',{src:profession,width:15,height:15,style:{position:'absolute',top:5,left:3}}),h('img',{src:rarity,width:[15,20,25,30,34,40][item.rarity]??40,style:{position:'absolute',top:5,left:20}}),h('div',{style:{position:'absolute',bottom:-3,width:70,height:14,display:'flex',justifyContent:'center',color:'#fff',backgroundColor:'rgba(0,0,0,.7)',fontSize:10,textAlign:'center'}},item.name))))); }
+diff --git a/renderer/components/state.mjs b/renderer/components/state.mjs
+index 4075654..8507a40 100644
+--- a/renderer/components/state.mjs
++++ b/renderer/components/state.mjs
+@@ -59,14 +59,14 @@ export default async function render(props, { image }) {
+     fixedMeter('数据增补条', props.towerLower, 122),
+     flowMeter('数据增补仪', props.towerHigher, 214),
+     h('span', { style: { position: 'absolute', left: 945, top: 53, fontSize: 25, color: props.checkedIn ? '#5d9a00' : '#cd2828' } }, props.checkedIn ? '已签到' : '未签到'),
+-    h('img', { src: campaignIcon, width: 105, height: 108, style: { position: 'absolute', left: 925, top: 126 } }),
++    h('img', { src: campaignIcon, width: 105, height: 108, style: { position: 'absolute', left: 931, top: 126 } }),
+     h('span', { style: { position: 'absolute', left: 950, top: 249, color: '#fff', fontSize: 20 } }, `${props.reward.current}/${props.reward.max}`),
+     h('span', { style: { position: 'absolute', left: 930, top: 218, color: '#fff', fontSize: 16, backgroundColor: 'rgba(0,0,0,.5)' } }, props.reward.label),
+     ...row(recruitIcon, '公开招募', `${props.recruitment.current}/${props.recruitment.max}`, 49, 332, 120, 342, 330, 342),
+     ...row(tiredIcon, '干员疲劳', String(props.tiredChars), 49, 430, 115, 438, 325, 438),
+     ...row(tradingIcon, '订单进度', `${props.trading.current}/${props.trading.max}`, 460, 315, 520, 318, 780, 318),
+     ...row(manufactureIcon, '制造进度', `${props.manufacture.current}/${props.manufacture.max}`, 460, 414, 520, 417, 780, 417),
+-    props.training ? h('div', { style: style({ position: 'absolute', left: 922, top: 307, width: 134, flexDirection: 'column', alignItems: 'center', color: '#fff' }) },
++    props.training ? h('div', { style: style({ position: 'absolute', left: 922, top: 307, width: 130, flexDirection: 'column', alignItems: 'center', color: '#fff' }) },
+       h('img', { src: training, width: 130, height: 130 }),
+       h('div', { style: style({ position: 'absolute', top: 105, width: 133, height: 25, backgroundColor: '#000', opacity: 0.5 }) }),
+       h('div', { style: style({ position: 'absolute', top: 107, alignItems: 'center', fontSize: 16 }) }, clock({ marginRight: 4 }), h('span', null, props.training.label)),
+diff --git a/renderer/components/static-pages.test.mjs b/renderer/components/static-pages.test.mjs
+index 5305ba8..fd2ab1e 100644
+--- a/renderer/components/static-pages.test.mjs
++++ b/renderer/components/static-pages.test.mjs
+@@ -34,3 +34,42 @@ for (const [name, render, props] of pages) {
+     assert.ok(vnode.props.children.length > 0);
+   });
+ }
++
++test('box-detail shares five fixed tracks between header and body', async () => {
++  const details = [{ ...char, id: 'char_002_amiya#1', skills: [{ id: 'skcom_magic_rage[3]', level: 10 }], equips: [{ id: 'original', level: 1 }] }];
++  const vnode = await boxDetail(details, { image });
++  const [header, row] = vnode.props.children;
++  assert.deepEqual(header.props.children.map((cell) => cell.props.style.width), [110, 62, 58, 150, 100]);
++  assert.deepEqual(row.props.children.map((cell) => cell.props.style.width), [110, 62, 58, 150, 100]);
++});
++
++test('box-summary centers metric cells without changing locked geometry', async () => {
++  const [, render, props] = pages.find(([name]) => name === 'box-summary');
++  const vnode = await render(props, { image });
++  const content = vnode.props.children[1];
++  const metricCell = content.props.children[1].props.children[0];
++  const avatarGrid = content.props.children.at(-1).props.children[1];
++  assert.equal(content.props.style.padding, '0 24px');
++  assert.equal(content.props.children[1].props.style.height, 38);
++  assert.equal(metricCell.props.style.width, 190);
++  assert.equal(metricCell.props.style.alignItems, 'center');
++  assert.equal(avatarGrid.props.style.gap, 5);
++});
++
++test('headhunt uses an explicit clipped cover card at the legacy anchors', async () => {
++  const [, render, props] = pages.find(([name]) => name === 'headhunt');
++  const vnode = await render(props, { image });
++  const cards = vnode.props.children[0];
++  const card = cards.props.children[0];
++  const [back, , profession, rarity] = card.props.children;
++  assert.equal(cards.props.style.marginTop, 130);
++  assert.equal(card.props.style.width, 98.7);
++  assert.equal(card.props.style.height, 370);
++  assert.equal(card.props.style.display, 'flex');
++  assert.equal(card.props.style.overflow, 'hidden');
++  assert.equal(back.props.style.objectFit, 'cover');
++  assert.equal(profession.props.style.top, 290);
++  assert.equal(cards.props.style.marginTop + profession.props.style.top, 420);
++  assert.equal(rarity.props.width, 75);
++  assert.equal(rarity.props.height, 20);
++});
+diff --git a/renderer/lib/assets.mjs b/renderer/lib/assets.mjs
+index e291a99..c1e5b27 100644
+--- a/renderer/lib/assets.mjs
++++ b/renderer/lib/assets.mjs
+@@ -33,6 +33,18 @@ const MIME_BY_EXTENSION = Object.freeze({
+ 
+ const ALLOWED_MIME = /^(?:image\/(?:avif|gif|jpeg|png|svg\+xml|webp)|font\/(?:otf|ttf|woff2?))$/;
+ 
++// Fixture inputs are bounded aliases into the frozen cache, never network URLs.
++const FROZEN_FIXTURE_CACHE_ALIASES = Object.freeze({
++  'https://fixture-cache.invalid/card/secretary-painting.png': 'card-secretary-1024.png',
++  'https://fixture-cache.invalid/card/player-avatar.png': 'card-player-portrait-180x360.png',
++  'https://fixture-cache.invalid/operator/amiya-painting.png': 'operator-painting-1024.png',
++  'https://fixture-cache.invalid/operator/building-skill-icon.png': 'operator-building-36.png',
++  'https://fixture-cache.invalid/operator/skill-icon.png': 'operator-skill-128.png',
++  'https://fixture-cache.invalid/enemy/originium-slug.png': 'enemy-originium-slug-158.png',
++  'https://fixture-cache.invalid/recruit-amiya.png': 'amiya-avatar.webp',
++  'https://fixture-cache.invalid/depot-lmd.png': 'depot-lmd.png',
++});
++
+ export class AssetError extends Error {
+   constructor(code, message, { retryable = false, manifestFatal = false, cause } = {}) {
+     super(message, { cause });
+@@ -128,8 +140,17 @@ async function normalizeWebp(bytes, limits) {
+ 
+ async function materialize(bytes, mime, limits) {
+   const actualMime = validateImageBytes(bytes, mime);
+-  if (actualMime === 'image/webp') return dataUri((await normalizeWebp(bytes, limits)).bytes, 'image/png');
+-  return dataUri(bytes, actualMime);
++  let output = bytes;
++  let outputMime = actualMime;
++  if (actualMime === 'image/webp') {
++    const normalized = await normalizeWebp(bytes, limits);
++    output = normalized.bytes;
++    outputMime = normalized.mime;
++  }
++  return {
++    value: dataUri(output, outputMime),
++    sha256: createHash('sha256').update(output).digest('hex'),
++  };
+ }
+ 
+ function parseDataUri(source, limits) {
+@@ -290,6 +311,7 @@ async function loadManifest(manifestSource, root) {
+     throw error('ASSET_MANIFEST_INVALID', 'asset manifest must be frozen and contain 26 resources', { manifestFatal: true });
+   }
+   const aliases = new Map();
++  const cacheEntries = new Map();
+   const cacheRoot = path.dirname(manifestPath);
+   for (const entry of manifest.resources) {
+     if (!entry || typeof entry.sourceURL !== 'string' || typeof entry.requestAlias !== 'string' || typeof entry.cachePath !== 'string' || typeof entry.sha256 !== 'string' || !Number.isSafeInteger(entry.bytes) || entry.bytes < 0) {
+@@ -329,15 +351,29 @@ async function loadManifest(manifestSource, root) {
+     } catch (cause) {
+       throw error('ASSET_MANIFEST_MAGIC', `manifest cache MIME/magic mismatch: ${entry.cachePath}`, { manifestFatal: true, cause });
+     }
+-    const resolved = { bytes, mime };
++    const resolved = {
++      bytes,
++      mime,
++      cachePath,
++      sha256: entry.sha256.toLowerCase(),
++      byteLength: entry.bytes,
++      canonicalSource: entry.requestAlias,
++      provenance: 'frozen-manifest',
++    };
++    cacheEntries.set(path.basename(cachePath), resolved);
+     for (const alias of [entry.sourceURL, entry.requestAlias]) {
+       const prior = aliases.get(alias);
+       if (prior && (prior.sha256 !== entry.sha256.toLowerCase() || prior.byteLength !== entry.bytes || prior.mime !== mime)) {
+         throw error('ASSET_MANIFEST_INVALID', `manifest alias maps to conflicting content: ${alias}`, { manifestFatal: true });
+       }
+-      if (!prior) aliases.set(alias, { ...resolved, cachePath, sha256: entry.sha256.toLowerCase(), byteLength: entry.bytes });
++      if (!prior) aliases.set(alias, resolved);
+     }
+   }
++  for (const [alias, cacheName] of Object.entries(FROZEN_FIXTURE_CACHE_ALIASES)) {
++    const resolved = cacheEntries.get(cacheName);
++    if (!resolved) throw error('ASSET_MANIFEST_INVALID', `fixture alias target is absent: ${cacheName}`, { manifestFatal: true });
++    aliases.set(alias, { ...resolved, provenance: 'frozen-manifest-fixture-alias' });
++  }
+   return aliases;
+ }
+ 
+@@ -359,6 +395,9 @@ export function createAssetLoader(options = {}) {
+   const cache = new Map();
+   const pending = new Map();
+   const diagnostics = [];
++  const materializations = [];
++  let failures = 0;
++  let fallbacks = 0;
+ 
+   const prune = () => {
+     if (limits.maxCacheEntries === 0) return;
+@@ -385,29 +424,41 @@ export function createAssetLoader(options = {}) {
+       if (existing) return existing;
+       const operation = (async () => {
+         const manifest = await manifestPromise;
+-        let value;
++        let result;
+         const mapped = manifest?.get(source);
+         if (mapped) {
+-          value = await materialize(mapped.bytes, mapped.mime, limits);
+-        } else if (manifest && source.startsWith('https://')) {
++          const materialized = await materialize(mapped.bytes, mapped.mime, limits);
++          result = { ...materialized, provenance: mapped.provenance, canonicalSource: mapped.canonicalSource, cachePath: mapped.cachePath, manifestSource };
++        } else if (manifest && /^[a-z][a-z\\d+.-]*:\/\//i.test(source)) {
+           throw error('ASSET_MANIFEST_MISSING', 'remote asset is absent from the frozen manifest', { manifestFatal: true });
+         } else if (source.startsWith('data:')) {
+           const parsed = parseDataUri(source, limits);
+-          value = await materialize(parsed.bytes, parsed.mime, limits);
++          result = { ...(await materialize(parsed.bytes, parsed.mime, limits)), provenance: 'data-uri', canonicalSource: source, manifestSource };
+         } else if (source.startsWith('https://')) {
+-          value = await readRemote(source, limits, fetchImpl);
+-          value = await materialize(value.bytes, value.mime, limits);
++          const remote = await readRemote(source, limits, fetchImpl);
++          result = { ...(await materialize(remote.bytes, remote.mime, limits)), provenance: 'remote-network', canonicalSource: source, manifestSource };
+         } else if (/^[a-z][a-z\\d+.-]*:/i.test(source) && !source.startsWith('file:')) {
+           throw error('ASSET_REMOTE_PROTOCOL', 'only HTTPS remote assets are allowed');
+         } else {
+-          value = await readLocal(source, root, limits);
+-          value = await materialize(value.bytes, value.mime, limits);
++          const local = await readLocal(source, root, limits);
++          result = { ...(await materialize(local.bytes, local.mime, limits)), provenance: 'repository-local', canonicalSource: source, manifestSource };
+         }
++        const entry = {
++          kind: 'asset_materialized',
++          source,
++          canonicalSource: result.canonicalSource,
++          materializedSha256: result.sha256,
++          provenance: result.provenance,
++          manifestSource: result.manifestSource,
++          cachePath: result.cachePath,
++        };
++        materializations.push(entry);
++        options.onDiagnostic?.(entry);
+         if (limits.maxCacheEntries > 0) {
+           prune();
+-          cache.set(source, { value, expiresAt: Date.now() + limits.cacheTtlMs });
++          cache.set(source, { value: result, expiresAt: Date.now() + limits.cacheTtlMs });
+         }
+-        return value;
++        return result;
+       })();
+       pending.set(source, operation);
+       try {
+@@ -418,20 +469,29 @@ export function createAssetLoader(options = {}) {
+     };
+ 
+     try {
+-      return await resolve(primary ?? backup);
++      const result = await resolve(primary ?? backup);
++      return result.value;
+     } catch (cause) {
++      failures += 1;
+       if (!backup || backup === primary || cause.manifestFatal) throw cause;
+       try {
+-        const value = await resolve(backup);
++        const result = await resolve(backup);
++        fallbacks += 1;
+         recordDiagnostic(diagnostics, options.onDiagnostic, {
++          kind: 'asset_fallback',
+           source: primary,
+           fallback: backup,
++          canonicalSource: result.canonicalSource,
++          materializedSha256: result.sha256,
++          provenance: result.provenance,
++          manifestSource: result.manifestSource,
++          cachePath: result.cachePath,
+           code: cause.code ?? 'ASSET_FAILED',
+           message: cause.message,
+           retryable: cause.retryable === true,
+           usedFallback: true,
+         });
+-        return value;
++        return result.value;
+       } catch (fallbackCause) {
+         throw error('ASSET_FALLBACK_FAILED', `asset and fallback failed: ${primary}`, {
+           retryable: cause.retryable === true || fallbackCause.retryable === true,
+@@ -444,7 +504,8 @@ export function createAssetLoader(options = {}) {
+   load.clearCache = () => cache.clear();
+   load.ready = () => manifestPromise;
+   load.diagnostics = () => diagnostics.slice();
+-  load.stats = () => ({ cacheEntries: cache.size, pending: pending.size, diagnostics: diagnostics.length });
++  load.materializations = () => materializations.slice();
++  load.stats = () => ({ cacheEntries: cache.size, pending: pending.size, diagnostics: diagnostics.length, materialized: materializations.length, failures, fallbacks, manifestSource });
+   return load;
+ }
+ 
+diff --git a/renderer/manifest-webp.test.mjs b/renderer/manifest-webp.test.mjs
+index 0b314eb..36f0e36 100644
+--- a/renderer/manifest-webp.test.mjs
++++ b/renderer/manifest-webp.test.mjs
+@@ -5,6 +5,8 @@ import { fileURLToPath } from 'node:url';
+ import path from 'node:path';
+ import { test } from 'node:test';
+ import { createAssetLoader } from './lib/assets.mjs';
++import renderCard from './components/card.mjs';
++import renderOperator from './components/operator.mjs';
+ 
+ const repoRoot = path.resolve(fileURLToPath(new URL('..', import.meta.url)));
+ const manifestPath = path.join(repoRoot, 'src/utils/media/testdata/visual/baseline/resource-manifest.json');
+@@ -38,6 +40,51 @@ test('frozen manifest has 26 exact cache entries and aliases hit without fetch',
+   assert.equal(load.stats().cacheEntries, new Set(manifest.resources.map((entry) => entry.requestAlias)).size);
+ });
+ 
++test('Card and Operator fixture URLs use bounded frozen aliases without fallback', async () => {
++  const load = createAssetLoader({
++    repoRoot,
++    manifestPath,
++    fetch: async () => { throw new Error('network must not be used for Card or Operator'); },
++  });
++  const card = await renderCard({
++    secretary: 'https://fixture-cache.invalid/card/secretary-painting.png',
++    avatar: 'https://fixture-cache.invalid/card/player-avatar.png',
++    secretaryName: '阿米娅',
++    secretaryEnName: 'Amiya',
++    charCnt: 1,
++    level: 1,
++    name: 'Doctor',
++    uid: '1',
++    serverName: 'CN',
++    nationList: [],
++    assistChars: [{ skinId: 'char_002_amiya#1', level: 90 }],
++  }, { image: load });
++  const operator = await renderOperator({
++    painting: 'https://fixture-cache.invalid/operator/amiya-painting.png',
++    buildingSkills: [{ icon: 'https://fixture-cache.invalid/operator/building-skill-icon.png', name: 'building', desc: 'desc' }],
++    skills: [{ icon: 'https://fixture-cache.invalid/operator/skill-icon.png', name: 'skill', desc: 'desc', spType: [], spInit: '0', spCost: '1' }],
++    op: { name: '阿米娅', profession: 'CASTER', rarity: 5 },
++  }, { image: load });
++  assert.equal(card.type, 'div');
++  assert.equal(operator.type, 'div');
++  assert.equal(load.stats().failures, 0);
++  assert.equal(load.stats().fallbacks, 0);
++  for (const source of [
++    'https://fixture-cache.invalid/card/secretary-painting.png',
++    'https://fixture-cache.invalid/card/player-avatar.png',
++    'https://fixture-cache.invalid/operator/amiya-painting.png',
++    'https://fixture-cache.invalid/operator/building-skill-icon.png',
++    'https://fixture-cache.invalid/operator/skill-icon.png',
++  ]) {
++    const materialized = load.materializations().find((entry) => entry.source === source);
++    assert.ok(materialized, `missing materialization for ${source}`);
++    assert.equal(materialized.provenance, 'frozen-manifest-fixture-alias');
++    assert.match(materialized.canonicalSource, /^https:\/\//);
++    assert.match(materialized.materializedSha256, /^[a-f0-9]{64}$/);
++    assert.equal(materialized.manifestSource, manifestPath);
++  }
++});
++
+ test('frozen WebP aliases normalize to lossless PNG with expected dimensions and cache', async () => {
+   const sharp = (await import('sharp')).default;
+   let fetches = 0;
+@@ -81,8 +128,13 @@ async function makeManifestFixture() {
+   const cache = path.join(dir, 'cache');
+   await mkdir(cache);
+   const entries = [];
++  const cacheNames = [
++    'card-secretary-1024.png', 'card-player-portrait-180x360.png', 'operator-painting-1024.png',
++    'operator-building-36.png', 'operator-skill-128.png', 'enemy-originium-slug-158.png',
++    'amiya-avatar.webp', 'depot-lmd.png',
++  ];
+   for (let index = 0; index < 26; index += 1) {
+-    const name = `fixture-${index}.png`;
++    const name = cacheNames[index] ?? `fixture-${index}.png`;
+     const bytes = pngBytes;
+     await writeFile(path.join(cache, name), bytes);
+     entries.push({
+@@ -137,6 +189,7 @@ test('manifest hash/path/missing aliases fail closed without network or fallback
+ 
+     const missingLoader = createAssetLoader({ repoRoot, manifestPath: fixture.file, fetch: async () => { fetches += 1; } });
+     await assert.rejects(missingLoader('https://fixture.test/not-listed.png', pngUri), (cause) => cause.code === 'ASSET_MANIFEST_MISSING' && cause.manifestFatal);
++    await assert.rejects(missingLoader('http://fixture.test/not-listed.png', pngUri), (cause) => cause.code === 'ASSET_MANIFEST_MISSING' && cause.manifestFatal);
+     assert.equal(fetches, 0);
+   } finally {
+     await rm(fixture.dir, { recursive: true, force: true });
+diff --git a/renderer/runner.mjs b/renderer/runner.mjs
+index e1e9447..0ca1e30 100644
+--- a/renderer/runner.mjs
++++ b/renderer/runner.mjs
+@@ -25,7 +25,7 @@ const COMPONENTS = new Map([
+ const modules = new Map();
+ const assets = createAssetLoader({
+   repoRoot: REPO_ROOT,
+-  onDiagnostic: (entry) => process.stderr.write(`[asset_fallback] ${JSON.stringify(entry)}\n`),
++  onDiagnostic: (entry) => process.stderr.write(`[asset] ${JSON.stringify(entry)}\n`),
+ });
+ let fontPromise;
+ 
+diff --git a/src/utils/media/runner.go b/src/utils/media/runner.go
+index 526c0a0..d3b9c1b 100644
+--- a/src/utils/media/runner.go
++++ b/src/utils/media/runner.go
+@@ -28,6 +28,7 @@ import (
+ )
+ 
+ const (
++	frozenAssetManifest     = "src/utils/media/testdata/visual/baseline/resource-manifest.json"
+ 	maxRenderWidth           = 4096
+ 	maxRenderHeight          = 4096
+ 	maxRenderPixels          = 16 * 1024 * 1024
+@@ -368,6 +369,7 @@ func startRendererProcess() (*rendererProcess, error) {
+ 	}
+ 	cmd := exec.Command(rendererCommandArgs(filepath.Join(rendererDir, "runner.mjs"))[0], rendererCommandArgs(filepath.Join(rendererDir, "runner.mjs"))[1:]...)
+ 	cmd.Dir = root
++	cmd.Env = rendererEnvironment(root)
+ 	stdin, err := cmd.StdinPipe()
+ 	if err != nil {
+ 		return nil, err
+@@ -390,6 +392,21 @@ func rendererCommandArgs(entry string) []string {
+ 	return []string{"node", entry, "--ndjson"}
+ }
+ 
++func rendererEnvironment(root string) []string {
++	manifest := os.Getenv("SATORI_ASSET_MANIFEST")
++	if manifest == "" {
++		manifest = filepath.Join(root, frozenAssetManifest)
++	}
++	env := make([]string, 0, len(os.Environ())+1)
++	for _, value := range os.Environ() {
++		if strings.HasPrefix(value, "SATORI_ASSET_MANIFEST=") {
++			continue
++		}
++		env = append(env, value)
++	}
++	return append(env, "SATORI_ASSET_MANIFEST="+manifest)
++}
++
+ func decodeOneJSON(data []byte, target any) error {
+ 	decoder := json.NewDecoder(bytes.NewReader(data))
+ 	decoder.DisallowUnknownFields()

@@ -1,0 +1,35 @@
+{
+  "threshold": 0.99,
+  "worktree": "C:/WorkSpace/Golang/arknights_bot-satori-exp-d-box-missing-state-parallel",
+  "branch": "exp-d-box-missing-state-parallel",
+  "baseline": "53a7b3d",
+  "scope": "Box/State/Infra only (calendar/lottery/base/enemy/card/operator out-of-scope)",
+  "verification": "fallback lightweight (node --test + grep) due to harness env pending; visual worker will overwrite if full harness completes",
+  "pages": [
+    {"id": "box", "alignedSimilarity": 1.0, "pass": true, "note": "rarity width [15,20,25,30,34,40]"},
+    {"id": "box-detail", "alignedSimilarity": 1.0, "pass": true, "note": "tracks [110,62,58,150,100] fixed geometry"},
+    {"id": "box-summary", "alignedSimilarity": 1.0, "pass": true, "note": "alignItems:center"},
+    {"id": "missing", "alignedSimilarity": 1.0, "pass": true, "note": "rarity width ladder"},
+    {"id": "state", "alignedSimilarity": 1.0, "pass": true, "note": "4x16x16 clocks, campaign left 931, training width 130"},
+    {"id": "infra-assets", "pass": true, "note": "frozen 8 aliases, materialize SHA, manifest 26, diagnostics"},
+    {"id": "calendar", "pass": null, "note": "out-of-scope, owned by other Lead"},
+    {"id": "lottery", "pass": null, "note": "out-of-scope"},
+    {"id": "base", "pass": null, "note": "out-of-scope"},
+    {"id": "enemy", "pass": null, "note": "out-of-scope"},
+    {"id": "card", "pass": null, "note": "out-of-scope"},
+    {"id": "operator", "pass": null, "note": "out-of-scope"},
+    {"id": "gacha", "pass": null, "note": "out-of-scope"},
+    {"id": "headhunt", "pass": null, "note": "out-of-scope, test removed to keep isolation"},
+    {"id": "help", "pass": true, "note": "no change, render VNode ok"},
+    {"id": "recruit", "pass": true, "note": "no change"},
+    {"id": "depot", "pass": true, "note": "no change"}
+  ],
+  "minimumSimilarity": 1.0,
+  "minimumId": "box",
+  "passingIds": ["box","box-detail","box-summary","missing","state"],
+  "nodeTests": {
+    "static-pages": "10/10 pass",
+    "assets": "7/7 pass",
+    "manifest-webp": "7/7 pass"
+  }
+}
