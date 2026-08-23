@@ -2,9 +2,9 @@ import { h } from '../lib/h.mjs';
 
 const style = (extra = {}) => ({ display: 'flex', boxSizing: 'border-box', ...extra });
 
-const imageEntry = (entry, avatar, includeCount) => h('div', { style: style({ width: 230, height: 150, padding: '12px 4px', alignItems: 'center', gap: includeCount ? 3 : 12 }) },
+const imageEntry = (entry, avatar, includeCount) => h('div', { style: style({ width: 230, height: 150, padding: '8px 4px', alignItems: 'center', gap: includeCount ? 3 : 12 }) },
   h('img', { src: avatar, width: 100, height: 100 }),
-  h('div', { style: style({ height: 110, flexDirection: 'column', gap: includeCount ? 12 : 8, color: '#eee', ...(includeCount ? { transform: 'translateY(9px)' } : {}) }) },
+  h('div', { style: style({ height: 110, flexDirection: 'column', gap: 10, color: '#eee', ...(includeCount ? { transform: 'translateY(9px)' } : {}) }) }, // ponytail: 10 vs 12/8
     h('span', { style: { fontSize: includeCount ? 16 : 17 } }, entry.name, entry.isNew ? h('span', { style: { marginLeft: 6, color: 'red', fontSize: 10 } }, 'New') : null),
     h('span', { style: { fontSize: 15 } }, entry.date),
     h('span', { style: { fontSize: 15 } }, entry.pool),
@@ -12,7 +12,7 @@ const imageEntry = (entry, avatar, includeCount) => h('div', { style: style({ wi
   ),
 );
 
-const listBox = (title, entries, resolved, includeCount) => h('div', { style: style({ width: 465, minHeight: 250, flexWrap: 'wrap', alignContent: 'flex-start', padding: 0, border: '1px solid #000', borderRadius: 20, backgroundColor: '#1f1e1e' }) },
+const listBox = (title, entries, resolved, includeCount) => h('div', { style: style({ width: 465, height: 250, flexWrap: 'wrap', alignContent: 'flex-start', padding: 0, border: '1px solid #000', borderRadius: 20, backgroundColor: '#1f1e1e' }) }, // ponytail: height vs minHeight
   h('div', { style: style({ transform: 'translateY(15px)', width: '100%', height: 38, justifyContent: 'center', color: '#eee', fontSize: 20 }) }, title),
   ...entries.map((entry, index) => imageEntry(entry, resolved[index], includeCount)),
 );
@@ -69,11 +69,11 @@ export default async function render(props, { image }) {
       h('div', { style: style({ position: 'absolute', left: 20, top: 150, width: 300, height: 250, padding: 12, flexDirection: 'column', border: '1px solid #000', borderRadius: 20, backgroundColor: '#1f1e1e' }) },
         h('span', { style: style({ width: '100%', justifyContent: 'center', alignItems: 'center', color: '#eee', fontSize: 20 }) }, '星级分布'),
         h('div', { style: style({ alignItems: 'center', gap: 8 }) },
-          h('div', { style: style({ width: 100, flexDirection: 'column', gap: 12, transform: 'translateY(13px)', color: '#fff', fontSize: 14 }) }, ...rarities.map((item) => h('span', null, `${item.label}  ${item.percent.toFixed(2)}%`))),
+          h('div', { style: style({ width: 100, flexDirection: 'column', gap: 12, marginTop: 13, color: '#fff', fontSize: 14 }) }, ...rarities.map((item) => h('span', null, `${item.label}  ${item.percent.toFixed(2)}%`))), // ponytail: marginTop over transform
           h('svg', { width: 180, height: 180, viewBox: '0 0 300 300' }, ...pie),
         ),
       ),
-      h('div', { style: style({ position: 'absolute', left: 347, top: 150, width: 300, height: 250, padding: 22, flexDirection: 'column', gap: 20, border: '1px solid #000', borderRadius: 20, backgroundColor: '#1f1e1e', color: '#eee' }) },
+      h('div', { style: style({ position: 'absolute', left: 340, top: 150, width: 300, height: 250, padding: 22, flexDirection: 'column', gap: 20, border: '1px solid #000', borderRadius: 20, backgroundColor: '#1f1e1e', color: '#eee' }) }, // ponytail: 340 matches legacy 20+300+20
         h('span', { style: style({ width: '100%', justifyContent: 'center', alignItems: 'center', fontSize: 20 }) }, '星级分布'),
         ...(props.averages || []).map((item) => h('div', { style: style({ justifyContent: 'space-between', fontSize: 18 }) }, h('span', null, `${item.count}个${item.label}`), h('span', null, `${item.avg}抽/个`))),
       ),
