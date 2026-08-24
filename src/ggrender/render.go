@@ -905,59 +905,6 @@ func SampleCard() *CardInfo {
 	}
 }
 
-func RenderCard(data *CardInfo) (*gg.Context, error) {
-	const mainW=1000
-	const mainH=600
-	dc:=gg.NewContext(mainW,mainH)
-	FillBackground(dc,27,29,30)
-	// top decor bar
-	dc.SetRGB255(45,48,55)
-	dc.DrawRectangle(0,0,float64(mainW),90)
-	dc.Fill()
-	// avatar circle
-	dc.SetRGB255(80,80,90)
-	dc.DrawCircle(60,45,38)
-	dc.Fill()
-	setFont(dc,22)
-	dc.SetRGB255(255,255,255)
-	drawString(dc,data.Name,110,36)
-	setFont(dc,13)
-	dc.SetRGB255(180,200,220)
-	drawString(dc,fmt.Sprintf("UID %s · %s · Lv%d",data.Uid,data.ServerName,data.Level),110,58)
-	drawString(dc,"主线 "+data.MainStageProgress,110,76)
-	// stats row
-	stats:=[]struct{label string; val int}{
-		{"干员",data.CharCnt},{"家具",data.FurnitureCnt},{"时装",data.SkinCnt},{"模组",data.EquipCnt},
-	}
-	x:=20
-	y:=140
-	for _,s:=range stats {
-		dc.SetRGBA255(255,255,255,12)
-		RoundRect(dc,float64(x),float64(y),140,80,8)
-		setFont(dc,15)
-		dc.SetRGB255(180,200,220)
-		drawStringAnchored(dc,s.label,float64(x+70),float64(y+24),0.5,0.5)
-		setFont(dc,24)
-		dc.SetRGB255(255,255,255)
-		drawStringAnchored(dc,itoa(s.val),float64(x+70),float64(y+54),0.5,0.5)
-		x+=160
-	}
-	// secretary
-	y=260
-	fillRoundedCard(dc,20,float64(y),float64(mainW-40),120,10,14)
-	setFont(dc,16)
-	dc.SetRGB255(255,230,160)
-	drawString(dc,"秘书 "+data.SecretaryName+" / "+data.SecretaryEnName,30,float64(y+36))
-	setFont(dc,13)
-	dc.SetRGB255(200,200,200)
-	drawString(dc,StripHTML(data.Resume),30,float64(y+64))
-	// resume icon placeholder
-	dc.SetRGB255(70,70,80)
-	dc.DrawCircle(float64(mainW-80),float64(y+60),36)
-	dc.Fill()
-	return dc,nil
-}
-
 // ponytail: depot split to depot.go for per-scene ownership (renderContext routes there)
 // DepotData/DepotItem/SampleDepot/RenderDepot moved to src/ggrender/depot.go
 
