@@ -1,0 +1,458 @@
+{
+  "ok": true,
+  "bbox": {
+    "x": 0,
+    "y": 0,
+    "width": 1280,
+    "height": 720
+  },
+  "sha256": "75fea0acb6d2e20f52107a9310bc66e2e6228fa01811dc66445917a32d8de2a2",
+  "image": "card-legacy.jpg",
+  "elapsedMs": 888,
+  "url": "http://127.0.0.1:38124/card",
+  "scale": 1,
+  "format": "jpeg",
+  "timezoneId": "Asia/Shanghai",
+  "frozenDateISO": "2025-01-15T12:00:00Z",
+  "frozenDateEpochMillis": 1736942400000,
+  "browserVersion": "148.0.7778.96",
+  "playwrightVersion": "1.60.0",
+  "pending": [],
+  "events": [
+    {
+      "kind": "request",
+      "url": "http://127.0.0.1:38124/card",
+      "method": "GET"
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:38124/card",
+      "status": 200,
+      "mime": "text/html; charset=utf-8"
+    },
+    {
+      "kind": "request",
+      "url": "http://127.0.0.1:38124/assets/css/common.css",
+      "method": "GET"
+    },
+    {
+      "kind": "request",
+      "url": "https://media.prts.wiki/d/dd/%E7%AB%8B%E7%BB%98_%E9%98%BF%E7%B1%B3%E5%A8%85_1.png",
+      "method": "GET"
+    },
+    {
+      "kind": "request",
+      "url": "http://127.0.0.1:38124/assets/card/no_use_icon_circle.png",
+      "method": "GET"
+    },
+    {
+      "kind": "request",
+      "url": "http://127.0.0.1:38124/assets/card/no_use_icon_x.png",
+      "method": "GET"
+    },
+    {
+      "kind": "request",
+      "url": "http://127.0.0.1:38124/assets/card/decor.png",
+      "method": "GET"
+    },
+    {
+      "kind": "request",
+      "url": "http://127.0.0.1:38124/assets/card/decor_skin.png",
+      "method": "GET"
+    },
+    {
+      "kind": "request",
+      "url": "http://127.0.0.1:38124/template/js/common.js",
+      "method": "GET"
+    },
+    {
+      "kind": "request",
+      "url": "http://127.0.0.1:38124/assets/card/icon_skin.png",
+      "method": "GET"
+    },
+    {
+      "kind": "request",
+      "url": "http://127.0.0.1:38124/assets/card/human_resource.png",
+      "method": "GET"
+    },
+    {
+      "kind": "request",
+      "url": "http://127.0.0.1:38124/assets/card/rhodes.png",
+      "method": "GET"
+    },
+    {
+      "kind": "request",
+      "url": "http://127.0.0.1:38124/assets/card/lungmen.png",
+      "method": "GET"
+    },
+    {
+      "kind": "request",
+      "url": "http://127.0.0.1:38124/assets/card/yan.png",
+      "method": "GET"
+    },
+    {
+      "kind": "request",
+      "url": "http://127.0.0.1:38124/assets/card/headicon_back.png",
+      "method": "GET"
+    },
+    {
+      "kind": "request",
+      "url": "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_002_amiya%231.png",
+      "method": "GET"
+    },
+    {
+      "kind": "request",
+      "url": "http://127.0.0.1:38124/assets/card/level_bg.png",
+      "method": "GET"
+    },
+    {
+      "kind": "request",
+      "url": "http://127.0.0.1:38124/assets/card/resume_icon.png",
+      "method": "GET"
+    },
+    {
+      "kind": "request",
+      "url": "http://127.0.0.1:38124/assets/card/assist_icon.png",
+      "method": "GET"
+    },
+    {
+      "kind": "request",
+      "url": "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/char_002_amiya%231.png",
+      "method": "GET"
+    },
+    {
+      "kind": "request",
+      "url": "http://127.0.0.1:38124/assets/card/spec_max_icon.png",
+      "method": "GET"
+    },
+    {
+      "kind": "finished",
+      "url": "http://127.0.0.1:38124/card"
+    },
+    {
+      "kind": "request",
+      "url": "http://127.0.0.1:38124/assets/box/Evolve_2.png",
+      "method": "GET"
+    },
+    {
+      "kind": "request",
+      "url": "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/char_103_angel%231.png",
+      "method": "GET"
+    },
+    {
+      "kind": "request",
+      "url": "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/char_102_texas%231.png",
+      "method": "GET"
+    },
+    {
+      "kind": "request",
+      "url": "http://127.0.0.1:38124/assets/card/module_collection_bg.png",
+      "method": "GET"
+    },
+    {
+      "kind": "request",
+      "url": "http://127.0.0.1:38124/assets/card/module_collection_bg_icon.png",
+      "method": "GET"
+    },
+    {
+      "kind": "response",
+      "url": "https://media.prts.wiki/d/dd/%E7%AB%8B%E7%BB%98_%E9%98%BF%E7%B1%B3%E5%A8%85_1.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "kind": "finished",
+      "url": "https://media.prts.wiki/d/dd/%E7%AB%8B%E7%BB%98_%E9%98%BF%E7%B1%B3%E5%A8%85_1.png"
+    },
+    {
+      "kind": "response",
+      "url": "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_002_amiya%231.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "kind": "finished",
+      "url": "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_002_amiya%231.png"
+    },
+    {
+      "kind": "response",
+      "url": "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/char_002_amiya%231.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "kind": "finished",
+      "url": "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/char_002_amiya%231.png"
+    },
+    {
+      "kind": "response",
+      "url": "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/char_103_angel%231.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "kind": "finished",
+      "url": "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/char_103_angel%231.png"
+    },
+    {
+      "kind": "response",
+      "url": "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/char_102_texas%231.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "kind": "finished",
+      "url": "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/char_102_texas%231.png"
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:38124/assets/css/common.css",
+      "status": 200,
+      "mime": "text/css; charset=utf-8"
+    },
+    {
+      "kind": "finished",
+      "url": "http://127.0.0.1:38124/assets/css/common.css"
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:38124/assets/card/no_use_icon_circle.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "kind": "finished",
+      "url": "http://127.0.0.1:38124/assets/card/no_use_icon_circle.png"
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:38124/assets/card/no_use_icon_x.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "kind": "finished",
+      "url": "http://127.0.0.1:38124/assets/card/no_use_icon_x.png"
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:38124/assets/card/decor_skin.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:38124/assets/card/decor.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "kind": "finished",
+      "url": "http://127.0.0.1:38124/assets/card/decor_skin.png"
+    },
+    {
+      "kind": "finished",
+      "url": "http://127.0.0.1:38124/assets/card/decor.png"
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:38124/template/js/common.js",
+      "status": 200,
+      "mime": "application/javascript"
+    },
+    {
+      "kind": "finished",
+      "url": "http://127.0.0.1:38124/template/js/common.js"
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:38124/assets/card/icon_skin.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "kind": "finished",
+      "url": "http://127.0.0.1:38124/assets/card/icon_skin.png"
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:38124/assets/card/human_resource.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "kind": "finished",
+      "url": "http://127.0.0.1:38124/assets/card/human_resource.png"
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:38124/assets/card/rhodes.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "kind": "finished",
+      "url": "http://127.0.0.1:38124/assets/card/rhodes.png"
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:38124/assets/card/lungmen.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "kind": "finished",
+      "url": "http://127.0.0.1:38124/assets/card/lungmen.png"
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:38124/assets/card/yan.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "kind": "finished",
+      "url": "http://127.0.0.1:38124/assets/card/yan.png"
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:38124/assets/card/headicon_back.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "kind": "finished",
+      "url": "http://127.0.0.1:38124/assets/card/headicon_back.png"
+    },
+    {
+      "kind": "request",
+      "url": "http://127.0.0.1:38124/assets/card/bg.png",
+      "method": "GET"
+    },
+    {
+      "kind": "request",
+      "url": "http://127.0.0.1:38124/assets/card/name_card_short.png",
+      "method": "GET"
+    },
+    {
+      "kind": "request",
+      "url": "http://127.0.0.1:38124/assets/card/back_end.png",
+      "method": "GET"
+    },
+    {
+      "kind": "request",
+      "url": "http://127.0.0.1:38124/assets/font/NotoSansHans-Regular.ttf",
+      "method": "GET"
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:38124/assets/card/level_bg.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "kind": "finished",
+      "url": "http://127.0.0.1:38124/assets/card/level_bg.png"
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:38124/assets/card/resume_icon.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "kind": "finished",
+      "url": "http://127.0.0.1:38124/assets/card/resume_icon.png"
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:38124/assets/card/assist_icon.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "kind": "finished",
+      "url": "http://127.0.0.1:38124/assets/card/assist_icon.png"
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:38124/assets/card/spec_max_icon.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "kind": "finished",
+      "url": "http://127.0.0.1:38124/assets/card/spec_max_icon.png"
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:38124/assets/card/module_collection_bg.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "kind": "finished",
+      "url": "http://127.0.0.1:38124/assets/card/module_collection_bg.png"
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:38124/assets/box/Evolve_2.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "kind": "finished",
+      "url": "http://127.0.0.1:38124/assets/box/Evolve_2.png"
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:38124/assets/card/module_collection_bg_icon.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "kind": "finished",
+      "url": "http://127.0.0.1:38124/assets/card/module_collection_bg_icon.png"
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:38124/assets/card/back_end.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "kind": "finished",
+      "url": "http://127.0.0.1:38124/assets/card/back_end.png"
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:38124/assets/card/bg.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "kind": "finished",
+      "url": "http://127.0.0.1:38124/assets/card/bg.png"
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:38124/assets/card/name_card_short.png",
+      "status": 200,
+      "mime": "image/png"
+    },
+    {
+      "kind": "finished",
+      "url": "http://127.0.0.1:38124/assets/card/name_card_short.png"
+    },
+    {
+      "kind": "response",
+      "url": "http://127.0.0.1:38124/assets/font/NotoSansHans-Regular.ttf",
+      "status": 200,
+      "mime": "font/ttf"
+    },
+    {
+      "kind": "finished",
+      "url": "http://127.0.0.1:38124/assets/font/NotoSansHans-Regular.ttf"
+    }
+  ]
+}
