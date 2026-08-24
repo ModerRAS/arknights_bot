@@ -73,10 +73,10 @@
       "oldFormat": "jpeg",
       "newFormat": "png",
       "oldSha256": "cf10f5d37fe6c3738eb19b77e3761861a5cda8d4448cc50b333d25ace4c1c8d9",
-      "newSha256": "beba604e0dca533c098390a2c248c6a1ec4a3802374b000528c4f37a79456976",
-      "similarity": 0.9647058823529412,
-      "rawSimilarity": 0.9647058823529412,
-      "alignedSimilarity": 0.9647058823529412,
+      "newSha256": "9de15ac42ac50aa32762c1089c5bd52f4fb3e68519d05105a91a6be368fb7a86",
+      "similarity": 0.9911764705882353,
+      "rawSimilarity": 0.9911764705882353,
+      "alignedSimilarity": 0.9911764705882353,
       "globalOffset": {
         "dx": 0,
         "dy": 0
@@ -94,7 +94,7 @@
         "width": 1050,
         "height": 536
       },
-      "pass": false,
+      "pass": true,
       "oldPath": "images/box.jpg",
       "newPath": "new/box.png",
       "diffPath": "compare/box.diff.png",
@@ -155,10 +155,10 @@
       "oldFormat": "jpeg",
       "newFormat": "png",
       "oldSha256": "6a4633e048410f14271b0b6728d14d4307c2b32af7411c5446a72cea8624f071",
-      "newSha256": "8975c3f2e288ffccb9a32dd6b93cdac384824f981f89627455268558655a2af3",
-      "similarity": 0.9647058823529412,
-      "rawSimilarity": 0.9647058823529412,
-      "alignedSimilarity": 0.9647058823529412,
+      "newSha256": "5aa215b60adb4c2d48f4075187f627fd9ebf4096bfa995cf0d205c4b74243bae",
+      "similarity": 0.9911764705882353,
+      "rawSimilarity": 0.9911764705882353,
+      "alignedSimilarity": 0.9911764705882353,
       "globalOffset": {
         "dx": 0,
         "dy": 0
@@ -176,7 +176,7 @@
         "width": 1350,
         "height": 723
       },
-      "pass": false,
+      "pass": true,
       "oldPath": "images/box-summary.jpg",
       "newPath": "new/box-summary.png",
       "diffPath": "compare/box-summary.diff.png",

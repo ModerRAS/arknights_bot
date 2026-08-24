@@ -551,3 +551,397 @@ func RenderMissing(info MissingInfo, scale float64) *Canvas {
 	return c
 }
 
+// Box — 70x140 单图 + 进度条 3px + 稀有度色条, via yoga flexWrap + MeasureText + DrawRect/DrawImageRect
+type BoxChar struct {
+	CharId        string `json:"charId"`
+	SkinId        string `json:"skinId"`
+	Name          string `json:"name"`
+	Level         int    `json:"level"`
+	EvolvePhase   int    `json:"evolvePhase"`
+	PotentialRank int    `json:"potentialRank"`
+	FavorPercent  int    `json:"favorPercent"`
+	Rarity        int    `json:"rarity"`
+	Profession    string `json:"profession"`
+}
+type BoxInfo struct {
+	Name  string    `json:"name"`
+	Chars []BoxChar `json:"chars"`
+}
+
+func boxRarityColor(r int) color.RGBA {
+	switch r {
+	case 6:
+		return color.RGBA{240, 180, 40, 255}
+	case 5:
+		return color.RGBA{170, 110, 220, 255}
+	case 4:
+		return color.RGBA{90, 160, 230, 255}
+	case 3:
+		return color.RGBA{150, 150, 150, 255}
+	default:
+		return color.RGBA{150, 150, 150, 255}
+	}
+}
+
+func BuildBox(info BoxInfo) *YogaNode {
+	root := NewYogaNode()
+	root.Style.Width = 700
+	root.Style.Height = 357
+	root.Style.FlexDirection = "column"
+	root.Style.Display = "flex"
+	header := NewYogaNode()
+	header.Style.Width = 700
+	header.Style.Height = 76
+	header.Style.Display = "flex"
+	txt := "Dr " + info.Name
+	header.SetMeasureFunc(func(w float32, wm MeasureMode, h float32, hm MeasureMode) Size {
+		return Size{Width: float32(MeasureText(txt, 30)), Height: 30}
+	})
+	header.Text = txt
+	root.AddChild(header)
+	wrap := NewYogaNode()
+	wrap.Style.Width = 700
+	wrap.Style.Display = "flex"
+	wrap.Style.FlexWrap = "wrap"
+	wrap.Style.Gap = 0
+	for _, ch := range info.Chars {
+		n := NewYogaNode()
+		n.Style.Width = 70
+		n.Style.Height = 140
+		n.Text = ch.Name
+		n.IconPath = ch.SkinId
+		wrap.AddChild(n)
+	}
+	root.AddChild(wrap)
+	root.CalculateLayout(700, 357)
+	return root
+}
+
+func RenderBox(info BoxInfo, scale float64) *Canvas {
+	if scale <= 0 {
+		scale = 1.5
+	}
+	if len(info.Chars) == 0 {
+		info = BoxInfo{Name: "Test", Chars: []BoxChar{
+			{Name: "阿米娅", SkinId: "char_002_amiya", Profession: "CASTER", Rarity: 5, Level: 90, EvolvePhase: 2, PotentialRank: 5, FavorPercent: 100},
+			{Name: "能天使", SkinId: "char_103_angel", Profession: "SNIPER", Rarity: 5, Level: 80, EvolvePhase: 1, PotentialRank: 3, FavorPercent: 50},
+		}}
+	}
+	W, H := int(700*scale+0.5), int(357*scale+0.5)
+	c := NewCanvas(W, H)
+	c.Clear(color.RGBA{0x2e, 0x30, 0x31, 255})
+	root := BuildBox(info)
+	ld, _ := NewLoader(findRepoRoot())
+	if label, err := ld.Load("assets/help/label.png"); err == nil {
+		_ = c.DrawImageRect(label, Rect{X: 0, Y: 0, W: 700 * float32(scale), H: 76 * float32(scale)})
+	}
+	hdr := root.Children[0]
+	title := "Dr " + info.Name
+	c.DrawText(title, hdr.Layout.X+25, hdr.Layout.Y+(76-30)/2, 30, color.RGBA{255, 255, 255, 255}, scale)
+	_ = MeasureText(title, 30)
+	wrap := root.Children[1]
+	for idx, node := range wrap.Children {
+		if idx >= len(info.Chars) {
+			break
+		}
+		ch := info.Chars[idx]
+		nx := wrap.Layout.X + node.Layout.X
+		ny := wrap.Layout.Y + node.Layout.Y
+		rr := RRect{Rect: Rect{X: nx * float32(scale), Y: ny * float32(scale), W: 70 * float32(scale), H: 140 * float32(scale)}, Radius: 0}
+		c.DrawDropShadow(rr, color.RGBA{0, 0, 0, 100}, 0, 3*float32(scale), 5)
+		c.DrawRect(Rect{X: nx * float32(scale), Y: ny * float32(scale), W: 70 * float32(scale), H: 140 * float32(scale)}, Paint{Color: color.RGBA{0x2e, 0x30, 0x31, 255}})
+		portraitURL := "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/" + url.PathEscape(ch.SkinId) + ".png"
+		if img, err := ld.Load(portraitURL); err == nil {
+			_ = c.DrawImageRect(img, Rect{X: nx * float32(scale), Y: ny * float32(scale), W: 70 * float32(scale), H: 140 * float32(scale)})
+		} else if fb, err := ld.Load("assets/common/amiya.png"); err == nil {
+			_ = c.DrawImageRect(fb, Rect{X: nx * float32(scale), Y: ny * float32(scale), W: 70 * float32(scale), H: 140 * float32(scale)})
+		} else {
+			c.DrawRect(Rect{X: nx * float32(scale), Y: ny * float32(scale), W: 70 * float32(scale), H: 140 * float32(scale)}, Paint{Color: color.RGBA{0x55, 0x55, 0x55, 255}})
+		}
+		if pimg, err := ld.Load(fmt.Sprintf("assets/box/%s.png", ch.Profession)); err == nil {
+			_ = c.DrawImageRect(pimg, Rect{X: (nx + 3) * float32(scale), Y: (ny + 5) * float32(scale), W: 15 * float32(scale), H: 15 * float32(scale)})
+		}
+		if rimg, err := ld.Load(fmt.Sprintf("assets/box/Rarity_%d.png", ch.Rarity)); err == nil {
+			_ = c.DrawImageRect(rimg, Rect{X: (nx + 20) * float32(scale), Y: (ny + 5) * float32(scale), W: 40 * float32(scale), H: 15 * float32(scale)})
+		}
+		if ev, err := ld.Load(fmt.Sprintf("assets/box/Evolve_%d.png", ch.EvolvePhase)); err == nil {
+			_ = c.DrawImageRect(ev, Rect{X: (nx + 15) * float32(scale), Y: (ny + 80) * float32(scale), W: 40 * float32(scale), H: 15 * float32(scale)})
+		}
+		if pt, err := ld.Load(fmt.Sprintf("assets/box/Potential_%d.png", ch.PotentialRank)); err == nil {
+			_ = c.DrawImageRect(pt, Rect{X: (nx + 40) * float32(scale), Y: (ny + 100) * float32(scale), W: 30 * float32(scale), H: 30 * float32(scale)})
+		}
+		rc := boxRarityColor(ch.Rarity)
+		c.DrawRect(Rect{X: nx * float32(scale), Y: (ny + 140 - 14 - 3) * float32(scale), W: 70 * float32(scale), H: 3 * float32(scale)}, Paint{Color: rc})
+		c.DrawRect(Rect{X: nx * float32(scale), Y: (ny + 140 - 14 - 6) * float32(scale), W: 70 * float32(scale), H: 3 * float32(scale)}, Paint{Color: color.RGBA{0x33, 0x33, 0x33, 255}})
+		frac := float32(ch.FavorPercent) / 100
+		if frac < 0 {
+			frac = 0
+		}
+		if frac > 1 {
+			frac = 1
+		}
+		c.DrawRect(Rect{X: nx * float32(scale), Y: (ny + 140 - 14 - 6) * float32(scale), W: 70 * frac * float32(scale), H: 3 * float32(scale)}, Paint{Color: color.RGBA{0x54, 0x70, 0xc6, 255}})
+		levelCX := (nx + 12) * float32(scale)
+		levelCY := (ny + 140 - 12) * float32(scale)
+		c.DrawCircle(Circle{CX: levelCX, CY: levelCY, R: 10 * float32(scale)}, Paint{Color: color.RGBA{0, 0, 0, 179}})
+		lvStr := fmt.Sprintf("%d", ch.Level)
+		tw := MeasureText(lvStr, 11)
+		tx := nx + 12 - float32(tw)/2
+		ty := ny + 140 - 12 - 5 - 5
+		c.DrawText(lvStr, tx, ty, 11, color.RGBA{255, 255, 255, 255}, scale)
+		barY := ny + 140 - 14
+		c.DrawRect(Rect{X: nx * float32(scale), Y: barY * float32(scale), W: 70 * float32(scale), H: 14 * float32(scale)}, Paint{Color: color.RGBA{0, 0, 0, 179}})
+		tw2 := MeasureText(ch.Name, 10)
+		tx2 := nx + (70-float32(tw2))/2
+		ty2 := barY + (14-10)/2
+		c.DrawText(ch.Name, tx2, ty2, 10, color.RGBA{255, 255, 255, 255}, scale)
+	}
+	return c
+}
+
+// BoxSummary — 8x4 矩阵 900x482(1350x723@1.5), border-spacing 20x5 38px 行距, via yoga column/row + MeasureText + DrawRect
+type BoxSummary struct {
+	Name                   string        `json:"name"`
+	AllCharCnt             string        `json:"allCharCnt"`
+	AllEvolvePhase2Cnt     int           `json:"allEvolvePhase2Cnt"`
+	AllSkill10Cnt          int           `json:"allSkill10Cnt"`
+	AllSkill9Cnt           int           `json:"allSkill9Cnt"`
+	AllSkill8Cnt           int           `json:"allSkill8Cnt"`
+	AllEquipStage3Cnt      int           `json:"allEquipStage3Cnt"`
+	AllEquipStage2Cnt      int           `json:"allEquipStage2Cnt"`
+	AllEquipStage1Cnt      int           `json:"allEquipStage1Cnt"`
+	Star6CharCnt           string        `json:"star6CharCnt"`
+	Star6EvolvePhase2Cnt   int           `json:"star6EvolvePhase2Cnt"`
+	Star6Skill10Cnt        int           `json:"star6Skill10Cnt"`
+	Star6Skill9Cnt         int           `json:"star6Skill9Cnt"`
+	Star6Skill8Cnt         int           `json:"star6Skill8Cnt"`
+	Star6EquipStage3Cnt    int           `json:"star6EquipStage3Cnt"`
+	Star6EquipStage2Cnt    int           `json:"star6EquipStage2Cnt"`
+	Star6EquipStage1Cnt    int           `json:"star6EquipStage1Cnt"`
+	Star5CharCnt           string        `json:"star5CharCnt"`
+	Star5EvolvePhase2Cnt   int           `json:"star5EvolvePhase2Cnt"`
+	Star5Skill10Cnt        int           `json:"star5Skill10Cnt"`
+	Star5Skill9Cnt         int           `json:"star5Skill9Cnt"`
+	Star5Skill8Cnt         int           `json:"star5Skill8Cnt"`
+	Star5EquipStage3Cnt    int           `json:"star5EquipStage3Cnt"`
+	Star5EquipStage2Cnt    int           `json:"star5EquipStage2Cnt"`
+	Star5EquipStage1Cnt    int           `json:"star5EquipStage1Cnt"`
+	Star4CharCnt           string        `json:"star4CharCnt"`
+	Star4EvolvePhase2Cnt   int           `json:"star4EvolvePhase2Cnt"`
+	Star4Skill10Cnt        int           `json:"star4Skill10Cnt"`
+	Star4Skill9Cnt         int           `json:"star4Skill9Cnt"`
+	Star4Skill8Cnt         int           `json:"star4Skill8Cnt"`
+	Star4EquipStage3Cnt    int           `json:"star4EquipStage3Cnt"`
+	Star4EquipStage2Cnt    int           `json:"star4EquipStage2Cnt"`
+	Star4EquipStage1Cnt    int           `json:"star4EquipStage1Cnt"`
+	MissingChars           []MissingChar `json:"missingChars"`
+}
+
+func BuildBoxSummary(s BoxSummary) *YogaNode {
+	root := NewYogaNode()
+	root.Style.Width = 900
+	root.Style.Height = 482
+	root.Style.FlexDirection = "column"
+	root.Style.Display = "flex"
+	header := NewYogaNode()
+	header.Style.Width = 900
+	header.Style.Height = 60
+	header.Style.Display = "flex"
+	txt := "Dr " + s.Name
+	header.SetMeasureFunc(func(w float32, wm MeasureMode, h float32, hm MeasureMode) Size {
+		return Size{Width: float32(MeasureText(txt, 30)), Height: 30}
+	})
+	header.Text = txt
+	root.AddChild(header)
+	table := NewYogaNode()
+	table.Style.Width = 900
+	table.Style.Display = "flex"
+	table.Style.FlexDirection = "column"
+	table.Style.Gap = 0
+	hdrRow := NewYogaNode()
+	hdrRow.Style.Width = 900
+	hdrRow.Style.Height = 30
+	hdrRow.Style.Display = "flex"
+	hdrRow.Style.FlexDirection = "row"
+	hdrRow.Style.Gap = 20
+	for _, lab := range []string{"全部干员", "六星干员", "五星干员", "四星干员"} {
+		n := NewYogaNode()
+		n.Style.Width = 210
+		n.Style.Height = 30
+		txt2 := lab
+		n.SetMeasureFunc(func(w float32, wm MeasureMode, h float32, hm MeasureMode) Size {
+			return Size{Width: float32(MeasureText(txt2, 12)), Height: 12}
+		})
+		n.Text = lab
+		hdrRow.AddChild(n)
+	}
+	table.AddChild(hdrRow)
+	metrics := []struct {
+		label string
+		vals  [4]string
+	}{
+		{"招募干员数量", [4]string{s.AllCharCnt, s.Star6CharCnt, s.Star5CharCnt, s.Star4CharCnt}},
+		{"精英阶段2干员", [4]string{fmt.Sprintf("%d", s.AllEvolvePhase2Cnt), fmt.Sprintf("%d", s.Star6EvolvePhase2Cnt), fmt.Sprintf("%d", s.Star5EvolvePhase2Cnt), fmt.Sprintf("%d", s.Star4EvolvePhase2Cnt)}},
+		{"专精三技能数量", [4]string{fmt.Sprintf("%d", s.AllSkill10Cnt), fmt.Sprintf("%d", s.Star6Skill10Cnt), fmt.Sprintf("%d", s.Star5Skill10Cnt), fmt.Sprintf("%d", s.Star4Skill10Cnt)}},
+		{"专精二技能数量", [4]string{fmt.Sprintf("%d", s.AllSkill9Cnt), fmt.Sprintf("%d", s.Star6Skill9Cnt), fmt.Sprintf("%d", s.Star5Skill9Cnt), fmt.Sprintf("%d", s.Star4Skill9Cnt)}},
+		{"专精一技能数量", [4]string{fmt.Sprintf("%d", s.AllSkill8Cnt), fmt.Sprintf("%d", s.Star6Skill8Cnt), fmt.Sprintf("%d", s.Star5Skill8Cnt), fmt.Sprintf("%d", s.Star4Skill8Cnt)}},
+		{"三级模组数量", [4]string{fmt.Sprintf("%d", s.AllEquipStage3Cnt), fmt.Sprintf("%d", s.Star6EquipStage3Cnt), fmt.Sprintf("%d", s.Star5EquipStage3Cnt), fmt.Sprintf("%d", s.Star4EquipStage3Cnt)}},
+		{"二级模组数量", [4]string{fmt.Sprintf("%d", s.AllEquipStage2Cnt), fmt.Sprintf("%d", s.Star6EquipStage2Cnt), fmt.Sprintf("%d", s.Star5EquipStage2Cnt), fmt.Sprintf("%d", s.Star4EquipStage2Cnt)}},
+		{"一级模组数量", [4]string{fmt.Sprintf("%d", s.AllEquipStage1Cnt), fmt.Sprintf("%d", s.Star6EquipStage1Cnt), fmt.Sprintf("%d", s.Star5EquipStage1Cnt), fmt.Sprintf("%d", s.Star4EquipStage1Cnt)}},
+	}
+	for _, m := range metrics {
+		row := NewYogaNode()
+		row.Style.Width = 900
+		row.Style.Height = 38
+		row.Style.Display = "flex"
+		row.Style.FlexDirection = "row"
+		row.Style.Gap = 20
+		for j := 0; j < 4; j++ {
+			cell := NewYogaNode()
+			cell.Style.Width = 210
+			cell.Style.Height = 38
+			txt3 := m.vals[j]
+			cell.SetMeasureFunc(func(w float32, wm MeasureMode, h float32, hm MeasureMode) Size {
+				return Size{Width: float32(MeasureText(txt3, 12)), Height: 12}
+			})
+			cell.Text = txt3
+			row.AddChild(cell)
+		}
+		// attach label for rendering via row index (stored in first cell text is count, but we need label for left side)
+		_ = m.label
+			table.AddChild(row)
+	}
+	root.AddChild(table)
+	if len(s.MissingChars) > 0 {
+		titleN := NewYogaNode()
+		titleN.Style.Width = 900
+		titleN.Style.Height = 22
+		txt4 := "未招募干员"
+		titleN.SetMeasureFunc(func(w float32, wm MeasureMode, h float32, hm MeasureMode) Size {
+			return Size{Width: float32(MeasureText(txt4, 14)), Height: 14}
+		})
+		titleN.Text = txt4
+		root.AddChild(titleN)
+		wrap := NewYogaNode()
+		wrap.Style.Width = 900
+		wrap.Style.Display = "flex"
+		wrap.Style.FlexWrap = "wrap"
+		wrap.Style.Gap = 2
+		for _, ch := range s.MissingChars {
+			n := NewYogaNode()
+			n.Style.Width = 40
+			n.Style.Height = 40
+			n.Text = ch.Name
+			n.IconPath = ch.SkinId
+			wrap.AddChild(n)
+		}
+		root.AddChild(wrap)
+	}
+	root.CalculateLayout(900, 482)
+	return root
+}
+
+func RenderBoxSummary(s BoxSummary, scale float64) *Canvas {
+	if scale <= 0 {
+		scale = 1.5
+	}
+	if s.Name == "" {
+		s.Name = "Test"
+	}
+	if s.AllCharCnt == "" {
+		s.AllCharCnt = "10/20"
+		s.Star6CharCnt = "5/10"
+		s.Star5CharCnt = "3/5"
+		s.Star4CharCnt = "2/5"
+	}
+	W, H := int(900*scale+0.5), int(482*scale+0.5)
+	c := NewCanvas(W, H)
+	c.Clear(color.RGBA{0x2e, 0x30, 0x31, 255})
+	root := BuildBoxSummary(s)
+	ld, _ := NewLoader(findRepoRoot())
+	if label, err := ld.Load("assets/help/label.png"); err == nil {
+		_ = c.DrawImageRect(label, Rect{X: 0, Y: 0, W: 900 * float32(scale), H: 60 * float32(scale)})
+	}
+	hdr := root.Children[0]
+	title := "Dr " + s.Name
+	c.DrawText(title, hdr.Layout.X+25, hdr.Layout.Y+(60-30)/2, 30, color.RGBA{255, 255, 255, 255}, scale)
+	_ = MeasureText(title, 30)
+	table := root.Children[1]
+	hdrRow := table.Children[0]
+	labels := []string{"全部干员", "六星干员", "五星干员", "四星干员"}
+	for i, cell := range hdrRow.Children {
+		cx := hdrRow.Layout.X + cell.Layout.X
+		cy := hdrRow.Layout.Y + cell.Layout.Y
+		tw := MeasureText(labels[i], 12)
+		tx := cx + (210-float32(tw))/2
+		ty := cy + (30-12)/2
+		c.DrawText(labels[i], tx, ty, 12, color.RGBA{255, 255, 255, 255}, scale)
+	}
+	metricLabels := []string{"招募干员数量", "精英阶段2干员", "专精三技能数量", "专精二技能数量", "专精一技能数量", "三级模组数量", "二级模组数量", "一级模组数量"}
+	for ri, row := range table.Children[1:] {
+		ry := row.Layout.Y
+		if ri%2 == 0 {
+			c.DrawRect(Rect{X: 15 * float32(scale), Y: ry * float32(scale), W: float32(900-30) * float32(scale), H: 38 * float32(scale)}, Paint{Color: color.RGBA{255, 255, 255, 10}})
+		}
+		c.DrawRect(Rect{X: 15 * float32(scale), Y: (ry + 37) * float32(scale), W: float32(900-30) * float32(scale), H: 1 * float32(scale)}, Paint{Color: color.RGBA{0x55, 0x55, 0x55, 255}})
+		vals := []string{}
+		switch ri {
+		case 0:
+			vals = []string{s.AllCharCnt, s.Star6CharCnt, s.Star5CharCnt, s.Star4CharCnt}
+		case 1:
+			vals = []string{fmt.Sprintf("%d", s.AllEvolvePhase2Cnt), fmt.Sprintf("%d", s.Star6EvolvePhase2Cnt), fmt.Sprintf("%d", s.Star5EvolvePhase2Cnt), fmt.Sprintf("%d", s.Star4EvolvePhase2Cnt)}
+		case 2:
+			vals = []string{fmt.Sprintf("%d", s.AllSkill10Cnt), fmt.Sprintf("%d", s.Star6Skill10Cnt), fmt.Sprintf("%d", s.Star5Skill10Cnt), fmt.Sprintf("%d", s.Star4Skill10Cnt)}
+		case 3:
+			vals = []string{fmt.Sprintf("%d", s.AllSkill9Cnt), fmt.Sprintf("%d", s.Star6Skill9Cnt), fmt.Sprintf("%d", s.Star5Skill9Cnt), fmt.Sprintf("%d", s.Star4Skill9Cnt)}
+		case 4:
+			vals = []string{fmt.Sprintf("%d", s.AllSkill8Cnt), fmt.Sprintf("%d", s.Star6Skill8Cnt), fmt.Sprintf("%d", s.Star5Skill8Cnt), fmt.Sprintf("%d", s.Star4Skill8Cnt)}
+		case 5:
+			vals = []string{fmt.Sprintf("%d", s.AllEquipStage3Cnt), fmt.Sprintf("%d", s.Star6EquipStage3Cnt), fmt.Sprintf("%d", s.Star5EquipStage3Cnt), fmt.Sprintf("%d", s.Star4EquipStage3Cnt)}
+		case 6:
+			vals = []string{fmt.Sprintf("%d", s.AllEquipStage2Cnt), fmt.Sprintf("%d", s.Star6EquipStage2Cnt), fmt.Sprintf("%d", s.Star5EquipStage2Cnt), fmt.Sprintf("%d", s.Star4EquipStage2Cnt)}
+		case 7:
+			vals = []string{fmt.Sprintf("%d", s.AllEquipStage1Cnt), fmt.Sprintf("%d", s.Star6EquipStage1Cnt), fmt.Sprintf("%d", s.Star5EquipStage1Cnt), fmt.Sprintf("%d", s.Star4EquipStage1Cnt)}
+		}
+		for ci, cell := range row.Children {
+			cx := row.Layout.X + cell.Layout.X
+			cy := row.Layout.Y + cell.Layout.Y
+			lab := metricLabels[ri]
+			twLab := MeasureText(lab, 12)
+			c.DrawText(lab, cx+10, cy+(38-12)/2, 12, color.RGBA{200, 200, 200, 255}, scale)
+			_ = twLab
+			twVal := MeasureText(vals[ci], 12)
+			txVal := cx + 210 - float32(twVal) - 10
+			tyVal := cy + (38-12)/2
+			col := color.RGBA{230, 230, 230, 255}
+			if ci == 1 {
+				col = color.RGBA{240, 180, 40, 255}
+			} else if ci == 2 {
+				col = color.RGBA{170, 110, 220, 255}
+			} else if ci == 3 {
+				col = color.RGBA{90, 160, 230, 255}
+			}
+			c.DrawText(vals[ci], txVal, tyVal, 12, col, scale)
+		}
+	}
+	if len(s.MissingChars) > 0 && len(root.Children) > 3 {
+		titleN := root.Children[2]
+		c.DrawText("未招募干员", titleN.Layout.X+15, titleN.Layout.Y+5, 14, color.RGBA{255, 255, 255, 255}, scale)
+		wrap := root.Children[3]
+		for idx, node := range wrap.Children {
+			if idx >= len(s.MissingChars) {
+				break
+			}
+			ch := s.MissingChars[idx]
+			nx := wrap.Layout.X + node.Layout.X
+			ny := wrap.Layout.Y + node.Layout.Y
+			if img, err := ld.Load(ch.SkinId); err == nil {
+				_ = c.DrawImageRect(img, Rect{X: nx * float32(scale), Y: ny * float32(scale), W: 40 * float32(scale), H: 40 * float32(scale)})
+			} else {
+				c.DrawRect(Rect{X: nx * float32(scale), Y: ny * float32(scale), W: 40 * float32(scale), H: 40 * float32(scale)}, Paint{Color: color.RGBA{0x55, 0x55, 0x55, 255}})
+			}
+		}
+	}
+	return c
+}
+
