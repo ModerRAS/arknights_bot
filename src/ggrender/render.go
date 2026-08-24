@@ -1117,56 +1117,6 @@ func RenderHelp(data *HelpData) (*gg.Context, error) {
 }
 
 
-// Lottery
-type LotteryData struct {
-	Details []struct{ User, Award string; Count int }
-}
-
-func SampleLottery() *LotteryData {
-	d:=&LotteryData{}
-	d.Details=[]struct{User,Award string; Count int}{
-		{"博士A","月卡",1},{"博士B","源石×10",2},{"博士C","家具",1},{"博士D","合成玉×600",1},{"博士E","龙门币",3},
-	}
-	return d
-}
-
-func RenderLottery(data *LotteryData) (*gg.Context, error) {
-	const mainW=800
-	rowH:=50
-	headerH:=80
-	mainH:=headerH+len(data.Details)*rowH+40
-	dc:=gg.NewContext(mainW,mainH)
-	FillBackground(dc,27,29,30)
-	dc.SetRGB255(45,48,55)
-	dc.DrawRectangle(0,0,float64(mainW),float64(headerH))
-	dc.Fill()
-	setFont(dc,26)
-	dc.SetRGB255(255,255,255)
-	drawString(dc,"抽奖详情",25,52)
-	y:=headerH+10
-	// header row
-	setFont(dc,13)
-	dc.SetRGB255(180,200,220)
-	drawString(dc,"用户",30,float64(y+18))
-	drawString(dc,"奖品",300,float64(y+18))
-	drawString(dc,"数量",600,float64(y+18))
-	y+=30
-	for i,d:=range data.Details {
-		if i%2==0 {
-			fillRoundedCard(dc,10,float64(y),float64(mainW-20),float64(rowH-10),6,10)
-		}
-		setFont(dc,14)
-		dc.SetRGB255(255,255,255)
-		drawString(dc,d.User,30,float64(y+28))
-		dc.SetRGB255(220,220,180)
-		drawString(dc,d.Award,300,float64(y+28))
-		dc.SetRGB255(180,220,180)
-		drawString(dc,itoa(d.Count),600,float64(y+28))
-		y+=rowH
-	}
-	return dc,nil
-}
-
 // Operator
 type OperatorInfo struct {
 	Name, Profession, Position, Tag string
