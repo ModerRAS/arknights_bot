@@ -117,3 +117,8 @@ arknights.yaml
 # Arknights binary files
 arknights_bot
 arknights_bot.exe
+# Renderer deps (generated via npm ci)
+renderer/node_modules/
+# Visual regression artifacts (generated)
+.visual-regression/
+.visual-regression-*/

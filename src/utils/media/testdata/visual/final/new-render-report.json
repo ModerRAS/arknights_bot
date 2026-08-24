@@ -27,7 +27,7 @@
     {
       "id": "base",
       "path": "new/base.png",
-      "sha256": "bc0b676d44a14518ebfa1d19506f4b4df52af7919c20748f482612132df0d24b",
+      "sha256": "50422f6c95f44fa7c6d30831e60f11dfc07b1ce9f6bd51e69c8bc7a5fe1af5ab",
       "width": 1665,
       "height": 918,
       "scale": 1.5,
@@ -45,7 +45,7 @@
     {
       "id": "box-detail",
       "path": "new/box-detail.png",
-      "sha256": "0b1e1e5de2e8ce16ffc543fea18668d157782737541e5e6179b0737684abf9ae",
+      "sha256": "ed18b77d6bf622e70f505ce1dba425f629ec7959357c89790e28b041b46955aa",
       "width": 722,
       "height": 279,
       "scale": 1.5,
@@ -54,7 +54,7 @@
     {
       "id": "box-summary",
       "path": "new/box-summary.png",
-      "sha256": "45e8ea34df9940e823016395214dfcbfc55edf9371b17185baecb579a0d6c136",
+      "sha256": "1cd54451401c8523b76e5551a9fc421a03ad74f1367a44690e5a8a7062ddb5a5",
       "width": 1350,
       "height": 723,
       "scale": 1.5,
@@ -72,7 +72,7 @@
     {
       "id": "card",
       "path": "new/card.png",
-      "sha256": "89da51c637723212a622dc62870b6a0e1b604737ac90dda2cc0e4825e68fcd91",
+      "sha256": "759c419910d64b0cf6e0d0fcee8199dc446ae4d4792725632146d57945c1b3b6",
       "width": 1280,
       "height": 720,
       "scale": 1,
@@ -81,7 +81,7 @@
     {
       "id": "depot",
       "path": "new/depot.png",
-      "sha256": "c435cc13a35a993dfa5df920df80ea9069ecabfe9a822a15549e81ada00bc405",
+      "sha256": "45b21e091a8250c0e2278b6d2e12de3db27e8a0441736eb67428898e5c80ec5b",
       "width": 1275,
       "height": 234,
       "scale": 1.5,
@@ -90,7 +90,7 @@
     {
       "id": "enemy",
       "path": "new/enemy.png",
-      "sha256": "56665732cdd41c9bdb7ff028843f50b6940ff3c5a3f8fb4bef0d09d65fde6997",
+      "sha256": "85369791e79def22917640a06ece13c24c3a4d127e17fca3eb3d332cbd45d9b6",
       "width": 984,
       "height": 477,
       "scale": 1.5,
@@ -99,7 +99,7 @@
     {
       "id": "gacha",
       "path": "new/gacha.png",
-      "sha256": "659d4d15a1680a14c4eefaf645d21ed4170dc53bf679fa1a16ff5ad83b81d40a",
+      "sha256": "da355ddf35137eceb23ce19df6d6333ab25de7f1da42d8fe10c3b302b60ec23f",
       "width": 1500,
       "height": 1323,
       "scale": 1.5,
@@ -108,7 +108,7 @@
     {
       "id": "headhunt",
       "path": "new/headhunt.png",
-      "sha256": "58dc824d0bf1894c82ed563bedfb228928d5d99e82a1d166db7728d9bdd69d97",
+      "sha256": "9723dafa05fccaf9311db5d9032236f7e259cac4c9f083e4abd09efae6c12214",
       "width": 1049,
       "height": 576,
       "scale": 1,
@@ -144,7 +144,7 @@
     {
       "id": "operator",
       "path": "new/operator.png",
-      "sha256": "d694e71e3c552a6e1e37786b510e80943b165ce9e617e01cc004ebfeab353663",
+      "sha256": "4c593be5cfe5de2cb9153279744ace300f62cf12b213f15a22664d9825f99fc6",
       "width": 1800,
       "height": 1200,
       "scale": 1.5,
@@ -162,7 +162,7 @@
     {
       "id": "state",
       "path": "new/state.png",
-      "sha256": "9a19dbb66748b6ef62eb9cb6dbb736217c2ee0fddb4c40330b6892140d5994fd",
+      "sha256": "af641b6c403fc44dc9e7a9b496e18c11f077bda21f6b36e86cf494e4bdf1ca1b",
       "width": 1092,
       "height": 510,
       "scale": 1,

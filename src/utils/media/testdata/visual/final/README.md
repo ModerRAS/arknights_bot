@@ -1,6 +1,6 @@
 # Visual Final Bundle
 
-Actual final replay; legacy Chromium rerenders gated against immutable manifest; current renders use Go HTTP RenderSpec plus one resident Node runner; capture-clock-erratum.json supplies dynamic legacy wall clocks.
+actual Go HTTP RenderSpec -> media.ScreenshotPNG -> resident Node renderer
 
 Legacy replay requires `legacy-capture.mjs --out <final-dir> --root <repo-root> --baseline <repo-root>/src/utils/media/testdata/visual/baseline --clock-erratum <repo-root>/src/utils/media/testdata/visual/capture-clock-erratum.json --base-url <legacy-url> --playwright <playwright-module>`. It replays manifest entries (or `--id gacha` for diagnostics) at each manifest DPR, takes Playwright locator JPEGs at default quality, waits 3000ms for Gacha, and uses an advancing fake wall clock anchored to the erratum for Gacha ECharts. Calendar and State use their fixed erratum clocks.
 

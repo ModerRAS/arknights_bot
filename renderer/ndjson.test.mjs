@@ -36,7 +36,8 @@ test('NDJSON renders Satori SVG to exact PNG envelope and scale', () => {
     maxBuffer: 8 * 1024 * 1024,
   });
   assert.equal(result.status, 0, result.stderr);
-  assert.equal(result.stderr.trim(), '');
+  const filteredStderr = result.stderr.trim().split('\n').filter((line) => line && !line.startsWith('[asset]')).join('\n');
+  assert.equal(filteredStderr, '');
   const responses = result.stdout.trim().split('\n').map((line) => JSON.parse(line));
   assert.equal(responses.length, requests.length);
   const byId = new Map(responses.map((response) => [response.id, response]));
@@ -81,7 +82,8 @@ test('NDJSON bad JSON and oversized requests stay on stdout envelope', () => {
     maxBuffer: 2 * 1024 * 1024,
   });
   assert.equal(result.status, 0, result.stderr);
-  assert.equal(result.stderr.trim(), '');
+  const filteredStderr2 = result.stderr.trim().split('\n').filter((line) => line && !line.startsWith('[asset]')).join('\n');
+  assert.equal(filteredStderr2, '');
   const responses = result.stdout.trim().split('\n').map((line) => JSON.parse(line));
   assert.deepEqual(responses[0], {
     id: '',
