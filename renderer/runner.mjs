@@ -180,6 +180,12 @@ function loadBoldFont(component) {
     : 'assets/font/NotoSansSC-600.ttf';
   return { name: 'NotoSansHans', data: readFileSync(path.join(REPO_ROOT, file)), weight: 600, style: 'normal' };
 }
+// Digits-only Liberation Serif subset (renamed per OFL RFN; see
+// assets/font/DepotSerif-README.md). The frozen depot baseline renders its
+// count badge in the browser default serif, not the page webfont.
+function loadCountSerifFont() {
+  return { name: 'DepotSerif', data: readFileSync(path.join(REPO_ROOT, 'assets/font/DepotSerif-subset.ttf')), weight: 400, style: 'normal' };
+}
 function assertVNode(value) {
   if (!value || typeof value !== 'object' || typeof value.type !== 'string') {
     throw new Error('component did not return a renderable VNode');
@@ -194,7 +200,7 @@ export async function renderRequest(request) {
   const svg = await satori(vnode, {
     width: valid.width,
     height: valid.height,
-    fonts: [await loadFont(), loadBoldFont(valid.component)],
+    fonts: [await loadFont(), loadBoldFont(valid.component), loadCountSerifFont()],
   });
   const pixelWidth = Math.max(1, Math.round(valid.width * valid.scale));
   const pixelHeight = Math.max(1, Math.round(valid.height * valid.scale));
