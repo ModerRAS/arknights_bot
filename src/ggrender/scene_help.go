@@ -99,7 +99,7 @@ func drawPersonIcon(dc *gg.Context, x, y, s float64) {
 
 func drawHelpChips(dc *gg.Context, cmds []Cmd, yTop float64) float64 {
 	const chipW, chipH = 227.0, 80.0
-	const chipMarginX, chipMarginTop = 14.0, 22.7
+	const chipMarginX, chipMarginTop = 14.0, 21.7
 	const perRow = 4
 	y := yTop
 	for i, c := range cmds {
