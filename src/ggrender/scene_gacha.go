@@ -56,6 +56,28 @@ func SampleGacha() *GachaData {
 	}
 }
 
+// drawStringMixed draws s with ASCII runes advanced at asciiAdv (measured Chromium ink runs)
+// and non-ASCII runes at their natural width.
+func drawStringMixed(dc *gg.Context, s string, x, y, asciiAdv float64) {
+	cur := x
+	for _, r := range s {
+		rs := string(r)
+		drawString(dc, rs, cur, y)
+		if r < 128 {
+			cur += asciiAdv
+		} else {
+			rw, _ := measure(dc, rs)
+			cur += rw
+		}
+	}
+}
+
+// drawStringMixedBold bold variant of drawStringMixed.
+func drawStringMixedBold(dc *gg.Context, s string, x, y, asciiAdv, w float64) {
+	drawStringMixed(dc, s, x-w/2, y, asciiAdv)
+	drawStringMixed(dc, s, x+w/2, y, asciiAdv)
+}
+
 // fillSector draws a pie sector from angle a0 to a1 (gg convention: +angle = clockwise on screen).
 func fillSector(dc *gg.Context, cx, cy, r, a0, a1 float64) {
 	dc.MoveTo(cx, cy)
@@ -76,12 +98,12 @@ func RenderGacha(data *GachaData) (*gg.Context, error) {
 	dc.DrawImage(ScaleExact(tryLocal("gacha/header.png"), W, 600), 0, 0)
 	setFont(dc, 48)
 	dc.SetRGB255(238, 238, 238)
-	drawStringBoldW(dc, data.Name, 480, 129, 1.8)
+	drawStringMixedBold(dc, data.Name, 481, 129, 48.3, 1.8)
 	totalStr := "共" + itoa(data.Total) + "抽"
-	drawStringBoldW(dc, totalStr, 386, 197, 1.8)
+	drawStringMixedBold(dc, totalStr, 377, 197, 25, 1.8)
 	dates := "(" + data.BegTime + "——" + data.EndTime + ")"
 	setFont(dc, 34.5)
-	drawString(dc, dates, 611, 193)
+	drawStringMixed(dc, dates, 521, 193, 19.2)
 
 	// three item cards
 	card := func(x0 float64) {
@@ -238,6 +260,6 @@ func RenderGacha(data *GachaData) (*gg.Context, error) {
 	dc.DrawImage(ScaleExact(tryLocal("gacha/footer.png"), W, 404), 0, 919)
 	setFont(dc, 48)
 	dc.SetRGB255(238, 238, 238)
-	drawStringBoldW(dc, data.Now, 810, 1258, 1.8)
+	drawStringMixedBold(dc, data.Now, 796, 1258, 26.5, 1.8)
 	return dc, nil
 }
