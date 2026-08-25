@@ -83,7 +83,7 @@ func RenderEnemy(data *Enemy) (*gg.Context, error) {
 	setFont(dc, 37.5)
 	dc.SetRGB255(255, 255, 255)
 	nw, _ := measure(dc, data.Name)
-	drawStringBold(dc, data.Name, W/2-nw/2-1, 81)
+	drawStringBoldW(dc, data.Name, W/2-nw/2-1, 81, 1.4)
 	// pic cell: img 158 CSS = 237 canvas centered in 0..425
 	pic := FetchImage(data.Pic, AssetPath("common/amiya.png"))
 	dc.DrawImage(ScaleExact(pic, 237, 237), 96, 101)
@@ -109,6 +109,6 @@ func RenderEnemy(data *Enemy) (*gg.Context, error) {
 	setFont(dc, 30)
 	dc.SetRGB255(255, 255, 255)
 	aw, _ := measure(dc, "能力")
-	drawStringBold(dc, "能力", W/2-aw/2, 461.5)
+	drawStringBoldW(dc, "能力", W/2-aw/2, 461.5, 1.2)
 	return dc, nil
 }

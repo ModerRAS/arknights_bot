@@ -118,20 +118,24 @@ func drawHelpChips(dc *gg.Context, cmds []Cmd, yTop float64) float64 {
 		if c.Param != "" {
 			line1 += " " + c.Param
 		}
-		drawStringBold(dc, line1, x+10, y+31)
+		drawStringBoldW(dc, line1, x+10, y+31, 0.9)
 		if c.IsBind {
 			drawPersonIcon(dc, x+chipW-40.5, y+6, 24)
 		}
 		// p2: desc
-		drawStringBold(dc, c.Desc, x+10, y+70)
+		drawStringBoldW(dc, c.Desc, x+10, y+70, 0.9)
 	}
 	return y + chipH
 }
 
-// drawStringBold fakes bold by double-drawing with a small offset (only regular face available).
+// drawStringBold fakes bold by symmetric double-draw (only regular face available).
 func drawStringBold(dc *gg.Context, s string, x, y float64) {
-	drawString(dc, s, x, y)
-	drawString(dc, s, x+1.2, y)
+	drawStringBoldW(dc, s, x, y, 1.2)
+}
+
+func drawStringBoldW(dc *gg.Context, s string, x, y, w float64) {
+	drawString(dc, s, x-w/2, y)
+	drawString(dc, s, x+w/2, y)
 }
 
 func RenderHelp(data *HelpData) (*gg.Context, error) {

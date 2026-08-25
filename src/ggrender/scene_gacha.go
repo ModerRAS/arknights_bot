@@ -76,9 +76,9 @@ func RenderGacha(data *GachaData) (*gg.Context, error) {
 	dc.DrawImage(ScaleExact(tryLocal("gacha/header.png"), W, 600), 0, 0)
 	setFont(dc, 48)
 	dc.SetRGB255(238, 238, 238)
-	drawStringBold(dc, data.Name, 480, 129)
+	drawStringBoldW(dc, data.Name, 480, 129, 1.8)
 	totalStr := "共" + itoa(data.Total) + "抽"
-	drawStringBold(dc, totalStr, 386, 197)
+	drawStringBoldW(dc, totalStr, 386, 197, 1.8)
 	dates := "(" + data.BegTime + "——" + data.EndTime + ")"
 	setFont(dc, 34.5)
 	drawString(dc, dates, 611, 193)
@@ -238,6 +238,6 @@ func RenderGacha(data *GachaData) (*gg.Context, error) {
 	dc.DrawImage(ScaleExact(tryLocal("gacha/footer.png"), W, 404), 0, 919)
 	setFont(dc, 48)
 	dc.SetRGB255(238, 238, 238)
-	drawStringBold(dc, data.Now, 810, 1258)
+	drawStringBoldW(dc, data.Now, 810, 1258, 1.8)
 	return dc, nil
 }
