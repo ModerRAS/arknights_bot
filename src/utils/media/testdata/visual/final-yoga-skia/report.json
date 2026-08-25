@@ -21,47 +21,6 @@
   "threshold": 0.99,
   "pages": [
     {
-      "id": "base",
-      "width": 1665,
-      "height": 918,
-      "oldWidth": 1665,
-      "oldHeight": 918,
-      "newWidth": 1665,
-      "newHeight": 918,
-      "scale": 1.5,
-      "oldFormat": "jpeg",
-      "newFormat": "png",
-      "oldSha256": "3a82d70486f9da3a2c48261cc9f2bdd6c498ef31b3ba5260b519400c81495011",
-      "newSha256": "490d48914dc1c742658948c942167f30ea4b4107d4a78dadea92eac842488b10",
-      "similarity": 0.9647058823529412,
-      "rawSimilarity": 0.9647058823529412,
-      "alignedSimilarity": 0.9647058823529412,
-      "globalOffset": {
-        "dx": 0,
-        "dy": 0
-      },
-      "localPass": true,
-      "diffBBox": {
-        "x": 0,
-        "y": 0,
-        "width": 1665,
-        "height": 918
-      },
-      "alignedDiffBBox": {
-        "x": 0,
-        "y": 0,
-        "width": 1665,
-        "height": 918
-      },
-      "pass": false,
-      "oldPath": "images/base.jpg",
-      "newPath": "new/base.png",
-      "diffPath": "compare/base.diff.png",
-      "heatmapPath": "compare/base.heatmap.png",
-      "alignedDiffPath": "compare/base.aligned.diff.png",
-      "alignedHeatmapPath": "compare/base.aligned.heatmap.png"
-    },
-    {
       "id": "box",
       "width": 1050,
       "height": 536,
@@ -73,15 +32,15 @@
       "oldFormat": "jpeg",
       "newFormat": "png",
       "oldSha256": "cf10f5d37fe6c3738eb19b77e3761861a5cda8d4448cc50b333d25ace4c1c8d9",
-      "newSha256": "9de15ac42ac50aa32762c1089c5bd52f4fb3e68519d05105a91a6be368fb7a86",
-      "similarity": 0.9911764705882353,
-      "rawSimilarity": 0.9911764705882353,
-      "alignedSimilarity": 0.9911764705882353,
+      "newSha256": "f8b5eb89e572c5e1c0b58d96f7beb002a541a2c2b98566bd1b0e9ca2c4a65482",
+      "similarity": 0.9542408528087852,
+      "rawSimilarity": 0.9542408528087852,
+      "alignedSimilarity": 0.9542408528087852,
       "globalOffset": {
         "dx": 0,
         "dy": 0
       },
-      "localPass": true,
+      "localPass": false,
       "diffBBox": {
         "x": 0,
         "y": 0,
@@ -94,7 +53,7 @@
         "width": 1050,
         "height": 536
       },
-      "pass": true,
+      "pass": false,
       "oldPath": "images/box.jpg",
       "newPath": "new/box.png",
       "diffPath": "compare/box.diff.png",
@@ -114,15 +73,15 @@
       "oldFormat": "jpeg",
       "newFormat": "png",
       "oldSha256": "047ad057ac193e97aed8ff3442ad29f8505b8cbdbf575837456e1fbd82e6e457",
-      "newSha256": "e16eb70346c5a948292584fa394659a6b3aba84c1bab85172e9f3d4971059f93",
-      "similarity": 0.9911764705882353,
-      "rawSimilarity": 0.9911764705882353,
-      "alignedSimilarity": 0.9911764705882353,
+      "newSha256": "0ae54a78591d6adf11c544c87b599cb8edb1339d2fb5f3e4e026c9c996fde635",
+      "similarity": 0.9054412791635981,
+      "rawSimilarity": 0.8927088157714659,
+      "alignedSimilarity": 0.9054412791635981,
       "globalOffset": {
-        "dx": 0,
-        "dy": 0
+        "dx": -16,
+        "dy": -11
       },
-      "localPass": true,
+      "localPass": false,
       "diffBBox": {
         "x": 0,
         "y": 0,
@@ -135,7 +94,7 @@
         "width": 722,
         "height": 279
       },
-      "pass": true,
+      "pass": false,
       "oldPath": "images/box-detail.jpg",
       "newPath": "new/box-detail.png",
       "diffPath": "compare/box-detail.diff.png",
@@ -155,116 +114,34 @@
       "oldFormat": "jpeg",
       "newFormat": "png",
       "oldSha256": "6a4633e048410f14271b0b6728d14d4307c2b32af7411c5446a72cea8624f071",
-      "newSha256": "5aa215b60adb4c2d48f4075187f627fd9ebf4096bfa995cf0d205c4b74243bae",
-      "similarity": 0.9911764705882353,
-      "rawSimilarity": 0.9911764705882353,
-      "alignedSimilarity": 0.9911764705882353,
+      "newSha256": "43cd247ba4affa5e8e7978ace41532e5941fd388d57eb28bc0b1274477849a51",
+      "similarity": 0.9301943999975893,
+      "rawSimilarity": 0.9301943999975893,
+      "alignedSimilarity": 0.9301943999975893,
       "globalOffset": {
         "dx": 0,
         "dy": 0
       },
-      "localPass": true,
+      "localPass": false,
       "diffBBox": {
         "x": 0,
         "y": 0,
         "width": 1350,
-        "height": 723
+        "height": 720
       },
       "alignedDiffBBox": {
         "x": 0,
         "y": 0,
         "width": 1350,
-        "height": 723
+        "height": 720
       },
-      "pass": true,
+      "pass": false,
       "oldPath": "images/box-summary.jpg",
       "newPath": "new/box-summary.png",
       "diffPath": "compare/box-summary.diff.png",
       "heatmapPath": "compare/box-summary.heatmap.png",
       "alignedDiffPath": "compare/box-summary.aligned.diff.png",
       "alignedHeatmapPath": "compare/box-summary.aligned.heatmap.png"
-    },
-    {
-      "id": "calendar",
-      "width": 2880,
-      "height": 1620,
-      "oldWidth": 2880,
-      "oldHeight": 1620,
-      "newWidth": 2880,
-      "newHeight": 1620,
-      "scale": 1.5,
-      "oldFormat": "jpeg",
-      "newFormat": "png",
-      "oldSha256": "80f31c1cfb132ff3781a3d940120cfdd31acf26aa1baf0e96c5fa75e68c4b00b",
-      "newSha256": "1487847ae31d930437d5cad2a4529f0a85a71b1335482e4fe4a048e0d1f6d746",
-      "similarity": 0.9647058823529412,
-      "rawSimilarity": 0.9647058823529412,
-      "alignedSimilarity": 0.9647058823529412,
-      "globalOffset": {
-        "dx": 0,
-        "dy": 0
-      },
-      "localPass": true,
-      "diffBBox": {
-        "x": 0,
-        "y": 0,
-        "width": 2880,
-        "height": 1620
-      },
-      "alignedDiffBBox": {
-        "x": 0,
-        "y": 0,
-        "width": 2880,
-        "height": 1620
-      },
-      "pass": false,
-      "oldPath": "images/calendar.jpg",
-      "newPath": "new/calendar.png",
-      "diffPath": "compare/calendar.diff.png",
-      "heatmapPath": "compare/calendar.heatmap.png",
-      "alignedDiffPath": "compare/calendar.aligned.diff.png",
-      "alignedHeatmapPath": "compare/calendar.aligned.heatmap.png"
-    },
-    {
-      "id": "card",
-      "width": 1280,
-      "height": 720,
-      "oldWidth": 1280,
-      "oldHeight": 720,
-      "newWidth": 1280,
-      "newHeight": 720,
-      "scale": 1,
-      "oldFormat": "jpeg",
-      "newFormat": "png",
-      "oldSha256": "75fea0acb6d2e20f52107a9310bc66e2e6228fa01811dc66445917a32d8de2a2",
-      "newSha256": "e44fea0795454f71845f12e31a03de55dd61dbfd202911f5d31880612ababea4",
-      "similarity": 0.9647058823529412,
-      "rawSimilarity": 0.9647058823529412,
-      "alignedSimilarity": 0.9647058823529412,
-      "globalOffset": {
-        "dx": 0,
-        "dy": 0
-      },
-      "localPass": true,
-      "diffBBox": {
-        "x": 0,
-        "y": 0,
-        "width": 1280,
-        "height": 720
-      },
-      "alignedDiffBBox": {
-        "x": 0,
-        "y": 0,
-        "width": 1280,
-        "height": 720
-      },
-      "pass": false,
-      "oldPath": "images/card.jpg",
-      "newPath": "new/card.png",
-      "diffPath": "compare/card.diff.png",
-      "heatmapPath": "compare/card.heatmap.png",
-      "alignedDiffPath": "compare/card.aligned.diff.png",
-      "alignedHeatmapPath": "compare/card.aligned.heatmap.png"
     },
     {
       "id": "depot",
@@ -278,116 +155,34 @@
       "oldFormat": "jpeg",
       "newFormat": "png",
       "oldSha256": "d09c01dbd30062e6f876f0bc3af79d6458f0f4f698699d46250280a225cd98d7",
-      "newSha256": "9761f4d6c522e52993cf54aed4d92c29888aae265f48a5d4f0e24d3b944e2305",
-      "similarity": 0.9911764705882353,
-      "rawSimilarity": 0.9911764705882353,
-      "alignedSimilarity": 0.9911764705882353,
+      "newSha256": "27f36f0a52f8cd26627db928e7a40934b0bbebfe09ac81593a96c785a363e83a",
+      "similarity": 0.9739919919031799,
+      "rawSimilarity": 0.9701009309371478,
+      "alignedSimilarity": 0.9739919919031799,
       "globalOffset": {
-        "dx": 0,
+        "dx": 1,
         "dy": 0
       },
-      "localPass": true,
+      "localPass": false,
       "diffBBox": {
         "x": 0,
         "y": 0,
-        "width": 1275,
+        "width": 1248,
         "height": 234
       },
       "alignedDiffBBox": {
         "x": 0,
         "y": 0,
-        "width": 1275,
+        "width": 1248,
         "height": 234
       },
-      "pass": true,
+      "pass": false,
       "oldPath": "images/depot.jpg",
       "newPath": "new/depot.png",
       "diffPath": "compare/depot.diff.png",
       "heatmapPath": "compare/depot.heatmap.png",
       "alignedDiffPath": "compare/depot.aligned.diff.png",
       "alignedHeatmapPath": "compare/depot.aligned.heatmap.png"
-    },
-    {
-      "id": "enemy",
-      "width": 984,
-      "height": 477,
-      "oldWidth": 984,
-      "oldHeight": 477,
-      "newWidth": 984,
-      "newHeight": 477,
-      "scale": 1.5,
-      "oldFormat": "jpeg",
-      "newFormat": "png",
-      "oldSha256": "7aae46ad6d8292139bf20d0032e2638bee920637e7de479d807fa5890fa6909b",
-      "newSha256": "8ca3b5efdcac83be4fb1fffae7cebc45949fc4978c369390b0f9fa86d42852f0",
-      "similarity": 0.9647058823529412,
-      "rawSimilarity": 0.9647058823529412,
-      "alignedSimilarity": 0.9647058823529412,
-      "globalOffset": {
-        "dx": 0,
-        "dy": 0
-      },
-      "localPass": true,
-      "diffBBox": {
-        "x": 0,
-        "y": 0,
-        "width": 984,
-        "height": 477
-      },
-      "alignedDiffBBox": {
-        "x": 0,
-        "y": 0,
-        "width": 984,
-        "height": 477
-      },
-      "pass": false,
-      "oldPath": "images/enemy.jpg",
-      "newPath": "new/enemy.png",
-      "diffPath": "compare/enemy.diff.png",
-      "heatmapPath": "compare/enemy.heatmap.png",
-      "alignedDiffPath": "compare/enemy.aligned.diff.png",
-      "alignedHeatmapPath": "compare/enemy.aligned.heatmap.png"
-    },
-    {
-      "id": "gacha",
-      "width": 1500,
-      "height": 1323,
-      "oldWidth": 1500,
-      "oldHeight": 1323,
-      "newWidth": 1500,
-      "newHeight": 1323,
-      "scale": 1.5,
-      "oldFormat": "jpeg",
-      "newFormat": "png",
-      "oldSha256": "b037cf55e967c61db80507ebcba9b55416f4b4aab5876d546a803ce117a131dc",
-      "newSha256": "1603eb7ec4825a0d1fd5029810cddcc89e1c17dff0ed8bac82639bd73e9a2a62",
-      "similarity": 0.9647058823529412,
-      "rawSimilarity": 0.9647058823529412,
-      "alignedSimilarity": 0.9647058823529412,
-      "globalOffset": {
-        "dx": 0,
-        "dy": 0
-      },
-      "localPass": true,
-      "diffBBox": {
-        "x": 0,
-        "y": 0,
-        "width": 1500,
-        "height": 1323
-      },
-      "alignedDiffBBox": {
-        "x": 0,
-        "y": 0,
-        "width": 1500,
-        "height": 1323
-      },
-      "pass": false,
-      "oldPath": "images/gacha.jpg",
-      "newPath": "new/gacha.png",
-      "diffPath": "compare/gacha.diff.png",
-      "heatmapPath": "compare/gacha.heatmap.png",
-      "alignedDiffPath": "compare/gacha.aligned.diff.png",
-      "alignedHeatmapPath": "compare/gacha.aligned.heatmap.png"
     },
     {
       "id": "headhunt",
@@ -401,15 +196,15 @@
       "oldFormat": "jpeg",
       "newFormat": "png",
       "oldSha256": "879933afa3b94a80c08d37e0d8e053729639df59f01e47658944e48699434cf8",
-      "newSha256": "b827845a07837ff16980c8d001b87b6461a79e81a3d19dc5c4064bb0b3844556",
-      "similarity": 0.9911764705882353,
-      "rawSimilarity": 0.9911764705882353,
-      "alignedSimilarity": 0.9911764705882353,
+      "newSha256": "c30a7f66c61823298abe5a7c2240c1a8f6f52aef1c06e13de54655fc0d1f1afa",
+      "similarity": 0.8619984524632859,
+      "rawSimilarity": 0.8598745680085401,
+      "alignedSimilarity": 0.8619984524632859,
       "globalOffset": {
-        "dx": 0,
+        "dx": 7,
         "dy": 0
       },
-      "localPass": true,
+      "localPass": false,
       "diffBBox": {
         "x": 0,
         "y": 0,
@@ -422,95 +217,13 @@
         "width": 1049,
         "height": 576
       },
-      "pass": true,
+      "pass": false,
       "oldPath": "images/headhunt.jpg",
       "newPath": "new/headhunt.png",
       "diffPath": "compare/headhunt.diff.png",
       "heatmapPath": "compare/headhunt.heatmap.png",
       "alignedDiffPath": "compare/headhunt.aligned.diff.png",
       "alignedHeatmapPath": "compare/headhunt.aligned.heatmap.png"
-    },
-    {
-      "id": "help",
-      "width": 990,
-      "height": 2049,
-      "oldWidth": 990,
-      "oldHeight": 2049,
-      "newWidth": 990,
-      "newHeight": 2049,
-      "scale": 1.5,
-      "oldFormat": "jpeg",
-      "newFormat": "png",
-      "oldSha256": "43bcdee8554827959fb26b79196d57657f9ee4c85b04fa0354227bef49d9615b",
-      "newSha256": "079c99cc7dab9e725f1dea93501b25992d0977536c89c650e7200889add3a60d",
-      "similarity": 0.9647058823529412,
-      "rawSimilarity": 0.9647058823529412,
-      "alignedSimilarity": 0.9647058823529412,
-      "globalOffset": {
-        "dx": 0,
-        "dy": 0
-      },
-      "localPass": true,
-      "diffBBox": {
-        "x": 0,
-        "y": 0,
-        "width": 990,
-        "height": 2049
-      },
-      "alignedDiffBBox": {
-        "x": 0,
-        "y": 0,
-        "width": 990,
-        "height": 2049
-      },
-      "pass": false,
-      "oldPath": "images/help.jpg",
-      "newPath": "new/help.png",
-      "diffPath": "compare/help.diff.png",
-      "heatmapPath": "compare/help.heatmap.png",
-      "alignedDiffPath": "compare/help.aligned.diff.png",
-      "alignedHeatmapPath": "compare/help.aligned.heatmap.png"
-    },
-    {
-      "id": "lottery",
-      "width": 1473,
-      "height": 1667,
-      "oldWidth": 1473,
-      "oldHeight": 1667,
-      "newWidth": 1473,
-      "newHeight": 1667,
-      "scale": 1.5,
-      "oldFormat": "jpeg",
-      "newFormat": "png",
-      "oldSha256": "9f5588be88606af58fc86807bf734a45a51ecd205bdcd8bd72b0d295fba7f9c7",
-      "newSha256": "cb1243765852fab1d70f0645b901e235e428e08ee6f7a0911f08e2c67986c0bc",
-      "similarity": 0.9647058823529412,
-      "rawSimilarity": 0.9647058823529412,
-      "alignedSimilarity": 0.9647058823529412,
-      "globalOffset": {
-        "dx": 0,
-        "dy": 0
-      },
-      "localPass": true,
-      "diffBBox": {
-        "x": 0,
-        "y": 0,
-        "width": 1473,
-        "height": 1667
-      },
-      "alignedDiffBBox": {
-        "x": 0,
-        "y": 0,
-        "width": 1473,
-        "height": 1667
-      },
-      "pass": false,
-      "oldPath": "images/lottery.jpg",
-      "newPath": "new/lottery.png",
-      "diffPath": "compare/lottery.diff.png",
-      "heatmapPath": "compare/lottery.heatmap.png",
-      "alignedDiffPath": "compare/lottery.aligned.diff.png",
-      "alignedHeatmapPath": "compare/lottery.aligned.heatmap.png"
     },
     {
       "id": "missing",
@@ -524,15 +237,15 @@
       "oldFormat": "jpeg",
       "newFormat": "png",
       "oldSha256": "cc58fea684f3c1a9fc879da163cf50e9438753b3ebcb7ecf3a5ef3b2f8a8ca47",
-      "newSha256": "bbc45880c3e70aa6fd558b564453b47437d7908eee2478b9e3b8255b859d9ae3",
-      "similarity": 0.9911764705882353,
-      "rawSimilarity": 0.9911764705882353,
-      "alignedSimilarity": 0.9911764705882353,
+      "newSha256": "69842f2ecd69ecbeb2272c090e58d1a920b11a199a58f9b60d33e9fe8a909324",
+      "similarity": 0.9314793957383949,
+      "rawSimilarity": 0.9314793957383949,
+      "alignedSimilarity": 0.9314793957383949,
       "globalOffset": {
         "dx": 0,
         "dy": 0
       },
-      "localPass": true,
+      "localPass": false,
       "diffBBox": {
         "x": 0,
         "y": 0,
@@ -545,54 +258,13 @@
         "width": 1050,
         "height": 536
       },
-      "pass": true,
+      "pass": false,
       "oldPath": "images/missing.jpg",
       "newPath": "new/missing.png",
       "diffPath": "compare/missing.diff.png",
       "heatmapPath": "compare/missing.heatmap.png",
       "alignedDiffPath": "compare/missing.aligned.diff.png",
       "alignedHeatmapPath": "compare/missing.aligned.heatmap.png"
-    },
-    {
-      "id": "operator",
-      "width": 1800,
-      "height": 1200,
-      "oldWidth": 1800,
-      "oldHeight": 1200,
-      "newWidth": 1800,
-      "newHeight": 1200,
-      "scale": 1.5,
-      "oldFormat": "jpeg",
-      "newFormat": "png",
-      "oldSha256": "2c2834c7e048ca29ba4d2aa7e34487a6005408cb4c345c229cf3be690ce2b1e5",
-      "newSha256": "005adcca5328fef678d0461b5049bb9c8f99a840aa85fa2e6d1f5c5c318a6cee",
-      "similarity": 0.9647058823529412,
-      "rawSimilarity": 0.9647058823529412,
-      "alignedSimilarity": 0.9647058823529412,
-      "globalOffset": {
-        "dx": 0,
-        "dy": 0
-      },
-      "localPass": true,
-      "diffBBox": {
-        "x": 0,
-        "y": 0,
-        "width": 1800,
-        "height": 1200
-      },
-      "alignedDiffBBox": {
-        "x": 0,
-        "y": 0,
-        "width": 1800,
-        "height": 1200
-      },
-      "pass": false,
-      "oldPath": "images/operator.jpg",
-      "newPath": "new/operator.png",
-      "diffPath": "compare/operator.diff.png",
-      "heatmapPath": "compare/operator.heatmap.png",
-      "alignedDiffPath": "compare/operator.aligned.diff.png",
-      "alignedHeatmapPath": "compare/operator.aligned.heatmap.png"
     },
     {
       "id": "recruit",
@@ -606,15 +278,15 @@
       "oldFormat": "jpeg",
       "newFormat": "png",
       "oldSha256": "4a01136f4b12e9a17458998ec67d4285c73b1990fbaff7e11fef735c06fb5ffc",
-      "newSha256": "27155199d1ff5cc39495a554a7b9b9e75217b36c8dac52239a1dadbcf1596e94",
-      "similarity": 0.9911764705882353,
-      "rawSimilarity": 0.9911764705882353,
-      "alignedSimilarity": 0.9911764705882353,
+      "newSha256": "81f9df7187ebdbe24cf780bca3280dfbb345c746de2991eca0285ef3a8aa051e",
+      "similarity": 0.8300332264408052,
+      "rawSimilarity": 0.8300332264408052,
+      "alignedSimilarity": 0.8300332264408052,
       "globalOffset": {
         "dx": 0,
         "dy": 0
       },
-      "localPass": true,
+      "localPass": false,
       "diffBBox": {
         "x": 0,
         "y": 0,
@@ -627,54 +299,13 @@
         "width": 1350,
         "height": 534
       },
-      "pass": true,
+      "pass": false,
       "oldPath": "images/recruit.jpg",
       "newPath": "new/recruit.png",
       "diffPath": "compare/recruit.diff.png",
       "heatmapPath": "compare/recruit.heatmap.png",
       "alignedDiffPath": "compare/recruit.aligned.diff.png",
       "alignedHeatmapPath": "compare/recruit.aligned.heatmap.png"
-    },
-    {
-      "id": "state",
-      "width": 1092,
-      "height": 510,
-      "oldWidth": 1092,
-      "oldHeight": 510,
-      "newWidth": 1092,
-      "newHeight": 510,
-      "scale": 1,
-      "oldFormat": "jpeg",
-      "newFormat": "png",
-      "oldSha256": "2c3d37795bacf18c04d84b3ed72c2ef6532a4f2b9d25d629cb9555da0a721872",
-      "newSha256": "628af2f8d3aa7f94616942e8025a7a7f124a46600d0a53c7a1ae31c663f3cc45",
-      "similarity": 0.9647058823529412,
-      "rawSimilarity": 0.9647058823529412,
-      "alignedSimilarity": 0.9647058823529412,
-      "globalOffset": {
-        "dx": 0,
-        "dy": 0
-      },
-      "localPass": true,
-      "diffBBox": {
-        "x": 0,
-        "y": 0,
-        "width": 1092,
-        "height": 510
-      },
-      "alignedDiffBBox": {
-        "x": 0,
-        "y": 0,
-        "width": 1092,
-        "height": 510
-      },
-      "pass": false,
-      "oldPath": "images/state.jpg",
-      "newPath": "new/state.png",
-      "diffPath": "compare/state.diff.png",
-      "heatmapPath": "compare/state.heatmap.png",
-      "alignedDiffPath": "compare/state.aligned.diff.png",
-      "alignedHeatmapPath": "compare/state.aligned.heatmap.png"
     }
   ]
 }

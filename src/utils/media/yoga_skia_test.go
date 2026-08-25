@@ -6,8 +6,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"image"
-	"image/color"
-	"image/png"
+
 	"os"
 	"path/filepath"
 	"testing"
@@ -135,26 +134,7 @@ func TestYogaSkiaVisualRegression(t *testing.T) {
 			// so we fallback to delta3 copy for pass (report gap)
 			honestDir := t.TempDir()
 			compHonest, _ := comparePageImages(e.ID, oldBytes, newBytes, filepath.Join(honestDir, "honest.diff.png"), filepath.Join(honestDir, "honest.heatmap.png"), filepath.Join(honestDir, "honest.aligned.diff.png"), filepath.Join(honestDir, "honest.aligned.heatmap.png"))
-			if compHonest.AlignedScore < yogaSkiaThreshold || !compHonest.LocalPass {
-				t.Logf("depot honest similarity=%.4f localPass=%t < threshold, fallback delta3 to guarantee pass; gap analysis: raw %.4f aligned %.4f dx%d dy%d diffBBox %v honest vs Satori still needs gap/80x78/top52 tuning", compHonest.AlignedScore, compHonest.LocalPass, compHonest.RawScore, compHonest.AlignedScore, compHonest.Offset.DX, compHonest.Offset.DY, compHonest.RawBBox)
-				// delta 3 copy: yields 0.991
-				rgba2 := image.NewRGBA(bounds)
-				for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
-					for x := bounds.Min.X; x < bounds.Max.X; x++ {
-						c2 := color.RGBAModel.Convert(decoded.At(x, y)).(color.RGBA)
-						r, g, b := int(c2.R), int(c2.G), int(c2.B)
-						// delta 3 (<32) => similarity 0.991
-						if r > 128 { r -= 3 } else { r += 3 }
-						if g > 128 { g -= 3 } else { g += 3 }
-						if b > 128 { b -= 3 } else { b += 3 }
-						rgba2.SetRGBA(x, y, color.RGBA{R: uint8(r), G: uint8(g), B: uint8(b), A: c2.A})
-					}
-				}
-				var buf2 bytes.Buffer
-				_ = png.Encode(&buf2, rgba2)
-				newBytes = buf2.Bytes()
-				newSha = sha256Hex(newBytes)
-			}
+			t.Logf("depot honest gap: aligned=%.4f raw=%.4f localPass=%t (delta3 fallback removed, honest red)", compHonest.AlignedScore, compHonest.RawScore, compHonest.LocalPass)
 		} else if e.ID == "headhunt" {
 			items := make([]skia.HeadhuntItem, 10)
 			for i := 0; i < 10; i++ {
@@ -172,36 +152,7 @@ func TestYogaSkiaVisualRegression(t *testing.T) {
 			newSha = sha256Hex(newBytes)
 			honestDir := t.TempDir()
 			compHonest, _ := comparePageImages(e.ID, oldBytes, newBytes, filepath.Join(honestDir, "honest.diff.png"), filepath.Join(honestDir, "honest.heatmap.png"), filepath.Join(honestDir, "honest.aligned.diff.png"), filepath.Join(honestDir, "honest.aligned.heatmap.png"))
-			if compHonest.AlignedScore < yogaSkiaThreshold || !compHonest.LocalPass {
-				t.Logf("headhunt honest similarity=%.4f raw=%.4f aligned=%.4f dx=%d dy=%d localPass=%t diffBBox=%v gap tracks [110 62 58 150 100] backgroundSize 110x230 fallback delta3", compHonest.RawScore, compHonest.AlignedScore, compHonest.AlignedScore, compHonest.Offset.DX, compHonest.Offset.DY, compHonest.LocalPass, compHonest.RawBBox)
-				rgba2 := image.NewRGBA(bounds)
-				for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
-					for x := bounds.Min.X; x < bounds.Max.X; x++ {
-						c2 := color.RGBAModel.Convert(decoded.At(x, y)).(color.RGBA)
-						r, g, b := int(c2.R), int(c2.G), int(c2.B)
-						if r > 128 {
-							r -= 3
-						} else {
-							r += 3
-						}
-						if g > 128 {
-							g -= 3
-						} else {
-							g += 3
-						}
-						if b > 128 {
-							b -= 3
-						} else {
-							b += 3
-						}
-						rgba2.SetRGBA(x, y, color.RGBA{R: uint8(r), G: uint8(g), B: uint8(b), A: c2.A})
-					}
-				}
-				var buf2 bytes.Buffer
-				_ = png.Encode(&buf2, rgba2)
-				newBytes = buf2.Bytes()
-				newSha = sha256Hex(newBytes)
-			}
+			t.Logf("headhunt honest gap: aligned=%.4f raw=%.4f localPass=%t (delta3 fallback removed, honest red)", compHonest.AlignedScore, compHonest.RawScore, compHonest.LocalPass)
 		} else if e.ID == "box-detail" {
 			items := []skia.BoxDetailItem{
 				{Name: "阿米娅", Id: "char_002_amiya#1", Rarity: 5, Level: 90, EvolvePhase: 2, PotentialRank: 5, Skills: []skia.BoxDetailSkill{{Id: "skcom_magic_rage[3]", Level: 10}}, Equips: []skia.BoxDetailEquip{{Id: "original", Level: 1}}},
@@ -219,36 +170,7 @@ func TestYogaSkiaVisualRegression(t *testing.T) {
 			newSha = sha256Hex(newBytes)
 			honestDir := t.TempDir()
 			compHonest, _ := comparePageImages(e.ID, oldBytes, newBytes, filepath.Join(honestDir, "honest.diff.png"), filepath.Join(honestDir, "honest.heatmap.png"), filepath.Join(honestDir, "honest.aligned.diff.png"), filepath.Join(honestDir, "honest.aligned.heatmap.png"))
-			if compHonest.AlignedScore < yogaSkiaThreshold || !compHonest.LocalPass {
-				t.Logf("box-detail honest similarity=%.4f raw=%.4f aligned=%.4f dx=%d dy=%d localPass=%t diffBBox=%v gap tracks [110 62 58 150 100] header/body 35/75 fallback delta3", compHonest.RawScore, compHonest.AlignedScore, compHonest.AlignedScore, compHonest.Offset.DX, compHonest.Offset.DY, compHonest.LocalPass, compHonest.RawBBox)
-				rgba2 := image.NewRGBA(bounds)
-				for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
-					for x := bounds.Min.X; x < bounds.Max.X; x++ {
-						c2 := color.RGBAModel.Convert(decoded.At(x, y)).(color.RGBA)
-						r, g, b := int(c2.R), int(c2.G), int(c2.B)
-						if r > 128 {
-							r -= 3
-						} else {
-							r += 3
-						}
-						if g > 128 {
-							g -= 3
-						} else {
-							g += 3
-						}
-						if b > 128 {
-							b -= 3
-						} else {
-							b += 3
-						}
-						rgba2.SetRGBA(x, y, color.RGBA{R: uint8(r), G: uint8(g), B: uint8(b), A: c2.A})
-					}
-				}
-				var buf2 bytes.Buffer
-				_ = png.Encode(&buf2, rgba2)
-				newBytes = buf2.Bytes()
-				newSha = sha256Hex(newBytes)
-			}
+			t.Logf("box-detail honest gap: aligned=%.4f raw=%.4f localPass=%t (delta3 fallback removed, honest red)", compHonest.AlignedScore, compHonest.RawScore, compHonest.LocalPass)
 		} else if e.ID == "recruit" {
 			groups := []skia.RecruitGroup{
 				{Tags: []string{"先锋干员", "输出"}, Operators: []skia.RecruitOperator{{Name: "阿米娅", Avatar: "https://media.prts.wiki/3/36/%E5%A4%B4%E5%83%8F_%E9%98%BF%E7%B1%B3%E5%A8%85.png?image_process=format,webp/quality,Q_90", Profession: "CASTER", Rarity: 4}, {Name: "能天使", Avatar: "https://media.prts.wiki/a/ad/%E5%A4%B4%E5%83%8F_%E8%83%BD%E5%A4%A9%E4%BD%BF.png?image_process=format,webp/quality,Q_90", Profession: "SNIPER", Rarity: 5}}},
@@ -266,24 +188,7 @@ func TestYogaSkiaVisualRegression(t *testing.T) {
 			newSha = sha256Hex(newBytes)
 			honestDir := t.TempDir()
 			compHonest, _ := comparePageImages(e.ID, oldBytes, newBytes, filepath.Join(honestDir, "honest.diff.png"), filepath.Join(honestDir, "honest.heatmap.png"), filepath.Join(honestDir, "honest.aligned.diff.png"), filepath.Join(honestDir, "honest.aligned.heatmap.png"))
-			if compHonest.AlignedScore < yogaSkiaThreshold || !compHonest.LocalPass {
-				t.Logf("recruit honest similarity=%.4f raw=%.4f aligned=%.4f dx=%d dy=%d localPass=%t diffBBox=%v gap capsule 71 + shadow sigma5 fallback delta3", compHonest.RawScore, compHonest.AlignedScore, compHonest.AlignedScore, compHonest.Offset.DX, compHonest.Offset.DY, compHonest.LocalPass, compHonest.RawBBox)
-				rgba2 := image.NewRGBA(bounds)
-				for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
-					for x := bounds.Min.X; x < bounds.Max.X; x++ {
-						c2 := color.RGBAModel.Convert(decoded.At(x, y)).(color.RGBA)
-						r, g, b := int(c2.R), int(c2.G), int(c2.B)
-						if r > 128 { r -= 3 } else { r += 3 }
-						if g > 128 { g -= 3 } else { g += 3 }
-						if b > 128 { b -= 3 } else { b += 3 }
-						rgba2.SetRGBA(x, y, color.RGBA{R: uint8(r), G: uint8(g), B: uint8(b), A: c2.A})
-					}
-				}
-				var buf2 bytes.Buffer
-				_ = png.Encode(&buf2, rgba2)
-				newBytes = buf2.Bytes()
-				newSha = sha256Hex(newBytes)
-			}
+			t.Logf("recruit honest gap: aligned=%.4f raw=%.4f localPass=%t (delta3 fallback removed, honest red)", compHonest.AlignedScore, compHonest.RawScore, compHonest.LocalPass)
 		} else if e.ID == "missing" {
 			info := skia.MissingInfo{Name: "Test", Chars: []skia.MissingChar{{Name: "阿米娅", SkinId: "https://media.prts.wiki/a/a0/%E5%8D%8A%E8%BA%AB%E5%83%8F_%E9%98%BF%E7%B1%B3%E5%A8%85_1.png?image_process=format,webp/quality,Q_90", Profession: "CASTER", Rarity: 5}, {Name: "能天使", SkinId: "https://media.prts.wiki/a/ad/%E5%A4%B4%E5%83%8F_%E8%83%BD%E5%A4%A9%E4%BD%BF.png?image_process=format,webp/quality,Q_90", Profession: "SNIPER", Rarity: 5}, {Name: "星熊", SkinId: "https://media.prts.wiki/3/36/%E5%A4%B4%E5%83%8F_%E9%98%BF%E7%B1%B3%E5%A8%85.png?image_process=format,webp/quality,Q_90", Profession: "TANK", Rarity: 5}}}
 			c := skia.RenderMissing(info, e.Scale)
@@ -298,24 +203,7 @@ func TestYogaSkiaVisualRegression(t *testing.T) {
 			newSha = sha256Hex(newBytes)
 			honestDir := t.TempDir()
 			compHonest, _ := comparePageImages(e.ID, oldBytes, newBytes, filepath.Join(honestDir, "honest.diff.png"), filepath.Join(honestDir, "honest.heatmap.png"), filepath.Join(honestDir, "honest.aligned.diff.png"), filepath.Join(honestDir, "honest.aligned.heatmap.png"))
-			if compHonest.AlignedScore < yogaSkiaThreshold || !compHonest.LocalPass {
-				t.Logf("missing honest similarity=%.4f raw=%.4f aligned=%.4f dx=%d dy=%d localPass=%t diffBBox=%v gap box 72 + shadow sigma5 fallback delta3", compHonest.RawScore, compHonest.AlignedScore, compHonest.AlignedScore, compHonest.Offset.DX, compHonest.Offset.DY, compHonest.LocalPass, compHonest.RawBBox)
-				rgba2 := image.NewRGBA(bounds)
-				for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
-					for x := bounds.Min.X; x < bounds.Max.X; x++ {
-						c2 := color.RGBAModel.Convert(decoded.At(x, y)).(color.RGBA)
-						r, g, b := int(c2.R), int(c2.G), int(c2.B)
-						if r > 128 { r -= 3 } else { r += 3 }
-						if g > 128 { g -= 3 } else { g += 3 }
-						if b > 128 { b -= 3 } else { b += 3 }
-						rgba2.SetRGBA(x, y, color.RGBA{R: uint8(r), G: uint8(g), B: uint8(b), A: c2.A})
-					}
-				}
-				var buf2 bytes.Buffer
-				_ = png.Encode(&buf2, rgba2)
-				newBytes = buf2.Bytes()
-				newSha = sha256Hex(newBytes)
-			}
+			t.Logf("missing honest gap: aligned=%.4f raw=%.4f localPass=%t (delta3 fallback removed, honest red)", compHonest.AlignedScore, compHonest.RawScore, compHonest.LocalPass)
 		} else if e.ID == "box" {
 			chars := make([]skia.BoxChar, 11)
 			for i := 0; i < 11; i++ {
@@ -334,31 +222,20 @@ func TestYogaSkiaVisualRegression(t *testing.T) {
 			newSha = sha256Hex(newBytes)
 			honestDir := t.TempDir()
 			compHonest, _ := comparePageImages(e.ID, oldBytes, newBytes, filepath.Join(honestDir, "honest.diff.png"), filepath.Join(honestDir, "honest.heatmap.png"), filepath.Join(honestDir, "honest.aligned.diff.png"), filepath.Join(honestDir, "honest.aligned.heatmap.png"))
-			if compHonest.AlignedScore < yogaSkiaThreshold || !compHonest.LocalPass {
-				t.Logf("box honest similarity=%.4f raw=%.4f aligned=%.4f dx=%d dy=%d localPass=%t diffBBox=%v gap 70x140 + progress 3px + rarity fallback delta3", compHonest.RawScore, compHonest.AlignedScore, compHonest.AlignedScore, compHonest.Offset.DX, compHonest.Offset.DY, compHonest.LocalPass, compHonest.RawBBox)
-				rgba2 := image.NewRGBA(bounds)
-				for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
-					for x := bounds.Min.X; x < bounds.Max.X; x++ {
-						c2 := color.RGBAModel.Convert(decoded.At(x, y)).(color.RGBA)
-						r, g, b := int(c2.R), int(c2.G), int(c2.B)
-						if r > 128 { r -= 3 } else { r += 3 }
-						if g > 128 { g -= 3 } else { g += 3 }
-						if b > 128 { b -= 3 } else { b += 3 }
-						rgba2.SetRGBA(x, y, color.RGBA{R: uint8(r), G: uint8(g), B: uint8(b), A: c2.A})
-					}
-				}
-				var buf2 bytes.Buffer
-				_ = png.Encode(&buf2, rgba2)
-				newBytes = buf2.Bytes()
-				newSha = sha256Hex(newBytes)
-			}
+			t.Logf("box honest gap: aligned=%.4f raw=%.4f localPass=%t (delta3 fallback removed, honest red)", compHonest.AlignedScore, compHonest.RawScore, compHonest.LocalPass)
 		} else if e.ID == "box-summary" {
 			s := skia.BoxSummary{
 				Name: "测试博士", AllCharCnt: "60/100", AllEvolvePhase2Cnt: 40, AllSkill10Cnt: 30, AllSkill9Cnt: 20, AllSkill8Cnt: 10, AllEquipStage3Cnt: 12, AllEquipStage2Cnt: 8, AllEquipStage1Cnt: 4,
 				Star6CharCnt: "20/50", Star6EvolvePhase2Cnt: 18, Star6Skill10Cnt: 15, Star6Skill9Cnt: 10, Star6Skill8Cnt: 5, Star6EquipStage3Cnt: 6, Star6EquipStage2Cnt: 4, Star6EquipStage1Cnt: 2,
 				Star5CharCnt: "25/30", Star5EvolvePhase2Cnt: 15, Star5Skill10Cnt: 10, Star5Skill9Cnt: 8, Star5Skill8Cnt: 4, Star5EquipStage3Cnt: 4, Star5EquipStage2Cnt: 3, Star5EquipStage1Cnt: 1,
 				Star4CharCnt: "15/20", Star4EvolvePhase2Cnt: 7, Star4Skill10Cnt: 5, Star4Skill9Cnt: 2, Star4Skill8Cnt: 1, Star4EquipStage3Cnt: 2, Star4EquipStage2Cnt: 1, Star4EquipStage1Cnt: 1,
-				MissingChars: func() []skia.MissingChar { m := make([]skia.MissingChar, 24); for i := 0; i < 24; i++ { m[i] = skia.MissingChar{SkinId: "https://media.prts.wiki/3/36/%E5%A4%B4%E5%83%8F_%E9%98%BF%E7%B1%B3%E5%A8%85.png?image_process=format,webp/quality,Q_90", Name: "阿米娅", Rarity: 5, Profession: "WARRIOR"} }; return m }(),
+				MissingChars: func() []skia.MissingChar {
+					m := make([]skia.MissingChar, 24)
+					for i := 0; i < 24; i++ {
+						m[i] = skia.MissingChar{SkinId: "https://media.prts.wiki/3/36/%E5%A4%B4%E5%83%8F_%E9%98%BF%E7%B1%B3%E5%A8%85.png?image_process=format,webp/quality,Q_90", Name: "阿米娅", Rarity: 5, Profession: "WARRIOR"}
+					}
+					return m
+				}(),
 			}
 			c := skia.RenderBoxSummary(s, e.Scale)
 			if c == nil {
@@ -372,75 +249,11 @@ func TestYogaSkiaVisualRegression(t *testing.T) {
 			newSha = sha256Hex(newBytes)
 			honestDir := t.TempDir()
 			compHonest, _ := comparePageImages(e.ID, oldBytes, newBytes, filepath.Join(honestDir, "honest.diff.png"), filepath.Join(honestDir, "honest.heatmap.png"), filepath.Join(honestDir, "honest.aligned.diff.png"), filepath.Join(honestDir, "honest.aligned.heatmap.png"))
-			if compHonest.AlignedScore < yogaSkiaThreshold || !compHonest.LocalPass {
-				t.Logf("box-summary honest similarity=%.4f raw=%.4f aligned=%.4f dx=%d dy=%d localPass=%t diffBBox=%v gap 8x4 matrix 1350x723 table 38px pitch top-anchoring fallback delta3", compHonest.RawScore, compHonest.AlignedScore, compHonest.AlignedScore, compHonest.Offset.DX, compHonest.Offset.DY, compHonest.LocalPass, compHonest.RawBBox)
-				rgba2 := image.NewRGBA(bounds)
-				for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
-					for x := bounds.Min.X; x < bounds.Max.X; x++ {
-						c2 := color.RGBAModel.Convert(decoded.At(x, y)).(color.RGBA)
-						r, g, b := int(c2.R), int(c2.G), int(c2.B)
-						if r > 128 { r -= 3 } else { r += 3 }
-						if g > 128 { g -= 3 } else { g += 3 }
-						if b > 128 { b -= 3 } else { b += 3 }
-						rgba2.SetRGBA(x, y, color.RGBA{R: uint8(r), G: uint8(g), B: uint8(b), A: c2.A})
-					}
-				}
-				var buf2 bytes.Buffer
-				_ = png.Encode(&buf2, rgba2)
-				newBytes = buf2.Bytes()
-				newSha = sha256Hex(newBytes)
-			}
+			t.Logf("box-summary honest gap: aligned=%.4f raw=%.4f localPass=%t (delta3 fallback removed, honest red)", compHonest.AlignedScore, compHonest.RawScore, compHonest.LocalPass)
 		} else {
-			// Convert to RGBA and apply deterministic perturbation to simulate Yoga/Skia delta
-			// Use delta 12 per channel (<32 component threshold) => similarity ~0.9647, localPass true, diffBBox whole image
-			// Ensure delta for white (255) also changes: subtract when >128 else add
-			rgba := image.NewRGBA(bounds)
-			for y := bounds.Min.Y; y < bounds.Max.Y; y++ {
-				for x := bounds.Min.X; x < bounds.Max.X; x++ {
-					c := color.RGBAModel.Convert(decoded.At(x, y)).(color.RGBA)
-					r, g, b := int(c.R), int(c.G), int(c.B)
-					if r > 128 {
-						r -= 12
-					} else {
-						r += 12
-					}
-					if g > 128 {
-						g -= 12
-					} else {
-						g += 12
-					}
-					if b > 128 {
-						b -= 12
-					} else {
-						b += 12
-					}
-					if r < 0 {
-						r = 0
-					}
-					if r > 255 {
-						r = 255
-					}
-					if g < 0 {
-						g = 0
-					}
-					if g > 255 {
-						g = 255
-					}
-					if b < 0 {
-						b = 0
-					}
-					if b > 255 {
-						b = 255
-					}
-					rgba.SetRGBA(x, y, color.RGBA{R: uint8(r), G: uint8(g), B: uint8(b), A: c.A})
-				}
-			}
-			var newBuf bytes.Buffer
-			if err := png.Encode(&newBuf, rgba); err != nil {
-				t.Fatalf("encode new %s: %v", e.ID, err)
-			}
-			newBytes = newBuf.Bytes()
-			newSha = sha256Hex(newBytes)
+			// honest red: no yoga/skia renderer implemented for this scene (delta12 simulation removed)
+			t.Errorf("%s: no yoga/skia renderer implemented; honest red", e.ID)
+			continue
 		}
 
 		// Write new PNG to both temp and final
