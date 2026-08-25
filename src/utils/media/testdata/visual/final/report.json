@@ -299,26 +299,26 @@
       "oldFormat": "jpeg",
       "newFormat": "png",
       "oldSha256": "047ad057ac193e97aed8ff3442ad29f8505b8cbdbf575837456e1fbd82e6e457",
-      "newSha256": "ed18b77d6bf622e70f505ce1dba425f629ec7959357c89790e28b041b46955aa",
+      "newSha256": "123d31a624b9ae99ca61e2741540f53aee6db783e0c15309716f923163203b3d",
       "oldGate": true,
-      "similarity": 0.9119542937261482,
-      "rawSimilarity": 0.8898425662622995,
-      "alignedSimilarity": 0.9119542937261482,
+      "similarity": 0.9500315476819705,
+      "rawSimilarity": 0.949415749778699,
+      "alignedSimilarity": 0.9500315476819705,
       "globalOffset": {
-        "DX": -16,
-        "DY": -9
+        "DX": 1,
+        "DY": -1
       },
       "localPass": false,
       "meaningful": [
         {
           "bbox": {
-            "X": 0,
+            "X": 4,
             "Y": 0,
-            "Width": 722,
+            "Width": 718,
             "Height": 279
           },
-          "pixels": 48519,
-          "meanDelta": 158.18096357226793
+          "pixels": 28570,
+          "meanDelta": 116.75862068965517
         }
       ],
       "zeroByteIdentity": false,
@@ -354,11 +354,11 @@
       "oldFormat": "jpeg",
       "newFormat": "png",
       "oldSha256": "6a4633e048410f14271b0b6728d14d4307c2b32af7411c5446a72cea8624f071",
-      "newSha256": "1cd54451401c8523b76e5551a9fc421a03ad74f1367a44690e5a8a7062ddb5a5",
+      "newSha256": "860d79fc1d94802579aacc9622ef43f76b4e0eb1f89d89c0ebea7e9f46aba71c",
       "oldGate": true,
-      "similarity": 0.9111416363072046,
-      "rawSimilarity": 0.9111416363072046,
-      "alignedSimilarity": 0.9111416363072046,
+      "similarity": 0.9789577448519493,
+      "rawSimilarity": 0.9789577448519493,
+      "alignedSimilarity": 0.9789577448519493,
       "globalOffset": {
         "DX": 0,
         "DY": 0
@@ -369,11 +369,11 @@
           "bbox": {
             "X": 0,
             "Y": 0,
-            "Width": 1350,
-            "Height": 723
+            "Width": 1320,
+            "Height": 706
           },
-          "pixels": 229069,
-          "meanDelta": 168.90625
+          "pixels": 80683,
+          "meanDelta": 113.58231707317073
         }
       ],
       "zeroByteIdentity": true,
@@ -381,13 +381,13 @@
         "X": 0,
         "Y": 0,
         "Width": 1350,
-        "Height": 723
+        "Height": 720
       },
       "alignedDiffBBox": {
         "X": 0,
         "Y": 0,
         "Width": 1350,
-        "Height": 723
+        "Height": 720
       },
       "pass": false,
       "oldPath": "old/box-summary.jpg",
