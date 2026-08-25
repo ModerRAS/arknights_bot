@@ -340,21 +340,20 @@ func RenderCard(data *CardInfo) (*gg.Context, error) {
 	if nc, err := LoadImage(AssetPath("card/name_card_short.png")); err == nil {
 		dc.DrawImage(ScaleExact(nc, 638, 223), 642, ncY)
 	}
-	if hd, err := LoadImage(AssetPath("card/headicon_back.png")); err == nil {
-		dc.DrawImage(ScaleExact(hd, 147, 149), 672, ncY+30)
-	}
+	// headicon_back: absent from frozen baseline (A/B verified)
 	// level widget: bg 84x84 at (676,+3), number fs20 pad-top 8, LV fs14 below
+	// player portrait 180x360 -> 130x260 at (681,+11);
+	// template DOM paints #level AFTER #avatar, so the level widget sits on top
+	portrait := FetchImage(data.Avatar, AssetPath("common/amiya.png"))
+	dc.DrawImage(ScaleExact(portrait, 130, 260), 681, ncY+11)
 	if lb, err := LoadImage(AssetPath("card/level_bg.png")); err == nil {
-		dc.DrawImage(ScaleExact(lb, 84, 84), 676, ncY+3)
+		dc.DrawImage(ScaleExact(lb, 84, 84), 676, ncY+3+0)
 	}
 	dc.SetRGB255(255, 255, 255)
 	setFont(dc, 20)
-	cardTextTopCenter(dc, itoa(data.Level), 718, ncY+11)
+	cardTextTopCenter(dc, itoa(data.Level), 718, ncY+11+0)
 	setFont(dc, 14)
-	cardTextTopCenter(dc, "LV", 718, ncY+39)
-	// player portrait 180x360 -> 130x260 at (681,+11)
-	portrait := FetchImage(data.Avatar, AssetPath("common/amiya.png"))
-	dc.DrawImage(ScaleExact(portrait, 130, 260), 681, ncY+11)
+	cardTextTopCenter(dc, "LV", 718, ncY+39+0)
 	// name fs30 at (842,+55)
 	setFont(dc, 30)
 // NAME-PATCH-START (tuned against frozen baseline)
@@ -423,13 +422,12 @@ func RenderCard(data *CardInfo) (*gg.Context, error) {
 
 	// ================= module collection panel (overflow hidden) =================
 	const modX, modY = 639.0, 463.0 // measured rigid offset vs template float math
-	// moduleBg art measured overflowing above the panel: raw-draw at (652,443)
-	if mb, err := LoadImage(AssetPath("card/module_collection_bg.png")); err == nil {
-		dc.DrawImage(ScaleExact(mb, 612, 178), 652, 450)
-	}
 	modules := cardPanelLayer(605, 196, 15, func(lg *gg.Context) {
 		lg.SetRGBA255(0, 0, 0, 153)
 		RoundRect(lg, 0, 0, 605, 196, 15)
+		if mb, err := LoadImage(AssetPath("card/module_collection_bg.png")); err == nil {
+			lg.DrawImage(ScaleExact(mb, 612, 178), -7, 0) // clipped by panel like overflow:hidden
+		}
 		if mi, err := LoadImage(AssetPath("card/module_collection_bg_icon.png")); err == nil {
 			lg.DrawImage(cardWithOpacity(ScaleExact(mi, 175, 163), 77), 40, 14) // measured -4
 		}
