@@ -80,7 +80,7 @@ func RenderEnemy(data *Enemy) (*gg.Context, error) {
 	drawStringBoldW(dc, data.Name, W/2-nw/2-1, 81, 1.4)
 	// pic cell: img 158 CSS = 237 canvas centered in 0..425
 	pic := FetchImage(data.Pic, AssetPath("common/amiya.png"))
-	dc.DrawImage(ScaleExact(pic, 237, 237), 96, 101)
+	dc.DrawImage(ScaleExact(pic, 237, 237), 95, 102)
 	// desc cell centered
 	centerText(StripHTML(data.Desc), (425+W)/2+1, 221, 24)
 	// header row
@@ -103,6 +103,6 @@ func RenderEnemy(data *Enemy) (*gg.Context, error) {
 	setFont(dc, 30)
 	dc.SetRGB255(255, 255, 255)
 	aw, _ := measure(dc, "能力")
-	drawStringBoldW(dc, "能力", W/2-aw/2, 461.5, 1.2)
+	drawStringBoldW(dc, "能力", W/2-aw/2, 463.5, 1.2)
 	return dc, nil
 }
