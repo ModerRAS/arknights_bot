@@ -7,7 +7,7 @@ const fallback = 'assets/common/amiya.png';
 const COLS = [51.7, 129.3, 184, 291.3, 425.7];
 const HEADER_H = 35;
 const ROW_H = 75;
-const bold = { fontWeight: 700, WebkitTextStrokeWidth: 1.0, WebkitTextStrokeColor: '#fff' };
+const bold = { fontWeight: 700 };
 
 // inline group: n icons of 50px with ~3.4px word space, centered on cx
 function inlineCenters(cx, n, pitch) {
