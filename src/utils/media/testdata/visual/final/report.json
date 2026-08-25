@@ -20,7 +20,7 @@
   ],
   "threshold": 0.99,
   "manifestSha256": "a33f149920406742e04c9c9bae075097ca7682b1fc4367c6088d52cafc2c5350",
-  "resourceManifestSha256": "9c4e277f6dc4a1eeb3710dcf3e88a0d5d94f7a0e3ea61207db30cc82788e521c",
+  "resourceManifestSha256": "1cee91b8708cf21e32a49b7c63dd471517fc57b4a0e01967ed735e11d5d0f057",
   "clockErratum": "../capture-clock-erratum.json",
   "clockErratumSha256": "2292366d447f3e12c46a95b9bd956b2bd67811999af9557cc5d2302b2a738677",
   "legacyCapture": {
@@ -37,7 +37,7 @@
     "static-specs.ndjson": "ecc5c7b5cbcf4fed738c254cb5aa79b943c24d0d6bb0cbb51d35f6a62f28523e"
   },
   "command": "visual-final -spec-dir \u003ccanonical-spec-dir\u003e -out \u003cfinal-dir\u003e -baseline \u003cbaseline-manifest\u003e -resource-manifest \u003cresource-manifest\u003e -clock-erratum \u003ccapture-clock-erratum\u003e -legacy-script \u003clegacy-capture.mjs\u003e",
-  "runNote": "merge integration run: lead-2 four-branch consolidation onto feat/satori-renderer @ d4831b9 (worker-21). BASE BLOCKED: neargate portrait URLs absent from frozen resource manifest (7 chars) - gate renders 15/16.",
+  "runNote": "final integration gate: lead-2 four-branch merge @ d4831b9 + portrait manifest extension 37d6f84 + JPEG q80 capture alignment f86b74e (worker-21)",
   "pages": [
     {
       "id": "base",
@@ -51,18 +51,159 @@
       "oldFormat": "jpeg",
       "newFormat": "png",
       "oldSha256": "3a82d70486f9da3a2c48261cc9f2bdd6c498ef31b3ba5260b519400c81495011",
-      "newSha256": "",
+      "newSha256": "d8cacfe3855e74ac1bdba35e7fee627ab3fb7d9b5e65db251fc806740a120eca",
       "oldGate": true,
+      "similarity": 0.9842661160455598,
+      "rawSimilarity": 0.9840536281507702,
+      "alignedSimilarity": 0.9842661160455598,
+      "globalOffset": {
+        "DX": -1,
+        "DY": 0
+      },
       "localPass": false,
+      "meaningful": [
+        {
+          "bbox": {
+            "X": 1469,
+            "Y": 0,
+            "Width": 151,
+            "Height": 42
+          },
+          "pixels": 1533,
+          "meanDelta": 85.50228310502283
+        },
+        {
+          "bbox": {
+            "X": 1438,
+            "Y": 256,
+            "Width": 193,
+            "Height": 32
+          },
+          "pixels": 3785,
+          "meanDelta": 32
+        },
+        {
+          "bbox": {
+            "X": 1488,
+            "Y": 432,
+            "Width": 144,
+            "Height": 33
+          },
+          "pixels": 2606,
+          "meanDelta": 102.14839797639124
+        },
+        {
+          "bbox": {
+            "X": 1496,
+            "Y": 604,
+            "Width": 135,
+            "Height": 44
+          },
+          "pixels": 2352,
+          "meanDelta": 152.15593220338982
+        },
+        {
+          "bbox": {
+            "X": 1196,
+            "Y": 608,
+            "Width": 227,
+            "Height": 32
+          },
+          "pixels": 4736,
+          "meanDelta": 47
+        },
+        {
+          "bbox": {
+            "X": 1516,
+            "Y": 777,
+            "Width": 115,
+            "Height": 48
+          },
+          "pixels": 2166,
+          "meanDelta": 146.50721153846155
+        },
+        {
+          "bbox": {
+            "X": 579,
+            "Y": 432,
+            "Width": 497,
+            "Height": 485
+          },
+          "pixels": 28693,
+          "meanDelta": 35.5
+        },
+        {
+          "bbox": {
+            "X": 14,
+            "Y": 4,
+            "Width": 228,
+            "Height": 908
+          },
+          "pixels": 26935,
+          "meanDelta": 68.48275862068965
+        }
+      ],
+      "objectShifts": [
+        {
+          "bbox": {
+            "X": 1469,
+            "Y": 0,
+            "Width": 151,
+            "Height": 42
+          },
+          "offset": {
+            "DX": 1,
+            "DY": 0
+          },
+          "improvement": 0.3249786353618495
+        },
+        {
+          "bbox": {
+            "X": 1488,
+            "Y": 432,
+            "Width": 144,
+            "Height": 33
+          },
+          "offset": {
+            "DX": -8,
+            "DY": 0
+          },
+          "improvement": 0.15096061538353536
+        },
+        {
+          "bbox": {
+            "X": 1516,
+            "Y": 777,
+            "Width": 115,
+            "Height": 48
+          },
+          "offset": {
+            "DX": 6,
+            "DY": 3
+          },
+          "improvement": 0.48684134883873725
+        }
+      ],
       "zeroByteIdentity": false,
+      "diffBBox": {
+        "X": 0,
+        "Y": 0,
+        "Width": 1665,
+        "Height": 918
+      },
+      "alignedDiffBBox": {
+        "X": 0,
+        "Y": 0,
+        "Width": 1664,
+        "Height": 918
+      },
       "pass": false,
       "oldPath": "old/base.jpg",
       "newPath": "new/base.png",
       "diffPath": "compare/base.diff.png",
       "heatmapPath": "compare/base.heatmap.png",
       "alignedDiffPath": "compare/base.aligned.diff.png",
-      "alignedHeatmapPath": "compare/base.aligned.heatmap.png",
-      "error": "open utils\\media\\testdata\\visual\\final\\new\\base.png: The system cannot find the file specified."
+      "alignedHeatmapPath": "compare/base.aligned.heatmap.png"
     },
     {
       "id": "box",
@@ -76,11 +217,11 @@
       "oldFormat": "jpeg",
       "newFormat": "png",
       "oldSha256": "cf10f5d37fe6c3738eb19b77e3761861a5cda8d4448cc50b333d25ace4c1c8d9",
-      "newSha256": "f59a74cef9ec574876ec767a18305b00a5b25b8b4be477ac47577c147902c8f9",
+      "newSha256": "31fa97081bccc12f2425ab04d83235d37790bebd04966509bd33c88b2689035d",
       "oldGate": true,
-      "similarity": 0.9795540295720279,
-      "rawSimilarity": 0.9795540295720279,
-      "alignedSimilarity": 0.9795540295720279,
+      "similarity": 0.9802058875789121,
+      "rawSimilarity": 0.9802058875789121,
+      "alignedSimilarity": 0.9802058875789121,
       "globalOffset": {
         "DX": 0,
         "DY": 0
@@ -90,12 +231,12 @@
         {
           "bbox": {
             "X": 0,
-            "Y": 0,
+            "Y": 2,
             "Width": 1050,
-            "Height": 536
+            "Height": 534
           },
-          "pixels": 36709,
-          "meanDelta": 89.53968253968254
+          "pixels": 27098,
+          "meanDelta": 101.77966101694915
         }
       ],
       "zeroByteIdentity": true,
@@ -131,11 +272,11 @@
       "oldFormat": "jpeg",
       "newFormat": "png",
       "oldSha256": "047ad057ac193e97aed8ff3442ad29f8505b8cbdbf575837456e1fbd82e6e457",
-      "newSha256": "59ff0c36b99de9020dbb08b94ea2eb651e7c4b38a5d5ea3c246eede5691c3089",
+      "newSha256": "d26cf2951fc58fa2f3d5a4897ae1190470b7046d2f38e9647db38427b0b51309",
       "oldGate": true,
-      "similarity": 0.9517385293854831,
-      "rawSimilarity": 0.9453807272767625,
-      "alignedSimilarity": 0.9517385293854831,
+      "similarity": 0.9501460674222926,
+      "rawSimilarity": 0.9440769251435123,
+      "alignedSimilarity": 0.9501460674222926,
       "globalOffset": {
         "DX": 1,
         "DY": -2
@@ -144,13 +285,13 @@
       "meaningful": [
         {
           "bbox": {
-            "X": 4,
+            "X": 2,
             "Y": 0,
-            "Width": 718,
+            "Width": 720,
             "Height": 279
           },
-          "pixels": 28277,
-          "meanDelta": 69.62903225806451
+          "pixels": 28391,
+          "meanDelta": 70.7457627118644
         }
       ],
       "zeroByteIdentity": false,
@@ -186,11 +327,11 @@
       "oldFormat": "jpeg",
       "newFormat": "png",
       "oldSha256": "6a4633e048410f14271b0b6728d14d4307c2b32af7411c5446a72cea8624f071",
-      "newSha256": "038e1e762571f3d04d1192c09f2ee9ea98293764180868b8645499b7000abfb2",
+      "newSha256": "92e2c6a21654f2b552c264354271b1dc2cee1853a7b00384752a9f1884f3f1a6",
       "oldGate": true,
-      "similarity": 0.9778472745791109,
-      "rawSimilarity": 0.9778472745791109,
-      "alignedSimilarity": 0.9778472745791109,
+      "similarity": 0.9769659321133299,
+      "rawSimilarity": 0.9769659321133299,
+      "alignedSimilarity": 0.9769659321133299,
       "globalOffset": {
         "DX": 0,
         "DY": 0
@@ -199,13 +340,13 @@
       "meaningful": [
         {
           "bbox": {
-            "X": 0,
-            "Y": 0,
-            "Width": 1320,
-            "Height": 706
+            "X": 31,
+            "Y": 2,
+            "Width": 1289,
+            "Height": 703
           },
-          "pixels": 82825,
-          "meanDelta": 113.58231707317073
+          "pixels": 79943,
+          "meanDelta": 112.26139817629179
         }
       ],
       "zeroByteIdentity": true,
@@ -213,13 +354,13 @@
         "X": 0,
         "Y": 0,
         "Width": 1350,
-        "Height": 720
+        "Height": 723
       },
       "alignedDiffBBox": {
         "X": 0,
         "Y": 0,
         "Width": 1350,
-        "Height": 720
+        "Height": 723
       },
       "pass": false,
       "oldPath": "old/box-summary.jpg",
@@ -241,11 +382,11 @@
       "oldFormat": "jpeg",
       "newFormat": "png",
       "oldSha256": "80f31c1cfb132ff3781a3d940120cfdd31acf26aa1baf0e96c5fa75e68c4b00b",
-      "newSha256": "54fe36915e0744de790ffca336b352ef097856d0934f8d69a25733f255e4defa",
+      "newSha256": "cf1bdda2efa2fbad40cc4e1b7e9e80fb6d06f48a6554dcb6b508ad4e4797f6db",
       "oldGate": true,
-      "similarity": 0.992585611585169,
-      "rawSimilarity": 0.992585611585169,
-      "alignedSimilarity": 0.992585611585169,
+      "similarity": 0.9924785856515103,
+      "rawSimilarity": 0.9924785856515103,
+      "alignedSimilarity": 0.9924785856515103,
       "globalOffset": {
         "DX": 0,
         "DY": 0
@@ -259,18 +400,18 @@
             "Width": 66,
             "Height": 124
           },
-          "pixels": 1237,
-          "meanDelta": 129.1483113069016
+          "pixels": 1208,
+          "meanDelta": 116.16569767441861
         },
         {
           "bbox": {
             "X": 823,
             "Y": 14,
-            "Width": 66,
+            "Width": 67,
             "Height": 124
           },
-          "pixels": 1421,
-          "meanDelta": 128.6044776119403
+          "pixels": 1436,
+          "meanDelta": 117.25186289120715
         },
         {
           "bbox": {
@@ -279,8 +420,8 @@
             "Width": 66,
             "Height": 124
           },
-          "pixels": 1577,
-          "meanDelta": 130.4549418604651
+          "pixels": 1526,
+          "meanDelta": 117.16358463726885
         },
         {
           "bbox": {
@@ -289,8 +430,8 @@
             "Width": 65,
             "Height": 125
           },
-          "pixels": 1779,
-          "meanDelta": 128.24525547445256
+          "pixels": 1768,
+          "meanDelta": 113.29378531073446
         },
         {
           "bbox": {
@@ -299,18 +440,18 @@
             "Width": 66,
             "Height": 124
           },
-          "pixels": 1551,
-          "meanDelta": 128.98833819241983
+          "pixels": 1541,
+          "meanDelta": 118.09010339734121
         },
         {
           "bbox": {
-            "X": 31,
+            "X": 30,
             "Y": 23,
-            "Width": 201,
+            "Width": 202,
             "Height": 113
           },
-          "pixels": 6336,
-          "meanDelta": 169.87443541102078
+          "pixels": 6357,
+          "meanDelta": 170.13749561557347
         },
         {
           "bbox": {
@@ -319,8 +460,8 @@
             "Width": 63,
             "Height": 126
           },
-          "pixels": 1908,
-          "meanDelta": 139.61897810218977
+          "pixels": 1891,
+          "meanDelta": 132.92341678939616
         },
         {
           "bbox": {
@@ -329,8 +470,18 @@
             "Width": 66,
             "Height": 131
           },
-          "pixels": 1708,
-          "meanDelta": 145.2089552238806
+          "pixels": 1745,
+          "meanDelta": 133.77560975609757
+        },
+        {
+          "bbox": {
+            "X": 127,
+            "Y": 306,
+            "Width": 35,
+            "Height": 10
+          },
+          "pixels": 2,
+          "meanDelta": 35
         },
         {
           "bbox": {
@@ -344,13 +495,13 @@
         },
         {
           "bbox": {
-            "X": 35,
-            "Y": 379,
-            "Width": 188,
-            "Height": 99
+            "X": 27,
+            "Y": 401,
+            "Width": 139,
+            "Height": 86
           },
-          "pixels": 11,
-          "meanDelta": 33
+          "pixels": 10,
+          "meanDelta": 36
         },
         {
           "bbox": {
@@ -359,7 +510,7 @@
             "Width": 2546,
             "Height": 81
           },
-          "pixels": 8505,
+          "pixels": 8477,
           "meanDelta": 52.9811542991755
         },
         {
@@ -367,30 +518,30 @@
             "X": 311,
             "Y": 787,
             "Width": 2546,
-            "Height": 82
+            "Height": 84
           },
-          "pixels": 16471,
-          "meanDelta": 111.81222222222222
+          "pixels": 16470,
+          "meanDelta": 117.85330235645536
         },
         {
           "bbox": {
             "X": 29,
-            "Y": 641,
+            "Y": 640,
             "Width": 226,
-            "Height": 282
+            "Height": 283
           },
-          "pixels": 15328,
-          "meanDelta": 180.2961296129613
+          "pixels": 15422,
+          "meanDelta": 34
         },
         {
           "bbox": {
             "X": 311,
-            "Y": 1024,
+            "Y": 1025,
             "Width": 2546,
-            "Height": 96
+            "Height": 95
           },
-          "pixels": 20670,
-          "meanDelta": 125.44439371208662
+          "pixels": 20669,
+          "meanDelta": 32
         },
         {
           "bbox": {
@@ -399,7 +550,7 @@
             "Width": 2546,
             "Height": 97
           },
-          "pixels": 8629,
+          "pixels": 8546,
           "meanDelta": 52.997250589159464
         }
       ],
@@ -415,7 +566,7 @@
             "DX": 1,
             "DY": -7
           },
-          "improvement": 0.2023434778228473
+          "improvement": 0.18384728916421847
         },
         {
           "bbox": {
@@ -428,20 +579,20 @@
             "DX": 2,
             "DY": 6
           },
-          "improvement": 0.19301124274149478
+          "improvement": 0.18643922214776654
         },
         {
           "bbox": {
             "X": 311,
-            "Y": 1024,
+            "Y": 1025,
             "Width": 2546,
-            "Height": 96
+            "Height": 95
           },
           "offset": {
             "DX": 1,
             "DY": -8
           },
-          "improvement": 0.2273999799413557
+          "improvement": 0.22578673368780872
         }
       ],
       "zeroByteIdentity": true,
@@ -477,11 +628,11 @@
       "oldFormat": "jpeg",
       "newFormat": "png",
       "oldSha256": "75fea0acb6d2e20f52107a9310bc66e2e6228fa01811dc66445917a32d8de2a2",
-      "newSha256": "a9f59a776ac5488eaad7cad8d57f1dcf47d2f097131ec7bf288c49fce0b6b11a",
+      "newSha256": "b6ce041dc3f987f18fcf60bc03fe6125eef22c55b572ae4f443b931640f079e2",
       "oldGate": true,
-      "similarity": 0.9863809572440088,
-      "rawSimilarity": 0.9863809572440088,
-      "alignedSimilarity": 0.9863809572440088,
+      "similarity": 0.9881938636131536,
+      "rawSimilarity": 0.9881938636131536,
+      "alignedSimilarity": 0.9881938636131536,
       "globalOffset": {
         "DX": 0,
         "DY": 0
@@ -490,33 +641,141 @@
       "meaningful": [
         {
           "bbox": {
+            "X": 1044,
+            "Y": 0,
+            "Width": 218,
+            "Height": 148
+          },
+          "pixels": 1990,
+          "meanDelta": 38.4
+        },
+        {
+          "bbox": {
+            "X": 1110,
+            "Y": 265,
+            "Width": 28,
+            "Height": 29
+          },
+          "pixels": 206,
+          "meanDelta": 36
+        },
+        {
+          "bbox": {
+            "X": 1190,
+            "Y": 272,
+            "Width": 36,
+            "Height": 39
+          },
+          "pixels": 535,
+          "meanDelta": 80.12284069097889
+        },
+        {
+          "bbox": {
             "X": 16,
             "Y": 16,
             "Width": 144,
             "Height": 317
           },
-          "pixels": 7512,
-          "meanDelta": 37
+          "pixels": 7852,
+          "meanDelta": 83.94366197183099
+        },
+        {
+          "bbox": {
+            "X": 658,
+            "Y": 0,
+            "Width": 334,
+            "Height": 390
+          },
+          "pixels": 6043,
+          "meanDelta": 123.37145855194125
+        },
+        {
+          "bbox": {
+            "X": 1046,
+            "Y": 382,
+            "Width": 9,
+            "Height": 9
+          },
+          "pixels": 3,
+          "meanDelta": 36
+        },
+        {
+          "bbox": {
+            "X": 285,
+            "Y": 114,
+            "Width": 313,
+            "Height": 374
+          },
+          "pixels": 2215,
+          "meanDelta": 33
         },
         {
           "bbox": {
             "X": 16,
-            "Y": 400,
-            "Width": 164,
-            "Height": 201
+            "Y": 402,
+            "Width": 160,
+            "Height": 199
           },
-          "pixels": 4363,
-          "meanDelta": 32
+          "pixels": 4447,
+          "meanDelta": 36
         },
         {
           "bbox": {
-            "X": 284,
-            "Y": 0,
-            "Width": 980,
-            "Height": 708
+            "X": 699,
+            "Y": 448,
+            "Width": 562,
+            "Height": 182
           },
-          "pixels": 18624,
-          "meanDelta": 83.50581395348837
+          "pixels": 4404,
+          "meanDelta": 36.8
+        },
+        {
+          "bbox": {
+            "X": 470,
+            "Y": 642,
+            "Width": 54,
+            "Height": 65
+          },
+          "pixels": 656,
+          "meanDelta": 70
+        },
+        {
+          "bbox": {
+            "X": 338,
+            "Y": 635,
+            "Width": 41,
+            "Height": 73
+          },
+          "pixels": 518,
+          "meanDelta": 43.5
+        }
+      ],
+      "objectShifts": [
+        {
+          "bbox": {
+            "X": 1044,
+            "Y": 0,
+            "Width": 218,
+            "Height": 148
+          },
+          "offset": {
+            "DX": 0,
+            "DY": -2
+          },
+          "improvement": 0.6906176123727107
+        },
+        {
+          "bbox": {
+            "X": 1190,
+            "Y": 272,
+            "Width": 36,
+            "Height": 39
+          },
+          "offset": {
+            "DX": 0,
+            "DY": -2
+          },
+          "improvement": 0.5088917424084821
         }
       ],
       "zeroByteIdentity": true,
@@ -552,11 +811,11 @@
       "oldFormat": "jpeg",
       "newFormat": "png",
       "oldSha256": "d09c01dbd30062e6f876f0bc3af79d6458f0f4f698699d46250280a225cd98d7",
-      "newSha256": "45b21e091a8250c0e2278b6d2e12de3db27e8a0441736eb67428898e5c80ec5b",
+      "newSha256": "e5f22db5a6fbae74b6e69eb0b7f9985bc03979c6af9cba019eaed4e876c56039",
       "oldGate": true,
-      "similarity": 0.9650598389179704,
-      "rawSimilarity": 0.9566668145387869,
-      "alignedSimilarity": 0.9650598389179704,
+      "similarity": 0.9639626606466284,
+      "rawSimilarity": 0.9557914050151651,
+      "alignedSimilarity": 0.9639626606466284,
       "globalOffset": {
         "DX": -3,
         "DY": 0
@@ -570,21 +829,21 @@
             "Width": 1239,
             "Height": 224
           },
-          "pixels": 44085,
-          "meanDelta": 41.4
+          "pixels": 43009,
+          "meanDelta": 41.166666666666664
         }
       ],
       "zeroByteIdentity": false,
       "diffBBox": {
         "X": 0,
         "Y": 0,
-        "Width": 1251,
+        "Width": 1275,
         "Height": 234
       },
       "alignedDiffBBox": {
         "X": 0,
         "Y": 0,
-        "Width": 1248,
+        "Width": 1272,
         "Height": 234
       },
       "pass": false,
@@ -607,11 +866,11 @@
       "oldFormat": "jpeg",
       "newFormat": "png",
       "oldSha256": "7aae46ad6d8292139bf20d0032e2638bee920637e7de479d807fa5890fa6909b",
-      "newSha256": "c94377c96344e6ffee9e3db8602c157b60202f3b62f787c7cb3e5a2036c94eeb",
+      "newSha256": "950f9c788455205f3077365e7de953b0e45405f824530c9144546d1b9893d005",
       "oldGate": true,
-      "similarity": 0.9922484502314501,
-      "rawSimilarity": 0.9922484502314501,
-      "alignedSimilarity": 0.9922484502314501,
+      "similarity": 0.9940003011141223,
+      "rawSimilarity": 0.9940003011141223,
+      "alignedSimilarity": 0.9940003011141223,
       "globalOffset": {
         "DX": 0,
         "DY": 0
@@ -625,67 +884,67 @@
             "Width": 94,
             "Height": 22
           },
-          "pixels": 803,
-          "meanDelta": 80.09375
+          "pixels": 837,
+          "meanDelta": 78.14070351758794
         },
         {
           "bbox": {
-            "X": 435,
-            "Y": 49,
-            "Width": 113,
-            "Height": 36
+            "X": 433,
+            "Y": 48,
+            "Width": 115,
+            "Height": 37
           },
-          "pixels": 1137,
-          "meanDelta": 103.10714285714286
+          "pixels": 1145,
+          "meanDelta": 102.07142857142857
         },
         {
           "bbox": {
             "X": 549,
             "Y": 208,
-            "Width": 298,
+            "Width": 297,
             "Height": 32
           },
-          "pixels": 3154,
-          "meanDelta": 72.35197368421052
+          "pixels": 3167,
+          "meanDelta": 71.11184210526316
         },
         {
           "bbox": {
-            "X": 109,
-            "Y": 195,
-            "Width": 209,
-            "Height": 94
+            "X": 159,
+            "Y": 256,
+            "Width": 81,
+            "Height": 29
           },
-          "pixels": 314,
-          "meanDelta": 38
+          "pixels": 56,
+          "meanDelta": 39
         },
         {
           "bbox": {
-            "X": 164,
+            "X": 165,
             "Y": 352,
-            "Width": 96,
+            "Width": 95,
             "Height": 64
           },
-          "pixels": 1149,
-          "meanDelta": 48.25
+          "pixels": 1162,
+          "meanDelta": 59
         },
         {
           "bbox": {
-            "X": 657,
+            "X": 658,
             "Y": 352,
-            "Width": 96,
+            "Width": 95,
             "Height": 64
           },
-          "pixels": 1050,
-          "meanDelta": 44.04545454545455
+          "pixels": 1041,
+          "meanDelta": 35
         },
         {
           "bbox": {
             "X": 843,
             "Y": 352,
-            "Width": 97,
+            "Width": 98,
             "Height": 64
           },
-          "pixels": 1090,
+          "pixels": 1071,
           "meanDelta": 67.625
         },
         {
@@ -695,23 +954,23 @@
             "Width": 104,
             "Height": 116
           },
-          "pixels": 2089,
-          "meanDelta": 70.48251748251748
+          "pixels": 2125,
+          "meanDelta": 65.89285714285714
         }
       ],
       "objectShifts": [
         {
           "bbox": {
-            "X": 435,
-            "Y": 49,
-            "Width": 113,
-            "Height": 36
+            "X": 1,
+            "Y": 7,
+            "Width": 94,
+            "Height": 22
           },
           "offset": {
-            "DX": 1,
-            "DY": 0
+            "DX": -8,
+            "DY": 8
           },
-          "improvement": 0.15024563156454818
+          "improvement": 0.15411909362374845
         }
       ],
       "zeroByteIdentity": true,
@@ -747,11 +1006,11 @@
       "oldFormat": "jpeg",
       "newFormat": "png",
       "oldSha256": "b037cf55e967c61db80507ebcba9b55416f4b4aab5876d546a803ce117a131dc",
-      "newSha256": "df0c1547ed40e2c13c4e50614b360349bbbd47ba6e96812f3e6528c0182cdb95",
+      "newSha256": "f5f0e1c548bcca4958e40f50406234aba32f324a33947f95b92ad3aab5037faf",
       "oldGate": true,
-      "similarity": 0.96338147407111,
-      "rawSimilarity": 0.96338147407111,
-      "alignedSimilarity": 0.96338147407111,
+      "similarity": 0.9633488481812478,
+      "rawSimilarity": 0.9633488481812478,
+      "alignedSimilarity": 0.9633488481812478,
       "globalOffset": {
         "DX": 0,
         "DY": 0
@@ -766,17 +1025,17 @@
             "Height": 2
           },
           "pixels": 1666,
-          "meanDelta": 68.57322929171669
+          "meanDelta": 68.46518607442977
         },
         {
           "bbox": {
             "X": 0,
             "Y": 88,
-            "Width": 1490,
+            "Width": 1488,
             "Height": 512
           },
-          "pixels": 111652,
-          "meanDelta": 35
+          "pixels": 112845,
+          "meanDelta": 34
         },
         {
           "bbox": {
@@ -785,7 +1044,7 @@
             "Width": 1500,
             "Height": 659
           },
-          "pixels": 74057,
+          "pixels": 74528,
           "meanDelta": 33
         }
       ],
@@ -799,9 +1058,9 @@
           },
           "offset": {
             "DX": 0,
-            "DY": 2
+            "DY": 1
           },
-          "improvement": 0.4767555728421012
+          "improvement": 0.47558085053606375
         }
       ],
       "zeroByteIdentity": true,
@@ -837,11 +1096,11 @@
       "oldFormat": "jpeg",
       "newFormat": "png",
       "oldSha256": "879933afa3b94a80c08d37e0d8e053729639df59f01e47658944e48699434cf8",
-      "newSha256": "30f0ac5fd7866d36bd5692c74cddde7204b947df2b13eed5cfb2c77d2c240410",
+      "newSha256": "4a32931dd40d6f012eb2a111d23c8bb0d59a7f191cf5239550d96f32d1c486dc",
       "oldGate": true,
-      "similarity": 0.9894030989156599,
-      "rawSimilarity": 0.9894030989156599,
-      "alignedSimilarity": 0.9894030989156599,
+      "similarity": 0.9938415888744545,
+      "rawSimilarity": 0.9938415888744545,
+      "alignedSimilarity": 0.9938415888744545,
       "globalOffset": {
         "DX": 0,
         "DY": 0
@@ -850,27 +1109,27 @@
       "meaningful": [
         {
           "bbox": {
-            "X": 16,
-            "Y": 191,
-            "Width": 992,
-            "Height": 321
+            "X": 23,
+            "Y": 208,
+            "Width": 986,
+            "Height": 293
           },
-          "pixels": 17880,
-          "meanDelta": 78.41379310344827
+          "pixels": 11149,
+          "meanDelta": 33
         }
       ],
       "zeroByteIdentity": true,
       "diffBBox": {
         "X": 0,
-        "Y": 0,
+        "Y": 2,
         "Width": 1049,
-        "Height": 576
+        "Height": 574
       },
       "alignedDiffBBox": {
         "X": 0,
-        "Y": 0,
+        "Y": 2,
         "Width": 1049,
-        "Height": 576
+        "Height": 574
       },
       "pass": false,
       "oldPath": "old/headhunt.jpg",
@@ -892,11 +1151,11 @@
       "oldFormat": "jpeg",
       "newFormat": "png",
       "oldSha256": "43bcdee8554827959fb26b79196d57657f9ee4c85b04fa0354227bef49d9615b",
-      "newSha256": "7d6e026d612fe22aa377edb4336cf9360f27f148ed6955ac9e6a33e46fdec5ad",
+      "newSha256": "49da09b877914eaa88f225f46963c15cdf48e0e8d39ad823f3fc328d5d471db5",
       "oldGate": true,
-      "similarity": 0.9200717995368184,
-      "rawSimilarity": 0.9200717995368184,
-      "alignedSimilarity": 0.9200717995368184,
+      "similarity": 0.9206544400743867,
+      "rawSimilarity": 0.9206544400743867,
+      "alignedSimilarity": 0.9206544400743867,
       "globalOffset": {
         "DX": 0,
         "DY": 0
@@ -905,13 +1164,33 @@
       "meaningful": [
         {
           "bbox": {
-            "X": 0,
-            "Y": 14,
-            "Width": 990,
-            "Height": 2035
+            "X": 814,
+            "Y": 16,
+            "Width": 67,
+            "Height": 32
           },
-          "pixels": 436559,
-          "meanDelta": 38
+          "pixels": 10,
+          "meanDelta": 39
+        },
+        {
+          "bbox": {
+            "X": 715,
+            "Y": 59,
+            "Width": 15,
+            "Height": 13
+          },
+          "pixels": 2,
+          "meanDelta": 34
+        },
+        {
+          "bbox": {
+            "X": 0,
+            "Y": 177,
+            "Width": 990,
+            "Height": 1872
+          },
+          "pixels": 433458,
+          "meanDelta": 46
         }
       ],
       "zeroByteIdentity": true,
@@ -947,11 +1226,11 @@
       "oldFormat": "jpeg",
       "newFormat": "png",
       "oldSha256": "9f5588be88606af58fc86807bf734a45a51ecd205bdcd8bd72b0d295fba7f9c7",
-      "newSha256": "618ac59764c3dddc14d785503781b910965e268dd7d3e51bd64d1a42df404e2e",
+      "newSha256": "c5122b425ba9af021c960a44237a54d76638fa948b9f680d8345460952348252",
       "oldGate": true,
-      "similarity": 0.9925443113126506,
-      "rawSimilarity": 0.991517223491127,
-      "alignedSimilarity": 0.9925443113126506,
+      "similarity": 0.992148772034659,
+      "rawSimilarity": 0.9911923194211842,
+      "alignedSimilarity": 0.992148772034659,
       "globalOffset": {
         "DX": 0,
         "DY": 4
@@ -962,11 +1241,141 @@
           "bbox": {
             "X": 0,
             "Y": 0,
-            "Width": 1473,
-            "Height": 355
+            "Width": 1472,
+            "Height": 23
           },
-          "pixels": 18177,
-          "meanDelta": 51.311626429479034
+          "pixels": 2950,
+          "meanDelta": 38.504129387474194
+        },
+        {
+          "bbox": {
+            "X": 74,
+            "Y": 197,
+            "Width": 11,
+            "Height": 22
+          },
+          "pixels": 76,
+          "meanDelta": 58.18421052631579
+        },
+        {
+          "bbox": {
+            "X": 209,
+            "Y": 197,
+            "Width": 12,
+            "Height": 22
+          },
+          "pixels": 155,
+          "meanDelta": 59.333333333333336
+        },
+        {
+          "bbox": {
+            "X": 346,
+            "Y": 198,
+            "Width": 12,
+            "Height": 21
+          },
+          "pixels": 131,
+          "meanDelta": 60.75609756097561
+        },
+        {
+          "bbox": {
+            "X": 1299,
+            "Y": 197,
+            "Width": 27,
+            "Height": 22
+          },
+          "pixels": 223,
+          "meanDelta": 51.5
+        },
+        {
+          "bbox": {
+            "X": 480,
+            "Y": 198,
+            "Width": 15,
+            "Height": 21
+          },
+          "pixels": 90,
+          "meanDelta": 60.114285714285714
+        },
+        {
+          "bbox": {
+            "X": 1162,
+            "Y": 198,
+            "Width": 13,
+            "Height": 21
+          },
+          "pixels": 143,
+          "meanDelta": 57.65573770491803
+        },
+        {
+          "bbox": {
+            "X": 1298,
+            "Y": 335,
+            "Width": 28,
+            "Height": 20
+          },
+          "pixels": 255,
+          "meanDelta": 59.86486486486486
+        },
+        {
+          "bbox": {
+            "X": 74,
+            "Y": 334,
+            "Width": 25,
+            "Height": 21
+          },
+          "pixels": 163,
+          "meanDelta": 56.513513513513516
+        },
+        {
+          "bbox": {
+            "X": 210,
+            "Y": 334,
+            "Width": 26,
+            "Height": 21
+          },
+          "pixels": 203,
+          "meanDelta": 50.19444444444444
+        },
+        {
+          "bbox": {
+            "X": 346,
+            "Y": 334,
+            "Width": 26,
+            "Height": 21
+          },
+          "pixels": 186,
+          "meanDelta": 58.91304347826087
+        },
+        {
+          "bbox": {
+            "X": 482,
+            "Y": 334,
+            "Width": 28,
+            "Height": 21
+          },
+          "pixels": 168,
+          "meanDelta": 60.18604651162791
+        },
+        {
+          "bbox": {
+            "X": 1163,
+            "Y": 334,
+            "Width": 27,
+            "Height": 21
+          },
+          "pixels": 222,
+          "meanDelta": 62.80555555555556
+        },
+        {
+          "bbox": {
+            "X": 617,
+            "Y": 72,
+            "Width": 437,
+            "Height": 283
+          },
+          "pixels": 13123,
+          "meanDelta": 38.08650519031142
         },
         {
           "bbox": {
@@ -976,7 +1385,7 @@
             "Height": 22
           },
           "pixels": 268,
-          "meanDelta": 58.35849056603774
+          "meanDelta": 59.035714285714285
         },
         {
           "bbox": {
@@ -985,8 +1394,8 @@
             "Width": 27,
             "Height": 21
           },
-          "pixels": 317,
-          "meanDelta": 62.425925925925924
+          "pixels": 320,
+          "meanDelta": 61.886792452830186
         },
         {
           "bbox": {
@@ -995,8 +1404,8 @@
             "Width": 27,
             "Height": 21
           },
-          "pixels": 304,
-          "meanDelta": 61.482142857142854
+          "pixels": 303,
+          "meanDelta": 60.535714285714285
         },
         {
           "bbox": {
@@ -1005,38 +1414,8 @@
             "Width": 28,
             "Height": 21
           },
-          "pixels": 309,
-          "meanDelta": 64.38
-        },
-        {
-          "bbox": {
-            "X": 617,
-            "Y": 471,
-            "Width": 27,
-            "Height": 21
-          },
-          "pixels": 307,
-          "meanDelta": 59.55555555555556
-        },
-        {
-          "bbox": {
-            "X": 1162,
-            "Y": 471,
-            "Width": 28,
-            "Height": 21
-          },
-          "pixels": 323,
-          "meanDelta": 62.1551724137931
-        },
-        {
-          "bbox": {
-            "X": 1298,
-            "Y": 471,
-            "Width": 28,
-            "Height": 21
-          },
-          "pixels": 272,
-          "meanDelta": 63.19565217391305
+          "pixels": 310,
+          "meanDelta": 61.92156862745098
         },
         {
           "bbox": {
@@ -1045,28 +1424,58 @@
             "Width": 27,
             "Height": 21
           },
-          "pixels": 305,
-          "meanDelta": 62
+          "pixels": 301,
+          "meanDelta": 60.62
+        },
+        {
+          "bbox": {
+            "X": 617,
+            "Y": 471,
+            "Width": 28,
+            "Height": 21
+          },
+          "pixels": 309,
+          "meanDelta": 59.59016393442623
+        },
+        {
+          "bbox": {
+            "X": 1162,
+            "Y": 471,
+            "Width": 28,
+            "Height": 21
+          },
+          "pixels": 313,
+          "meanDelta": 62.07142857142857
+        },
+        {
+          "bbox": {
+            "X": 1298,
+            "Y": 471,
+            "Width": 28,
+            "Height": 21
+          },
+          "pixels": 270,
+          "meanDelta": 62.19565217391305
         },
         {
           "bbox": {
             "X": 481,
-            "Y": 471,
+            "Y": 470,
             "Width": 29,
-            "Height": 21
+            "Height": 22
           },
-          "pixels": 260,
-          "meanDelta": 62.3448275862069
+          "pixels": 262,
+          "meanDelta": 60.16393442622951
         },
         {
           "bbox": {
             "X": 890,
             "Y": 471,
-            "Width": 27,
+            "Width": 28,
             "Height": 21
           },
-          "pixels": 238,
-          "meanDelta": 63.19230769230769
+          "pixels": 240,
+          "meanDelta": 62.490196078431374
         },
         {
           "bbox": {
@@ -1075,18 +1484,18 @@
             "Width": 26,
             "Height": 22
           },
-          "pixels": 248,
-          "meanDelta": 57.198113207547166
+          "pixels": 243,
+          "meanDelta": 56.86915887850467
         },
         {
           "bbox": {
             "X": 754,
-            "Y": 606,
+            "Y": 605,
             "Width": 27,
-            "Height": 21
+            "Height": 22
           },
-          "pixels": 282,
-          "meanDelta": 63.627906976744185
+          "pixels": 278,
+          "meanDelta": 60.05434782608695
         },
         {
           "bbox": {
@@ -1095,18 +1504,18 @@
             "Width": 27,
             "Height": 21
           },
-          "pixels": 298,
-          "meanDelta": 59.276315789473685
+          "pixels": 288,
+          "meanDelta": 58.869565217391305
         },
         {
           "bbox": {
             "X": 1027,
-            "Y": 606,
+            "Y": 605,
             "Width": 27,
-            "Height": 21
+            "Height": 22
           },
-          "pixels": 287,
-          "meanDelta": 60.48888888888889
+          "pixels": 282,
+          "meanDelta": 59.108695652173914
         },
         {
           "bbox": {
@@ -1115,18 +1524,18 @@
             "Width": 26,
             "Height": 21
           },
-          "pixels": 283,
-          "meanDelta": 61.74418604651163
+          "pixels": 278,
+          "meanDelta": 60.86046511627907
         },
         {
           "bbox": {
             "X": 617,
             "Y": 606,
-            "Width": 27,
+            "Width": 28,
             "Height": 21
           },
-          "pixels": 285,
-          "meanDelta": 62.17333333333333
+          "pixels": 283,
+          "meanDelta": 61.80821917808219
         },
         {
           "bbox": {
@@ -1135,8 +1544,8 @@
             "Width": 28,
             "Height": 21
           },
-          "pixels": 306,
-          "meanDelta": 61.5
+          "pixels": 300,
+          "meanDelta": 59.84313725490196
         },
         {
           "bbox": {
@@ -1145,8 +1554,18 @@
             "Width": 29,
             "Height": 21
           },
-          "pixels": 239,
-          "meanDelta": 61.183673469387756
+          "pixels": 241,
+          "meanDelta": 59.04
+        },
+        {
+          "bbox": {
+            "X": 890,
+            "Y": 606,
+            "Width": 28,
+            "Height": 21
+          },
+          "pixels": 221,
+          "meanDelta": 60.30434782608695
         },
         {
           "bbox": {
@@ -1155,28 +1574,8 @@
             "Width": 28,
             "Height": 21
           },
-          "pixels": 241,
-          "meanDelta": 49.65217391304348
-        },
-        {
-          "bbox": {
-            "X": 890,
-            "Y": 606,
-            "Width": 27,
-            "Height": 21
-          },
-          "pixels": 223,
-          "meanDelta": 60.06153846153846
-        },
-        {
-          "bbox": {
-            "X": 480,
-            "Y": 743,
-            "Width": 30,
-            "Height": 20
-          },
-          "pixels": 170,
-          "meanDelta": 61.96296296296296
+          "pixels": 225,
+          "meanDelta": 57.22222222222222
         },
         {
           "bbox": {
@@ -1185,8 +1584,28 @@
             "Width": 29,
             "Height": 21
           },
-          "pixels": 232,
-          "meanDelta": 61.166666666666664
+          "pixels": 231,
+          "meanDelta": 62.06666666666667
+        },
+        {
+          "bbox": {
+            "X": 480,
+            "Y": 743,
+            "Width": 30,
+            "Height": 20
+          },
+          "pixels": 161,
+          "meanDelta": 64.61538461538461
+        },
+        {
+          "bbox": {
+            "X": 617,
+            "Y": 743,
+            "Width": 28,
+            "Height": 21
+          },
+          "pixels": 213,
+          "meanDelta": 47.61904761904762
         },
         {
           "bbox": {
@@ -1195,18 +1614,8 @@
             "Width": 28,
             "Height": 21
           },
-          "pixels": 232,
-          "meanDelta": 62.361111111111114
-        },
-        {
-          "bbox": {
-            "X": 617,
-            "Y": 743,
-            "Width": 27,
-            "Height": 21
-          },
-          "pixels": 208,
-          "meanDelta": 47.19047619047619
+          "pixels": 239,
+          "meanDelta": 59.51282051282051
         },
         {
           "bbox": {
@@ -1215,28 +1624,28 @@
             "Width": 27,
             "Height": 21
           },
-          "pixels": 175,
-          "meanDelta": 57.61702127659574
+          "pixels": 172,
+          "meanDelta": 57.797872340425535
         },
         {
           "bbox": {
             "X": 753,
             "Y": 743,
             "Width": 28,
-            "Height": 21
+            "Height": 20
           },
-          "pixels": 213,
-          "meanDelta": 51.43333333333333
+          "pixels": 207,
+          "meanDelta": 50.5625
         },
         {
           "bbox": {
             "X": 889,
             "Y": 743,
             "Width": 28,
-            "Height": 20
+            "Height": 21
           },
-          "pixels": 141,
-          "meanDelta": 52.42857142857143
+          "pixels": 145,
+          "meanDelta": 53.76923076923077
         },
         {
           "bbox": {
@@ -1245,8 +1654,8 @@
             "Width": 29,
             "Height": 21
           },
-          "pixels": 214,
-          "meanDelta": 52.916666666666664
+          "pixels": 221,
+          "meanDelta": 53.088235294117645
         },
         {
           "bbox": {
@@ -1255,8 +1664,8 @@
             "Width": 27,
             "Height": 21
           },
-          "pixels": 277,
-          "meanDelta": 60.56818181818182
+          "pixels": 267,
+          "meanDelta": 58.46808510638298
         },
         {
           "bbox": {
@@ -1265,18 +1674,8 @@
             "Width": 26,
             "Height": 22
           },
-          "pixels": 241,
-          "meanDelta": 57.990566037735846
-        },
-        {
-          "bbox": {
-            "X": 194,
-            "Y": 724,
-            "Width": 178,
-            "Height": 176
-          },
-          "pixels": 4333,
-          "meanDelta": 74.24630541871922
+          "pixels": 245,
+          "meanDelta": 57.757009345794394
         },
         {
           "bbox": {
@@ -1285,8 +1684,8 @@
             "Width": 27,
             "Height": 21
           },
-          "pixels": 279,
-          "meanDelta": 63.28
+          "pixels": 283,
+          "meanDelta": 63.2
         },
         {
           "bbox": {
@@ -1295,18 +1694,28 @@
             "Width": 27,
             "Height": 21
           },
-          "pixels": 292,
-          "meanDelta": 64.25
+          "pixels": 294,
+          "meanDelta": 63.34615384615385
+        },
+        {
+          "bbox": {
+            "X": 193,
+            "Y": 724,
+            "Width": 179,
+            "Height": 176
+          },
+          "pixels": 4368,
+          "meanDelta": 47.42857142857143
         },
         {
           "bbox": {
             "X": 617,
             "Y": 879,
-            "Width": 27,
+            "Width": 28,
             "Height": 21
           },
-          "pixels": 285,
-          "meanDelta": 64.80851063829788
+          "pixels": 288,
+          "meanDelta": 64.44680851063829
         },
         {
           "bbox": {
@@ -1315,8 +1724,8 @@
             "Width": 28,
             "Height": 21
           },
-          "pixels": 307,
-          "meanDelta": 64.8125
+          "pixels": 308,
+          "meanDelta": 64.91666666666667
         },
         {
           "bbox": {
@@ -1325,18 +1734,58 @@
             "Width": 29,
             "Height": 21
           },
-          "pixels": 240,
-          "meanDelta": 62.916666666666664
+          "pixels": 238,
+          "meanDelta": 62.729166666666664
         },
         {
           "bbox": {
             "X": 890,
             "Y": 879,
+            "Width": 28,
+            "Height": 21
+          },
+          "pixels": 223,
+          "meanDelta": 64.20408163265306
+        },
+        {
+          "bbox": {
+            "X": 345,
+            "Y": 1016,
             "Width": 27,
             "Height": 21
           },
-          "pixels": 221,
-          "meanDelta": 65.20833333333333
+          "pixels": 259,
+          "meanDelta": 58.620253164556964
+        },
+        {
+          "bbox": {
+            "X": 1026,
+            "Y": 1016,
+            "Width": 28,
+            "Height": 21
+          },
+          "pixels": 261,
+          "meanDelta": 60.80392156862745
+        },
+        {
+          "bbox": {
+            "X": 481,
+            "Y": 1016,
+            "Width": 29,
+            "Height": 21
+          },
+          "pixels": 217,
+          "meanDelta": 60.111111111111114
+        },
+        {
+          "bbox": {
+            "X": 1162,
+            "Y": 1016,
+            "Width": 28,
+            "Height": 21
+          },
+          "pixels": 275,
+          "meanDelta": 58.083333333333336
         },
         {
           "bbox": {
@@ -1345,28 +1794,8 @@
             "Width": 26,
             "Height": 22
           },
-          "pixels": 220,
-          "meanDelta": 59.130434782608695
-        },
-        {
-          "bbox": {
-            "X": 1026,
-            "Y": 1016,
-            "Width": 28,
-            "Height": 21
-          },
-          "pixels": 265,
-          "meanDelta": 59.7037037037037
-        },
-        {
-          "bbox": {
-            "X": 345,
-            "Y": 1016,
-            "Width": 27,
-            "Height": 21
-          },
-          "pixels": 260,
-          "meanDelta": 59.735849056603776
+          "pixels": 215,
+          "meanDelta": 60.45
         },
         {
           "bbox": {
@@ -1375,18 +1804,8 @@
             "Width": 26,
             "Height": 21
           },
-          "pixels": 247,
-          "meanDelta": 62.108108108108105
-        },
-        {
-          "bbox": {
-            "X": 481,
-            "Y": 1016,
-            "Width": 29,
-            "Height": 20
-          },
-          "pixels": 220,
-          "meanDelta": 60.270270270270274
+          "pixels": 248,
+          "meanDelta": 60.486486486486484
         },
         {
           "bbox": {
@@ -1395,8 +1814,8 @@
             "Width": 27,
             "Height": 21
           },
-          "pixels": 263,
-          "meanDelta": 60.65909090909091
+          "pixels": 255,
+          "meanDelta": 57.76086956521739
         },
         {
           "bbox": {
@@ -1405,18 +1824,8 @@
             "Width": 27,
             "Height": 20
           },
-          "pixels": 263,
-          "meanDelta": 56.96296296296296
-        },
-        {
-          "bbox": {
-            "X": 1162,
-            "Y": 1016,
-            "Width": 28,
-            "Height": 21
-          },
-          "pixels": 281,
-          "meanDelta": 58.97530864197531
+          "pixels": 262,
+          "meanDelta": 58.54347826086956
         },
         {
           "bbox": {
@@ -1425,8 +1834,8 @@
             "Width": 27,
             "Height": 21
           },
-          "pixels": 191,
-          "meanDelta": 58.568627450980394
+          "pixels": 193,
+          "meanDelta": 59.27272727272727
         },
         {
           "bbox": {
@@ -1435,8 +1844,8 @@
             "Width": 28,
             "Height": 21
           },
-          "pixels": 196,
-          "meanDelta": 61.40384615384615
+          "pixels": 192,
+          "meanDelta": 61.63461538461539
         },
         {
           "bbox": {
@@ -1445,8 +1854,8 @@
             "Width": 28,
             "Height": 21
           },
-          "pixels": 255,
-          "meanDelta": 61.223880597014926
+          "pixels": 248,
+          "meanDelta": 62.689655172413794
         },
         {
           "bbox": {
@@ -1455,8 +1864,8 @@
             "Width": 28,
             "Height": 21
           },
-          "pixels": 298,
-          "meanDelta": 58.94252873563219
+          "pixels": 295,
+          "meanDelta": 61.53061224489796
         },
         {
           "bbox": {
@@ -1465,28 +1874,28 @@
             "Width": 27,
             "Height": 21
           },
-          "pixels": 258,
-          "meanDelta": 60.309859154929576
+          "pixels": 257,
+          "meanDelta": 62.93103448275862
         },
         {
           "bbox": {
-            "X": 73,
+            "X": 72,
             "Y": 1151,
-            "Width": 26,
+            "Width": 27,
             "Height": 22
           },
           "pixels": 196,
-          "meanDelta": 57.21904761904762
+          "meanDelta": 56.74285714285714
         },
         {
           "bbox": {
-            "X": 754,
+            "X": 753,
             "Y": 1152,
-            "Width": 27,
+            "Width": 28,
             "Height": 21
           },
-          "pixels": 239,
-          "meanDelta": 60.51315789473684
+          "pixels": 241,
+          "meanDelta": 61.13559322033898
         },
         {
           "bbox": {
@@ -1495,8 +1904,8 @@
             "Width": 27,
             "Height": 21
           },
-          "pixels": 260,
-          "meanDelta": 61.139240506329116
+          "pixels": 256,
+          "meanDelta": 60.0875
         },
         {
           "bbox": {
@@ -1506,7 +1915,7 @@
             "Height": 21
           },
           "pixels": 185,
-          "meanDelta": 64.88709677419355
+          "meanDelta": 63.95238095238095
         },
         {
           "bbox": {
@@ -1515,8 +1924,8 @@
             "Width": 27,
             "Height": 21
           },
-          "pixels": 233,
-          "meanDelta": 64.57627118644068
+          "pixels": 230,
+          "meanDelta": 64.05084745762711
         },
         {
           "bbox": {
@@ -1525,8 +1934,8 @@
             "Width": 27,
             "Height": 21
           },
-          "pixels": 177,
-          "meanDelta": 65.72413793103448
+          "pixels": 176,
+          "meanDelta": 65.12068965517241
         },
         {
           "bbox": {
@@ -1535,38 +1944,8 @@
             "Width": 28,
             "Height": 21
           },
-          "pixels": 252,
-          "meanDelta": 64.16129032258064
-        },
-        {
-          "bbox": {
-            "X": 72,
-            "Y": 1288,
-            "Width": 27,
-            "Height": 20
-          },
-          "pixels": 146,
-          "meanDelta": 54.4375
-        },
-        {
-          "bbox": {
-            "X": 209,
-            "Y": 1289,
-            "Width": 27,
-            "Height": 19
-          },
-          "pixels": 156,
-          "meanDelta": 53.23809523809524
-        },
-        {
-          "bbox": {
-            "X": 345,
-            "Y": 1288,
-            "Width": 27,
-            "Height": 20
-          },
-          "pixels": 142,
-          "meanDelta": 54.19047619047619
+          "pixels": 249,
+          "meanDelta": 63.20967741935484
         },
         {
           "bbox": {
@@ -1575,68 +1954,98 @@
             "Width": 29,
             "Height": 20
           },
-          "pixels": 168,
-          "meanDelta": 55.36363636363637
+          "pixels": 167,
+          "meanDelta": 53.27272727272727
+        },
+        {
+          "bbox": {
+            "X": 72,
+            "Y": 1288,
+            "Width": 27,
+            "Height": 20
+          },
+          "pixels": 145,
+          "meanDelta": 48.86363636363637
+        },
+        {
+          "bbox": {
+            "X": 209,
+            "Y": 1288,
+            "Width": 27,
+            "Height": 20
+          },
+          "pixels": 161,
+          "meanDelta": 49.125
+        },
+        {
+          "bbox": {
+            "X": 345,
+            "Y": 1288,
+            "Width": 27,
+            "Height": 20
+          },
+          "pixels": 151,
+          "meanDelta": 51.869565217391305
         },
         {
           "bbox": {
             "X": 617,
-            "Y": 1289,
+            "Y": 1288,
             "Width": 28,
-            "Height": 19
+            "Height": 20
           },
-          "pixels": 148,
-          "meanDelta": 51.95
+          "pixels": 155,
+          "meanDelta": 47.625
         },
         {
           "bbox": {
             "X": 753,
-            "Y": 1289,
+            "Y": 1288,
             "Width": 28,
-            "Height": 19
+            "Height": 20
           },
-          "pixels": 150,
-          "meanDelta": 52.65217391304348
+          "pixels": 157,
+          "meanDelta": 52.285714285714285
         },
         {
           "bbox": {
             "X": 890,
-            "Y": 1289,
+            "Y": 1288,
             "Width": 28,
             "Height": 20
           },
-          "pixels": 119,
-          "meanDelta": 49.78260869565217
+          "pixels": 124,
+          "meanDelta": 47.19230769230769
         },
         {
           "bbox": {
             "X": 1026,
-            "Y": 1289,
+            "Y": 1288,
             "Width": 28,
-            "Height": 19
+            "Height": 20
           },
-          "pixels": 151,
-          "meanDelta": 55.57142857142857
+          "pixels": 152,
+          "meanDelta": 52.68181818181818
         },
         {
           "bbox": {
             "X": 1162,
-            "Y": 1289,
+            "Y": 1288,
             "Width": 28,
-            "Height": 19
+            "Height": 20
           },
-          "pixels": 184,
-          "meanDelta": 56.75
+          "pixels": 192,
+          "meanDelta": 54.77272727272727
         },
         {
           "bbox": {
-            "X": 1298,
+            "X": 1299,
             "Y": 1289,
-            "Width": 28,
+            "Width": 27,
             "Height": 19
           },
-          "pixels": 156,
-          "meanDelta": 59.34782608695652
+          "pixels": 153,
+          "meanDelta": 57.125
         },
         {
           "bbox": {
@@ -1645,8 +2054,8 @@
             "Width": 42,
             "Height": 22
           },
-          "pixels": 421,
-          "meanDelta": 50.55339805825243
+          "pixels": 409,
+          "meanDelta": 52.63333333333333
         },
         {
           "bbox": {
@@ -1655,18 +2064,8 @@
             "Width": 27,
             "Height": 22
           },
-          "pixels": 237,
-          "meanDelta": 57.51
-        },
-        {
-          "bbox": {
-            "X": 753,
-            "Y": 1424,
-            "Width": 28,
-            "Height": 21
-          },
-          "pixels": 276,
-          "meanDelta": 60.745098039215684
+          "pixels": 233,
+          "meanDelta": 58.666666666666664
         },
         {
           "bbox": {
@@ -1675,8 +2074,18 @@
             "Width": 27,
             "Height": 21
           },
-          "pixels": 283,
-          "meanDelta": 59.25
+          "pixels": 288,
+          "meanDelta": 58.59090909090909
+        },
+        {
+          "bbox": {
+            "X": 753,
+            "Y": 1424,
+            "Width": 28,
+            "Height": 21
+          },
+          "pixels": 272,
+          "meanDelta": 60.09803921568628
         },
         {
           "bbox": {
@@ -1685,8 +2094,8 @@
             "Width": 28,
             "Height": 21
           },
-          "pixels": 276,
-          "meanDelta": 61.16
+          "pixels": 272,
+          "meanDelta": 61.76086956521739
         },
         {
           "bbox": {
@@ -1695,8 +2104,8 @@
             "Width": 27,
             "Height": 21
           },
-          "pixels": 279,
-          "meanDelta": 62.15686274509804
+          "pixels": 273,
+          "meanDelta": 61.705882352941174
         },
         {
           "bbox": {
@@ -1705,18 +2114,8 @@
             "Width": 27,
             "Height": 21
           },
-          "pixels": 278,
-          "meanDelta": 60.982142857142854
-        },
-        {
-          "bbox": {
-            "X": 481,
-            "Y": 1424,
-            "Width": 29,
-            "Height": 21
-          },
-          "pixels": 237,
-          "meanDelta": 58.981818181818184
+          "pixels": 282,
+          "meanDelta": 59.75438596491228
         },
         {
           "bbox": {
@@ -1725,28 +2124,48 @@
             "Width": 28,
             "Height": 21
           },
-          "pixels": 306,
-          "meanDelta": 59.389830508474574
+          "pixels": 294,
+          "meanDelta": 58.32203389830509
+        },
+        {
+          "bbox": {
+            "X": 481,
+            "Y": 1424,
+            "Width": 29,
+            "Height": 21
+          },
+          "pixels": 238,
+          "meanDelta": 58.56363636363636
         },
         {
           "bbox": {
             "X": 890,
             "Y": 1424,
-            "Width": 27,
+            "Width": 28,
             "Height": 21
           },
-          "pixels": 213,
-          "meanDelta": 58.74418604651163
+          "pixels": 208,
+          "meanDelta": 58.76190476190476
         },
         {
           "bbox": {
             "X": 587,
-            "Y": 1575,
+            "Y": 1572,
             "Width": 337,
-            "Height": 29
+            "Height": 32
           },
-          "pixels": 2975,
-          "meanDelta": 116.36585365853658
+          "pixels": 3050,
+          "meanDelta": 44.666666666666664
+        },
+        {
+          "bbox": {
+            "X": 1,
+            "Y": 1652,
+            "Width": 12,
+            "Height": 15
+          },
+          "pixels": 24,
+          "meanDelta": 39.375
         },
         {
           "bbox": {
@@ -1755,18 +2174,8 @@
             "Width": 13,
             "Height": 24
           },
-          "pixels": 102,
-          "meanDelta": 120.16666666666667
-        },
-        {
-          "bbox": {
-            "X": 0,
-            "Y": 1648,
-            "Width": 13,
-            "Height": 19
-          },
-          "pixels": 93,
-          "meanDelta": 35
+          "pixels": 32,
+          "meanDelta": 38.69230769230769
         }
       ],
       "objectShifts": [
@@ -1774,14 +2183,183 @@
           "bbox": {
             "X": 0,
             "Y": 0,
-            "Width": 1473,
-            "Height": 355
+            "Width": 1472,
+            "Height": 23
+          },
+          "offset": {
+            "DX": 0,
+            "DY": -4
+          },
+          "improvement": 0.980860888005192
+        },
+        {
+          "bbox": {
+            "X": 74,
+            "Y": 197,
+            "Width": 11,
+            "Height": 22
+          },
+          "offset": {
+            "DX": 0,
+            "DY": -3
+          },
+          "improvement": 0.2695604091788775
+        },
+        {
+          "bbox": {
+            "X": 209,
+            "Y": 197,
+            "Width": 12,
+            "Height": 22
+          },
+          "offset": {
+            "DX": 0,
+            "DY": -3
+          },
+          "improvement": 0.6065308285731111
+        },
+        {
+          "bbox": {
+            "X": 346,
+            "Y": 198,
+            "Width": 12,
+            "Height": 21
+          },
+          "offset": {
+            "DX": 0,
+            "DY": -3
+          },
+          "improvement": 0.6362832727629899
+        },
+        {
+          "bbox": {
+            "X": 1299,
+            "Y": 197,
+            "Width": 27,
+            "Height": 22
+          },
+          "offset": {
+            "DX": 1,
+            "DY": -3
+          },
+          "improvement": 0.5032716512461449
+        },
+        {
+          "bbox": {
+            "X": 480,
+            "Y": 198,
+            "Width": 15,
+            "Height": 21
+          },
+          "offset": {
+            "DX": 1,
+            "DY": -2
+          },
+          "improvement": 0.5179688636694311
+        },
+        {
+          "bbox": {
+            "X": 1162,
+            "Y": 198,
+            "Width": 13,
+            "Height": 21
+          },
+          "offset": {
+            "DX": 1,
+            "DY": -3
+          },
+          "improvement": 0.6248034149629297
+        },
+        {
+          "bbox": {
+            "X": 1298,
+            "Y": 335,
+            "Width": 28,
+            "Height": 20
+          },
+          "offset": {
+            "DX": 1,
+            "DY": -2
+          },
+          "improvement": 0.49499832395335297
+        },
+        {
+          "bbox": {
+            "X": 74,
+            "Y": 334,
+            "Width": 25,
+            "Height": 21
+          },
+          "offset": {
+            "DX": 1,
+            "DY": -2
+          },
+          "improvement": 0.31724175914961583
+        },
+        {
+          "bbox": {
+            "X": 210,
+            "Y": 334,
+            "Width": 26,
+            "Height": 21
+          },
+          "offset": {
+            "DX": 0,
+            "DY": -2
+          },
+          "improvement": 0.4304902768805827
+        },
+        {
+          "bbox": {
+            "X": 346,
+            "Y": 334,
+            "Width": 26,
+            "Height": 21
+          },
+          "offset": {
+            "DX": 0,
+            "DY": -2
+          },
+          "improvement": 0.477919619566472
+        },
+        {
+          "bbox": {
+            "X": 482,
+            "Y": 334,
+            "Width": 28,
+            "Height": 21
+          },
+          "offset": {
+            "DX": 1,
+            "DY": -2
+          },
+          "improvement": 0.35035778395259054
+        },
+        {
+          "bbox": {
+            "X": 1163,
+            "Y": 334,
+            "Width": 27,
+            "Height": 21
+          },
+          "offset": {
+            "DX": 1,
+            "DY": -2
+          },
+          "improvement": 0.4981109564525751
+        },
+        {
+          "bbox": {
+            "X": 617,
+            "Y": 72,
+            "Width": 437,
+            "Height": 283
           },
           "offset": {
             "DX": -1,
             "DY": -5
           },
-          "improvement": 0.17508112703360845
+          "improvement": 0.2470143755323128
         },
         {
           "bbox": {
@@ -1794,7 +2372,7 @@
             "DX": 1,
             "DY": -3
           },
-          "improvement": 0.5262502002812839
+          "improvement": 0.5072484092064438
         },
         {
           "bbox": {
@@ -1807,7 +2385,7 @@
             "DX": 0,
             "DY": -3
           },
-          "improvement": 0.6404797336122939
+          "improvement": 0.6216677762019162
         },
         {
           "bbox": {
@@ -1820,7 +2398,7 @@
             "DX": 1,
             "DY": -3
           },
-          "improvement": 0.6097047393438308
+          "improvement": 0.5961328480436761
         },
         {
           "bbox": {
@@ -1833,46 +2411,7 @@
             "DX": 0,
             "DY": -3
           },
-          "improvement": 0.6192101850057395
-        },
-        {
-          "bbox": {
-            "X": 617,
-            "Y": 471,
-            "Width": 27,
-            "Height": 21
-          },
-          "offset": {
-            "DX": 1,
-            "DY": -3
-          },
-          "improvement": 0.6333738971706724
-        },
-        {
-          "bbox": {
-            "X": 1162,
-            "Y": 471,
-            "Width": 28,
-            "Height": 21
-          },
-          "offset": {
-            "DX": 1,
-            "DY": -3
-          },
-          "improvement": 0.61957928802589
-        },
-        {
-          "bbox": {
-            "X": 1298,
-            "Y": 471,
-            "Width": 28,
-            "Height": 21
-          },
-          "offset": {
-            "DX": 1,
-            "DY": -3
-          },
-          "improvement": 0.6088360237892948
+          "improvement": 0.604379198805673
         },
         {
           "bbox": {
@@ -1885,33 +2424,72 @@
             "DX": 0,
             "DY": -3
           },
-          "improvement": 0.6497340913258757
+          "improvement": 0.635336414997432
         },
         {
           "bbox": {
-            "X": 481,
+            "X": 617,
             "Y": 471,
-            "Width": 29,
+            "Width": 28,
             "Height": 21
           },
           "offset": {
             "DX": 1,
             "DY": -3
           },
-          "improvement": 0.49506463397498945
+          "improvement": 0.6119316060628687
+        },
+        {
+          "bbox": {
+            "X": 1162,
+            "Y": 471,
+            "Width": 28,
+            "Height": 21
+          },
+          "offset": {
+            "DX": 1,
+            "DY": -3
+          },
+          "improvement": 0.6070713518846299
+        },
+        {
+          "bbox": {
+            "X": 1298,
+            "Y": 471,
+            "Width": 28,
+            "Height": 21
+          },
+          "offset": {
+            "DX": 1,
+            "DY": -3
+          },
+          "improvement": 0.5930158941721368
+        },
+        {
+          "bbox": {
+            "X": 481,
+            "Y": 470,
+            "Width": 29,
+            "Height": 22
+          },
+          "offset": {
+            "DX": 1,
+            "DY": -3
+          },
+          "improvement": 0.4735532683525322
         },
         {
           "bbox": {
             "X": 890,
             "Y": 471,
-            "Width": 27,
+            "Width": 28,
             "Height": 21
           },
           "offset": {
             "DX": 0,
             "DY": -3
           },
-          "improvement": 0.5777798232695139
+          "improvement": 0.5670021567217829
         },
         {
           "bbox": {
@@ -1921,23 +2499,23 @@
             "Height": 22
           },
           "offset": {
-            "DX": 1,
+            "DX": 0,
             "DY": -3
           },
-          "improvement": 0.5176039262089969
+          "improvement": 0.5029080231126267
         },
         {
           "bbox": {
             "X": 754,
-            "Y": 606,
+            "Y": 605,
             "Width": 27,
-            "Height": 21
+            "Height": 22
           },
           "offset": {
             "DX": 1,
             "DY": -3
           },
-          "improvement": 0.6114731437598736
+          "improvement": 0.5924815165268712
         },
         {
           "bbox": {
@@ -1950,20 +2528,20 @@
             "DX": 0,
             "DY": -3
           },
-          "improvement": 0.6663017640435381
+          "improvement": 0.6511341222879684
         },
         {
           "bbox": {
             "X": 1027,
-            "Y": 606,
+            "Y": 605,
             "Width": 27,
-            "Height": 21
+            "Height": 22
           },
           "offset": {
             "DX": 0,
             "DY": -3
           },
-          "improvement": 0.6455375334905584
+          "improvement": 0.6262646956850632
         },
         {
           "bbox": {
@@ -1976,20 +2554,20 @@
             "DX": 0,
             "DY": -3
           },
-          "improvement": 0.6665956540264167
+          "improvement": 0.6507607192254495
         },
         {
           "bbox": {
             "X": 617,
             "Y": 606,
-            "Width": 27,
+            "Width": 28,
             "Height": 21
           },
           "offset": {
             "DX": 1,
             "DY": -3
           },
-          "improvement": 0.6589808958306441
+          "improvement": 0.6435571110404072
         },
         {
           "bbox": {
@@ -2002,7 +2580,7 @@
             "DX": 1,
             "DY": -3
           },
-          "improvement": 0.6398054504747935
+          "improvement": 0.6218058181374642
         },
         {
           "bbox": {
@@ -2015,7 +2593,20 @@
             "DX": 1,
             "DY": -3
           },
-          "improvement": 0.5250832954717553
+          "improvement": 0.5058060734825451
+        },
+        {
+          "bbox": {
+            "X": 890,
+            "Y": 606,
+            "Width": 28,
+            "Height": 21
+          },
+          "offset": {
+            "DX": 0,
+            "DY": -3
+          },
+          "improvement": 0.5750991583631615
         },
         {
           "bbox": {
@@ -2028,33 +2619,7 @@
             "DX": 1,
             "DY": -3
           },
-          "improvement": 0.5575600124701237
-        },
-        {
-          "bbox": {
-            "X": 890,
-            "Y": 606,
-            "Width": 27,
-            "Height": 21
-          },
-          "offset": {
-            "DX": 0,
-            "DY": -3
-          },
-          "improvement": 0.5953419226957384
-        },
-        {
-          "bbox": {
-            "X": 480,
-            "Y": 743,
-            "Width": 30,
-            "Height": 20
-          },
-          "offset": {
-            "DX": 1,
-            "DY": -2
-          },
-          "improvement": 0.4496555310022098
+          "improvement": 0.5352564741532266
         },
         {
           "bbox": {
@@ -2067,7 +2632,33 @@
             "DX": 1,
             "DY": -2
           },
-          "improvement": 0.558907609026215
+          "improvement": 0.5334353755019282
+        },
+        {
+          "bbox": {
+            "X": 480,
+            "Y": 743,
+            "Width": 30,
+            "Height": 20
+          },
+          "offset": {
+            "DX": 1,
+            "DY": -2
+          },
+          "improvement": 0.4192443324937028
+        },
+        {
+          "bbox": {
+            "X": 617,
+            "Y": 743,
+            "Width": 28,
+            "Height": 21
+          },
+          "offset": {
+            "DX": 1,
+            "DY": -2
+          },
+          "improvement": 0.552627720408035
         },
         {
           "bbox": {
@@ -2080,20 +2671,7 @@
             "DX": 1,
             "DY": -2
           },
-          "improvement": 0.5525520483546004
-        },
-        {
-          "bbox": {
-            "X": 617,
-            "Y": 743,
-            "Width": 27,
-            "Height": 21
-          },
-          "offset": {
-            "DX": 1,
-            "DY": -2
-          },
-          "improvement": 0.5804971402474828
+          "improvement": 0.5362387841054752
         },
         {
           "bbox": {
@@ -2106,33 +2684,33 @@
             "DX": 1,
             "DY": -2
           },
-          "improvement": 0.3713847148166101
+          "improvement": 0.35976420876913845
         },
         {
           "bbox": {
             "X": 753,
             "Y": 743,
             "Width": 28,
-            "Height": 21
+            "Height": 20
           },
           "offset": {
             "DX": 1,
             "DY": -2
           },
-          "improvement": 0.48164580712094124
+          "improvement": 0.47043045362859964
         },
         {
           "bbox": {
             "X": 889,
             "Y": 743,
             "Width": 28,
-            "Height": 20
+            "Height": 21
           },
           "offset": {
             "DX": 0,
             "DY": -2
           },
-          "improvement": 0.43976184917114175
+          "improvement": 0.423568281938326
         },
         {
           "bbox": {
@@ -2145,7 +2723,7 @@
             "DX": 0,
             "DY": -2
           },
-          "improvement": 0.5214663627428427
+          "improvement": 0.5098563043918235
         },
         {
           "bbox": {
@@ -2158,7 +2736,7 @@
             "DX": 1,
             "DY": -3
           },
-          "improvement": 0.6074532886181644
+          "improvement": 0.595241688043861
         },
         {
           "bbox": {
@@ -2171,7 +2749,7 @@
             "DX": 1,
             "DY": -3
           },
-          "improvement": 0.5106122136234771
+          "improvement": 0.496793501496366
         },
         {
           "bbox": {
@@ -2184,7 +2762,7 @@
             "DX": 1,
             "DY": -3
           },
-          "improvement": 0.606540823140442
+          "improvement": 0.5952806748223527
         },
         {
           "bbox": {
@@ -2197,20 +2775,20 @@
             "DX": 0,
             "DY": -3
           },
-          "improvement": 0.6389710551176224
+          "improvement": 0.6286859389524695
         },
         {
           "bbox": {
             "X": 617,
             "Y": 879,
-            "Width": 27,
+            "Width": 28,
             "Height": 21
           },
           "offset": {
             "DX": 1,
             "DY": -3
           },
-          "improvement": 0.6512940353554623
+          "improvement": 0.6411937528993351
         },
         {
           "bbox": {
@@ -2223,7 +2801,7 @@
             "DX": 1,
             "DY": -3
           },
-          "improvement": 0.6366822251128625
+          "improvement": 0.6269892360435348
         },
         {
           "bbox": {
@@ -2236,12 +2814,25 @@
             "DX": 1,
             "DY": -3
           },
-          "improvement": 0.5251840227179315
+          "improvement": 0.5147836126495048
         },
         {
           "bbox": {
             "X": 890,
             "Y": 879,
+            "Width": 28,
+            "Height": 21
+          },
+          "offset": {
+            "DX": 0,
+            "DY": -3
+          },
+          "improvement": 0.5683903887894597
+        },
+        {
+          "bbox": {
+            "X": 345,
+            "Y": 1016,
             "Width": 27,
             "Height": 21
           },
@@ -2249,7 +2840,46 @@
             "DX": 0,
             "DY": -3
           },
-          "improvement": 0.5806754772393539
+          "improvement": 0.567254382037949
+        },
+        {
+          "bbox": {
+            "X": 1026,
+            "Y": 1016,
+            "Width": 28,
+            "Height": 21
+          },
+          "offset": {
+            "DX": 0,
+            "DY": -3
+          },
+          "improvement": 0.5510562796405001
+        },
+        {
+          "bbox": {
+            "X": 481,
+            "Y": 1016,
+            "Width": 29,
+            "Height": 21
+          },
+          "offset": {
+            "DX": 1,
+            "DY": -2
+          },
+          "improvement": 0.4598474201967476
+        },
+        {
+          "bbox": {
+            "X": 1162,
+            "Y": 1016,
+            "Width": 28,
+            "Height": 21
+          },
+          "offset": {
+            "DX": 1,
+            "DY": -2
+          },
+          "improvement": 0.5423406279733587
         },
         {
           "bbox": {
@@ -2262,33 +2892,7 @@
             "DX": 1,
             "DY": -3
           },
-          "improvement": 0.4381971128881504
-        },
-        {
-          "bbox": {
-            "X": 1026,
-            "Y": 1016,
-            "Width": 28,
-            "Height": 21
-          },
-          "offset": {
-            "DX": 0,
-            "DY": -3
-          },
-          "improvement": 0.563548551093035
-        },
-        {
-          "bbox": {
-            "X": 345,
-            "Y": 1016,
-            "Width": 27,
-            "Height": 21
-          },
-          "offset": {
-            "DX": 0,
-            "DY": -3
-          },
-          "improvement": 0.5826198329707348
+          "improvement": 0.42423141363370276
         },
         {
           "bbox": {
@@ -2301,20 +2905,7 @@
             "DX": 1,
             "DY": -2
           },
-          "improvement": 0.5817966563822917
-        },
-        {
-          "bbox": {
-            "X": 481,
-            "Y": 1016,
-            "Width": 29,
-            "Height": 20
-          },
-          "offset": {
-            "DX": 1,
-            "DY": -2
-          },
-          "improvement": 0.4872129112352576
+          "improvement": 0.5599384260150087
         },
         {
           "bbox": {
@@ -2327,7 +2918,7 @@
             "DX": 1,
             "DY": -3
           },
-          "improvement": 0.5284759214901148
+          "improvement": 0.51200465378649
         },
         {
           "bbox": {
@@ -2340,20 +2931,7 @@
             "DX": 0,
             "DY": -3
           },
-          "improvement": 0.5619298426796103
-        },
-        {
-          "bbox": {
-            "X": 1162,
-            "Y": 1016,
-            "Width": 28,
-            "Height": 21
-          },
-          "offset": {
-            "DX": 1,
-            "DY": -2
-          },
-          "improvement": 0.5603065415567503
+          "improvement": 0.5457572394309353
         },
         {
           "bbox": {
@@ -2366,7 +2944,7 @@
             "DX": 0,
             "DY": -2
           },
-          "improvement": 0.4973712815279842
+          "improvement": 0.48356737376755304
         },
         {
           "bbox": {
@@ -2379,7 +2957,7 @@
             "DX": 1,
             "DY": -2
           },
-          "improvement": 0.47300125575554625
+          "improvement": 0.4453767086543207
         },
         {
           "bbox": {
@@ -2392,7 +2970,7 @@
             "DX": 0,
             "DY": -3
           },
-          "improvement": 0.6028595102515735
+          "improvement": 0.5849127802267543
         },
         {
           "bbox": {
@@ -2405,7 +2983,7 @@
             "DX": 1,
             "DY": -3
           },
-          "improvement": 0.5996310264322215
+          "improvement": 0.5828726633647547
         },
         {
           "bbox": {
@@ -2418,33 +2996,33 @@
             "DX": 0,
             "DY": -3
           },
-          "improvement": 0.6491600871970543
+          "improvement": 0.6169480093011698
         },
         {
           "bbox": {
-            "X": 73,
+            "X": 72,
             "Y": 1151,
-            "Width": 26,
+            "Width": 27,
             "Height": 22
           },
           "offset": {
             "DX": 1,
             "DY": -3
           },
-          "improvement": 0.4625207180708266
+          "improvement": 0.4365164761264291
         },
         {
           "bbox": {
-            "X": 754,
+            "X": 753,
             "Y": 1152,
-            "Width": 27,
+            "Width": 28,
             "Height": 21
           },
           "offset": {
             "DX": 1,
             "DY": -3
           },
-          "improvement": 0.5844963911703329
+          "improvement": 0.5607514578873551
         },
         {
           "bbox": {
@@ -2457,7 +3035,7 @@
             "DX": 0,
             "DY": -3
           },
-          "improvement": 0.6070829349257609
+          "improvement": 0.5773127095879348
         },
         {
           "bbox": {
@@ -2470,7 +3048,7 @@
             "DX": 1,
             "DY": -3
           },
-          "improvement": 0.4230035756853397
+          "improvement": 0.40967463810863547
         },
         {
           "bbox": {
@@ -2483,7 +3061,7 @@
             "DX": 1,
             "DY": -3
           },
-          "improvement": 0.6176657487820377
+          "improvement": 0.5788901387326584
         },
         {
           "bbox": {
@@ -2496,7 +3074,7 @@
             "DX": 0,
             "DY": -3
           },
-          "improvement": 0.5164933063661755
+          "improvement": 0.487748637443518
         },
         {
           "bbox": {
@@ -2509,7 +3087,20 @@
             "DX": 1,
             "DY": -3
           },
-          "improvement": 0.5840669174854806
+          "improvement": 0.5577188053612011
+        },
+        {
+          "bbox": {
+            "X": 481,
+            "Y": 1288,
+            "Width": 29,
+            "Height": 20
+          },
+          "offset": {
+            "DX": 1,
+            "DY": -1
+          },
+          "improvement": 0.3253962348389017
         },
         {
           "bbox": {
@@ -2519,23 +3110,23 @@
             "Height": 20
           },
           "offset": {
-            "DX": 1,
+            "DX": 0,
             "DY": -1
           },
-          "improvement": 0.23956515519954227
+          "improvement": 0.22295010372311388
         },
         {
           "bbox": {
             "X": 209,
-            "Y": 1289,
+            "Y": 1288,
             "Width": 27,
-            "Height": 19
+            "Height": 20
           },
           "offset": {
             "DX": 0,
             "DY": -1
           },
-          "improvement": 0.3875952526352123
+          "improvement": 0.359056486654252
         },
         {
           "bbox": {
@@ -2548,51 +3139,25 @@
             "DX": 0,
             "DY": -1
           },
-          "improvement": 0.3946569694193105
-        },
-        {
-          "bbox": {
-            "X": 481,
-            "Y": 1288,
-            "Width": 29,
-            "Height": 20
-          },
-          "offset": {
-            "DX": 1,
-            "DY": -1
-          },
-          "improvement": 0.33781499492887423
+          "improvement": 0.3669152212676285
         },
         {
           "bbox": {
             "X": 617,
-            "Y": 1289,
+            "Y": 1288,
             "Width": 28,
-            "Height": 19
+            "Height": 20
           },
           "offset": {
             "DX": 1,
             "DY": -1
           },
-          "improvement": 0.41282520039375614
+          "improvement": 0.3953861688631127
         },
         {
           "bbox": {
             "X": 753,
-            "Y": 1289,
-            "Width": 28,
-            "Height": 19
-          },
-          "offset": {
-            "DX": 1,
-            "DY": -1
-          },
-          "improvement": 0.3096089293998854
-        },
-        {
-          "bbox": {
-            "X": 890,
-            "Y": 1289,
+            "Y": 1288,
             "Width": 28,
             "Height": 20
           },
@@ -2600,46 +3165,59 @@
             "DX": 0,
             "DY": -1
           },
-          "improvement": 0.31477130073711657
+          "improvement": 0.28493778819650173
         },
         {
           "bbox": {
-            "X": 1026,
-            "Y": 1289,
+            "X": 890,
+            "Y": 1288,
             "Width": 28,
-            "Height": 19
+            "Height": 20
           },
           "offset": {
             "DX": 0,
             "DY": -1
           },
-          "improvement": 0.35919781320198113
+          "improvement": 0.3076032655050567
+        },
+        {
+          "bbox": {
+            "X": 1026,
+            "Y": 1288,
+            "Width": 28,
+            "Height": 20
+          },
+          "offset": {
+            "DX": 0,
+            "DY": -1
+          },
+          "improvement": 0.34660774496781444
         },
         {
           "bbox": {
             "X": 1162,
-            "Y": 1289,
+            "Y": 1288,
             "Width": 28,
-            "Height": 19
+            "Height": 20
           },
           "offset": {
             "DX": 1,
             "DY": -1
           },
-          "improvement": 0.45743853280214986
+          "improvement": 0.43061187708389653
         },
         {
           "bbox": {
-            "X": 1298,
+            "X": 1299,
             "Y": 1289,
-            "Width": 28,
+            "Width": 27,
             "Height": 19
           },
           "offset": {
             "DX": 1,
             "DY": -1
           },
-          "improvement": 0.39956013745704466
+          "improvement": 0.38246385920804526
         },
         {
           "bbox": {
@@ -2652,7 +3230,7 @@
             "DX": 1,
             "DY": -3
           },
-          "improvement": 0.4698271617096711
+          "improvement": 0.44991955430684627
         },
         {
           "bbox": {
@@ -2665,20 +3243,7 @@
             "DX": 1,
             "DY": -3
           },
-          "improvement": 0.4621228651339932
-        },
-        {
-          "bbox": {
-            "X": 753,
-            "Y": 1424,
-            "Width": 28,
-            "Height": 21
-          },
-          "offset": {
-            "DX": 1,
-            "DY": -3
-          },
-          "improvement": 0.5569813626642224
+          "improvement": 0.445519132012819
         },
         {
           "bbox": {
@@ -2691,7 +3256,20 @@
             "DX": 0,
             "DY": -3
           },
-          "improvement": 0.6118409094664485
+          "improvement": 0.5914457131797949
+        },
+        {
+          "bbox": {
+            "X": 753,
+            "Y": 1424,
+            "Width": 28,
+            "Height": 21
+          },
+          "offset": {
+            "DX": 1,
+            "DY": -3
+          },
+          "improvement": 0.5364736285680723
         },
         {
           "bbox": {
@@ -2704,7 +3282,7 @@
             "DX": 0,
             "DY": -3
           },
-          "improvement": 0.5981175927604794
+          "improvement": 0.5825520959829018
         },
         {
           "bbox": {
@@ -2717,7 +3295,7 @@
             "DX": 0,
             "DY": -3
           },
-          "improvement": 0.6134708841333447
+          "improvement": 0.5936552093982002
         },
         {
           "bbox": {
@@ -2730,20 +3308,7 @@
             "DX": 1,
             "DY": -3
           },
-          "improvement": 0.5959036063135836
-        },
-        {
-          "bbox": {
-            "X": 481,
-            "Y": 1424,
-            "Width": 29,
-            "Height": 21
-          },
-          "offset": {
-            "DX": 1,
-            "DY": -2
-          },
-          "improvement": 0.49290926614346686
+          "improvement": 0.5718253509018467
         },
         {
           "bbox": {
@@ -2756,33 +3321,59 @@
             "DX": 1,
             "DY": -3
           },
-          "improvement": 0.5891900535700008
+          "improvement": 0.57196141074267
+        },
+        {
+          "bbox": {
+            "X": 481,
+            "Y": 1424,
+            "Width": 29,
+            "Height": 21
+          },
+          "offset": {
+            "DX": 1,
+            "DY": -2
+          },
+          "improvement": 0.47017296824158467
         },
         {
           "bbox": {
             "X": 890,
             "Y": 1424,
-            "Width": 27,
+            "Width": 28,
             "Height": 21
           },
           "offset": {
             "DX": 0,
             "DY": -3
           },
-          "improvement": 0.5209889531825355
+          "improvement": 0.49826926580433595
         },
         {
           "bbox": {
             "X": 587,
-            "Y": 1575,
+            "Y": 1572,
             "Width": 337,
-            "Height": 29
+            "Height": 32
           },
           "offset": {
             "DX": -2,
             "DY": 4
           },
-          "improvement": 0.22865906715851722
+          "improvement": 0.2318254008488613
+        },
+        {
+          "bbox": {
+            "X": 1,
+            "Y": 1652,
+            "Width": 12,
+            "Height": 15
+          },
+          "offset": {
+            "DX": 0,
+            "DY": -5
+          },
+          "improvement": 0.5152983944259315
         },
         {
           "bbox": {
@@ -2792,23 +3383,10 @@
             "Height": 24
           },
           "offset": {
-            "DX": 8,
-            "DY": -6
-          },
-          "improvement": 0.5956754930529161
-        },
-        {
-          "bbox": {
-            "X": 0,
-            "Y": 1648,
-            "Width": 13,
-            "Height": 19
-          },
-          "offset": {
-            "DX": -8,
+            "DX": -1,
             "DY": -5
           },
-          "improvement": 0.6134776699939078
+          "improvement": 0.5269947443860488
         }
       ],
       "zeroByteIdentity": false,
@@ -2844,11 +3422,11 @@
       "oldFormat": "jpeg",
       "newFormat": "png",
       "oldSha256": "cc58fea684f3c1a9fc879da163cf50e9438753b3ebcb7ecf3a5ef3b2f8a8ca47",
-      "newSha256": "dc0e77722b3b18306410692be47e22888a71bcc41d25645c3eafcbb2c83ec577",
+      "newSha256": "0a89f7cc45a780ef23f7db54164bf18a57875b681576f8c195d9fe5969958703",
       "oldGate": true,
-      "similarity": 0.9813763918502725,
-      "rawSimilarity": 0.9813763918502725,
-      "alignedSimilarity": 0.9813763918502725,
+      "similarity": 0.9815524269409256,
+      "rawSimilarity": 0.9815524269409256,
+      "alignedSimilarity": 0.9815524269409256,
       "globalOffset": {
         "DX": 0,
         "DY": 0
@@ -2858,12 +3436,12 @@
         {
           "bbox": {
             "X": 0,
-            "Y": 0,
+            "Y": 2,
             "Width": 1050,
-            "Height": 536
+            "Height": 534
           },
-          "pixels": 29414,
-          "meanDelta": 89.53968253968254
+          "pixels": 24196,
+          "meanDelta": 101.77966101694915
         }
       ],
       "zeroByteIdentity": true,
@@ -2899,11 +3477,11 @@
       "oldFormat": "jpeg",
       "newFormat": "png",
       "oldSha256": "2c2834c7e048ca29ba4d2aa7e34487a6005408cb4c345c229cf3be690ce2b1e5",
-      "newSha256": "d71052ba1e2eaaded91f06c9365d26750d6d45eac14b8d91f7bafd503dcb8b07",
+      "newSha256": "9a4f12d094afffabf547a8abf1cc0d47a3b2519ba259257de4316cc45557e9ca",
       "oldGate": true,
-      "similarity": 0.9620719589687727,
-      "rawSimilarity": 0.9620719589687727,
-      "alignedSimilarity": 0.9620719589687727,
+      "similarity": 0.962591418845316,
+      "rawSimilarity": 0.962591418845316,
+      "alignedSimilarity": 0.962591418845316,
       "globalOffset": {
         "DX": 0,
         "DY": 0
@@ -2917,8 +3495,8 @@
             "Width": 1800,
             "Height": 1200
           },
-          "pixels": 228952,
-          "meanDelta": 46.857142857142854
+          "pixels": 227991,
+          "meanDelta": 44.875
         }
       ],
       "zeroByteIdentity": true,
@@ -2954,11 +3532,11 @@
       "oldFormat": "jpeg",
       "newFormat": "png",
       "oldSha256": "4a01136f4b12e9a17458998ec67d4285c73b1990fbaff7e11fef735c06fb5ffc",
-      "newSha256": "84966b969603de3ff74a8fe42e27123f3f185efd44cc974da4b3dc7192953977",
+      "newSha256": "c3677b84a2385a39fa7077c0ed4f5c5a308b1da41b47e98f79bb0f9a467ae657",
       "oldGate": true,
-      "similarity": 0.9815655743501451,
-      "rawSimilarity": 0.9815655743501451,
-      "alignedSimilarity": 0.9815655743501451,
+      "similarity": 0.9832988081347118,
+      "rawSimilarity": 0.9832988081347118,
+      "alignedSimilarity": 0.9832988081347118,
       "globalOffset": {
         "DX": 0,
         "DY": 0
@@ -2967,13 +3545,13 @@
       "meaningful": [
         {
           "bbox": {
-            "X": 3,
+            "X": 2,
             "Y": 11,
-            "Width": 1346,
+            "Width": 1347,
             "Height": 522
           },
-          "pixels": 39359,
-          "meanDelta": 41
+          "pixels": 34343,
+          "meanDelta": 39
         }
       ],
       "zeroByteIdentity": true,
@@ -3009,11 +3587,11 @@
       "oldFormat": "jpeg",
       "newFormat": "png",
       "oldSha256": "2c3d37795bacf18c04d84b3ed72c2ef6532a4f2b9d25d629cb9555da0a721872",
-      "newSha256": "de97d094a0920cda8487beadf69c2b6e95c0118fffe568f6e04fdd93a691039b",
+      "newSha256": "199936d40e436e07a880332df36b37473b21d40850e013a431d0f456525326e5",
       "oldGate": true,
-      "similarity": 0.9880966745672628,
-      "rawSimilarity": 0.9880966745672628,
-      "alignedSimilarity": 0.9880966745672628,
+      "similarity": 0.9869923602925333,
+      "rawSimilarity": 0.9869923602925333,
+      "alignedSimilarity": 0.9869923602925333,
       "globalOffset": {
         "DX": 0,
         "DY": 0
@@ -3022,33 +3600,43 @@
       "meaningful": [
         {
           "bbox": {
-            "X": 34,
+            "X": 35,
             "Y": 34,
-            "Width": 222,
+            "Width": 221,
             "Height": 54
           },
-          "pixels": 1462,
-          "meanDelta": 58
+          "pixels": 1286,
+          "meanDelta": 41.5
         },
         {
           "bbox": {
             "X": 35,
             "Y": 144,
             "Width": 265,
-            "Height": 79
+            "Height": 80
           },
-          "pixels": 4220,
-          "meanDelta": 102.375
+          "pixels": 4260,
+          "meanDelta": 101.375
         },
         {
           "bbox": {
-            "X": 460,
+            "X": 457,
             "Y": 118,
-            "Width": 256,
+            "Width": 259,
             "Height": 142
           },
-          "pixels": 3098,
-          "meanDelta": 41
+          "pixels": 3171,
+          "meanDelta": 40
+        },
+        {
+          "bbox": {
+            "X": 832,
+            "Y": 54,
+            "Width": 203,
+            "Height": 220
+          },
+          "pixels": 2977,
+          "meanDelta": 50.666666666666664
         },
         {
           "bbox": {
@@ -3057,8 +3645,8 @@
             "Width": 37,
             "Height": 32
           },
-          "pixels": 208,
-          "meanDelta": 46
+          "pixels": 224,
+          "meanDelta": 34
         },
         {
           "bbox": {
@@ -3067,7 +3655,17 @@
             "Width": 160,
             "Height": 47
           },
-          "pixels": 1491,
+          "pixels": 1508,
+          "meanDelta": 32
+        },
+        {
+          "bbox": {
+            "X": 781,
+            "Y": 336,
+            "Width": 51,
+            "Height": 32
+          },
+          "pixels": 430,
           "meanDelta": 33
         },
         {
@@ -3077,8 +3675,8 @@
             "Width": 171,
             "Height": 45
           },
-          "pixels": 1367,
-          "meanDelta": 79.3723849372385
+          "pixels": 1400,
+          "meanDelta": 94.38518518518518
         },
         {
           "bbox": {
@@ -3087,8 +3685,18 @@
             "Width": 14,
             "Height": 20
           },
-          "pixels": 48,
-          "meanDelta": 70
+          "pixels": 57,
+          "meanDelta": 56
+        },
+        {
+          "bbox": {
+            "X": 781,
+            "Y": 440,
+            "Width": 51,
+            "Height": 26
+          },
+          "pixels": 288,
+          "meanDelta": 61.621212121212125
         },
         {
           "bbox": {
@@ -3097,8 +3705,8 @@
             "Width": 166,
             "Height": 39
           },
-          "pixels": 1022,
-          "meanDelta": 72.63247863247864
+          "pixels": 1059,
+          "meanDelta": 81.50970873786407
         },
         {
           "bbox": {
@@ -3107,18 +3715,18 @@
             "Width": 157,
             "Height": 49
           },
-          "pixels": 1521,
-          "meanDelta": 88.72789115646259
+          "pixels": 1512,
+          "meanDelta": 89.0944055944056
         },
         {
           "bbox": {
-            "X": 781,
-            "Y": 53,
-            "Width": 271,
-            "Height": 431
+            "X": 921,
+            "Y": 324,
+            "Width": 134,
+            "Height": 160
           },
-          "pixels": 6611,
-          "meanDelta": 88.42424242424242
+          "pixels": 2260,
+          "meanDelta": 34
         }
       ],
       "zeroByteIdentity": true,
@@ -3143,7 +3751,7 @@
       "alignedHeatmapPath": "compare/state.aligned.heatmap.png"
     }
   ],
-  "minimumSimilarity": 0.9200717995368184,
+  "minimumSimilarity": 0.9206544400743867,
   "minimumId": "help",
   "passingIds": null
 }
