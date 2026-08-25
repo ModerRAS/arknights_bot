@@ -1046,14 +1046,14 @@
       "oldFormat": "jpeg",
       "newFormat": "png",
       "oldSha256": "43bcdee8554827959fb26b79196d57657f9ee4c85b04fa0354227bef49d9615b",
-      "newSha256": "42af048edf022383a5efa7f0aa663d1212409f4ec65e51456af72e1b15d394d2",
+      "newSha256": "18971f296b9a9f0428edcf88c3f3b75ce884b14829ee40c4751af8ec4ec704d3",
       "oldGate": true,
-      "similarity": 0.8723936810182611,
-      "rawSimilarity": 0.8710063834161672,
-      "alignedSimilarity": 0.8723936810182611,
+      "similarity": 0.9341177161716593,
+      "rawSimilarity": 0.9341177161716593,
+      "alignedSimilarity": 0.9341177161716593,
       "globalOffset": {
-        "DX": -13,
-        "DY": 14
+        "DX": 0,
+        "DY": 0
       },
       "localPass": false,
       "meaningful": [
@@ -1064,11 +1064,11 @@
             "Width": 990,
             "Height": 2035
           },
-          "pixels": 653609,
-          "meanDelta": 32
+          "pixels": 404310,
+          "meanDelta": 38
         }
       ],
-      "zeroByteIdentity": false,
+      "zeroByteIdentity": true,
       "diffBBox": {
         "X": 0,
         "Y": 0,
