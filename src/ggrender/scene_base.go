@@ -106,41 +106,45 @@ func RenderBase(data *BaseInfo) (*gg.Context, error) {
 	const cssW, cssH = 1110, 612
 	dc := gg.NewContext(1665, 918) // manifest pixels
 	dc.Scale(1.5, 1.5)
-	FillBackground(dc, 0x2b, 0x33, 0x3d)
-	// header
-	setFont(dc, 17)
+	FillBackground(dc, 0x2b, 0x33, 0x3c)
+	// header (h3 18.7px bold; labor right: glyph + text + 100px bar)
+	setFont(dc, 19)
 	dc.SetRGB255(255, 255, 255)
-	drawString(dc, "基建信息", 10, 23)
-	// labor right: purple glyph + 42/99 + bar
-	lx := 962.0
+	drawString(dc, "基建信息", 10, 18.5)
+	lx := 975.0
 	dc.SetRGB255(0x85, 0x2c, 0xd3)
-	dc.DrawRectangle(lx, 8, 4, 4)
+	dc.DrawRectangle(lx, 4, 4, 4)
 	dc.Fill()
-	dc.DrawRectangle(lx+14, 8, 4, 4)
+	dc.DrawRectangle(lx+14, 4, 4, 4)
 	dc.Fill()
-	dc.DrawRectangle(lx+7, 15, 4, 4)
+	dc.DrawRectangle(lx+7, 11, 4, 4)
 	dc.Fill()
 	setFont(dc, 15)
 	dc.SetRGB255(255, 255, 255)
-	drawString(dc, fmt.Sprintf("%d/%d", data.LaborCur, data.LaborTotal), lx+24, 21)
-	drawAPBar(dc, 980, 26, 100, data.LaborCur*100/data.LaborTotal)
+	drawString(dc, fmt.Sprintf("%d/%d", data.LaborCur, data.LaborTotal), 1000, 17.5)
+	dc.SetRGBA255(255, 255, 255, 25)
+	dc.DrawRectangle(980, 22.5, 100, 4.5)
+	dc.Fill()
+	dc.SetRGB255(255, 255, 255)
+	dc.DrawRectangle(980, 22.5, 100*float64(data.LaborCur)/float64(data.LaborTotal), 4.5)
+	dc.Fill()
 
-	// cards
-	cardY := func(i int) float64 { return 45 + float64(i)*114 }
+	// cards: full 0..1108; halves left 0..552 / right 556..1108; h=112 pitch 117.33
+	cardY := func(i int) float64 { return 32 + float64(i)*117.33 }
 	halfIdx := 0
 	row := 0
 	for _, r := range data.Rooms {
 		var x, w float64
 		var idx int
 		if !r.Half {
-			x, w = 2.5, 1102
+			x, w = 0, 1108
 			idx = row
 			row++
 		} else {
-			x, w = 2.5, 548
+			x, w = 0, 552
 			if halfIdx%2 == 1 {
-				x = 560
-				w = 545
+				x = 556
+				w = 552
 			}
 			idx = row
 			if halfIdx%2 == 1 {
@@ -150,46 +154,66 @@ func RenderBase(data *BaseInfo) (*gg.Context, error) {
 		}
 		y := cardY(idx)
 		dc.SetRGB255(0x21, 0x26, 0x2f)
-		dc.DrawRoundedRectangle(x, y, w, 110, 15)
+		dc.DrawRoundedRectangle(x, y, w, 112, 15)
 		dc.Fill()
-		// title
-		setFont(dc, 17)
+		// title h3
+		setFont(dc, 19)
 		dc.SetRGB255(255, 255, 255)
-		drawString(dc, r.Title, x+10, y+24)
-		// note right
-		if r.Note != "" {
+		drawString(dc, r.Title, x+11, y+38.5)
+		// note right (flush to card edge)
+		if r.Note != "" && r.SkillIcon == "" && len(r.Board) == 0 {
 			setFont(dc, 15)
 			dc.SetRGB255(r.NoteColor[0], r.NoteColor[1], r.NoteColor[2])
 			nw, _ := dc.MeasureString(r.Note)
-			drawString(dc, r.Note, x+w-20-nw, y+23)
+			drawString(dc, r.Note, x+w-3-nw, y+38.5)
 		}
-		// board boxes
+		// board boxes flush right: 线索 [n][n]
 		if len(r.Board) > 0 {
-			bx := x + w - 20
+			bx := x + w - 3
 			for i := len(r.Board) - 1; i >= 0; i-- {
 				setFont(dc, 15)
 				dc.SetRGB255(255, 255, 255)
-				dc.DrawRectangle(bx-22, y+8, 22, 24)
+				dc.DrawRectangle(bx-23, y+14, 23, 25)
 				dc.Stroke()
-				drawStringAnchored(dc, fmt.Sprintf("%d", r.Board[i]), bx-11, y+25, 0.5, 0.5)
-				bx -= 26
+				drawStringAnchored(dc, fmt.Sprintf("%d", r.Board[i]), bx-11.5, y+31, 0.5, 0.5)
+				bx -= 27
 			}
-			setFont(dc, 15)
-			dc.SetRGB255(255, 255, 255)
-			drawString(dc, "线索", bx-40, y+23)
+			drawString(dc, "线索", bx-6-measureString(dc, "线索"), y+38.5)
+			// orange sharing note left of it
+			if r.Note != "" {
+				setFont(dc, 15)
+				dc.SetRGB255(r.NoteColor[0], r.NoteColor[1], r.NoteColor[2])
+				nw, _ := dc.MeasureString(r.Note)
+				drawString(dc, r.Note, bx-40-nw, y+38.5)
+			}
 		}
-		// skill lv + icon
+		// training: Lv text + 30px skill icon at right
 		if r.SkillIcon != "" {
 			setFont(dc, 15)
 			dc.SetRGB255(255, 255, 255)
-			drawString(dc, r.Note, x+w-70, y+23)
-			dc.DrawImage(ScaleExact(tryLocal(r.SkillIcon), 30, 30), int(x+w-50), int(y+6))
+			nw, _ := dc.MeasureString(r.Note)
+			drawString(dc, r.Note, x+w-48-nw, y+38.5)
+			dc.DrawImage(ScaleExact(tryLocal(r.SkillIcon), 30, 30), int(x+w-38), int(y)+7)
 		}
-		// chars
-		for j, c := range r.Chars {
-			drawBaseChar(dc, c, x+10, y+48)
-			_ = j
+		// chars: avatar 40 @ (x+10.7,y+64); mood 20 @ +52,+74; name @ +72,+89.5; ap bar @ +10.7,+103.3 w150
+		for _, c := range r.Chars {
+			dc.DrawImage(ScaleExact(tryLocal(c.Avatar), 40, 40), int(x+10.7), int(y+64))
+			drawMoodIcon(dc, x+53, y+74, c.AP)
+			setFont(dc, 15)
+			dc.SetRGB255(255, 255, 255)
+			drawString(dc, c.Name, x+72, y+89.5)
+			dc.SetRGB255(0x80, 0x81, 0x85)
+			dc.DrawRectangle(x+10.7, y+103.3, 150, 4)
+			dc.Fill()
+			dc.SetRGB255(255, 255, 255)
+			dc.DrawRectangle(x+10.7, y+103.3, 150*float64(c.AP)/100, 4)
+			dc.Fill()
 		}
 	}
 	return dc, nil
+}
+
+func measureString(dc *gg.Context, s string) float64 {
+	w, _ := dc.MeasureString(s)
+	return w
 }
