@@ -5,6 +5,8 @@ package ggrender
 
 import (
 	"bytes"
+	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
 	"image"
 	"image/color"
@@ -131,10 +133,17 @@ func fetch(url string) (image.Image, error) {
 	return Decode(resp.Body)
 }
 
-// FetchImage tries remote URL with 6s timeout, falls back to local asset, then 1x1 pixel.
-// Matches poc logic and Playwright's resource error fallback.
+// FetchImage tries the frozen asset first (assets/frozen/<sha256(url)>.img —
+// the baseline-era remote material, SHA-verified against resource-manifest.json),
+// then the live remote URL with 6s timeout, then local fallback, then 1x1 pixel.
+// Frozen hits make rendering deterministic and immune to upstream image drift.
 func FetchImage(url, fallbackPath string) image.Image {
 	if url != "" {
+		if p := frozenPath(url); p != "" {
+			if img, err := LoadImage(p); err == nil {
+				return img
+			}
+		}
 		if img, err := fetch(url); err == nil {
 			return img
 		}
@@ -146,6 +155,30 @@ func FetchImage(url, fallbackPath string) image.Image {
 		return img
 	}
 	return image.NewRGBA(image.Rect(0, 0, 1, 1))
+}
+
+// frozenEnabled allows disabling the frozen lookup (GG_FROZEN_OFF=1) for A/B.
+var frozenEnabled = os.Getenv("GG_FROZEN_OFF") != "1"
+
+// frozenPath resolves assets/frozen/<sha256(url)>.img; retries the query-stripped
+// URL because the resource manifest records post-redirect addresses.
+func frozenPath(url string) string {
+	if !frozenEnabled {
+		return ""
+	}
+	h := sha256.Sum256([]byte(url))
+	p := filepath.Join(AssetRoot, "frozen", hex.EncodeToString(h[:])+".img")
+	if _, err := os.Stat(p); err == nil {
+		return p
+	}
+	if i := strings.IndexByte(url, '?'); i >= 0 {
+		h2 := sha256.Sum256([]byte(url[:i]))
+		p = filepath.Join(AssetRoot, "frozen", hex.EncodeToString(h2[:])+".img")
+		if _, err := os.Stat(p); err == nil {
+			return p
+		}
+	}
+	return ""
 }
 
 // ScaleContain fits within w*h.

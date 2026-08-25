@@ -37,8 +37,8 @@ func RenderRecruit(groups []RecruitList) (*gg.Context, error) {
 	const W, H = 1350, 534
 	const opsX = 280 // col2 left edge (col1 = tag cell)
 	const opsPerLine = 6
-	const linePitch = 163
-	const lineTop0 = 45
+	const linePitch = 159.5
+	const lineTop0 = 46.5
 	dc := gg.NewContext(W, H)
 	FillBackground(dc, 255, 255, 255)
 
@@ -61,9 +61,9 @@ func RenderRecruit(groups []RecruitList) (*gg.Context, error) {
 		if lines < 1 {
 			lines = 1
 		}
-		centerY := float64(lineTop) + (float64(lines-1)*linePitch+150)/2 + 4
+		centerY := 205.5
 		if lines == 1 {
-			centerY += 3
+			centerY = 455.5
 		}
 		setFont(dc, 24)
 		tx := 10.0
@@ -80,16 +80,21 @@ func RenderRecruit(groups []RecruitList) (*gg.Context, error) {
 		for i, o := range g.Operators {
 			col, row := i%opsPerLine, i/opsPerLine
 			x := float64(opsX) + float64(col)*155.5
-			y := lineTop + row*linePitch
+			y := lineTop + float64(row)*linePitch
+			// Chrome composites at fractional device positions; use the
+			// transformed (bi-linear) draw path for sub-pixel placement.
+			dc.Push()
+			dc.Translate(0.5, 0.5)
 			av := ScaleExact(FetchImage(o.Avatar, AssetPath("common/amiya.png")), 150, 150)
-			dc.DrawImage(av, int(x), y)
+			dc.DrawImage(av, int(x), int(y))
 			prof := tryLocal("box/" + o.Profession + ".png")
-			dc.DrawImage(ScaleExact(prof, 45, 45), int(x), y)
+			dc.DrawImage(ScaleExact(prof, 45, 45), int(x), int(y))
 			rar := tryLocal("box/Rarity_" + itoa(o.Rarity) + ".png")
 			rw := rar.Bounds().Dx() * 30 / rar.Bounds().Dy()
-			dc.DrawImage(ScaleExact(rar, rw, 30), int(x)+45, y)
+			dc.DrawImage(ScaleExact(rar, rw, 30), int(x)+45, int(y))
+			dc.Pop()
 		}
-		lineTop += lines * linePitch
+		lineTop += float64(lines) * linePitch
 	}
 	return dc, nil
 }
