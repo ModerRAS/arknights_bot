@@ -842,54 +842,6 @@ func RenderBase(data *BaseInfo) (*gg.Context, error) {
 }
 
 // Calendar
-type CalendarData struct {
-	Entries []struct{ Title, Begin, End string }
-}
-
-func SampleCalendar() *CalendarData {
-	c := &CalendarData{}
-	c.Entries = []struct{ Title, Begin, End string }{
-		{"主线活动「破碎日冕」", "2025-08-01", "2025-08-14"},
-		{"危机合约", "2025-08-05", "2025-08-19"},
-		{"常驻寻访", "2025-08-01", "2025-08-30"},
-		{"愚人号复刻", "2025-08-10", "2025-08-24"},
-		{"感谢庆典", "2025-08-15", "2025-08-29"},
-	}
-	return c
-}
-
-func RenderCalendar(data *CalendarData) (*gg.Context, error) {
-	const mainW = 900
-	rowH := 70
-	headerH := 80
-	mainH := headerH + len(data.Entries)*rowH + 40
-	dc := gg.NewContext(mainW, mainH)
-	FillBackground(dc, 46, 48, 49)
-	dc.SetRGB255(60,62,64)
-	dc.DrawRectangle(0,0,float64(mainW),float64(headerH))
-	dc.Fill()
-	setFont(dc,26)
-	dc.SetRGB255(255,255,255)
-	drawString(dc,"活动日历",25,50)
-	y:=headerH+10
-	for i, e := range data.Entries {
-		if i%2==0 {
-			fillRoundedCard(dc,10,float64(y),float64(mainW-20),float64(rowH-10),8,10)
-		} else {
-			fillRoundedCard(dc,10,float64(y),float64(mainW-20),float64(rowH-10),8,6)
-		}
-		setFont(dc,16)
-		dc.SetRGB255(255,255,255)
-		drawString(dc,e.Title,30,float64(y+28))
-		setFont(dc,13)
-		dc.SetRGB255(180,200,220)
-		drawString(dc,fmt.Sprintf("%s ~ %s",e.Begin,e.End),30,float64(y+50))
-		y+=rowH
-	}
-	return dc,nil
-}
-
-// Card
 type CardInfo struct {
 	Name, Uid, ServerName, Resume string
 	Level, RegTime int
@@ -1127,56 +1079,6 @@ func RenderHelp(data *HelpData) (*gg.Context, error) {
 }
 
 // Lottery
-type LotteryData struct {
-	Details []struct{ User, Award string; Count int }
-}
-
-func SampleLottery() *LotteryData {
-	d:=&LotteryData{}
-	d.Details=[]struct{User,Award string; Count int}{
-		{"博士A","月卡",1},{"博士B","源石×10",2},{"博士C","家具",1},{"博士D","合成玉×600",1},{"博士E","龙门币",3},
-	}
-	return d
-}
-
-func RenderLottery(data *LotteryData) (*gg.Context, error) {
-	const mainW=800
-	rowH:=50
-	headerH:=80
-	mainH:=headerH+len(data.Details)*rowH+40
-	dc:=gg.NewContext(mainW,mainH)
-	FillBackground(dc,27,29,30)
-	dc.SetRGB255(45,48,55)
-	dc.DrawRectangle(0,0,float64(mainW),float64(headerH))
-	dc.Fill()
-	setFont(dc,26)
-	dc.SetRGB255(255,255,255)
-	drawString(dc,"抽奖详情",25,52)
-	y:=headerH+10
-	// header row
-	setFont(dc,13)
-	dc.SetRGB255(180,200,220)
-	drawString(dc,"用户",30,float64(y+18))
-	drawString(dc,"奖品",300,float64(y+18))
-	drawString(dc,"数量",600,float64(y+18))
-	y+=30
-	for i,d:=range data.Details {
-		if i%2==0 {
-			fillRoundedCard(dc,10,float64(y),float64(mainW-20),float64(rowH-10),6,10)
-		}
-		setFont(dc,14)
-		dc.SetRGB255(255,255,255)
-		drawString(dc,d.User,30,float64(y+28))
-		dc.SetRGB255(220,220,180)
-		drawString(dc,d.Award,300,float64(y+28))
-		dc.SetRGB255(180,220,180)
-		drawString(dc,itoa(d.Count),600,float64(y+28))
-		y+=rowH
-	}
-	return dc,nil
-}
-
-// Operator
 type OperatorInfo struct {
 	Name, Profession, Position, Tag string
 	Rarity int
