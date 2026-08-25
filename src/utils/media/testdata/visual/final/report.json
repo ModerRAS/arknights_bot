@@ -3095,11 +3095,11 @@
       "oldFormat": "jpeg",
       "newFormat": "png",
       "oldSha256": "4a01136f4b12e9a17458998ec67d4285c73b1990fbaff7e11fef735c06fb5ffc",
-      "newSha256": "0d59c056b5cddca7b6f4c30685d689220a65a6c8aa58639cdb33cfd87e5d8328",
+      "newSha256": "42e76a5ffe5c566b7eefb9451910af09e58f28663e724de0cd8c105c0e11f85e",
       "oldGate": true,
-      "similarity": 0.8025216042582937,
-      "rawSimilarity": 0.8025216042582937,
-      "alignedSimilarity": 0.8025216042582937,
+      "similarity": 0.9812793485267598,
+      "rawSimilarity": 0.9812793485267598,
+      "alignedSimilarity": 0.9812793485267598,
       "globalOffset": {
         "DX": 0,
         "DY": 0
@@ -3108,13 +3108,13 @@
       "meaningful": [
         {
           "bbox": {
-            "X": 0,
-            "Y": 1,
-            "Width": 1350,
-            "Height": 533
+            "X": 3,
+            "Y": 9,
+            "Width": 1346,
+            "Height": 524
           },
-          "pixels": 363283,
-          "meanDelta": 189.42307692307693
+          "pixels": 39561,
+          "meanDelta": 41
         }
       ],
       "zeroByteIdentity": true,
@@ -3321,7 +3321,7 @@
       "alignedHeatmapPath": "compare/state.aligned.heatmap.png"
     }
   ],
-  "minimumSimilarity": 0.8025216042582937,
-  "minimumId": "recruit",
+  "minimumSimilarity": 0.8605059498775678,
+  "minimumId": "headhunt",
   "passingIds": null
 }
