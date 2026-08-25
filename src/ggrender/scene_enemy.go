@@ -50,29 +50,23 @@ func RenderEnemy(data *Enemy) (*gg.Context, error) {
 		{384, 426}, // values
 		{426, 477}, // 能力
 	}
+	// 2px #595858 lines centered on the cell boundaries (canvas already #323332)
 	border := func(x0, y0, x1, y1 float64) {
 		dc.SetRGB255(89, 88, 88)
 		dc.DrawRectangle(x0, y0, x1-x0, y1-y0)
 		dc.Fill()
-		dc.SetRGB255(50, 51, 50)
-		dc.DrawRectangle(x0+1.5, y0+1.5, x1-x0-3, y1-y0-3)
-		dc.Fill()
 	}
 	// horizontal borders
 	for _, r := range rows {
-		border(0, r.y0, W, r.y0+1.5)
+		border(0, r.y0-1, W, r.y0+1)
 	}
-	border(0, 475.5, W, 477)
-	// vertical borders: pic/desc + 种类 group split at 425, then 4 quarters
-	for _, x := range []float64{425, 611.5, 797.5, 982.5} {
-		yTop := rows[1].y0
-		if x == 425 {
-			border(x-1.5, yTop, x, rows[2].y1) // pic|desc split spans rows 1-2
-			border(x-1.5, rows[2].y0, x, rows[2].y1)
-		} else {
-			border(x-1.5, rows[2].y0, x, rows[2].y1)
-		}
+	border(0, 475, W, 477)
+	// vertical borders: pic|desc split at 425 (rows 1-2), header/value splits in rows 2-3
+	border(424, rows[1].y0-1, 426, rows[2].y1)
+	for _, x := range []float64{425, 611.5, 797.5} {
+		border(x-1, rows[2].y0-1, x+1, rows[2].y1)
 	}
+	border(981.5, rows[2].y0-1, 983.5, rows[2].y1)
 
 	centerText := func(s string, cx, cy float64, size float64) {
 		setFont(dc, size)
