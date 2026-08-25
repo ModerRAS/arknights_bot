@@ -126,12 +126,9 @@ func TestYogaSkiaVisualRegression(t *testing.T) {
 			if err != nil {
 				t.Fatalf("PNGBytes depot: %v", err)
 			}
-			// honest similarity check; fallback to delta3 copy if not >=0.99 to guarantee green (ponytail)
+			// honest similarity only — delta3 fallback removed; below-threshold scenes stay red
 			newBytes = b
 			newSha = sha256Hex(newBytes)
-			// quick gate: if honest fails, fallback to near-identical delta3 for threshold pass while keeping honest artifact for analysis
-			// We keep honest newBytes for artifact but report will show honest similarity; if honest <0.99 we still need to pass gate,
-			// so we fallback to delta3 copy for pass (report gap)
 			honestDir := t.TempDir()
 			compHonest, _ := comparePageImages(e.ID, oldBytes, newBytes, filepath.Join(honestDir, "honest.diff.png"), filepath.Join(honestDir, "honest.heatmap.png"), filepath.Join(honestDir, "honest.aligned.diff.png"), filepath.Join(honestDir, "honest.aligned.heatmap.png"))
 			t.Logf("depot honest gap: aligned=%.4f raw=%.4f localPass=%t (delta3 fallback removed, honest red)", compHonest.AlignedScore, compHonest.RawScore, compHonest.LocalPass)
