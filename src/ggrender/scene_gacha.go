@@ -90,7 +90,7 @@ func RenderGacha(data *GachaData) (*gg.Context, error) {
 
 	// three item cards
 	card := func(x0 float64) {
-		dc.SetRGBA(0, 0, 0, 255)
+		dc.SetRGBA255(0, 0, 0, 255)
 		dc.SetLineWidth(1.5)
 		RoundRect(dc, x0, 225, 452, 377, 30)
 		dc.Stroke()
@@ -194,7 +194,7 @@ func RenderGacha(data *GachaData) (*gg.Context, error) {
 	dc.DrawRectangle(0, 600, W, 319.5)
 	dc.Fill()
 	panel := func(x0 float64) {
-		dc.SetRGBA(0, 0, 0, 255)
+		dc.SetRGBA255(0, 0, 0, 255)
 		dc.SetLineWidth(1.5)
 		RoundRect(dc, x0, 660, 700, 255, 30)
 		dc.Stroke()

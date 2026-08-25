@@ -84,7 +84,7 @@ func SampleHelp() *HelpData {
 func drawPersonIcon(dc *gg.Context, x, y, s float64) {
 	cx, cy, r := x+s/2, y+s/2, s/2
 	lw := s * 0.0833
-	dc.SetRGBA(255, 255, 255, 255)
+	dc.SetRGBA255(255, 255, 255, 255)
 	dc.SetLineWidth(lw)
 	dc.DrawCircle(cx, cy, r-lw/2)
 	dc.Stroke()
@@ -108,10 +108,9 @@ func drawHelpChips(dc *gg.Context, cmds []Cmd, yTop float64) float64 {
 			y += chipH + chipMarginTop
 		}
 		x := chipMarginX + float64(col)*(chipW+chipMarginX)
-		dc.SetRGBA(255, 255, 255, 255)
+		dc.SetRGBA255(255, 255, 255, 255)
 		dc.SetLineWidth(1.5)
-		RoundRect(dc, x, y, chipW, chipH, 15)
-		dc.Stroke()
+		StrokeRoundRect(dc, x, y, chipW, chipH, 15)
 		// p1: cmd + param, person icon right when IsBind
 		setFont(dc, 22.5)
 		dc.SetRGB255(255, 255, 255)
@@ -149,7 +148,7 @@ func RenderHelp(data *HelpData) (*gg.Context, error) {
 	// .bg panel: amiya.png (660px auto, center top) + rgba(0,0,0,0.8) overlay
 	bgTop := 373.6
 	dc.DrawImage(ScaleExact(tryLocal("help/amiya.png"), W, 1018), 0, int(bgTop))
-	dc.SetRGBA(0, 0, 0, 204)
+	dc.SetRGBA255(0, 0, 0, 204)
 	dc.DrawRectangle(0, bgTop, W, H-bgTop)
 	dc.Fill()
 

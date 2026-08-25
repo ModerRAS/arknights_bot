@@ -47,10 +47,10 @@ func RenderRecruit(groups []RecruitList) (*gg.Context, error) {
 	dc.SetRGB255(0, 0, 0)
 	drawStringAnchored(dc, "标签", 140, 22, 0.5, 0.5)
 	drawStringAnchored(dc, "干员", 815, 22, 0.5, 0.5)
-	dc.SetRGBA(0, 0, 0, 70)
+	dc.SetRGBA255(0, 0, 0, 70)
 	dc.DrawRectangle(0, 42, W, 2.5)
 	dc.Fill()
-	dc.SetRGBA(0, 0, 0, 30)
+	dc.SetRGBA255(0, 0, 0, 30)
 	dc.DrawRectangle(0, 44.5, W, 3)
 	dc.Fill()
 
