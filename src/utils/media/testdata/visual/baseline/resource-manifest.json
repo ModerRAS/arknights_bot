@@ -401,6 +401,111 @@
       "targets": [
         "Gacha Exusiai"
       ]
+    },
+    {
+      "sourceURL": "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_102_texas%231.png",
+      "requestAlias": "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_102_texas%231.png",
+      "cachePath": "cache/base-portrait-texas.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 180,
+        "height": 360
+      },
+      "bytes": 122829,
+      "sha256": "4fabea39365caedcfe16940ad7367d37288794d191f18f81b40874fc25243621",
+      "targets": [
+        "Base facility avatars"
+      ]
+    },
+    {
+      "sourceURL": "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_112_siege%231.png",
+      "requestAlias": "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_112_siege%231.png",
+      "cachePath": "cache/base-portrait-siege.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 180,
+        "height": 360
+      },
+      "bytes": 160252,
+      "sha256": "d8e138304d15bcb69fcb2d38de0013aae56093372bdbf6aa4a78d8233338c384",
+      "targets": [
+        "Base facility avatars"
+      ]
+    },
+    {
+      "sourceURL": "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_202_demkni%231.png",
+      "requestAlias": "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_202_demkni%231.png",
+      "cachePath": "cache/base-portrait-demkni.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 180,
+        "height": 360
+      },
+      "bytes": 139127,
+      "sha256": "26519c88e5c2e43b53966a31e63e41e11d92734a0002395e85341854d2a8027b",
+      "targets": [
+        "Base facility avatars"
+      ]
+    },
+    {
+      "sourceURL": "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_003_kalts%231.png",
+      "requestAlias": "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_003_kalts%231.png",
+      "cachePath": "cache/base-portrait-kalts.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 180,
+        "height": 360
+      },
+      "bytes": 140163,
+      "sha256": "23b374fc0eae7b9722cf91388119e301d32cb62a9b7f928eef917b29426bb16c",
+      "targets": [
+        "Base facility avatars"
+      ]
+    },
+    {
+      "sourceURL": "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_172_svrash%231.png",
+      "requestAlias": "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_172_svrash%231.png",
+      "cachePath": "cache/base-portrait-svrash.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 180,
+        "height": 360
+      },
+      "bytes": 127577,
+      "sha256": "ea729435e26d9612fe0738ff522c1da5cba26eb4ce1d6001b3969d4fdde04c05",
+      "targets": [
+        "Base facility avatars"
+      ]
+    },
+    {
+      "sourceURL": "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_180_amgoat%231.png",
+      "requestAlias": "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_180_amgoat%231.png",
+      "cachePath": "cache/base-portrait-amgoat.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 180,
+        "height": 360
+      },
+      "bytes": 143865,
+      "sha256": "8f3e7746e77e3dcbb8c0bd41322c4bd59ddb858cab00932a9421e988166f0675",
+      "targets": [
+        "Base facility avatars"
+      ]
+    },
+    {
+      "sourceURL": "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_103_angel%231.png",
+      "requestAlias": "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_103_angel%231.png",
+      "cachePath": "cache/base-portrait-angel.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 180,
+        "height": 360
+      },
+      "bytes": 123387,
+      "sha256": "630f99ab2c166a9536c9b5c59b908948aeada8f5361be5a15e83198b5aa5603c",
+      "targets": [
+        "Base facility avatars"
+      ]
     }
   ]
 }

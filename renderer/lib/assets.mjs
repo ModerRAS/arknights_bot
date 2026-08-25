@@ -307,7 +307,7 @@ async function loadManifest(manifestSource, root) {
   } catch (cause) {
     throw error('ASSET_MANIFEST_INVALID', 'asset manifest is not valid JSON', { manifestFatal: true, cause });
   }
-  if (manifest?.status !== 'frozen' || !Array.isArray(manifest.resources) || manifest.resources.length !== 26) {
+  if (manifest?.status !== 'frozen' || !Array.isArray(manifest.resources) || manifest.resources.length !== 33) {
     throw error('ASSET_MANIFEST_INVALID', 'asset manifest must be frozen and contain 26 resources', { manifestFatal: true });
   }
   const aliases = new Map();
