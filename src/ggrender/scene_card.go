@@ -262,16 +262,16 @@ func RenderCard(data *CardInfo) (*gg.Context, error) {
 
 	dc.SetRGB255(255, 255, 255)
 	setFont(dc, 24)
-	cardTextTop(dc, data.SecretaryName, 20, 151)
+	cardTextTop(dc, data.SecretaryName, 20, 158) // measured +7
 	setFont(dc, 17)
-	cardTextTop(dc, data.SecretaryEnName, 20, 185)
+	cardTextTop(dc, data.SecretaryEnName, 20, 192)
 
 	if d, err := LoadImage(AssetPath("card/decor.png")); err == nil {
-		dc.DrawImage(ScaleExact(d, 177, 47), 20, 248)
+		dc.DrawImage(ScaleExact(d, 177, 47), 0, 248) // measured dx=-20
 	}
 	setFont(dc, 12)
 	cardTextTop(dc, "DATA PROVIDED BY PRTS", 20, 297)
-	cardTextTop(dc, "-", 20, 320)
+	cardTextTop(dc, "-", 20, 334) // measured dy=+14
 	if ds, err := LoadImage(AssetPath("card/decor_skin.png")); err == nil {
 		dc.DrawImage(ScaleExact(ds, 96, 27), 20, 360)
 	}
@@ -296,8 +296,8 @@ func RenderCard(data *CardInfo) (*gg.Context, error) {
 	}
 
 	// char count 55px
-	setFont(dc, 55)
-	cardTextTop(dc, itoa(data.CharCnt), 20, 504)
+	setFont(dc, 55) // measured larger glyphs vs satori fs55
+	cardTextTop(dc, itoa(data.CharCnt), 20, 522)
 
 	// nation flags 30x30 pitch 37: flag==1 -> blue silhouette, flag==-1 -> 20% opacity
 	nx, ny := 17.0, 573.0
@@ -317,33 +317,34 @@ func RenderCard(data *CardInfo) (*gg.Context, error) {
 	}
 
 	// ================= right name card =================
-	// bg 638x223 floats right: x=642, effective top 0
+	// bg 638x223 floats right: x=642; measured baseline effective top -39 (viewport-clipped float)
+	const ncY = -39.0
 	if nc, err := LoadImage(AssetPath("card/name_card_short.png")); err == nil {
-		dc.DrawImage(ScaleExact(nc, 638, 223), 642, 0)
+		dc.DrawImage(ScaleExact(nc, 638, 223), 642, ncY)
 	}
 	if hd, err := LoadImage(AssetPath("card/headicon_back.png")); err == nil {
-		dc.DrawImage(ScaleExact(hd, 147, 149), 672, 30)
+		dc.DrawImage(ScaleExact(hd, 147, 149), 672, ncY+30)
 	}
-	// level widget: bg 84x84 at (676,3), number fs20 pad-top 8, LV fs14 below
+	// level widget: bg 84x84 at (676,+3), number fs20 pad-top 8, LV fs14 below
 	if lb, err := LoadImage(AssetPath("card/level_bg.png")); err == nil {
-		dc.DrawImage(ScaleExact(lb, 84, 84), 676, 3)
+		dc.DrawImage(ScaleExact(lb, 84, 84), 676, ncY+3)
 	}
 	dc.SetRGB255(255, 255, 255)
 	setFont(dc, 20)
-	cardTextTopCenter(dc, itoa(data.Level), 718, 11)
+	cardTextTopCenter(dc, itoa(data.Level), 718, ncY+11)
 	setFont(dc, 14)
-	cardTextTopCenter(dc, "LV", 718, 39)
-	// player portrait 180x360 -> 130x260 at (681,11)
+	cardTextTopCenter(dc, "LV", 718, ncY+39)
+	// player portrait 180x360 -> 130x260 at (681,+11)
 	portrait := FetchImage(data.Avatar, AssetPath("common/amiya.png"))
-	dc.DrawImage(ScaleExact(portrait, 130, 260), 681, 11)
-	// name fs30 at (842,55)
+	dc.DrawImage(ScaleExact(portrait, 130, 260), 681, ncY+11)
+	// name fs30 at (842,+55)
 	setFont(dc, 30)
-	cardTextTop(dc, data.Name, 842, 55)
-	// uid/server pills fs17 at (842,102)
+	cardTextTop(dc, data.Name, 842, ncY+63) // measured dy=+8 vs satori rel pos
+	// uid/server pills fs17 at (842,+102)
 	setFont(dc, 17)
 	px := 842.0
-	px += cardPill(dc, "ID "+data.Uid, px, 102) + 6
-	cardPill(dc, data.ServerName, px, 102)
+	px += cardPill(dc, "ID "+data.Uid, px, ncY+100) + 6 // measured dy=-2
+	cardPill(dc, data.ServerName, px, ncY+100)
 
 	// ================= resume strip =================
 	dc.SetRGBA255(0, 0, 0, 153)
@@ -361,21 +362,21 @@ func RenderCard(data *CardInfo) (*gg.Context, error) {
 
 	// ================= assist characters panel =================
 	dc.SetRGBA255(0, 0, 0, 153)
-	RoundRect(dc, 659, 239, 605, 200, 15)
-	// label column centered at cx 729.5
+	RoundRect(dc, 658, 239, 605, 200, 15)
+	// label column centered at cx ~728.5 (measured dx=-1 vs template float math)
 	if ai, err := LoadImage(AssetPath("card/assist_icon.png")); err == nil {
-		dc.DrawImage(ScaleExact(ai, 54, 64), 702, 264)
+		dc.DrawImage(ScaleExact(ai, 54, 64), 701, 264)
 	}
 	setFont(dc, 17)
 	dc.SetColor(cardGray)
-	cardTextSpacedCenter(dc, "助战干员", 729, 348, 7)
+	cardTextSpacedCenter(dc, "助战干员", 728, 348, 7)
 	setFont(dc, 13)
-	cardTextTopCenter(dc, "SUPPORT UNIT", 729, 360)
+	cardTextTopCenter(dc, "SUPPORT UNIT", 728, 360)
 	for i, a := range data.AssistChars {
 		if i >= 3 {
 			break
 		}
-		cx := 783 + i*154
+		cx := 782 + i*154
 		cy := 264
 		if be, err := LoadImage(AssetPath("card/back_end.png")); err == nil {
 			dc.DrawImage(ScaleExact(be, 150, 150), cx, cy)
@@ -399,17 +400,21 @@ func RenderCard(data *CardInfo) (*gg.Context, error) {
 	}
 
 	// ================= module collection panel (overflow hidden) =================
+	const modX, modY = 639.0, 463.0 // measured rigid offset vs template float math
+	// moduleBg art measured overflowing above the panel: raw-draw at (652,443)
+	if mb, err := LoadImage(AssetPath("card/module_collection_bg.png")); err == nil {
+		dc.DrawImage(ScaleExact(mb, 612, 178), 652, 443)
+	}
 	modules := cardPanelLayer(605, 196, 15, func(layer *image.RGBA) {
 		lg := gg.NewContextForImage(layer)
-		if mb, err := LoadImage(AssetPath("card/module_collection_bg.png")); err == nil {
-			lg.DrawImage(ScaleExact(mb, 612, 178), -7, 0)
-		}
+		lg.SetRGBA255(0, 0, 0, 153)
+		RoundRect(lg, 0, 0, 605, 196, 15)
 		if mi, err := LoadImage(AssetPath("card/module_collection_bg_icon.png")); err == nil {
-			lg.DrawImage(cardWithOpacity(ScaleExact(mi, 175, 163), 77), 40, 18)
+			lg.DrawImage(cardWithOpacity(ScaleExact(mi, 175, 163), 77), 40, 14) // measured -4
 		}
 	})
-	dc.DrawImage(modules, 659, 450)
-	// numbers row right-aligned at 1264, number tops 519, titles 606
+	dc.DrawImage(modules, int(modX), int(modY))
+	// numbers row right-aligned at modX+605, number tops modY+69, titles modY+156
 	cols := []struct {
 		title string
 		val   int
@@ -425,16 +430,16 @@ func RenderCard(data *CardInfo) (*gg.Context, error) {
 			widths[i] = nw
 		}
 	}
-	right := 1264.0
+	right := modX + 605
 	for i := len(cols) - 1; i >= 0; i-- {
 		c := cols[i]
 		cx := right - widths[i]/2
 		setFont(dc, 50)
 		dc.SetColor(cardGray)
 		nw, _ := measure(dc, itoa(c.val))
-		cardBold(dc, itoa(c.val), cx-nw/2, 519+50*cardAscFrac, 1.5)
+		cardBold(dc, itoa(c.val), cx-nw/2, modY+73+50*cardAscFrac, 1.5)
 		setFont(dc, 21)
-		cardTextTopCenter(dc, c.title, cx, 606)
+		cardTextTopCenter(dc, c.title, cx, modY+152)
 		right -= widths[i] + 20
 	}
 	return dc, nil
