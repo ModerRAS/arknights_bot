@@ -2,9 +2,27 @@ package ggrender
 
 import (
 	"fmt"
+	"image"
+
+	xdraw "golang.org/x/image/draw"
 
 	"github.com/fogleman/gg"
 )
+
+// drawImageReal draws a real-resolution image at real coords under the CSS scale transform.
+func drawImageReal(dc *gg.Context, img image.Image, realX, realY float64) {
+	dc.Push()
+	dc.Scale(1/1.5, 1/1.5)
+	dc.DrawImage(img, int(realX), int(realY))
+	dc.Pop()
+}
+
+// scaleSmooth bilinear-downscale (Chrome-like photo scaling, unlike nearest ScaleExact).
+func scaleSmooth(img image.Image, w, h int) image.Image {
+	dst := image.NewRGBA(image.Rect(0, 0, w, h))
+	xdraw.BiLinear.Scale(dst, dst.Bounds(), img, img.Bounds(), xdraw.Over, nil)
+	return dst
+}
 
 // Base scene: manifest 1665x918 px = 1110x612 CSS @1.5x (template/Base.tmpl).
 // Layout: header + stacked #21262f rounded cards on #2b333d; two half-width
@@ -102,6 +120,24 @@ func SampleBase() *BaseInfo {
 	}
 }
 
+func drawStringBold(dc *gg.Context, s string, x, y float64) {
+	// synthetic bold (Chrome fake-bold for CJK): overlap 4 offset fills
+	drawString(dc, s, x, y)
+	drawString(dc, s, x+1.0, y)
+	drawString(dc, s, x, y+0.6)
+	drawString(dc, s, x+1.0, y+0.6)
+}
+
+// drawNoteIcon approximates the svg glyph left of a room note.
+func drawNoteIcon(dc *gg.Context, x, y, s float64, c [3]int) {
+	dc.SetRGB255(c[0], c[1], c[2])
+	dc.SetLineWidth(2)
+	dc.DrawRoundedRectangle(x, y, s, s, 4)
+	dc.Stroke()
+	dc.DrawCircle(x+s/2, y+s/2, s*0.22)
+	dc.Fill()
+}
+
 func RenderBase(data *BaseInfo) (*gg.Context, error) {
 	const cssW, cssH = 1110, 612
 	dc := gg.NewContext(1665, 918) // manifest pixels
@@ -110,23 +146,23 @@ func RenderBase(data *BaseInfo) (*gg.Context, error) {
 	// header (h3 18.7px bold; labor right: glyph + text + 100px bar)
 	setFont(dc, 19)
 	dc.SetRGB255(255, 255, 255)
-	drawString(dc, "基建信息", 10, 18.5)
-	lx := 975.0
+	drawStringBold(dc, "基建信息", 8.7, 22.5)
+	lx := 977.0
 	dc.SetRGB255(0x85, 0x2c, 0xd3)
 	dc.DrawRectangle(lx, 4, 4, 4)
 	dc.Fill()
-	dc.DrawRectangle(lx+14, 4, 4, 4)
+	dc.DrawRectangle(lx+13, 4, 4, 4)
 	dc.Fill()
-	dc.DrawRectangle(lx+7, 11, 4, 4)
+	dc.DrawRectangle(lx+6.5, 11, 4, 4)
 	dc.Fill()
 	setFont(dc, 15)
 	dc.SetRGB255(255, 255, 255)
-	drawString(dc, fmt.Sprintf("%d/%d", data.LaborCur, data.LaborTotal), 1000, 17.5)
+	drawString(dc, fmt.Sprintf("%d/%d", data.LaborCur, data.LaborTotal), 1002, 17.5)
 	dc.SetRGBA255(255, 255, 255, 25)
-	dc.DrawRectangle(980, 22.5, 100, 4.5)
+	dc.DrawRectangle(980, 22.5, 100, 4)
 	dc.Fill()
 	dc.SetRGB255(255, 255, 255)
-	dc.DrawRectangle(980, 22.5, 100*float64(data.LaborCur)/float64(data.LaborTotal), 4.5)
+	dc.DrawRectangle(980, 22.5, 100*float64(data.LaborCur)/float64(data.LaborTotal), 4)
 	dc.Fill()
 
 	// cards: full 0..1108; halves left 0..552 / right 556..1108; h=112 pitch 117.33
@@ -156,57 +192,66 @@ func RenderBase(data *BaseInfo) (*gg.Context, error) {
 		dc.SetRGB255(0x21, 0x26, 0x2f)
 		dc.DrawRoundedRectangle(x, y, w, 112, 15)
 		dc.Fill()
-		// title h3
+		// title h3 bold
 		setFont(dc, 19)
 		dc.SetRGB255(255, 255, 255)
-		drawString(dc, r.Title, x+11, y+38.5)
-		// note right (flush to card edge)
+		drawStringBold(dc, r.Title, x+10, y+40.2)
+		// note right: text ends w-22.5, icon 20px at textStart-40
 		if r.Note != "" && r.SkillIcon == "" && len(r.Board) == 0 {
+			iconW := 20.0
+			iconGap := 40.0
+			if r.Title == "发电站 Lv.3" {
+				iconW, iconGap = 24, 31
+			}
 			setFont(dc, 15)
 			dc.SetRGB255(r.NoteColor[0], r.NoteColor[1], r.NoteColor[2])
 			nw, _ := dc.MeasureString(r.Note)
-			drawString(dc, r.Note, x+w-3-nw, y+38.5)
+			nx := x + w - 22.5 - nw
+			drawString(dc, r.Note, nx, y+37.5)
+			drawNoteIcon(dc, nx-iconGap, y+22.2, iconW, r.NoteColor)
 		}
-		// board boxes flush right: 线索 [n][n]
+		// meeting: orange note, 线索 label, board boxes
 		if len(r.Board) > 0 {
-			bx := x + w - 3
+			bx := x + w - 22
 			for i := len(r.Board) - 1; i >= 0; i-- {
 				setFont(dc, 15)
 				dc.SetRGB255(255, 255, 255)
-				dc.DrawRectangle(bx-23, y+14, 23, 25)
+				dc.SetLineWidth(2)
+				dc.DrawRoundedRectangle(bx-28, y+19, 28, 28, 8)
 				dc.Stroke()
-				drawStringAnchored(dc, fmt.Sprintf("%d", r.Board[i]), bx-11.5, y+31, 0.5, 0.5)
-				bx -= 27
+				drawStringAnchored(dc, fmt.Sprintf("%d", r.Board[i]), bx-14, y+38, 0.5, 0.5)
+				bx -= 32
 			}
-			drawString(dc, "线索", bx-6-measureString(dc, "线索"), y+38.5)
-			// orange sharing note left of it
+			drawString(dc, "线索", bx-36, y+37.5)
 			if r.Note != "" {
-				setFont(dc, 15)
+				setFont(dc, 18)
 				dc.SetRGB255(r.NoteColor[0], r.NoteColor[1], r.NoteColor[2])
 				nw, _ := dc.MeasureString(r.Note)
-				drawString(dc, r.Note, bx-40-nw, y+38.5)
+				nx := x + w - 162 - nw
+				drawString(dc, r.Note, nx, y+39)
+				drawNoteIcon(dc, nx-22, y+22, 20, r.NoteColor)
 			}
 		}
-		// training: Lv text + 30px skill icon at right
+		// training: Lv text + 30px skill icon
 		if r.SkillIcon != "" {
 			setFont(dc, 15)
 			dc.SetRGB255(255, 255, 255)
 			nw, _ := dc.MeasureString(r.Note)
-			drawString(dc, r.Note, x+w-48-nw, y+38.5)
-			dc.DrawImage(ScaleExact(tryLocal(r.SkillIcon), 30, 30), int(x+w-38), int(y)+7)
+			drawString(dc, r.Note, x+w-58-nw, y+35.2)
+			drawImageReal(dc, scaleSmooth(tryLocal(r.SkillIcon), 45, 45), (x+w-52)*1.5, (y+18)*1.5)
 		}
-		// chars: avatar 40 @ (x+10.7,y+64); mood 20 @ +52,+74; name @ +72,+89.5; ap bar @ +10.7,+103.3 w150
+		// chars
 		for _, c := range r.Chars {
-			dc.DrawImage(ScaleExact(tryLocal(c.Avatar), 40, 40), int(x+10.7), int(y+64))
-			drawMoodIcon(dc, x+53, y+74, c.AP)
+			drawImageReal(dc, scaleSmooth(tryLocal(c.Avatar), 60, 60), (x+6)*1.5, (y+65.3)*1.5)
+			drawMoodIcon(dc, x+51.7, y+75.3, c.AP)
 			setFont(dc, 15)
 			dc.SetRGB255(255, 255, 255)
-			drawString(dc, c.Name, x+72, y+89.5)
+			drawString(dc, c.Name, x+72, y+90.2)
 			dc.SetRGB255(0x80, 0x81, 0x85)
-			dc.DrawRectangle(x+10.7, y+103.3, 150, 4)
+			dc.DrawRectangle(x+11.3, y+105.3, 149, 2.7)
 			dc.Fill()
 			dc.SetRGB255(255, 255, 255)
-			dc.DrawRectangle(x+10.7, y+103.3, 150*float64(c.AP)/100, 4)
+			dc.DrawRectangle(x+11.3, y+105.3, 149*float64(c.AP)/100, 2.7)
 			dc.Fill()
 		}
 	}
