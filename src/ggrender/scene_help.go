@@ -129,10 +129,6 @@ func drawHelpChips(dc *gg.Context, cmds []Cmd, yTop float64) float64 {
 }
 
 // drawStringBold fakes bold by symmetric double-draw (only regular face available).
-func drawStringBold(dc *gg.Context, s string, x, y float64) {
-	drawStringBoldW(dc, s, x, y, 1.2)
-}
-
 func RenderHelp(data *HelpData) (*gg.Context, error) {
 	const W, H = 990, 2049
 	dc := gg.NewContext(W, H)
