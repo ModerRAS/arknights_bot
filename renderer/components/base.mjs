@@ -13,10 +13,12 @@ const laborIcon = () => h('svg', { width: 20, height: 20, viewBox: '0 0 48 48', 
 );
 
 const moodIcon = (ap, color) => h('svg', { width: 18, height: 18, viewBox: '0 0 18 18', fill: 'none', style: { marginLeft: 2 } },
-  h('circle', { cx: 9, cy: 9, r: 7, stroke: color, strokeWidth: 2 }),
-  h('circle', { cx: 6.5, cy: 7, r: 1, fill: color }),
-  h('circle', { cx: 11.5, cy: 7, r: 1, fill: color }),
-  h('path', { d: ap <= 0 ? 'M6 13Q9 10 12 13' : ap < 100 ? 'M6 12H12' : 'M6 11Q9 14 12 11', stroke: color, strokeWidth: 2, strokeLinecap: 'round' }),
+  h('circle', { cx: 9, cy: 9, r: 8, stroke: color, strokeWidth: 2 }),
+  h('rect', { x: 4.7, y: 5.4, width: 3.2, height: 2.8, fill: color }),
+  h('rect', { x: 10.1, y: 5.4, width: 3.2, height: 2.8, fill: color }),
+  ap <= 0
+    ? h('rect', { x: 6.2, y: 8.8, width: 5.6, height: 4.8, stroke: color, strokeWidth: 1.8 })
+    : h('path', { d: ap < 100 ? 'M5.8 13Q9 9.6 12.2 13' : 'M5.8 10Q9 13.4 12.2 10', stroke: color, strokeWidth: 2, strokeLinecap: 'round' }),
 );
 const comfortIcon = () => h('svg', { width: 20, height: 20, viewBox: '0 0 48 48', fill: 'none' },
   h('path', { d: 'M31 43C31 43 18 44 11 36C4 28 4 4 4 4C4 4 28 3 36 9C44 15 42 32 42 32', stroke: '#66c02f', strokeWidth: 4, strokeLinecap: 'round', strokeLinejoin: 'round' }),
@@ -35,7 +37,7 @@ const officeIcon = () => h('svg', { width: 20, height: 20, viewBox: '0 0 48 48',
 );
 
 async function operator(image, value) {
-  return { ...value, src: await image(`https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/${encodeURIComponent(value.avatar ?? '')}.png`, fallback) };
+  return { ...value, src: await image(`https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/${encodeURIComponent(value.avatar ?? '')}.png`, fallback) };
 }
 
 export default async function render(props, { image }) {
@@ -52,8 +54,8 @@ export default async function render(props, { image }) {
   const characterCard = (item) => {
     const ap = Math.max(0, Math.min(100, item.AP ?? 0));
     const color = ap <= 0 ? '#e42e20' : ap < 100 ? '#f0ab22' : '#3cd627';
-    return box({ width: 170, height: 46, marginTop: 5, marginRight: 6, alignItems: 'center', position: 'relative' },
-      h('img', { src: item.src, width: 40, height: 40 }),
+    return box({ width: 170, height: 46, marginTop: 7, marginRight: 6, alignItems: 'center', position: 'relative' },
+      box({ width: 40, height: 40, overflow: 'hidden', flexShrink: 0 }, h('img', { src: item.src, width: 40, height: 80, style: { marginTop: -4.5 } })),
       moodIcon(ap, color),
       text(item.name, { fontSize: 13, marginLeft: 2 }),
       box({ position: 'absolute', left: 0, bottom: 0, width: 150, height: 3, backgroundColor: '#444' },
@@ -65,7 +67,7 @@ export default async function render(props, { image }) {
   const roomCard = ({ title, room, chars }) => box({ width: title === '控制中枢' || title === '宿舍' ? 1105 : 550, height: 112, marginTop: 5, flexDirection: 'column', backgroundColor: '#21262f', border: '1px solid #21262f', borderRadius: 15, color: '#fff' },
     box({ position: 'relative', top: 7, left: rightColumn.has(title) ? 5 : 0, flexDirection: 'column' },
       box({ height: 49, marginLeft: 10, marginRight: 20, alignItems: 'center', justifyContent: 'space-between' },
-        text(`${title} Lv.${room?.level ?? 0}`, { fontSize: 19, fontWeight: 600 }),
+        text(`${title} Lv.${room?.level ?? 0}`, { fontSize: 19, fontWeight: 600, position: 'relative', top: -0.5 /* inverted-top: moves down 0.75px to match baseline synthetic-bold metrics */ }),
         title === '训练室' && skill
           ? box({ alignItems: 'center' }, text(`Lv.${room?.specializeLevel ?? ''}`), h('img', { src: skill, width: 30, height: 30, style: { marginLeft: 4 } }))
           : title === '贸易站'
@@ -73,7 +75,7 @@ export default async function render(props, { image }) {
                 h('path', { d: 'M33.0499 7H38C39.1046 7 40 7.89543 40 9V42C40 43.1046 39.1046 44 38 44H10C8.89543 44 8 43.1046 8 42L8 9C8 7.89543 8.89543 7 10 7H16H17V10H31V7H33.0499Z', fill: 'none', stroke: '#8cd1ff', strokeWidth: 4, strokeLinejoin: 'round' }),
                 h('rect', { x: 17, y: 4, width: 14, height: 6, stroke: '#8cd1ff', strokeWidth: 4, strokeLinecap: 'round', strokeLinejoin: 'round' }),
                 h('path', { d: 'M26.9996 19L19 27.0012H29.004L21.0003 35.0018', stroke: '#8cd1ff', strokeWidth: 4, strokeLinecap: 'round', strokeLinejoin: 'round' }),
-              ), text(`${room?.strategy ?? ''}\u00a0${room?.current ?? 0}/${room?.total ?? 0}`, { color: '#8cd1ff' }))
+              ), text(`${room?.strategy ?? ''}\u00a0${room?.current ?? 0}/${room?.total ?? 0}`, { color: '#8cd1ff', fontWeight: 600, position: 'relative', top: -0.5 }))
             : title === '制造站'
               ? box({ alignItems: 'center' }, h('svg', { width: 20, height: 20, viewBox: '0 0 48 48', fill: 'none' },
                   h('path', { d: 'M44 14L24 4L4 14V34L24 44L44 34V14Z', stroke: '#d79d13', strokeWidth: 4, strokeLinejoin: 'round' }),
@@ -81,7 +83,7 @@ export default async function render(props, { image }) {
                   h('path', { d: 'M24 44V24', stroke: '#d79d13', strokeWidth: 4, strokeLinecap: 'round', strokeLinejoin: 'round' }),
                   h('path', { d: 'M44 14L24 24', stroke: '#d79d13', strokeWidth: 4, strokeLinecap: 'round', strokeLinejoin: 'round' }),
                   h('path', { d: 'M34 9L14 19', stroke: '#d79d13', strokeWidth: 4, strokeLinecap: 'round', strokeLinejoin: 'round' }),
-                ), text(`${room?.item ?? ''}\u00a0${room?.current ?? 0}/${room?.total ?? 0}`, { color: '#d79d13' }))
+                ), text(`${room?.item ?? ''}\u00a0${room?.current ?? 0}/${room?.total ?? 0}`, { color: '#d79d13', fontWeight: 600, position: 'relative', top: -0.5 }))
               : title === '会客室'
                 ? box({ alignItems: 'center' }, room?.sharing ? box({ position: 'absolute', marginLeft: -200, color: '#eb9712', alignItems: 'center' }, h('svg', { width: 20, height: 20, viewBox: '0 0 48 48', fill: 'none' },
                     h('path', { d: 'M13.5 39.3706C16.3908 41.6439 20.0371 42.9999 24 42.9999C27.9629 42.9999 31.6092 41.6439 34.5 39.3706', stroke: '#ee810a', strokeWidth: 4 }),
@@ -90,20 +92,20 @@ export default async function render(props, { image }) {
                     h('path', { d: 'M43 36C43 37.3416 42.4716 38.5597 41.6117 39.4577C40.7015 40.4082 39.4199 41 38 41C35.2386 41 33 38.7614 33 36C33 33.9899 34.1861 32.2569 35.8967 31.4626C36.536 31.1657 37.2487 31 38 31C40.7614 31 43 33.2386 43 36Z', fill: 'none', stroke: '#ee810a', strokeWidth: 4, strokeLinecap: 'round', strokeLinejoin: 'round' }),
                     h('path', { d: 'M15 36C15 37.3416 14.4716 38.5597 13.6117 39.4577C12.7015 40.4082 11.4199 41 10 41C7.23858 41 5 38.7614 5 36C5 33.9899 6.18614 32.2569 7.89667 31.4626C8.53604 31.1657 9.24867 31 10 31C12.7614 31 15 33.2386 15 36Z', fill: 'none', stroke: '#ee810a', strokeWidth: 4, strokeLinecap: 'round', strokeLinejoin: 'round' }),
                     h('path', { d: 'M29 9C29 10.3416 28.4716 11.5597 27.6117 12.4577C26.7015 13.4082 25.4199 14 24 14C21.2386 14 19 11.7614 19 9C19 6.98991 20.1861 5.25686 21.8967 4.4626C22.536 4.16572 23.2487 4 24 4C26.7614 4 29 6.23858 29 9Z', fill: 'none', stroke: '#ee810a', strokeWidth: 4, strokeLinecap: 'round', strokeLinejoin: 'round' }),
-                  ), text('线索交流开启中')) : null, text('线索'), ...(room?.board ?? []).map((value) => box({ width: 20, justifyContent: 'center', border: '1px solid #fff', borderRadius: 5, marginLeft: 4 }, text(value))))
+                  ), text('线索交流开启中', { fontWeight: 600, position: 'relative', top: -0.5 })) : null, text('线索'), ...(room?.board ?? []).map((value) => box({ width: 20, justifyContent: 'center', border: '1px solid #fff', borderRadius: 5, marginLeft: 4 }, text(value))))
                 : title === '宿舍'
-                  ? box({ alignItems: 'center' }, comfortIcon(), text(`舒适度${room?.comfort ?? 0}`, { color: '#66c02f' }))
+                  ? box({ alignItems: 'center' }, comfortIcon(), text(`舒适度${room?.comfort ?? 0}`, { color: '#66c02f', fontWeight: 600, position: 'relative', top: -0.5 }))
                   : title === '发电站'
-                    ? box({ alignItems: 'center' }, powerIcon(), text(room?.power ?? 0, { color: '#adfe2e' }))
+                    ? box({ alignItems: 'center' }, powerIcon(), text(room?.power ?? 0, { color: '#adfe2e', fontWeight: 600, position: 'relative', top: -0.5 }))
                     : title === '办公室'
-                      ? box({ alignItems: 'center' }, officeIcon(), text(`刷新次数${props.hire?.refreshCount ?? room?.refreshCount ?? 3}`, { marginLeft: 4 }))
-                      : text(room?.strategy ?? room?.power ?? room?.comfort ?? room?.refreshCount ?? '', { color: '#8cd1ff' }),
+                      ? box({ alignItems: 'center' }, officeIcon(), text(`刷新次数${props.hire?.refreshCount ?? room?.refreshCount ?? 3}`, { marginLeft: 4, fontWeight: 600, position: 'relative', top: -0.5 }))
+                      : text(room?.strategy ?? room?.power ?? room?.comfort ?? room?.refreshCount ?? '', { color: '#8cd1ff', fontWeight: 600, position: 'relative', top: -0.5 }),
       ),
       box({ marginLeft: 10, alignItems: 'center', flexWrap: 'wrap' }, chars.length ? chars.map(characterCard) : text('空无一人', { marginLeft: 10 })),
     ),
   );
   return box({ width: 1110, height: 612, flexDirection: 'column', overflow: 'hidden', backgroundColor: '#2b333d', fontFamily: 'NotoSansHans' },
-    box({ height: 27, justifyContent: 'space-between', alignItems: 'center', color: '#fff' }, text('基建信息', { fontSize: 19, fontWeight: 600, marginLeft: 10 }), box({ flexDirection: 'column', alignItems: 'flex-start', marginRight: 30 }, box({ alignItems: 'center' }, laborIcon(), text(`${props.labor?.current ?? 0}/${props.labor?.total ?? 0}`)), box({ width: 100, height: 3, marginTop: 2, backgroundColor: '#555' }, h('div', { style: { display: 'flex', width: `${Math.min(100, 100 * (props.labor?.current ?? 0) / Math.max(1, props.labor?.total ?? 1))}%`, height: 3, backgroundColor: '#fff' } })))),
+    box({ height: 27, justifyContent: 'space-between', alignItems: 'center', color: '#fff', paddingTop: 2 }, text('基建信息', { fontSize: 19, fontWeight: 600, marginLeft: 10, position: 'relative', top: -2.5 /* inverted-top: moves down ~3.75px */ }), box({ flexDirection: 'column', alignItems: 'flex-start', marginRight: 30 }, box({ alignItems: 'center' }, laborIcon(), text(`${props.labor?.current ?? 0}/${props.labor?.total ?? 0}`)), box({ width: 100, height: 3, marginTop: 2, backgroundColor: '#555' }, h('div', { style: { display: 'flex', width: `${Math.min(100, 100 * (props.labor?.current ?? 0) / Math.max(1, props.labor?.total ?? 1))}%`, height: 3, backgroundColor: '#fff' } })))),
     box({ flexWrap: 'wrap', alignContent: 'flex-start' }, prepared.map(roomCard)),
   );
 }
