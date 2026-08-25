@@ -83,17 +83,17 @@ func RenderEnemy(data *Enemy) (*gg.Context, error) {
 	setFont(dc, 37.5)
 	dc.SetRGB255(255, 255, 255)
 	nw, _ := measure(dc, data.Name)
-	drawStringBold(dc, data.Name, W/2-nw/2, 80)
+	drawStringBold(dc, data.Name, W/2-nw/2-1, 81)
 	// pic cell: img 158 CSS = 237 canvas centered in 0..425
 	pic := FetchImage(data.Pic, AssetPath("common/amiya.png"))
 	dc.DrawImage(ScaleExact(pic, 237, 237), 96, 101)
 	// desc cell centered
-	centerText(StripHTML(data.Desc), (425+W)/2+2, 222, 24)
+	centerText(StripHTML(data.Desc), (425+W)/2+1, 221, 24)
 	// header row
 	hdrs := []struct {
 		s  string
 		cx float64
-	}{{"种类", 212.5}, {"地位级别", 518.5}, {"攻击方式", 704.5}, {"行动方式", 890.5}}
+	}{{"种类", 213.5}, {"地位级别", 519.5}, {"攻击方式", 705.5}, {"行动方式", 891.5}}
 	for _, hd := range hdrs {
 		centerText(hd.s, hd.cx, 363, 24)
 	}
@@ -101,7 +101,7 @@ func RenderEnemy(data *Enemy) (*gg.Context, error) {
 	vals := []struct {
 		s  string
 		cx float64
-	}{{data.EnemyRace, 212.5}, {data.EnemyLevel, 518.5}, {data.AttackType, 704.5}, {data.Motion, 890.5}}
+	}{{data.EnemyRace, 213.5}, {data.EnemyLevel, 519.5}, {data.AttackType, 705.5}, {data.Motion, 891.5}}
 	for _, v := range vals {
 		centerText(v.s, v.cx, 405, 24)
 	}

@@ -76,12 +76,12 @@ func RenderGacha(data *GachaData) (*gg.Context, error) {
 	dc.DrawImage(ScaleExact(tryLocal("gacha/header.png"), W, 600), 0, 0)
 	setFont(dc, 48)
 	dc.SetRGB255(238, 238, 238)
-	drawStringBold(dc, data.Name, 480, 127)
+	drawStringBold(dc, data.Name, 480, 129)
 	totalStr := "共" + itoa(data.Total) + "抽"
-	drawStringBold(dc, totalStr, 387, 192)
+	drawStringBold(dc, totalStr, 386, 197)
 	dates := "(" + data.BegTime + "——" + data.EndTime + ")"
 	setFont(dc, 34.5)
-	drawString(dc, dates, 612, 188)
+	drawString(dc, dates, 611, 193)
 
 	// three item cards
 	card := func(x0 float64) {
@@ -131,15 +131,15 @@ func RenderGacha(data *GachaData) (*gg.Context, error) {
 	}{{"6星", [3]int{244, 110, 30}}, {"5星", [3]int{247, 171, 55}}, {"4星", [3]int{161, 53, 246}}, {"3星", [3]int{109, 116, 126}}}
 	pcts := []string{"20.00%", "20.00%", "30.00%", "30.00%"}
 	for i, le := range legend {
-		cy := 369.5 + float64(i)*48
+		cy := 368.5 + float64(i)*48
 		dc.SetRGB255(le.col[0], le.col[1], le.col[2])
-		dc.DrawRectangle(40, cy-5, 10, 10)
+		dc.DrawRectangle(38, cy-5, 10, 10)
 		dc.Fill()
 		setFont(dc, 21)
 		dc.SetRGB255(255, 255, 255)
-		drawString(dc, le.s, 58, cy+7)
+		drawString(dc, le.s, 56, cy+7)
 		pw, _ := measure(dc, le.s)
-		drawString(dc, "  "+pcts[i], 58+pw+8, cy+7)
+		drawString(dc, "  "+pcts[i], 56+pw+8, cy+7)
 	}
 
 	// card2: avg table rows center y 335+i*67.3
@@ -153,8 +153,8 @@ func RenderGacha(data *GachaData) (*gg.Context, error) {
 	dc.SetRGB255(238, 238, 238)
 	for i, r := range avg {
 		cy := 335 + float64(i)*67.3
-		drawStringAnchored(dc, r.a, 574, cy, 0, 0.5)
-		drawStringAnchored(dc, r.b, 772, cy, 0, 0.5)
+		drawStringAnchored(dc, r.a, 572, cy, 0, 0.5)
+		drawStringAnchored(dc, r.b, 770, cy, 0, 0.5)
 	}
 
 	// card3: horizontal bars
@@ -204,7 +204,7 @@ func RenderGacha(data *GachaData) (*gg.Context, error) {
 	drawStringAnchored(dc, "新获得干员(至多显示20个)", 380, 699.5, 0.5, 0.5)
 	drawStringAnchored(dc, "获得六星干员(至多显示20个)", 1116, 699.5, 0.5, 0.5)
 
-	entry := func(x0 float64, avatar string, name string, isNew bool, ts, pool, cost string) {
+	entry := func(x0 float64, avatar string, name string, isNew bool, ts, pool string, yDate, yPool, yCost float64, cost string) {
 		dc.DrawImage(ScaleExact(FetchImage(avatar, AssetPath("common/amiya.png")), 150, 150), int(x0), 756)
 		setFont(dc, 24)
 		dc.SetRGB255(238, 238, 238)
@@ -217,20 +217,20 @@ func RenderGacha(data *GachaData) (*gg.Context, error) {
 		}
 		setFont(dc, 22.5)
 		dc.SetRGB255(238, 238, 238)
-		drawString(dc, ts, x0+152, 838)
-		drawString(dc, pool, x0+152, 885)
+		drawString(dc, ts, x0+152, yDate)
+		drawString(dc, pool, x0+152, yPool)
 		if cost != "" {
-			drawString(dc, cost, x0+152, 916)
+			drawString(dc, cost, x0+152, yCost)
 		}
 	}
 	ex := 36.0
 	for _, c := range data.Chars {
-		entry(ex, c.Avatar, c.CharName, c.IsNew, c.Ts, c.PoolName, "")
+		entry(ex, c.Avatar, c.CharName, c.IsNew, c.Ts, c.PoolName, 838, 885, 0, "")
 		ex += 345
 	}
-	ex = 772.0
+	ex = 771.0
 	for _, s := range data.Star6Info {
-		entry(ex, s.Avatar, s.Name, s.IsNew, s.Ts, s.PoolName, "花费"+itoa(s.Count)+"抽")
+		entry(ex, s.Avatar, s.Name, s.IsNew, s.Ts, s.PoolName, 830, 876, 904, "花费"+itoa(s.Count)+"抽")
 		ex += 345
 	}
 
@@ -238,6 +238,6 @@ func RenderGacha(data *GachaData) (*gg.Context, error) {
 	dc.DrawImage(ScaleExact(tryLocal("gacha/footer.png"), W, 404), 0, 919)
 	setFont(dc, 48)
 	dc.SetRGB255(238, 238, 238)
-	drawStringBold(dc, data.Now, 809, 1258)
+	drawStringBold(dc, data.Now, 808, 1258)
 	return dc, nil
 }
