@@ -91,7 +91,7 @@ func RenderOperator(data *OperatorInfo) (*gg.Context, error) {
 	dc.Scale(1.5, 1.5)
 
 	// ---- attr table (top-left): 3 rows x (b101.3,w71.3)x3, y18.7 rowH30 ----
-	attrY := 18.7
+	attrY := 20.0
 	rowH := 30.0
 	for r, row := range data.AttrRows {
 		y := attrY + float64(r)*rowH
