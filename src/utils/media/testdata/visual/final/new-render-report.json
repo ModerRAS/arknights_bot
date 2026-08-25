@@ -27,16 +27,13 @@
     {
       "id": "base",
       "path": "new/base.png",
-      "sha256": "50422f6c95f44fa7c6d30831e60f11dfc07b1ce9f6bd51e69c8bc7a5fe1af5ab",
-      "width": 1665,
-      "height": 918,
       "scale": 1.5,
-      "format": "png"
+      "error": "asset_error: remote asset is absent from the frozen manifest"
     },
     {
       "id": "box",
       "path": "new/box.png",
-      "sha256": "c3f0d9811ae71003ad7ec16ea90e0e0c59dfd6bdc9152feefe41d8688cae8ed9",
+      "sha256": "f59a74cef9ec574876ec767a18305b00a5b25b8b4be477ac47577c147902c8f9",
       "width": 1050,
       "height": 536,
       "scale": 1.5,
@@ -45,7 +42,7 @@
     {
       "id": "box-detail",
       "path": "new/box-detail.png",
-      "sha256": "123d31a624b9ae99ca61e2741540f53aee6db783e0c15309716f923163203b3d",
+      "sha256": "59ff0c36b99de9020dbb08b94ea2eb651e7c4b38a5d5ea3c246eede5691c3089",
       "width": 722,
       "height": 279,
       "scale": 1.5,
@@ -54,7 +51,7 @@
     {
       "id": "box-summary",
       "path": "new/box-summary.png",
-      "sha256": "860d79fc1d94802579aacc9622ef43f76b4e0eb1f89d89c0ebea7e9f46aba71c",
+      "sha256": "038e1e762571f3d04d1192c09f2ee9ea98293764180868b8645499b7000abfb2",
       "width": 1350,
       "height": 723,
       "scale": 1.5,
@@ -63,7 +60,7 @@
     {
       "id": "calendar",
       "path": "new/calendar.png",
-      "sha256": "432fec50f2426316a1871f15a2a0416f91dab44fa04e2d148acaa7df725200d7",
+      "sha256": "54fe36915e0744de790ffca336b352ef097856d0934f8d69a25733f255e4defa",
       "width": 2880,
       "height": 1620,
       "scale": 1.5,
@@ -72,7 +69,7 @@
     {
       "id": "card",
       "path": "new/card.png",
-      "sha256": "759c419910d64b0cf6e0d0fcee8199dc446ae4d4792725632146d57945c1b3b6",
+      "sha256": "a9f59a776ac5488eaad7cad8d57f1dcf47d2f097131ec7bf288c49fce0b6b11a",
       "width": 1280,
       "height": 720,
       "scale": 1,
@@ -90,7 +87,7 @@
     {
       "id": "enemy",
       "path": "new/enemy.png",
-      "sha256": "85369791e79def22917640a06ece13c24c3a4d127e17fca3eb3d332cbd45d9b6",
+      "sha256": "c94377c96344e6ffee9e3db8602c157b60202f3b62f787c7cb3e5a2036c94eeb",
       "width": 984,
       "height": 477,
       "scale": 1.5,
@@ -99,7 +96,7 @@
     {
       "id": "gacha",
       "path": "new/gacha.png",
-      "sha256": "da355ddf35137eceb23ce19df6d6333ab25de7f1da42d8fe10c3b302b60ec23f",
+      "sha256": "df0c1547ed40e2c13c4e50614b360349bbbd47ba6e96812f3e6528c0182cdb95",
       "width": 1500,
       "height": 1323,
       "scale": 1.5,
@@ -108,7 +105,7 @@
     {
       "id": "headhunt",
       "path": "new/headhunt.png",
-      "sha256": "9723dafa05fccaf9311db5d9032236f7e259cac4c9f083e4abd09efae6c12214",
+      "sha256": "30f0ac5fd7866d36bd5692c74cddde7204b947df2b13eed5cfb2c77d2c240410",
       "width": 1049,
       "height": 576,
       "scale": 1,
@@ -117,7 +114,7 @@
     {
       "id": "help",
       "path": "new/help.png",
-      "sha256": "18971f296b9a9f0428edcf88c3f3b75ce884b14829ee40c4751af8ec4ec704d3",
+      "sha256": "7d6e026d612fe22aa377edb4336cf9360f27f148ed6955ac9e6a33e46fdec5ad",
       "width": 990,
       "height": 2049,
       "scale": 1.5,
@@ -126,7 +123,7 @@
     {
       "id": "lottery",
       "path": "new/lottery.png",
-      "sha256": "3bf9e9a34c303e7486f07417983b21987e084d306062471a625b6f434aee8650",
+      "sha256": "618ac59764c3dddc14d785503781b910965e268dd7d3e51bd64d1a42df404e2e",
       "width": 1473,
       "height": 1667,
       "scale": 1.5,
@@ -135,7 +132,7 @@
     {
       "id": "missing",
       "path": "new/missing.png",
-      "sha256": "d5b3d4c420b7135e34d940ecf4a24eedde594d3681c631846eae8db0ac12e043",
+      "sha256": "dc0e77722b3b18306410692be47e22888a71bcc41d25645c3eafcbb2c83ec577",
       "width": 1050,
       "height": 536,
       "scale": 1.5,
@@ -144,7 +141,7 @@
     {
       "id": "operator",
       "path": "new/operator.png",
-      "sha256": "4c593be5cfe5de2cb9153279744ace300f62cf12b213f15a22664d9825f99fc6",
+      "sha256": "d71052ba1e2eaaded91f06c9365d26750d6d45eac14b8d91f7bafd503dcb8b07",
       "width": 1800,
       "height": 1200,
       "scale": 1.5,
@@ -153,7 +150,7 @@
     {
       "id": "recruit",
       "path": "new/recruit.png",
-      "sha256": "42e76a5ffe5c566b7eefb9451910af09e58f28663e724de0cd8c105c0e11f85e",
+      "sha256": "84966b969603de3ff74a8fe42e27123f3f185efd44cc974da4b3dc7192953977",
       "width": 1350,
       "height": 534,
       "scale": 1.5,
@@ -162,13 +159,13 @@
     {
       "id": "state",
       "path": "new/state.png",
-      "sha256": "af641b6c403fc44dc9e7a9b496e18c11f077bda21f6b36e86cf494e4bdf1ca1b",
+      "sha256": "de97d094a0920cda8487beadf69c2b6e95c0118fffe568f6e04fdd93a691039b",
       "width": 1092,
       "height": 510,
       "scale": 1,
       "format": "png"
     }
   ],
-  "rendered": 16,
-  "failed": 0
+  "rendered": 15,
+  "failed": 1
 }
