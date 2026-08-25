@@ -23,6 +23,7 @@ import (
 
 	"github.com/fogleman/gg"
 	"golang.org/x/image/draw"
+	_ "golang.org/x/image/webp"
 )
 
 // ggRepoRoot resolves the repository root from source location so no
@@ -162,7 +163,7 @@ func ScaleContain(img image.Image, w, h int) *image.RGBA {
 		nh = 1
 	}
 	dst := image.NewRGBA(image.Rect(0, 0, nw, nh))
-	draw.NearestNeighbor.Scale(dst, dst.Bounds(), img, img.Bounds(), draw.Over, nil)
+	draw.BiLinear.Scale(dst, dst.Bounds(), img, img.Bounds(), draw.Over, nil)
 	return dst
 }
 
@@ -175,11 +176,24 @@ func ScaleCover(img image.Image, w, h int) *image.RGBA {
 	scale := math.Max(float64(w)/float64(srcW), float64(h)/float64(srcH))
 	nw, nh := int(math.Round(float64(srcW)*scale)), int(math.Round(float64(srcH)*scale))
 	tmp := image.NewRGBA(image.Rect(0, 0, nw, nh))
-	draw.NearestNeighbor.Scale(tmp, tmp.Bounds(), img, img.Bounds(), draw.Over, nil)
+	draw.BiLinear.Scale(tmp, tmp.Bounds(), img, img.Bounds(), draw.Over, nil)
 	out := image.NewRGBA(image.Rect(0, 0, w, h))
 	sx, sy := (nw-w)/2, (nh-h)/2
 	draw.Draw(out, out.Bounds(), tmp, image.Pt(sx, sy), draw.Over)
 	return out
+}
+
+// ScaleExactCR stretches to w*h with CatmullRom (photos, strong downscale).
+func ScaleExactCR(img image.Image, w, h int) *image.RGBA {
+	if w <= 0 {
+		w = 1
+	}
+	if h <= 0 {
+		h = 1
+	}
+	dst := image.NewRGBA(image.Rect(0, 0, w, h))
+	draw.CatmullRom.Scale(dst, dst.Bounds(), img, img.Bounds(), draw.Over, nil)
+	return dst
 }
 
 // ScaleExact stretches to w*h.
@@ -191,7 +205,7 @@ func ScaleExact(img image.Image, w, h int) *image.RGBA {
 		h = 1
 	}
 	dst := image.NewRGBA(image.Rect(0, 0, w, h))
-	draw.NearestNeighbor.Scale(dst, dst.Bounds(), img, img.Bounds(), draw.Over, nil)
+	draw.BiLinear.Scale(dst, dst.Bounds(), img, img.Bounds(), draw.Over, nil)
 	return dst
 }
 

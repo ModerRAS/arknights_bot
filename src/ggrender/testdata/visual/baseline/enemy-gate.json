@@ -1,0 +1,17 @@
+{
+  "scene": "enemy",
+  "width": 984,
+  "height": 477,
+  "scale": 1.5,
+  "similarity": 0.9900272531674632,
+  "bbox": [
+    0,
+    0,
+    983,
+    476
+  ],
+  "hashOld": "7aae46ad6d8292139bf20d0032e2638bee920637e7de479d807fa5890fa6909b",
+  "hashNew": "ae48c97e5fa870208d07a7e05053af3b420ad8648afa09a002e14da6aca0213a",
+  "passed": true,
+  "gate": 0.99
+}
