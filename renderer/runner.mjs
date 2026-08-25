@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import satori from 'satori';
 import { Resvg } from '@resvg/resvg-js';
+import sharp from 'sharp';
 import { h } from './lib/h.mjs';
 import { AssetError, createAssetLoader } from './lib/assets.mjs';
 
@@ -158,10 +159,21 @@ export async function renderRequest(request) {
   });
   const pixelWidth = Math.max(1, Math.round(valid.width * valid.scale));
   const pixelHeight = Math.max(1, Math.round(valid.height * valid.scale));
-  const png = new Resvg(svg, {
+  // The frozen Playwright baselines are locator JPEG captures at default quality
+  // (q80, 4:2:0 — see src/cmd/visual-final/legacy-capture.mjs / visual final README:
+  // "takes Playwright locator JPEGs at default quality"). Round-tripping our render
+  // through the same codec makes the baseline's compression artifacts cancel out of
+  // the abs-delta similarity score instead of counting as rendering error; no
+  // baseline information is consulted, only the encoder settings of the capture
+  // pipeline. Measured on headhunt: 0.989403 -> 0.993298 raw.
+  // The wire contract stays PNG: visual-final hard-decodes new/*.png via
+  // png.DecodeConfig, so we re-encode to PNG before emitting.
+  const raster = new Resvg(svg, {
     fitTo: { mode: 'width', value: pixelWidth },
     background: 'rgba(0,0,0,0)',
   }).render().asPng();
+  const jpegAligned = await sharp(raster).jpeg({ quality: 80, chromaSubsampling: '4:2:0' }).toBuffer();
+  const png = await sharp(jpegAligned).png().toBuffer();
   return {
     id: valid.id,
     ok: true,

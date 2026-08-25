@@ -1,4 +1,5 @@
 import { h } from '../lib/h.mjs';
+import { skiaBilinearDataUri } from '../lib/skia-scale.mjs';
 const fallback='assets/common/amiya.png';
 // Frozen Headhunt.tmpl geometry, measured from the Playwright baseline:
 // .bg inline-blocks pitch 98.6 = 95px card + one whitespace space (fit so that
@@ -15,7 +16,10 @@ export default async function render(props, { image }) {
     Promise.all((props ?? []).map(async (item) => ({
       item,
       back: await image(`assets/headhunt/back_${item.rarity}.png`, fallback),
-      portrait: await image(item.thumbURL, fallback),
+      // Portrait is displayed 95x190 from a 180x360 webp; prescaling with the
+      // Skia-style kernel removes resvg's resample pass on the hottest band
+      // (headhunt: +0.000116 vs frozen Playwright baseline).
+      portrait: await skiaBilinearDataUri(await image(item.thumbURL, fallback), 95, 190),
       profession: await image(`assets/headhunt/${item.profession}.png`, fallback),
       rarity: await image(`assets/headhunt/Rarity_${item.rarity}.png`, fallback),
     }))),
