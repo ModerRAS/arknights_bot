@@ -2,70 +2,174 @@ package ggrender
 
 import "github.com/fogleman/gg"
 
-// Help
-type HelpData struct {
-	Private []Cmd; Public []Cmd; Admin []Cmd
+// Help — mirrors template/Help.tmpl rendered at 660x1366 CSS, scale 1.5 -> 990x2049.
+// bg.jpg cover; banner.png (660x239 CSS) at y=10 with h1 + person-line overlay;
+// dark .bg panel (amiya.png + 0.8 black) holds label bars + 4-per-row cmd chips.
+type Cmd struct {
+	Cmd, Desc, Param string
+	IsBind           bool
 }
-type Cmd struct{ Cmd, Desc, Param string; IsBind bool }
+type HelpData struct {
+	Private []Cmd
+	Public  []Cmd
+	Admin   []Cmd
+}
 
 func SampleHelp() *HelpData {
-	h:=&HelpData{}
-	h.Private=[]Cmd{{Cmd:"/bind",Desc:"绑定角色",Param:""},{Cmd:"/unbind",Desc:"解绑角色",Param:""},{Cmd:"/cancel",Desc:"取消操作",Param:""}}
-	h.Public=[]Cmd{
-		{Cmd:"/help",Desc:"使用说明",Param:""},
-		{Cmd:"/box",Desc:"我的干员",Param:""},
-		{Cmd:"/state",Desc:"当前状态",Param:""},
-		{Cmd:"/card",Desc:"我的名片",Param:""},
-		{Cmd:"/base",Desc:"基建信息",Param:""},
-		{Cmd:"/gacha",Desc:"抽卡记录",Param:""},
-		{Cmd:"/depot",Desc:"我的仓库",Param:""},
-		{Cmd:"/calendar",Desc:"活动日历",Param:""},
-		{Cmd:"/recruit",Desc:"公招计算",Param:""},
-		{Cmd:"/headhunt",Desc:"寻访模拟",Param:""},
+	h := &HelpData{}
+	h.Private = []Cmd{
+		{Cmd: "/bind", Desc: "绑定角色"},
+		{Cmd: "/unbind", Desc: "解绑角色", IsBind: true},
+		{Cmd: "/cancel", Desc: "取消操作"},
+		{Cmd: "/reset_token", Desc: "重设token", IsBind: true},
+		{Cmd: "/import_gacha", Desc: "导入抽卡记录", IsBind: true},
+		{Cmd: "/export_gacha", Desc: "导出抽卡记录", IsBind: true},
 	}
-	h.Admin=[]Cmd{{Cmd:"/news",Desc:"动态推送",Param:""},{Cmd:"/birthday",Desc:"生日推送",Param:""}}
+	h.Public = []Cmd{
+		{Cmd: "/help", Desc: "使用说明"},
+		{Cmd: "/ping", Desc: "存活测试"},
+		{Cmd: "/tag", Desc: "自定义群标签", Param: "标签"},
+		{Cmd: "/sign", Desc: "签到", IsBind: true},
+		{Cmd: "/sign", Desc: "开启自动签到", Param: "auto", IsBind: true},
+		{Cmd: "/sign", Desc: "关闭自动签到", Param: "stop", IsBind: true},
+		{Cmd: "/sign", Desc: "全部通知", Param: "notify_all", IsBind: true},
+		{Cmd: "/sign", Desc: "仅失败时通知", Param: "notify_fail", IsBind: true},
+		{Cmd: "/sign", Desc: "仅成功时通知", Param: "notify_success", IsBind: true},
+		{Cmd: "/ap", Desc: "开启理智提醒", Param: "on", IsBind: true},
+		{Cmd: "/ap", Desc: "关闭理智提醒", Param: "off", IsBind: true},
+		{Cmd: "/ap", Desc: "设理智提醒阈值", Param: "thr [1-100]", IsBind: true},
+		{Cmd: "/state", Desc: "当前状态", IsBind: true},
+		{Cmd: "/box", Desc: "我的干员(默认6星)", IsBind: true},
+		{Cmd: "/box", Desc: "所有干员", Param: "all", IsBind: true},
+		{Cmd: "/box", Desc: "对应星级干员", Param: "5,6", IsBind: true},
+		{Cmd: "/box_detail", Desc: "干员详情(默认6星)", IsBind: true},
+		{Cmd: "/box_detail", Desc: "对应星级干员", Param: "5", IsBind: true},
+		{Cmd: "/box_summary", Desc: "干员信息汇总", IsBind: true},
+		{Cmd: "/missing", Desc: "未获取干员(默认6星)", IsBind: true},
+		{Cmd: "/missing", Desc: "所有未获取干员", Param: "all", IsBind: true},
+		{Cmd: "/missing", Desc: "对应星级未获取干员", Param: "5,6", IsBind: true},
+		{Cmd: "/card", Desc: "我的名片", IsBind: true},
+		{Cmd: "/base", Desc: "基建信息", IsBind: true},
+		{Cmd: "/gacha", Desc: "抽卡记录", IsBind: true},
+		{Cmd: "/operator", Desc: "干员查询"},
+		{Cmd: "/skin", Desc: "干员皮肤查询"},
+		{Cmd: "/enemy", Desc: "敌人查询"},
+		{Cmd: "/report", Desc: "举报"},
+		{Cmd: "/quiz", Desc: "云玩家检测"},
+		{Cmd: "/quiz", Desc: "云玩家检测(困难)", Param: "h"},
+		{Cmd: "/redeem", Desc: "CDK兑换", Param: "[CDK]", IsBind: true},
+		{Cmd: "/headhunt", Desc: "寻访模拟"},
+		{Cmd: "/recruit", Desc: "公招计算(图片附带)"},
+		{Cmd: "/calendar", Desc: "活动日历"},
+		{Cmd: "/depot", Desc: "我的仓库", IsBind: true},
+	}
+	h.Admin = []Cmd{
+		{Cmd: "/news", Desc: "开启/关闭动态推送"},
+		{Cmd: "/birthday", Desc: "开启/关闭生日推送"},
+		{Cmd: "/request_mode", Desc: "切换群验证模式"},
+		{Cmd: "/quiz", Desc: "开启云玩家检测", Param: "on"},
+		{Cmd: "/quiz", Desc: "关闭云玩家检测", Param: "off"},
+		{Cmd: "/headhunt", Desc: "开启寻访模拟", Param: "on"},
+		{Cmd: "/headhunt", Desc: "关闭寻访模拟", Param: "off"},
+		{Cmd: "/reg", Desc: "回复消息设置为群规"},
+		{Cmd: "/welcome", Desc: "设置入群欢迎信息", Param: "文本"},
+	}
 	return h
 }
 
-func RenderHelp(data *HelpData) (*gg.Context, error) {
-	const mainW=990
-	const mainH=2049
-	dc:=gg.NewContext(mainW,mainH)
-	FillBackground(dc,46,48,49)
-	// banner placeholder
-	dc.SetRGB255(60,62,80)
-	dc.DrawRectangle(0,0,float64(mainW),140)
+// drawPersonIcon approximates the bootstrap person-circle svg (16px grid scaled).
+func drawPersonIcon(dc *gg.Context, x, y, s float64) {
+	cx, cy, r := x+s/2, y+s/2, s/2
+	lw := s * 0.0833
+	dc.SetRGBA(255, 255, 255, 255)
+	dc.SetLineWidth(lw)
+	dc.DrawCircle(cx, cy, r-lw/2)
+	dc.Stroke()
+	dc.DrawCircle(cx, cy-s*0.125, s*0.1875) // head
 	dc.Fill()
-	setFont(dc,28)
-	dc.SetRGB255(255,255,255)
-	drawString(dc,"Arknights Bot · 使用说明",30,80)
-	setFont(dc,14)
-	dc.SetRGB255(200,220,255)
-	drawString(dc,"基于森空岛数据的罗德岛助手",30,110)
-	y:=160
-	drawSection:=func(title string, cmds []Cmd, yy int) int {
-		setFont(dc,16)
-		dc.SetRGB255(120,200,220)
-		drawString(dc,title,20,float64(yy))
-		yy+=20
-		for _,c:=range cmds {
-			dc.SetRGBA255(255,255,255,10)
-			RoundRect(dc,20,float64(yy),float64(mainW-40),28,6)
-			setFont(dc,13)
-			dc.SetRGB255(255,230,120)
-			drawString(dc,c.Cmd,30,float64(yy+18))
-			dc.SetRGB255(200,200,200)
-			drawString(dc,c.Desc,160,float64(yy+18))
-			if c.Param!="" {
-				dc.SetRGB255(160,180,200)
-				drawString(dc,c.Param,300,float64(yy+18))
-			}
-			yy+=32
+	// shoulders: clipped filled circle
+	dc.Push()
+	dc.DrawRectangle(x, y+s*0.45, s, s*0.55)
+	dc.Clip()
+	dc.DrawCircle(cx, cy+s*0.42, s*0.34)
+	dc.Fill()
+	dc.Pop()
+}
+
+func drawHelpChips(dc *gg.Context, cmds []Cmd, yTop float64) float64 {
+	const chipW, chipH = 227.0, 80.0
+	const chipMarginX, chipMarginTop = 15.0, 23.7
+	const perRow = 4
+	y := yTop
+	for i, c := range cmds {
+		col := i % perRow
+		if col == 0 && i > 0 {
+			y += chipH + chipMarginTop
 		}
-		return yy+10
+		x := chipMarginX + float64(col)*(chipW+chipMarginX)
+		dc.SetRGBA(255, 255, 255, 255)
+		dc.SetLineWidth(1.5)
+		RoundRect(dc, x, y, chipW, chipH, 15)
+		dc.Stroke()
+		// p1: cmd + param, person icon right when IsBind
+		setFont(dc, 22.5)
+		dc.SetRGB255(255, 255, 255)
+		line1 := c.Cmd
+		if c.Param != "" {
+			line1 += " " + c.Param
+		}
+		drawString(dc, line1, x+9, y+30)
+		if c.IsBind {
+			drawPersonIcon(dc, x+chipW-40.5, y+6, 24)
+		}
+		// p2: desc
+		drawString(dc, c.Desc, x+9, y+68)
 	}
-	y=drawSection("私聊指令",data.Private,y)
-	y=drawSection("群聊指令",data.Public,y)
-	y=drawSection("管理员指令",data.Admin,y)
-	return dc,nil
+	return y + chipH
+}
+
+func RenderHelp(data *HelpData) (*gg.Context, error) {
+	const W, H = 990, 2049
+	dc := gg.NewContext(W, H)
+	FillBackground(dc, 255, 255, 255)
+	// #main bg.jpg cover
+	dc.DrawImage(ScaleCover(tryLocal("help/bg.jpg"), W, H), 0, 0)
+	// banner.png 100% width at y=15
+	dc.DrawImage(ScaleExact(tryLocal("help/banner.png"), W, 359), 0, 15)
+	// h1 使用说明 (32px bold white) over banner bottom area
+	setFont(dc, 48)
+	dc.SetRGB255(255, 255, 255)
+	drawStringAnchored(dc, "使用说明", 45, 237, 0, 0.5)
+	// person line: svg + 为需要绑定角色的指令
+	drawPersonIcon(dc, 30, 306, 24)
+	setFont(dc, 24)
+	drawString(dc, "为需要绑定角色的指令", 62, 324)
+
+	// .bg panel: amiya.png (660px auto, center top) + rgba(0,0,0,0.8) overlay
+	bgTop := 373.6
+	dc.DrawImage(ScaleExact(tryLocal("help/amiya.png"), W, 1018), 0, int(bgTop))
+	dc.SetRGBA(0, 0, 0, 204)
+	dc.DrawRectangle(0, bgTop, W, H-bgTop)
+	dc.Fill()
+
+	// sections: label bar (990x60) + chips
+	sections := []struct {
+		title string
+		cmds  []Cmd
+	}{
+		{"私聊指令", data.Private},
+		{"普通指令", data.Public},
+		{"管理员指令", data.Admin},
+	}
+	y := bgTop
+	for _, sec := range sections {
+		y += 15
+		dc.DrawImage(ScaleExact(tryLocal("help/label.png"), W, 60), 0, int(y))
+		setFont(dc, 24)
+		dc.SetRGB255(255, 255, 255)
+		drawString(dc, sec.title, 37.5, y+38)
+		y += 60
+		y = drawHelpChips(dc, sec.cmds, y+23.7)
+	}
+	return dc, nil
 }
