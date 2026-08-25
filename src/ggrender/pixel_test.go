@@ -346,10 +346,11 @@ func TestGGPixelParity_Negative(t *testing.T) {
 	draw.Draw(orig, b, img, b.Min, draw.Src)
 	rgba := imageToRGBA(img)
 	w, h := rgba.Bounds().Dx(), rgba.Bounds().Dy()
-	// 扰动：左上角 100x100 填充纯红
-	for y := 0; y < 100 && y < h; y++ {
-		for x := 0; x < 100 && x < w; x++ {
-			rgba.SetRGBA(x, y, color.RGBA{R: 255, G: 0, B: 0, A: 255})
+	// 扰动：左半幅填充纯品红 —— 面积随画布等比（固定 100x100 在大画布上占比过小，
+	// 会导致负向对照失效，见 worker-23 对 box 1050x536 的复核发现）
+	for y := 0; y < h; y++ {
+		for x := 0; x < w/2 && x < w; x++ {
+			rgba.SetRGBA(x, y, color.RGBA{R: 255, G: 0, B: 255, A: 255})
 		}
 	}
 	// 与原图对比应 <0.99
