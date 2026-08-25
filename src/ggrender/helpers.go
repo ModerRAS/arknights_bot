@@ -183,6 +183,19 @@ func ScaleCover(img image.Image, w, h int) *image.RGBA {
 	return out
 }
 
+// ScaleExactCR stretches to w*h with CatmullRom (photos, strong downscale).
+func ScaleExactCR(img image.Image, w, h int) *image.RGBA {
+	if w <= 0 {
+		w = 1
+	}
+	if h <= 0 {
+		h = 1
+	}
+	dst := image.NewRGBA(image.Rect(0, 0, w, h))
+	draw.CatmullRom.Scale(dst, dst.Bounds(), img, img.Bounds(), draw.Over, nil)
+	return dst
+}
+
 // ScaleExact stretches to w*h.
 func ScaleExact(img image.Image, w, h int) *image.RGBA {
 	if w <= 0 {

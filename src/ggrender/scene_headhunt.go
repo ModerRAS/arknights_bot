@@ -39,7 +39,7 @@ func RenderHeadhunt(data []HHOp) (*gg.Context, error) {
 		back := ScaleCover(tryLocal("headhunt/back_"+itoa(o.Rarity)+".png"), 95, 370)
 		dc.DrawImage(back, x, 130)
 		// thumb 95x190 at y=230 (padding-top 100)
-		thumb := ScaleExact(FetchImage(o.ThumbURL, AssetPath("common/amiya.png")), 95, 190)
+		thumb := ScaleExactCR(FetchImage(o.ThumbURL, AssetPath("common/amiya.png")), 95, 190)
 		dc.DrawImage(thumb, x, 230)
 		// rarity stars: height 20, horizontally centered on card
 		rar := tryLocal("headhunt/Rarity_" + itoa(o.Rarity) + ".png")

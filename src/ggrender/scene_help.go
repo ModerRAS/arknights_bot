@@ -99,7 +99,7 @@ func drawPersonIcon(dc *gg.Context, x, y, s float64) {
 
 func drawHelpChips(dc *gg.Context, cmds []Cmd, yTop float64) float64 {
 	const chipW, chipH = 227.0, 80.0
-	const chipMarginX, chipMarginTop = 13.0, 23.7
+	const chipMarginX, chipMarginTop = 15.0, 23.7
 	const perRow = 4
 	y := yTop
 	for i, c := range cmds {
@@ -107,7 +107,7 @@ func drawHelpChips(dc *gg.Context, cmds []Cmd, yTop float64) float64 {
 		if col == 0 && i > 0 {
 			y += chipH + chipMarginTop
 		}
-		x := chipMarginX + float64(col)*(chipW+chipMarginX)
+		x := chipMarginX + float64(col)*243
 		dc.SetRGBA255(255, 255, 255, 255)
 		dc.SetLineWidth(1.5)
 		StrokeRoundRect(dc, x, y, chipW, chipH, 15)
@@ -118,12 +118,12 @@ func drawHelpChips(dc *gg.Context, cmds []Cmd, yTop float64) float64 {
 		if c.Param != "" {
 			line1 += " " + c.Param
 		}
-		drawStringBold(dc, line1, x+9, y+30)
+		drawStringBold(dc, line1, x+10, y+31)
 		if c.IsBind {
 			drawPersonIcon(dc, x+chipW-40.5, y+6, 24)
 		}
 		// p2: desc
-		drawStringBold(dc, c.Desc, x+9, y+68)
+		drawStringBold(dc, c.Desc, x+10, y+70)
 	}
 	return y + chipH
 }
@@ -145,11 +145,11 @@ func RenderHelp(data *HelpData) (*gg.Context, error) {
 	// h1 使用说明 (32px bold white) over banner bottom area
 	setFont(dc, 48)
 	dc.SetRGB255(255, 255, 255)
-	drawStringBold(dc, "使用说明", 29, 267)
+	drawStringBold(dc, "使用说明", 29, 271)
 	// person line: svg + 为需要绑定角色的指令
-	drawPersonIcon(dc, 27, 306, 24)
+	drawPersonIcon(dc, 26, 309, 24)
 	setFont(dc, 24)
-	drawString(dc, "为需要绑定角色的指令", 55, 330)
+	drawString(dc, "为需要绑定角色的指令", 54, 333)
 
 	// .bg panel: amiya.png (660px auto, center top) + rgba(0,0,0,0.8) overlay
 	bgTop := 373.6
