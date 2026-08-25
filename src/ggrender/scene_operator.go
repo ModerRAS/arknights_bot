@@ -71,24 +71,26 @@ func RenderOperator(data *OperatorInfo) (*gg.Context, error) {
 	const cssW, cssH = 1200, 800
 	dc := gg.NewContext(1800, 1200) // manifest pixels
 	dc.Scale(1.5, 1.5)
-	// bg cover
-	dc.DrawImage(ScaleCover(tryLocal("operator/bg.png"), cssW, cssH), 0, 0)
-	// painting: height 650, bottom 0, left 5%
+	// browser body default white behind everything (bg.png has transparency)
+	dc.SetRGB(1, 1, 1)
+	dc.Clear()
+	// bg cover: measured scale 2.075 real px, offset (-10,0)
+	bg := scaleSmooth(tryLocal("operator/bg.png"), 2125, 1195)
+	drawImageReal(dc, bg, -10, 0)
+	// painting: height 650css, left 5% (60css), bottom 0
 	paint := tryLocal(data.Painting)
-	pw := 650.0
-	dc.DrawImage(ScaleExact(paint, int(pw), int(pw)), 60, cssH-650)
+	drawImageReal(dc, scaleSmooth(paint, 975, 975), 90, 225)
 
-	// ---- attr table (top-left, opacity .8) ----
-	attrY := 20.0
-	rowH := 25.7
-	setFont(dc, 15)
+	// ---- attr table (top-left): 3 rows x (b101.3,w71.3)x3, y18.7 rowH30 ----
+	attrY := 18.7
+	rowH := 30.0
 	for r, row := range data.AttrRows {
 		y := attrY + float64(r)*rowH
 		x := 0.0
 		for c, cell := range row {
-			w := 100.0
+			w := 101.3
 			if c%2 == 1 {
-				w = 70.0
+				w = 71.3
 			}
 			if c%2 == 0 {
 				dc.SetRGBA255(0, 0, 0, 204)
@@ -102,124 +104,131 @@ func RenderOperator(data *OperatorInfo) (*gg.Context, error) {
 			} else {
 				dc.SetRGB255(0, 0, 0)
 			}
-			drawString(dc, cell, x+3, y+18)
+			setFont(dc, 16)
+			drawString(dc, cell, x+5.3, y+21)
 			x += w
 		}
 	}
 
 	// ---- potential table ----
-	potY := attrY + 3*rowH + 20
 	dc.SetRGBA255(0, 0, 0, 204)
-	dc.DrawRectangle(0, potY, 205, rowH)
+	dc.DrawRectangle(0, 120, 136.7, 25.3)
 	dc.Fill()
 	dc.SetRGB255(255, 255, 255)
-	drawString(dc, "潜能提升", 3, potY+18)
+	setFont(dc, 16)
+	drawString(dc, "潜能提升", 5.3, 139)
+	potY := []float64{146, 190}
+	potH := []float64{44, 25.3}
+	potBase := []float64{168, 211}
 	for i, p := range data.Potentials {
-		y := potY + rowH + float64(i)*24
 		dc.SetRGBA255(0xef, 0xee, 0xef, 102)
-		dc.DrawRectangle(0, y, 205, 24)
+		dc.DrawRectangle(0, potY[i], 136.7, potH[i])
 		dc.Fill()
 		pot := tryLocal("box/Potential_2.png")
-		dc.DrawImage(ScaleExact(pot, 20, 20), 2, int(y)+2)
+		drawImageReal(dc, scaleSmooth(pot, 30, 30), 8, (potY[i]+5)*1.5)
 		dc.SetRGB255(0, 0, 0)
-		setFont(dc, 14)
-		drawString(dc, p, 26, y+17)
+		setFont(dc, 16)
+		drawString(dc, p, 30, potBase[i])
 	}
 
 	// ---- right tables (x=600 w=600) ----
 	rtX := 600.0
 	rtW := 600.0
-	setFont(dc, 15)
-	// talent
-	dc.SetRGBA255(0, 0, 0, 204)
-	dc.DrawRectangle(rtX, 20, rtW, rowH)
-	dc.Fill()
-	dc.SetRGB255(255, 255, 255)
-	drawString(dc, "天赋", rtX+3, 38)
-	dc.SetRGBA255(0xb0, 0xb1, 0xb1, 178)
-	dc.DrawRectangle(rtX, 20+rowH, rtW, 24)
-	dc.Fill()
+	// talent header
 	dc.SetRGB255(0, 0, 0)
-	setFont(dc, 12)
-	drawString(dc, "精英化1", rtX+3, 20+rowH+16)
-	drawStringAnchored(dc, data.TalentName, rtX+250, 20+rowH+16, 0.5, 0.5)
-	drawString(dc, data.TalentDesc, rtX+380, 20+rowH+16)
-	// building
-	bY := 20 + rowH + 24 + 8
-	dc.SetRGBA255(0, 0, 0, 204)
-	dc.DrawRectangle(rtX, bY, rtW, rowH)
+	dc.DrawRectangle(rtX, 20, rtW, 20)
 	dc.Fill()
 	dc.SetRGB255(255, 255, 255)
 	setFont(dc, 15)
-	drawString(dc, "基建技能", rtX+3, bY+18)
+	drawString(dc, "天赋", rtX+3, 35.5)
+	// talent row
 	dc.SetRGBA255(0xb0, 0xb1, 0xb1, 178)
-	dc.DrawRectangle(rtX, bY+rowH, rtW, 48)
+	dc.DrawRectangle(rtX, 40, rtW, 20)
 	dc.Fill()
 	dc.SetRGB255(0, 0, 0)
 	setFont(dc, 12)
-	drawString(dc, "精英化0", rtX+3, bY+rowH+28)
-	bicon := tryLocal("operator/building.png")
-	dc.DrawImage(ScaleExact(bicon, 36, 36), int(rtX)+110, int(bY+rowH)+6)
-	drawString(dc, data.BuildingName, rtX+160, bY+rowH+28)
-	drawString(dc, data.BuildingDesc, rtX+260, bY+rowH+28)
+	drawString(dc, "精英化1", rtX+3, 55)
+	drawStringAnchored(dc, data.TalentName, rtX+190, 55, 0.5, 0.5)
+	drawString(dc, data.TalentDesc, rtX+347, 55)
+	// building header
+	dc.SetRGB255(0, 0, 0)
+	dc.DrawRectangle(rtX, 60, rtW, 20)
+	dc.Fill()
+	dc.SetRGB255(255, 255, 255)
+	setFont(dc, 15)
+	drawString(dc, "基建技能", rtX+3, 75.5)
+	// building row
+	dc.SetRGBA255(0xb0, 0xb1, 0xb1, 178)
+	dc.DrawRectangle(rtX, 80, rtW, 40)
+	dc.Fill()
+	dc.SetRGB255(0, 0, 0)
+	setFont(dc, 12)
+	drawString(dc, "精英化0", rtX+3, 104)
+	drawImageReal(dc, scaleSmooth(tryLocal("operator/building.png"), 54, 54), 693*1.5, 86*1.5)
+	drawString(dc, data.BuildingName, rtX+173, 104)
+	drawString(dc, data.BuildingDesc, rtX+273, 104)
 	// skill block
-	sY := bY + rowH + 48 + 8
 	dc.SetRGBA255(63, 63, 62, 252)
-	dc.DrawRectangle(rtX, sY, rtW, 96)
+	dc.DrawRectangle(rtX, 120, rtW, 73.3)
 	dc.Fill()
-	sicon := ScaleExact(tryLocal("operator/skill.png"), 56, 56)
-	dc.DrawImage(sicon, int(rtX)+40, int(sY)+8)
+	drawImageReal(dc, scaleSmooth(tryLocal("operator/skill.png"), 80, 80), 630*1.5, 121*1.5)
 	dc.SetRGB255(255, 255, 255)
 	setFont(dc, 12)
-	drawStringAnchored(dc, data.SkillName, rtX+68, sY+80, 0.5, 0.5)
-	drawStringAnchored(dc, data.SkillMeta, rtX+330, sY+20, 0.5, 0.5)
-	drawStringAnchored(dc, data.SkillDesc, rtX+330, sY+56, 0.5, 0.5)
+	drawStringAnchored(dc, data.SkillName, rtX+56, 181, 0.5, 0.5)
+	drawString(dc, "自动回复", rtX+240, 137)
+	dc.DrawRectangle(rtX+288, 126, 59, 15)
+	dc.Stroke()
+	drawString(dc, "技力0/45", rtX+291, 137.5)
+	dc.DrawRectangle(rtX+353, 126, 76, 15)
+	dc.Stroke()
+	drawString(dc, "持续时间30s", rtX+356, 137.5)
+	drawString(dc, data.SkillDesc, rtX+123, 167)
+	dc.DrawRectangle(rtX+580, 150, 10, 10)
+	dc.Stroke()
 
 	// ---- bottom-left identity ----
-	// class icon black box
-	dc.SetRGBA255(0, 0, 0, 230)
-	dc.DrawRectangle(13, 487, 76, 76)
+	// class icon black box + white staff
+	dc.SetRGB255(0, 0, 0)
+	dc.DrawRectangle(13.3, 483.3, 75.4, 75.4)
 	dc.Fill()
-	// white staff glyph
 	dc.SetRGB255(255, 255, 255)
-	dc.SetLineWidth(5)
-	dc.DrawLine(30, 548, 72, 505)
+	dc.SetLineWidth(4)
+	dc.DrawLine(30, 545, 68, 505)
 	dc.Stroke()
-	dc.DrawCircle(76, 501, 7)
+	dc.DrawCircle(72, 500, 6)
 	dc.Fill()
-	dc.SetLineWidth(3)
-	dc.DrawLine(24, 554, 34, 544)
+	dc.SetLineWidth(2.5)
+	dc.DrawLine(24, 552, 33, 543)
 	dc.Stroke()
 	// stars
 	dc.SetRGB255(0xfd, 0xdb, 0x1e)
 	for i := 0; i < data.Rarity; i++ {
-		drawStar(dc, 110+float64(i)*23, 500, 11)
+		drawStar(dc, 99+float64(i)*11.7, 496.5, 7.2)
 	}
-	// class name
+	// class name bold
 	dc.SetRGB255(0, 0, 0)
-	setFont(dc, 26)
-	drawString(dc, data.ClassName, 96, 540)
+	setFont(dc, 20)
+	drawStringBold(dc, data.ClassName, 93, 530)
 	// position/tag
 	setFont(dc, 16)
-	drawString(dc, data.Position+" "+data.Tag, 13, 600)
-	setFont(dc, 16)
-	drawString(dc, data.Desc, 13, 626)
+	drawString(dc, data.Position+" "+data.Tag, 13.3, 578.5)
+	drawStringBold(dc, data.Desc, 13.3, 608)
 	// big name
-	setFont(dc, 40)
-	dc.SetRGB255(0, 0, 0)
-	drawString(dc, data.Name, 13, 715)
+	setFont(dc, 32)
+	drawStringBold(dc, data.Name, 13.3, 693)
 	// checkbox
 	dc.SetLineWidth(1.5)
-	dc.DrawRectangle(120, 692, 16, 16)
+	dc.DrawRectangle(113, 680, 13, 13)
 	dc.Stroke()
 	// code badge
 	dc.SetRGB255(255, 255, 255)
-	dc.DrawRectangle(13, 745, 46, 26)
+	dc.DrawRectangle(13.3, 733, 40, 19.4)
 	dc.Fill()
 	dc.SetRGB255(0, 0, 0)
-	setFont(dc, 20)
-	drawString(dc, data.Code, 16, 766)
+	setFont(dc, 15)
+	drawStringBold(dc, data.Code, 16, 748.5)
 	// en name
-	drawString(dc, data.EnName, 120, 765)
+	setFont(dc, 16)
+	drawString(dc, data.EnName, 113, 749)
 	return dc, nil
 }
