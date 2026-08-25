@@ -56,11 +56,7 @@ func SampleGacha() *GachaData {
 	}
 }
 
-// drawStringBold fakes bold by double-drawing with a 1px offset (only regular face available).
-func drawStringBold(dc *gg.Context, s string, x, y float64) {
-	drawString(dc, s, x, y)
-	drawString(dc, s, x+1.2, y)
-}
+// fillSector draws a pie sector from angle a0 to a1 (gg convention: +angle = clockwise on screen).
 func fillSector(dc *gg.Context, cx, cy, r, a0, a1 float64) {
 	dc.MoveTo(cx, cy)
 	dc.LineTo(cx+r*cos(a0), cy+r*sin(a0))
@@ -80,13 +76,12 @@ func RenderGacha(data *GachaData) (*gg.Context, error) {
 	dc.DrawImage(ScaleExact(tryLocal("gacha/header.png"), W, 600), 0, 0)
 	setFont(dc, 48)
 	dc.SetRGB255(238, 238, 238)
-	drawStringBold(dc, data.Name, 480, 110)
+	drawStringBold(dc, data.Name, 480, 127)
 	totalStr := "共" + itoa(data.Total) + "抽"
-	drawStringBold(dc, totalStr, 385, 193)
-	tw, _ := measure(dc, totalStr)
+	drawStringBold(dc, totalStr, 387, 192)
 	dates := "(" + data.BegTime + "——" + data.EndTime + ")"
 	setFont(dc, 34.5)
-	drawString(dc, dates, 385+tw+12, 191)
+	drawString(dc, dates, 612, 188)
 
 	// three item cards
 	card := func(x0 float64) {
@@ -158,8 +153,8 @@ func RenderGacha(data *GachaData) (*gg.Context, error) {
 	dc.SetRGB255(238, 238, 238)
 	for i, r := range avg {
 		cy := 335 + float64(i)*67.3
-		drawStringAnchored(dc, r.a, 580, cy, 0, 0.5)
-		drawStringAnchored(dc, r.b, 778, cy, 0, 0.5)
+		drawStringAnchored(dc, r.a, 574, cy, 0, 0.5)
+		drawStringAnchored(dc, r.b, 772, cy, 0, 0.5)
 	}
 
 	// card3: horizontal bars
@@ -210,7 +205,7 @@ func RenderGacha(data *GachaData) (*gg.Context, error) {
 	drawStringAnchored(dc, "获得六星干员(至多显示20个)", 1116, 699.5, 0.5, 0.5)
 
 	entry := func(x0 float64, avatar string, name string, isNew bool, ts, pool, cost string) {
-		dc.DrawImage(ScaleExact(FetchImage(avatar, AssetPath("common/amiya.png")), 150, 150), int(x0), 752)
+		dc.DrawImage(ScaleExact(FetchImage(avatar, AssetPath("common/amiya.png")), 150, 150), int(x0), 756)
 		setFont(dc, 24)
 		dc.SetRGB255(238, 238, 238)
 		drawString(dc, name, x0+152, 783)
@@ -228,12 +223,12 @@ func RenderGacha(data *GachaData) (*gg.Context, error) {
 			drawString(dc, cost, x0+152, 916)
 		}
 	}
-	ex := 30.0
+	ex := 36.0
 	for _, c := range data.Chars {
 		entry(ex, c.Avatar, c.CharName, c.IsNew, c.Ts, c.PoolName, "")
 		ex += 345
 	}
-	ex = 766.0
+	ex = 772.0
 	for _, s := range data.Star6Info {
 		entry(ex, s.Avatar, s.Name, s.IsNew, s.Ts, s.PoolName, "花费"+itoa(s.Count)+"抽")
 		ex += 345
@@ -243,6 +238,6 @@ func RenderGacha(data *GachaData) (*gg.Context, error) {
 	dc.DrawImage(ScaleExact(tryLocal("gacha/footer.png"), W, 404), 0, 919)
 	setFont(dc, 48)
 	dc.SetRGB255(238, 238, 238)
-	drawStringBold(dc, data.Now, 805, 1241)
+	drawStringBold(dc, data.Now, 809, 1258)
 	return dc, nil
 }

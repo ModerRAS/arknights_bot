@@ -45,8 +45,8 @@ func RenderRecruit(groups []RecruitList) (*gg.Context, error) {
 	// header row: 标签 | 干员 (th bold, centered), shadow under the tr
 	setFont(dc, 24)
 	dc.SetRGB255(0, 0, 0)
-	drawStringAnchored(dc, "标签", 140, 22, 0.5, 0.5)
-	drawStringAnchored(dc, "干员", 815, 22, 0.5, 0.5)
+	drawStringBold(dc, "标签", 118, 30)
+	drawStringBold(dc, "干员", 793, 30)
 	dc.SetRGBA255(0, 0, 0, 70)
 	dc.DrawRectangle(0, 42, W, 2.5)
 	dc.Fill()

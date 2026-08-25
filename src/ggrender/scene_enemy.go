@@ -80,12 +80,15 @@ func RenderEnemy(data *Enemy) (*gg.Context, error) {
 		drawStringAnchored(dc, s, cx, cy, 0.5, 0.5)
 	}
 	// name row
-	centerText(data.Name, W/2, 67, 37.5)
+	setFont(dc, 37.5)
+	dc.SetRGB255(255, 255, 255)
+	nw, _ := measure(dc, data.Name)
+	drawStringBold(dc, data.Name, W/2-nw/2, 80)
 	// pic cell: img 158 CSS = 237 canvas centered in 0..425
 	pic := FetchImage(data.Pic, AssetPath("common/amiya.png"))
-	dc.DrawImage(ScaleExact(pic, 237, 237), 94, 101)
+	dc.DrawImage(ScaleExact(pic, 237, 237), 96, 101)
 	// desc cell centered
-	centerText(StripHTML(data.Desc), (425+W)/2, 220, 24)
+	centerText(StripHTML(data.Desc), (425+W)/2+2, 222, 24)
 	// header row
 	hdrs := []struct {
 		s  string
@@ -103,6 +106,9 @@ func RenderEnemy(data *Enemy) (*gg.Context, error) {
 		centerText(v.s, v.cx, 405, 24)
 	}
 	// 能力 row
-	centerText("能力", W/2, 451.5, 30)
+	setFont(dc, 30)
+	dc.SetRGB255(255, 255, 255)
+	aw, _ := measure(dc, "能力")
+	drawStringBold(dc, "能力", W/2-aw/2, 461.5)
 	return dc, nil
 }
