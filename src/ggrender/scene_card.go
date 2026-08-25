@@ -8,6 +8,14 @@ import (
 	"github.com/fogleman/gg"
 )
 
+// CARD-TUNE-START (frozen-baseline micro-tuning)
+const (
+	cardNameDx, cardNameDy = 0.5, 0.0
+	cardCntX, cardCntTop = 20.0, 519.0
+)
+
+// CARD-TUNE-END
+
 // Card — mirrors template/Card.tmpl rendered at 1280x720 CSS, scale 1 -> 1280x720.
 // Layout coordinates follow the frozen Playwright baseline structure: absolute-positioned
 // left info column (regTime/circle icons/助理/secretary/decor/skin/hire/nations),
@@ -202,6 +210,7 @@ func cardPill(dc *gg.Context, s string, x, yTop float64) float64 {
 	dc.SetRGBA255(0, 0, 0, 51)
 	RoundRect(dc, x, yTop, w+10, pillH, 10)
 	dc.Fill()
+	dc.SetRGB255(255, 255, 255) // pill label inherits #nameCard white
 	cardTextCenter(dc, s, x+(w+10)/2, yTop+pillH/2)
 	return w + 10
 }
@@ -306,7 +315,7 @@ func RenderCard(data *CardInfo) (*gg.Context, error) {
 
 	// char count 55px
 	setFont(dc, 55)
-	cardTextTop(dc, itoa(data.CharCnt), 20, 519) // sweep: fs55 top519 optimal
+	cardTextTop(dc, itoa(data.CharCnt), cardCntX, cardCntTop)
 
 	// nation flags 30x30 pitch 37: flag==1 -> blue silhouette, flag==-1 -> 20% opacity
 	nx, ny := 17.0, 573.0
@@ -350,19 +359,14 @@ func RenderCard(data *CardInfo) (*gg.Context, error) {
 	setFont(dc, 30)
 // NAME-PATCH-START (tuned against frozen baseline)
 	setFont(dc, 30)
-	if 1.2 > 0 {
-		_, nh := measure(dc, data.Name)
-		drawString(dc, data.Name, 842+2-1.2/2, ncY+63+0+nh*cardAscFrac)
-		drawString(dc, data.Name, 842+2+1.2/2, ncY+63+0+nh*cardAscFrac)
-	} else {
-		cardTextTop(dc, data.Name, 842+2, ncY+63+0)
-	}
+	cardTextTop(dc, data.Name, 842+cardNameDx, ncY+63+cardNameDy)
 	// NAME-PATCH-END
 	// uid/server pills fs17 at (842,+102)
 	setFont(dc, 17)
 	px := 842.0
-	px += cardPill(dc, "ID "+data.Uid, px, ncY+100) + 6 // measured dy=-2
-	cardPill(dc, data.ServerName, px, ncY+100)
+	px += cardPill(dc, "ID "+data.Uid, px, ncY+106) + 6 // measured +6 vs template
+	cardPill(dc, data.ServerName, px, ncY+106)
+
 
 	// ================= resume strip =================
 	dc.SetRGBA255(0, 0, 0, 153)
