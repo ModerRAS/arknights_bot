@@ -422,17 +422,19 @@ func RenderCard(data *CardInfo) (*gg.Context, error) {
 
 	// ================= module collection panel (overflow hidden) =================
 	const modX, modY = 639.0, 463.0 // measured rigid offset vs template float math
+	// template #equip has NO overflow:hidden: bg-color sits under the images,
+	// and moduleBg art overflows the box top (Chromium float layout measured).
 	modules := cardPanelLayer(605, 196, 15, func(lg *gg.Context) {
 		lg.SetRGBA255(0, 0, 0, 153)
 		RoundRect(lg, 0, 0, 605, 196, 15)
-		if mb, err := LoadImage(AssetPath("card/module_collection_bg.png")); err == nil {
-			lg.DrawImage(ScaleExact(mb, 612, 178), -7, 0) // clipped by panel like overflow:hidden
-		}
-		if mi, err := LoadImage(AssetPath("card/module_collection_bg_icon.png")); err == nil {
-			lg.DrawImage(cardWithOpacity(ScaleExact(mi, 175, 163), 77), 40, 14) // measured -4
-		}
 	})
 	dc.DrawImage(modules, int(modX), int(modY))
+	if mb, err := LoadImage(AssetPath("card/module_collection_bg.png")); err == nil {
+		dc.DrawImage(ScaleExact(mb, 612, 178), 656, 442)
+	}
+	if mi, err := LoadImage(AssetPath("card/module_collection_bg_icon.png")); err == nil {
+		dc.DrawImage(cardWithOpacity(ScaleExact(mi, 175, 163), 77), modX+40, modY+14)
+	}
 	// numbers row right-aligned at modX+605, number tops modY+69, titles modY+156
 	cols := []struct {
 		title string
