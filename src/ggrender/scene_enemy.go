@@ -1,12 +1,11 @@
 package ggrender
 
-import (
-	"fmt"
+import "github.com/fogleman/gg"
 
-	"github.com/fogleman/gg"
-)
-
-// Enemy
+// Enemy — mirrors template/Enemy.tmpl rendered at 656x318 CSS, scale 1.5 -> 984x477.
+// The bare <tr>{{.Ability}}</tr> is foster-parented above the table: black text on
+// white body strip. #main #323332 with bordered centered table rows; canvas cuts
+// after the 能力 header row (level tables fall below the fold).
 type EnemySkill struct{ Name, SpInit, SpCost, Desc string }
 type EnemyLevel struct {
 	Desc, AttackType, Motion, HpRecovery, HP, ATK, DEF, Res, ATKRadius, Weight, MoveSpeed, Interval, DamageRes, ElementRes, Ridicule, Point, Abnormal string
@@ -19,59 +18,96 @@ type Enemy struct {
 	Levels []EnemyLevel
 }
 
+const enemyPicURL = "https://media.prts.wiki/3/3e/%E5%A4%B4%E5%83%8F_%E6%95%8C%E4%BA%BA_%E6%BA%90%E7%9F%B3%E8%99%AB.png"
+
 func SampleEnemy() *Enemy {
 	return &Enemy{
-		Name: "霜星", Pic: "", Desc: "雪怪小队领袖，擅长冰属性法术。", EnemyRace: "人类", EnemyLevel: "精英", AttackType: "法术", Motion: "地面",
-		Ability: "攻击造成法术伤害，并施加寒冷。",
-		Levels: []EnemyLevel{{HP: "12000", ATK: "850", DEF: "300", Res: "40", Talent: "攻击范围内我方单位移动速度降低。", Skills: []EnemySkill{{Name: "冰封", SpInit: "10", SpCost: "30", Desc: "对范围内单位造成大量法术伤害并冻结。"}}}},
+		Name: "源石虫", Pic: enemyPicURL, Desc: "拥有较高防御力的感染生物。", EnemyRace: "感染生物", EnemyLevel: "普通", AttackType: "近战", Motion: "地面",
+		Ability: "免疫沉默",
+		Levels: []EnemyLevel{
+			{Desc: "标准个体", AttackType: "近战", Motion: "地面", HpRecovery: "0", HP: "5000", ATK: "400", DEF: "500", Res: "20", ATKRadius: "1.1", Weight: "2", MoveSpeed: "0.8", Interval: "1.5", DamageRes: "0", ElementRes: "0", Ridicule: "0", Point: "1", Abnormal: "无",
+				Skills: []EnemySkill{{Name: "啃噬", SpInit: "0", SpCost: "5", Desc: "对目标造成 物理伤害"}}, Talent: "生命低于50%时防御提升"},
+			{Desc: "强化个体", AttackType: "近战", Motion: "地面", HpRecovery: "0", HP: "8000", ATK: "600", DEF: "700", Res: "30", ATKRadius: "1.1", Weight: "3", MoveSpeed: "0.8", Interval: "1.5", DamageRes: "10", ElementRes: "0", Ridicule: "1", Point: "2", Abnormal: "晕眩抗性",
+				Skills: []EnemySkill{{Name: "啃噬+", SpInit: "0", SpCost: "4", Desc: "造成更高 物理伤害"}}, Talent: "攻击力提升"},
+		},
 	}
 }
 
 func RenderEnemy(data *Enemy) (*gg.Context, error) {
-	const mainW = 984
-	const pad = 16
-	headerH := 160
-	levelH := 260
-	dc := gg.NewContext(mainW, 477)
-	FillBackground(dc, 27, 29, 30)
-	// pic placeholder
-	dc.SetRGB255(70, 70, 80)
-	dc.DrawRoundedRectangle(float64(pad), float64(pad), 120, 120, 8)
+	const W, H = 984, 477
+	const mainTop = 36.0
+	dc := gg.NewContext(W, H)
+	FillBackground(dc, 255, 255, 255)
+	// foster-parented ability text on white body
+	setFont(dc, 24)
+	dc.SetRGB255(0, 0, 0)
+	drawString(dc, StripHTML(data.Ability), 3, 27)
+	// #main
+	dc.SetRGB255(50, 51, 50)
+	dc.DrawRectangle(0, mainTop, W, H-mainTop)
 	dc.Fill()
-	setFont(dc, 22)
-	dc.SetRGB255(255, 255, 255)
-	drawString(dc, data.Name, 150, 40)
-	setFont(dc, 14)
-	dc.SetRGB255(200, 200, 200)
-	drawString(dc, StripHTML(data.Desc), 150, 70)
-	info := fmt.Sprintf("种族:%s  等级:%s  攻击:%s  移动:%s", data.EnemyRace, data.EnemyLevel, data.AttackType, data.Motion)
-	drawString(dc, info, 150, 95)
-	y := headerH
-	for _, lv := range data.Levels {
-		fillRoundedCard(dc, float64(pad), float64(y), float64(mainW-2*pad), float64(levelH-10), 8, 15)
-		row := func(label, val string, ry float64) {
-			setFont(dc, 14)
-			dc.SetRGB255(150, 150, 150)
-			drawString(dc, label, float64(pad+10), ry)
-			dc.SetRGB255(230, 230, 230)
-			drawString(dc, val, float64(pad+110), ry)
-		}
-		row("HP", lv.HP, float64(y+24))
-		row("ATK", lv.ATK, float64(y+46))
-		row("DEF", lv.DEF, float64(y+68))
-		row("RES", lv.Res, float64(y+90))
-		setFont(dc, 13)
-		dc.SetRGB255(180, 220, 200)
-		drawString(dc, "特性: "+StripHTML(lv.Talent), float64(pad+10), float64(y+120))
-		drawString(dc, "能力: "+StripHTML(data.Ability), float64(pad+10), float64(y+142))
-		sy := float64(y + 170)
-		for _, sk := range lv.Skills {
-			setFont(dc, 13)
-			dc.SetRGB255(230, 210, 150)
-			drawString(dc, fmt.Sprintf("技能 %s (技力%s/%s): %s", sk.Name, sk.SpInit, sk.SpCost, StripHTML(sk.Desc)), float64(pad+10), sy)
-			sy += 22
-		}
-		y += levelH
+
+	// table rows: [y0,y1] canvas
+	rows := []struct{ y0, y1 float64 }{
+		{36, 98},   // name
+		{98, 342},  // pic | desc
+		{342, 384}, // 种类 | 地位级别 | 攻击方式 | 行动方式
+		{384, 426}, // values
+		{426, 477}, // 能力
 	}
+	border := func(x0, y0, x1, y1 float64) {
+		dc.SetRGB255(89, 88, 88)
+		dc.DrawRectangle(x0, y0, x1-x0, y1-y0)
+		dc.Fill()
+		dc.SetRGB255(50, 51, 50)
+		dc.DrawRectangle(x0+1.5, y0+1.5, x1-x0-3, y1-y0-3)
+		dc.Fill()
+	}
+	// horizontal borders
+	for _, r := range rows {
+		border(0, r.y0, W, r.y0+1.5)
+	}
+	border(0, 475.5, W, 477)
+	// vertical borders: pic/desc + 种类 group split at 425, then 4 quarters
+	for _, x := range []float64{425, 611.5, 797.5, 982.5} {
+		yTop := rows[1].y0
+		if x == 425 {
+			border(x-1.5, yTop, x, rows[2].y1) // pic|desc split spans rows 1-2
+			border(x-1.5, rows[2].y0, x, rows[2].y1)
+		} else {
+			border(x-1.5, rows[2].y0, x, rows[2].y1)
+		}
+	}
+
+	centerText := func(s string, cx, cy float64, size float64) {
+		setFont(dc, size)
+		dc.SetRGB255(255, 255, 255)
+		drawStringAnchored(dc, s, cx, cy, 0.5, 0.5)
+	}
+	// name row
+	centerText(data.Name, W/2, 67, 37.5)
+	// pic cell: img 158 CSS = 237 canvas centered in 0..425
+	pic := FetchImage(data.Pic, AssetPath("common/amiya.png"))
+	dc.DrawImage(ScaleExact(pic, 237, 237), 94, 101)
+	// desc cell centered
+	centerText(StripHTML(data.Desc), (425+W)/2, 220, 24)
+	// header row
+	hdrs := []struct {
+		s  string
+		cx float64
+	}{{"种类", 212.5}, {"地位级别", 518.5}, {"攻击方式", 704.5}, {"行动方式", 890.5}}
+	for _, hd := range hdrs {
+		centerText(hd.s, hd.cx, 363, 24)
+	}
+	// values row
+	vals := []struct {
+		s  string
+		cx float64
+	}{{data.EnemyRace, 212.5}, {data.EnemyLevel, 518.5}, {data.AttackType, 704.5}, {data.Motion, 890.5}}
+	for _, v := range vals {
+		centerText(v.s, v.cx, 405, 24)
+	}
+	// 能力 row
+	centerText("能力", W/2, 451.5, 30)
 	return dc, nil
 }
