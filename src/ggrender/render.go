@@ -153,8 +153,8 @@ func renderContext(scene string, data interface{}) (*gg.Context, error) {
 		}
 		return RenderOperator(SampleOperator())
 	case "recruit":
-		if d, ok := data.(*RecruitList); ok && d != nil {
-			return RenderRecruit(d)
+		if arr, ok := data.([]RecruitList); ok {
+			return RenderRecruit(arr)
 		}
 		return RenderRecruit(SampleRecruit())
 	case "state":

@@ -23,6 +23,7 @@ import (
 
 	"github.com/fogleman/gg"
 	"golang.org/x/image/draw"
+	_ "golang.org/x/image/webp"
 )
 
 // ggRepoRoot resolves the repository root from source location so no
