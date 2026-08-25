@@ -131,7 +131,7 @@ func RenderGacha(data *GachaData) (*gg.Context, error) {
 	}{{"6星", [3]int{244, 110, 30}}, {"5星", [3]int{247, 171, 55}}, {"4星", [3]int{161, 53, 246}}, {"3星", [3]int{109, 116, 126}}}
 	pcts := []string{"20.00%", "20.00%", "30.00%", "30.00%"}
 	for i, le := range legend {
-		cy := 368.5 + float64(i)*48
+		cy := 370.5 + float64(i)*48
 		dc.SetRGB255(le.col[0], le.col[1], le.col[2])
 		dc.DrawRectangle(38, cy-5, 10, 10)
 		dc.Fill()
@@ -228,7 +228,7 @@ func RenderGacha(data *GachaData) (*gg.Context, error) {
 		entry(ex, c.Avatar, c.CharName, c.IsNew, c.Ts, c.PoolName, 838, 885, 0, "")
 		ex += 345
 	}
-	ex = 771.0
+	ex = 776.0
 	for _, s := range data.Star6Info {
 		entry(ex, s.Avatar, s.Name, s.IsNew, s.Ts, s.PoolName, 830, 876, 904, "花费"+itoa(s.Count)+"抽")
 		ex += 345
@@ -238,6 +238,6 @@ func RenderGacha(data *GachaData) (*gg.Context, error) {
 	dc.DrawImage(ScaleExact(tryLocal("gacha/footer.png"), W, 404), 0, 919)
 	setFont(dc, 48)
 	dc.SetRGB255(238, 238, 238)
-	drawStringBold(dc, data.Now, 808, 1258)
+	drawStringBold(dc, data.Now, 810, 1258)
 	return dc, nil
 }
