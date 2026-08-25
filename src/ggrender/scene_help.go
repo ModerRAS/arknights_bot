@@ -99,13 +99,13 @@ func drawPersonIcon(dc *gg.Context, x, y, s float64) {
 
 func drawHelpChips(dc *gg.Context, cmds []Cmd, yTop float64) float64 {
 	const chipW, chipH = 227.0, 80.0
-	const chipMarginX, chipMarginTop = 15.0, 23.7
+	const chipMarginX, chipMarginTop = 14.0, 22.7
 	const perRow = 4
 	y := yTop
 	for i, c := range cmds {
 		col := i % perRow
 		if col == 0 && i > 0 {
-			y += chipH + chipMarginTop
+			y += chipH + 23.55
 		}
 		x := chipMarginX + float64(col)*243
 		dc.SetRGBA255(255, 255, 255, 255)
