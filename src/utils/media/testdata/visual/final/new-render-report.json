@@ -45,7 +45,7 @@
     {
       "id": "box-detail",
       "path": "new/box-detail.png",
-      "sha256": "ed18b77d6bf622e70f505ce1dba425f629ec7959357c89790e28b041b46955aa",
+      "sha256": "123d31a624b9ae99ca61e2741540f53aee6db783e0c15309716f923163203b3d",
       "width": 722,
       "height": 279,
       "scale": 1.5,
@@ -54,7 +54,7 @@
     {
       "id": "box-summary",
       "path": "new/box-summary.png",
-      "sha256": "1cd54451401c8523b76e5551a9fc421a03ad74f1367a44690e5a8a7062ddb5a5",
+      "sha256": "860d79fc1d94802579aacc9622ef43f76b4e0eb1f89d89c0ebea7e9f46aba71c",
       "width": 1350,
       "height": 723,
       "scale": 1.5,
@@ -117,7 +117,7 @@
     {
       "id": "help",
       "path": "new/help.png",
-      "sha256": "42af048edf022383a5efa7f0aa663d1212409f4ec65e51456af72e1b15d394d2",
+      "sha256": "18971f296b9a9f0428edcf88c3f3b75ce884b14829ee40c4751af8ec4ec704d3",
       "width": 990,
       "height": 2049,
       "scale": 1.5,
