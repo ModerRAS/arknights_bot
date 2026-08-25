@@ -1,7 +1,10 @@
 package ggrender
 
 import (
+	"image"
 	"math"
+
+	xdraw "golang.org/x/image/draw"
 
 	"github.com/fogleman/gg"
 )
@@ -67,19 +70,25 @@ func drawStar(dc *gg.Context, cx, cy, r float64) {
 	dc.Fill()
 }
 
+func scaleSmoothCR(img image.Image, w, h int) image.Image {
+	dst := image.NewRGBA(image.Rect(0, 0, w, h))
+	xdraw.CatmullRom.Scale(dst, dst.Bounds(), img, img.Bounds(), xdraw.Over, nil)
+	return dst
+}
+
 func RenderOperator(data *OperatorInfo) (*gg.Context, error) {
 	const cssW, cssH = 1200, 800
 	dc := gg.NewContext(1800, 1200) // manifest pixels
-	dc.Scale(1.5, 1.5)
 	// browser body default white behind everything (bg.png has transparency)
 	dc.SetRGB(1, 1, 1)
 	dc.Clear()
-	// bg cover: measured scale 2.075 real px, offset (-10,0)
-	bg := scaleSmooth(tryLocal("operator/bg.png"), 2125, 1195)
-	drawImageReal(dc, bg, -10, 0)
-	// painting: height 650css, left 5% (60css), bottom 0
+	// bg + painting drawn 1:1 in REAL pixel space BEFORE the CSS scale transform
+	// (gg DrawImage resamples under transform; identity matrix keeps pixels exact)
+	bg := scaleSmooth(tryLocal("operator/bg.png"), 2143, 1206)
+	dc.DrawImage(bg, 6, 4)
 	paint := tryLocal(data.Painting)
-	drawImageReal(dc, scaleSmooth(paint, 975, 975), 90, 225)
+	dc.DrawImage(scaleSmooth(paint, 978, 974), 89, 225)
+	dc.Scale(1.5, 1.5)
 
 	// ---- attr table (top-left): 3 rows x (b101.3,w71.3)x3, y18.7 rowH30 ----
 	attrY := 18.7
