@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"image"
 	"image/color"
+	"image/draw"
 	"image/jpeg"
 	"image/png"
 	_ "image/jpeg"
@@ -339,6 +340,10 @@ func TestGGPixelParity_Negative(t *testing.T) {
 		t.Fatalf("render %s: %v", scene, err)
 	}
 	img := dc.Image()
+	// 先深拷贝原图：imageToRGBA 对 *image.RGBA 是别名快路径，直接用会与被扰动图像共享像素
+	b := img.Bounds()
+	orig := image.NewRGBA(b)
+	draw.Draw(orig, b, img, b.Min, draw.Src)
 	rgba := imageToRGBA(img)
 	w, h := rgba.Bounds().Dx(), rgba.Bounds().Dy()
 	// 扰动：左上角 100x100 填充纯红
@@ -348,7 +353,6 @@ func TestGGPixelParity_Negative(t *testing.T) {
 		}
 	}
 	// 与原图对比应 <0.99
-	orig := imageToRGBA(dc.Image())
 	sim, _ := similarityNormalized(orig, rgba)
 	if sim >= 0.99 {
 		t.Fatalf("负向测试失败: 扰动后相似度仍 %.5f >=0.99, harness 可能伪 1.0", sim)
