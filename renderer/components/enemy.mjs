@@ -58,7 +58,7 @@ export default async function render(props, { image }) {
     ...(props.autoHeight === true ? { minHeight: 318 } : { height: 318, overflow: 'hidden' }),
   };
   const base = box({ width: WIDTH, flexDirection: 'column' },
-    fullCell({ height: 42, alignItems: 'center', justifyContent: 'center' }, text(props.name, { color: '#fff', fontSize: 25, fontWeight: 600, justifyContent: 'center', textAlign: 'center' })),
+    fullCell({ height: 42, alignItems: 'center', justifyContent: 'center' }, text(props.name, { color: '#fff', fontSize: 25, fontWeight: 600, justifyContent: 'center', textAlign: 'center', position: 'relative', top: -2 /* NOTE: this satori version inverts span position:relative top sign (top:+2 moves UP); top:-2 moves down 2px to match baseline synthetic-bold metrics */ })),
     box({ width: WIDTH, height: 162 },
       cell(baseTracks[0], { alignItems: 'center', justifyContent: 'center' }, h('img', { src: picture, width: 158, height: 158, style: { margin: '1px 6px' } })),
       cell(baseTracks.slice(1).reduce((sum, value) => sum + value, 0), { alignItems: 'center', justifyContent: 'center' }, text(props.desc, { justifyContent: 'center', textAlign: 'center' })),

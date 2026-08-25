@@ -1,4 +1,5 @@
 import { createInterface } from 'node:readline';
+import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import satori from 'satori';
@@ -133,6 +134,12 @@ async function loadFont() {
   return fontPromise;
 }
 
+// Second face: real wght=600 instance (Google Fonts NotoSansSC variable instanced at 600, OFL).
+// The frozen Playwright baseline renders fontWeight:600 via Chromium synthetic bold; satori
+// ignores synthetic bold, so a real 600 face is required for bold text to match baseline ink.
+function loadBoldFont() {
+  return { name: 'NotoSansHans', data: readFileSync(path.join(REPO_ROOT, 'assets/font/NotoSansSC-600.ttf')), weight: 600, style: 'normal' };
+}
 function assertVNode(value) {
   if (!value || typeof value !== 'object' || typeof value.type !== 'string') {
     throw new Error('component did not return a renderable VNode');
@@ -147,7 +154,7 @@ export async function renderRequest(request) {
   const svg = await satori(vnode, {
     width: valid.width,
     height: valid.height,
-    fonts: [await loadFont()],
+    fonts: [await loadFont(), loadBoldFont()],
   });
   const pixelWidth = Math.max(1, Math.round(valid.width * valid.scale));
   const pixelHeight = Math.max(1, Math.round(valid.height * valid.scale));
