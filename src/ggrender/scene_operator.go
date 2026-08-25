@@ -84,8 +84,8 @@ func RenderOperator(data *OperatorInfo) (*gg.Context, error) {
 	dc.Clear()
 	// bg + painting drawn 1:1 in REAL pixel space BEFORE the CSS scale transform
 	// (gg DrawImage resamples under transform; identity matrix keeps pixels exact)
-	bg := scaleSmooth(tryLocal("operator/bg.png"), 2143, 1206)
-	dc.DrawImage(bg, 6, 4)
+	bg := scaleSmooth(tryLocal("operator/bg.png"), 2130, 1200)
+	dc.DrawImage(bg, -2, 0)
 	paint := tryLocal(data.Painting)
 	dc.DrawImage(scaleSmooth(paint, 978, 974), 89, 225)
 	dc.Scale(1.5, 1.5)
