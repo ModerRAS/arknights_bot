@@ -170,11 +170,12 @@ func cardFadeBottom(src image.Image) image.Image {
 	return out
 }
 
-// cardPanelLayer paints into a w×h layer, clips to a rounded rect of radius r
+// cardPanelLayer paints into a w×h gg context, clips to a rounded rect of radius r
 // (overflow hidden semantics), returns the composited layer.
-func cardPanelLayer(w, h int, r float64, paint func(*image.RGBA)) image.Image {
-	layer := image.NewRGBA(image.Rect(0, 0, w, h))
-	paint(layer)
+func cardPanelLayer(w, h int, r float64, paint func(*gg.Context)) image.Image {
+	lg := gg.NewContext(w, h)
+	paint(lg)
+	src := lg.Image()
 	mask := gg.NewContext(w, h)
 	mask.DrawRoundedRectangle(0, 0, float64(w), float64(h), r)
 	mask.SetColor(color.White)
@@ -184,7 +185,7 @@ func cardPanelLayer(w, h int, r float64, paint func(*image.RGBA)) image.Image {
 	for y := 0; y < h; y++ {
 		for x := 0; x < w; x++ {
 			_, _, _, ma := mi.At(x, y).RGBA()
-			r, g, b, a := layer.At(x, y).RGBA()
+			r, g, b, a := src.At(x, y).RGBA()
 			na := a * ma / 0xFFFF
 			if na > 0 {
 				out.SetRGBA(x, y, color.RGBA{R: uint8(r >> 8), G: uint8(g >> 8), B: uint8(b >> 8), A: uint8(na >> 8)})
@@ -270,7 +271,7 @@ func RenderCard(data *CardInfo) (*gg.Context, error) {
 		dc.DrawImage(ScaleExact(d, 177, 47), 0, 248) // measured dx=-20
 	}
 	setFont(dc, 12)
-	cardTextTop(dc, "DATA PROVIDED BY PRTS", 20, 297)
+	cardTextTop(dc, "DATA PROVIDED BY PRTS", 20, 308) // measured +11
 	cardTextTop(dc, "-", 20, 334) // measured dy=+14
 	if ds, err := LoadImage(AssetPath("card/decor_skin.png")); err == nil {
 		dc.DrawImage(ScaleExact(ds, 96, 27), 20, 360)
@@ -281,23 +282,31 @@ func RenderCard(data *CardInfo) (*gg.Context, error) {
 	}
 	setFont(dc, 16)
 	dc.SetRGB255(255, 255, 255)
+// SKIN-TBL-PATCH-START
+	setFont(dc, 16)
 	cardTextCenter(dc, "时装保有数", 122, 416)
-	cardTextCenter(dc, itoa(data.SkinCnt), 122, 437)
+	if 0 > 0 {
+		_, lh := measure(dc, "时装保有数")
+		drawString(dc, "时装保有数", 122-lh/2-0/2, 416+lh*(cardAscFrac-0.5))
+		drawString(dc, "时装保有数", 122-lh/2+0/2, 416+lh*(cardAscFrac-0.5))
+	}
+	cardTextCenter(dc, itoa(data.SkinCnt), 122, 441)
+	// SKIN-TBL-PATCH-END
 
 	// 雇佣干员进度 bar + human_resource art
 	dc.SetRGB255(0, 152, 220)
 	dc.DrawRectangle(20, 455, 160, 34)
 	dc.Fill()
-	setFont(dc, 17)
-	dc.SetRGB255(255, 255, 255)
-	cardTextSpacedCenter(dc, "雇佣干员进度", 100, 477, 3)
+	setFont(dc, 18)
+	dc.SetRGB255(0, 0, 0) // template inherits body default black
+	cardTextSpacedCenter(dc, "雇佣干员进度", 100, 477, 1)
 	if hr, err := LoadImage(AssetPath("card/human_resource.png")); err == nil {
 		dc.DrawImage(ScaleExact(hr, 114, 35), 160, 455)
 	}
 
 	// char count 55px
-	setFont(dc, 55) // measured larger glyphs vs satori fs55
-	cardTextTop(dc, itoa(data.CharCnt), 20, 522)
+	setFont(dc, 55)
+	cardTextTop(dc, itoa(data.CharCnt), 20, 519) // sweep: fs55 top519 optimal
 
 	// nation flags 30x30 pitch 37: flag==1 -> blue silhouette, flag==-1 -> 20% opacity
 	nx, ny := 17.0, 573.0
@@ -318,7 +327,7 @@ func RenderCard(data *CardInfo) (*gg.Context, error) {
 
 	// ================= right name card =================
 	// bg 638x223 floats right: x=642; measured baseline effective top -39 (viewport-clipped float)
-	const ncY = -39.0
+	const ncY = -41.0
 	if nc, err := LoadImage(AssetPath("card/name_card_short.png")); err == nil {
 		dc.DrawImage(ScaleExact(nc, 638, 223), 642, ncY)
 	}
@@ -339,7 +348,16 @@ func RenderCard(data *CardInfo) (*gg.Context, error) {
 	dc.DrawImage(ScaleExact(portrait, 130, 260), 681, ncY+11)
 	// name fs30 at (842,+55)
 	setFont(dc, 30)
-	cardTextTop(dc, data.Name, 842, ncY+63) // measured dy=+8 vs satori rel pos
+// NAME-PATCH-START (tuned against frozen baseline)
+	setFont(dc, 30)
+	if 1.2 > 0 {
+		_, nh := measure(dc, data.Name)
+		drawString(dc, data.Name, 842+2-1.2/2, ncY+63+0+nh*cardAscFrac)
+		drawString(dc, data.Name, 842+2+1.2/2, ncY+63+0+nh*cardAscFrac)
+	} else {
+		cardTextTop(dc, data.Name, 842+2, ncY+63+0)
+	}
+	// NAME-PATCH-END
 	// uid/server pills fs17 at (842,+102)
 	setFont(dc, 17)
 	px := 842.0
@@ -403,10 +421,9 @@ func RenderCard(data *CardInfo) (*gg.Context, error) {
 	const modX, modY = 639.0, 463.0 // measured rigid offset vs template float math
 	// moduleBg art measured overflowing above the panel: raw-draw at (652,443)
 	if mb, err := LoadImage(AssetPath("card/module_collection_bg.png")); err == nil {
-		dc.DrawImage(ScaleExact(mb, 612, 178), 652, 443)
+		dc.DrawImage(ScaleExact(mb, 612, 178), 652, 450)
 	}
-	modules := cardPanelLayer(605, 196, 15, func(layer *image.RGBA) {
-		lg := gg.NewContextForImage(layer)
+	modules := cardPanelLayer(605, 196, 15, func(lg *gg.Context) {
 		lg.SetRGBA255(0, 0, 0, 153)
 		RoundRect(lg, 0, 0, 605, 196, 15)
 		if mi, err := LoadImage(AssetPath("card/module_collection_bg_icon.png")); err == nil {
