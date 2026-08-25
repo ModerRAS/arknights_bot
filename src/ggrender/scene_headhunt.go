@@ -34,7 +34,7 @@ func RenderHeadhunt(data []HHOp) (*gg.Context, error) {
 	dc.DrawImage(bg, 1024, 0)
 
 	for i, o := range data {
-		x := int(26 + float64(i)*98.4)
+		x := int(26 + float64(i)*98.4 + 0.5)
 		// .bg panel: back_{rarity}.png covers padding box: 95x370 at y=130 (270 height + 100 padding-top)
 		back := ScaleCover(tryLocal("headhunt/back_"+itoa(o.Rarity)+".png"), 95, 370)
 		dc.DrawImage(back, x, 130)
