@@ -23,7 +23,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/fogleman/gg"
+"github.com/fogleman/gg"
 	"golang.org/x/image/draw"
 	_ "golang.org/x/image/webp"
 )
