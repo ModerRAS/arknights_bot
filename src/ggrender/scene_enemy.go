@@ -35,17 +35,12 @@ func SampleEnemy() *Enemy {
 
 func RenderEnemy(data *Enemy) (*gg.Context, error) {
 	const W, H = 984, 477
-	const mainTop = 36.0
 	dc := gg.NewContext(W, H)
-	FillBackground(dc, 255, 255, 255)
-	// foster-parented ability text on white body
+	FillBackground(dc, 50, 51, 50)
+	// foster-parented ability text: black on the #323332 strip
 	setFont(dc, 24)
 	dc.SetRGB255(0, 0, 0)
 	drawString(dc, StripHTML(data.Ability), 3, 27)
-	// #main
-	dc.SetRGB255(50, 51, 50)
-	dc.DrawRectangle(0, mainTop, W, H-mainTop)
-	dc.Fill()
 
 	// table rows: [y0,y1] canvas
 	rows := []struct{ y0, y1 float64 }{

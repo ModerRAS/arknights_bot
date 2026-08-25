@@ -1,6 +1,9 @@
 package ggrender
 
-import "github.com/fogleman/gg"
+import (
+	"github.com/fogleman/gg"
+	"math"
+)
 
 // Help — mirrors template/Help.tmpl rendered at 660x1366 CSS, scale 1.5 -> 990x2049.
 // bg.jpg cover; banner.png (660x239 CSS) at y=10 with h1 + person-line overlay;
@@ -87,13 +90,11 @@ func drawPersonIcon(dc *gg.Context, x, y, s float64) {
 	dc.Stroke()
 	dc.DrawCircle(cx, cy-s*0.125, s*0.1875) // head
 	dc.Fill()
-	// shoulders: clipped filled circle
-	dc.Push()
-	dc.DrawRectangle(x, y+s*0.45, s, s*0.55)
-	dc.Clip()
-	dc.DrawCircle(cx, cy+s*0.42, s*0.34)
+	// shoulders: filled dome (upper half of circle), no clipping needed
+	dc.DrawArc(cx, cy+s*0.42, s*0.34, math.Pi, 2*math.Pi)
+	dc.ClosePath()
 	dc.Fill()
-	dc.Pop()
+	dc.Stroke()
 }
 
 func drawHelpChips(dc *gg.Context, cmds []Cmd, yTop float64) float64 {

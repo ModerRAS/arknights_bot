@@ -35,8 +35,8 @@ func RenderHeadhunt(data []HHOp) (*gg.Context, error) {
 
 	for i, o := range data {
 		x := 26 + i*98
-		// .bg panel: back_{rarity}.png cover 95x270 at y=130
-		back := ScaleCover(tryLocal("headhunt/back_"+itoa(o.Rarity)+".png"), 95, 270)
+		// .bg panel: back_{rarity}.png covers padding box: 95x370 at y=130 (270 height + 100 padding-top)
+		back := ScaleCover(tryLocal("headhunt/back_"+itoa(o.Rarity)+".png"), 95, 370)
 		dc.DrawImage(back, x, 130)
 		// thumb 95x190 at y=230 (padding-top 100)
 		thumb := ScaleExact(FetchImage(o.ThumbURL, AssetPath("common/amiya.png")), 95, 190)

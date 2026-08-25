@@ -61,7 +61,10 @@ func RenderRecruit(groups []RecruitList) (*gg.Context, error) {
 		if lines < 1 {
 			lines = 1
 		}
-		centerY := float64(lineTop) + float64(lines-1)*linePitch + 75
+		centerY := float64(lineTop) + (float64(lines-1)*linePitch+150)/2 + 4
+		if lines == 1 {
+			centerY += 3
+		}
 		setFont(dc, 24)
 		tx := 10.0
 		for _, t := range g.Tags {

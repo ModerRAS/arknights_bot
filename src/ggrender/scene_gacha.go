@@ -56,7 +56,11 @@ func SampleGacha() *GachaData {
 	}
 }
 
-// fillSector draws a pie sector from angle a0 to a1 (gg convention: +angle = clockwise on screen).
+// drawStringBold fakes bold by double-drawing with a 1px offset (only regular face available).
+func drawStringBold(dc *gg.Context, s string, x, y float64) {
+	drawString(dc, s, x, y)
+	drawString(dc, s, x+1.2, y)
+}
 func fillSector(dc *gg.Context, cx, cy, r, a0, a1 float64) {
 	dc.MoveTo(cx, cy)
 	dc.LineTo(cx+r*cos(a0), cy+r*sin(a0))
@@ -76,14 +80,13 @@ func RenderGacha(data *GachaData) (*gg.Context, error) {
 	dc.DrawImage(ScaleExact(tryLocal("gacha/header.png"), W, 600), 0, 0)
 	setFont(dc, 48)
 	dc.SetRGB255(238, 238, 238)
-	drawStringAnchored(dc, data.Name, 480, 110, 0, 0.5)
-	drawString(dc, "共", 385, 193)
-	totalStr := itoa(data.Total) + "抽"
-	drawString(dc, totalStr, 437, 193)
+	drawStringBold(dc, data.Name, 480, 110)
+	totalStr := "共" + itoa(data.Total) + "抽"
+	drawStringBold(dc, totalStr, 385, 193)
+	tw, _ := measure(dc, totalStr)
 	dates := "(" + data.BegTime + "——" + data.EndTime + ")"
 	setFont(dc, 34.5)
-	tw, _ := measure(dc, dates)
-	drawString(dc, dates, 1243-tw, 191)
+	drawString(dc, dates, 385+tw+12, 191)
 
 	// three item cards
 	card := func(x0 float64) {
@@ -240,6 +243,6 @@ func RenderGacha(data *GachaData) (*gg.Context, error) {
 	dc.DrawImage(ScaleExact(tryLocal("gacha/footer.png"), W, 404), 0, 919)
 	setFont(dc, 48)
 	dc.SetRGB255(238, 238, 238)
-	drawStringAnchored(dc, data.Now, 805, 1241, 0, 0.5)
+	drawStringBold(dc, data.Now, 805, 1241)
 	return dc, nil
 }
