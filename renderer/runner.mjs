@@ -157,11 +157,28 @@ async function loadFont() {
   return fontPromise;
 }
 
-// Second face: real wght=600 instance (Google Fonts NotoSansSC variable instanced at 600, OFL).
-// The frozen Playwright baseline renders fontWeight:600 via Chromium synthetic bold; satori
-// ignores synthetic bold, so a real 600 face is required for bold text to match baseline ink.
-function loadBoldFont() {
-  return { name: 'NotoSansHans', data: readFileSync(path.join(REPO_ROOT, 'assets/font/NotoSansSC-600.ttf')), weight: 600, style: 'normal' };
+// Second face for fontWeight:600 text. The legacy pipeline registers ONLY
+// NotoSansHans-Regular in assets/css/common.css, so Chromium rendered every
+// fontWeight:600 run with SYNTHETIC bold (Skia embolden of the Regular design),
+// not a real 600 design. satori ignores synthetic bold; we therefore register a
+// second face. Two measured options:
+//   - assets/font/NotoSansSC-SB27.ttf: faux bold synthesized from the Regular
+//     outlines by .neargate/embolden.py (per-vertex averaged-normal offset,
+//     FreeType FT_Outline_EmboldenXY style) at strength 27/1000 em -- matches
+//     the Skia synthetic-bold ink closely (base +0.0558 vs real 600).
+//   - assets/font/NotoSansSC-600.ttf: real wght=600 instance (Google Fonts
+//     NotoSansSC variable instanced at 600, OFL).
+// MEASURED per-module aligned delta SB27-vs-real-600 (offline cmp sweep):
+//   base +0.0558   box/missing/state +/-0   enemy -0.0354
+// enemy's iteration history tuned compensations against the real-600 face, so
+// it stays on real-600 until retuned. Selection is static per component from
+// offline measurement only -- never decided at render time from baseline data.
+const SYNTHETIC_BOLD_COMPONENTS = new Set(['base']);
+function loadBoldFont(component) {
+  const file = SYNTHETIC_BOLD_COMPONENTS.has(component)
+    ? 'assets/font/NotoSansSC-SB27.ttf'
+    : 'assets/font/NotoSansSC-600.ttf';
+  return { name: 'NotoSansHans', data: readFileSync(path.join(REPO_ROOT, file)), weight: 600, style: 'normal' };
 }
 function assertVNode(value) {
   if (!value || typeof value !== 'object' || typeof value.type !== 'string') {
@@ -177,7 +194,7 @@ export async function renderRequest(request) {
   const svg = await satori(vnode, {
     width: valid.width,
     height: valid.height,
-    fonts: [await loadFont(), loadBoldFont()],
+    fonts: [await loadFont(), loadBoldFont(valid.component)],
   });
   const pixelWidth = Math.max(1, Math.round(valid.width * valid.scale));
   const pixelHeight = Math.max(1, Math.round(valid.height * valid.scale));
