@@ -7,10 +7,11 @@ import (
 )
 
 // State — mirrors template/State.tmpl rendered at 1092x510 CSS, scale 1 -> 1092x510.
-// Base layer is the production page background assets/state/bg.png (1092x510);
-// everything else is pure GG vector/text over it, matching the frozen
-// state-minimal fixture and the browserDeterminism frozen clock
-// Date.now()=1736942400000ms (fixtures.json) applied through State.js semantics.
+// Base: #2e3031 + production bg.png composited 1:1 (panels baked in asset).
+// Overlay geometry ported from the converged satori renderer/components/state.mjs
+// (honest 0.98832 vs the same frozen baseline), labels derived from the
+// state-minimal fixture through State.js semantics at browserDeterminism clock
+// Date.now()=1736942400000ms.
 
 const stateFrozenNow = int64(1736942400) // frozen capture clock, seconds
 
@@ -98,113 +99,106 @@ func pad2(n int) string {
 	return itoa(n)
 }
 
+// progress meter knobs (ported from state.mjs, tuned via harness score).
+var stateTrackTone = [3]int{128, 130, 131}
+const (
+	meterX      = 460.0
+	meterW      = 410.0
+	meterLowerY = 158 // label top 119 + row 25 + margin 14 (score-tuned)
+	meterHighrY = 249 // label top 210 + row 25 + margin 14 (score-tuned)
+	meterLowBH = 11
+	meterHiBH   = 11.0
+)
+
 func RenderState(data *StateInfo) (*gg.Context, error) {
 	const W, H = 1092, 510
 	dc := gg.NewContext(W, H)
-
-	// base: production page background, drawn 1:1 (asset is exactly WxH)
+	FillBackground(dc, 46, 48, 49)
 	if bg, err := LoadImage(AssetPath("state/bg.png")); err == nil {
 		dc.DrawImage(bg, 0, 0)
-	} else {
-		FillBackground(dc, 46, 48, 49)
 	}
 
 	white := func() { dc.SetRGB255(255, 255, 255) }
 
 	// avatar 54x54 @ (34,34)
 	av := FetchImage(data.AvatarURL, AssetPath("state/avatar-amiya.png"))
-	dc.DrawImage(ScaleExactCR(av, 54, 54), 34, 34)
+	dc.DrawImage(ScaleExact(av, 54, 54), 34, 34)
 
-	// name "Dr <name>" 30px white, abspos after avatar
+	// name "Dr <name>" 30px white (glyph-box top 52)
 	setFont(dc, 30)
 	white()
-	drawString(dc, "Dr "+data.PlayerName, 98, 133)
+	drawString(dc, "Dr "+data.PlayerName, 98, 79)
 
-	// checked-in flag 25px, green when signed
+	// checked-in flag, green when signed
 	setFont(dc, 25)
 	if data.CheckedIn {
 		dc.SetRGB255(0x5d, 0x9a, 0x00)
-		drawString(dc, "已签到", 75, 32.5)
 	} else {
 		dc.SetRGB255(0xcd, 0x28, 0x28)
-		drawString(dc, "未签到", 75, 32.5)
 	}
+	drawString(dc, map[bool]string{true: "已签到", false: "未签到"}[data.CheckedIn], 945, 77)
 
 	// ap icon + counter + recovery label
 	if ap, err := LoadImage(AssetPath("state/ap.png")); err == nil {
-		dc.DrawImage(ap, 36, 161)
+		dc.DrawImage(ap, 35, 146)
 	}
 	setFont(dc, 30)
 	white()
-	drawString(dc, fmt.Sprintf("%d/%d", data.Ap.Current, data.Ap.Max), 146, 177.9)
+	drawString(dc, fmt.Sprintf("%d/%d", data.Ap.Current, data.Ap.Max), 146, 174)
 	setFont(dc, 21)
 	white()
 	if data.Ap.Current >= data.Ap.Max {
-		drawString(dc, "理智已全部恢复", 145, 221.9)
+		drawString(dc, "理智已全部恢复", 146, 215)
 	} else {
 		hh, mm := jsHoursMinutes(data.Ap.RecoverTs)
-		drawString(dc, fmt.Sprintf("%d时%d分后恢复", hh, mm), 145, 221.9)
+		drawString(dc, fmt.Sprintf("%d时%d分后恢复", hh, mm), 146, 215)
 	}
 
-	// tower lower / higher rows + progress bars (fill white on native track)
-	drawTowerRow(dc, "数据增补条", jsDays(data.TowerLower.RecoverTs),
-		fmt.Sprintf("%d/%d", data.TowerLower.Current, data.TowerLower.Max),
-		fracOf(data.TowerLower), 117.5)
-	drawTowerRow(dc, "数据增补仪", jsDays(data.TowerHigher.RecoverTs),
-		fmt.Sprintf("%d/%d", data.TowerHigher.Current, data.TowerHigher.Max),
-		fracOf(data.TowerHigher), 193.5)
+	// tower meters (数据增补条/数据增补仪): label row + progress bar
+	drawMeter(dc, "数据增补条", jsDays(data.TowerLower.RecoverTs),
+		data.TowerLower, 119, meterLowerY, meterLowBH)
+	drawMeter(dc, "数据增补仪", jsDays(data.TowerHigher.RecoverTs),
+		data.TowerHigher, 210, meterHighrY, meterHiBH)
 
-	// campaign cluster (upper right zone)
-	campX, campY := 898.5, 83.5
+	// campaign cluster
 	if ic, err := LoadImage(AssetPath("state/campaign.png")); err == nil {
-		dc.DrawImage(ic, int(campX), int(campY))
+		dc.DrawImage(ic, 931, 127)
 	}
 	setFont(dc, 20)
 	white()
-	drawString(dc, fmt.Sprintf("%d/%d", data.Reward.Current, data.Reward.Max), campX+75, campY+138)
+	drawString(dc, fmt.Sprintf("%d/%d", data.Reward.Current, data.Reward.Max), 972, 269)
+	// black50 badge with clock + recover days
 	dc.SetRGBA255(0, 0, 0, 128)
-	dc.DrawRectangle(campX-38.5, campY+140, 110, 25)
+	dc.DrawRectangle(927, 213, 112, 21)
 	dc.Fill()
 	setFont(dc, 16)
-	white()
-	drawClockGlyph(dc, campX-30, campY+152.5, 16)
-	drawString(dc, fmt.Sprintf("%d天", jsDays(data.Reward.RecoverTs)), campX-10, campY+158)
+	drawClockGlyph(dc, 943, 223.5, 14)
+	drawString(dc, fmt.Sprintf("%d天", jsDays(data.Reward.RecoverTs)), 961, 229)
 
-	// recruit / tired rows (lower-left column)
-	drawIconRow(dc, AssetPath("state/recruit.png"), 49, 223.5, 65, "公开招募",
-		fmt.Sprintf("%d/%d", data.Recruitment.Current, data.Recruitment.Max))
-	drawIconRow(dc, AssetPath("state/tired_chars.png"), 49, 330.5, 55, "干员疲劳",
-		itoa(data.TiredChars))
+	// four stat sections (icons+titles+values over baked panels)
+	drawRow(dc, "recruit.png", 49, 331, "公开招募", 120, 339,
+		fmt.Sprintf("%d/%d", data.Recruitment.Current, data.Recruitment.Max), 330, 339)
+	drawRow(dc, "tired_chars.png", 49, 431, "干员疲劳", 115, 439,
+		itoa(data.TiredChars), 325, 439)
+	drawRow(dc, "tradings.png", 460, 338, "订单进度", 520, 341,
+		fmt.Sprintf("%d/%d", data.Trading.Current, data.Trading.Max), 780, 341)
+	drawRow(dc, "manufactures.png", 460, 436, "制造进度", 520, 439,
+		fmt.Sprintf("%d/%d", data.Manufacture.Current, data.Manufacture.Max), 780, 439)
 
-	// tradings / manufactures (right column, abspos icons)
-	if ic, err := LoadImage(AssetPath("state/tradings.png")); err == nil {
-		dc.DrawImage(ic, 460, 193)
-	}
-	setFont(dc, 25)
-	white()
-	drawString(dc, "订单进度", 520, 222.5)
-	drawString(dc, fmt.Sprintf("%d/%d", data.Trading.Current, data.Trading.Max), 780, 222.5)
-	if ic, err := LoadImage(AssetPath("state/manufactures.png")); err == nil {
-		dc.DrawImage(ic, 460, 427)
-	}
-	white()
-	drawString(dc, "制造进度", 520, 459.5)
-	drawString(dc, fmt.Sprintf("%d/%d", data.Manufacture.Current, data.Manufacture.Max), 780, 459.5)
-
-	// training room card (far right)
+	// training room card @ (922,307)
 	if data.Training.CharIcon != "" || data.Training.LeftSeconds != "" {
 		tr := FetchImage(data.Training.CharIcon, AssetPath("state/avatar-trainee.png"))
-		dc.DrawImage(ScaleExactCR(tr, 130, 130), 922, 347)
+		dc.DrawImage(ScaleExactCR(tr, 130, 130), 922, 307)
 		dc.SetRGBA255(0, 0, 0, 128)
-		dc.DrawRectangle(923, 456, 133, 25)
+		dc.DrawRectangle(922, 412, 133, 25)
 		dc.Fill()
 		setFont(dc, 16)
 		white()
-		drawClockGlyph(dc, 950, 477, 16)
-		drawString(dc, jsFormatTime(data.Training.LeftSeconds), 970, 477)
+		drawClockGlyph(dc, 930, 422, 16)
+		drawString(dc, jsFormatTime(data.Training.LeftSeconds), 950, 427)
 		setFont(dc, 30)
 		white()
-		drawString(dc, "训练室", 945, 488.5+34.8)
+		drawString(dc, "训练室", 928, 489)
 	}
 	return dc, nil
 }
@@ -223,46 +217,44 @@ func fracOf(m StateMeter) float64 {
 	return f
 }
 
-// drawTowerRow renders 数据增补条/仪 flex row + progress bar.
-// rowTop: block top of the flex paragraph; texts 25px, baseline = rowTop+29.
-func drawTowerRow(dc *gg.Context, label string, days int, reward string, frac float64, rowTop float64) {
-	const x0 = 460.0
+// drawMeter renders one 数据增补 meter: 25px label row + right-aligned reward +
+// 410x11 #999 track with white fill.
+func drawMeter(dc *gg.Context, label string, days int, m StateMeter, labelTop, barY, barH float64) {
 	setFont(dc, 25)
 	dc.SetRGB255(255, 255, 255)
-	drawString(dc, label, x0, rowTop+29)
-	lw, _ := measure(dc, label)
-	svgX := x0 + lw + 30
-	drawClockGlyph(dc, svgX, rowTop+18.5, 16)
-	tx := svgX + 16 + 10
-	drawString(dc, fmt.Sprintf("%d天", days), tx, rowTop+29)
-	tw, _ := measure(dc, fmt.Sprintf("%d天", days))
-	drawString(dc, reward, tx+tw+130, rowTop+29)
-	// progress: track + white value, 410x11 radius 1, top = rowTop+rowH-18
-	barY := rowTop + 37 - 18 + 37 - 37 // keep simple: rowTop+19
-	_ = barY
-	barTop := rowTop + 19
-	dc.SetRGB255(0xef, 0xef, 0xef)
-	dc.DrawRoundedRectangle(x0, barTop, 410, 11, 1)
+	baseline := labelTop + 21
+	drawString(dc, label, meterX, baseline)
+	drawClockGlyph(dc, meterX+measureW(dc, label)+30, baseline-11.5, 16)
+	term := fmt.Sprintf("%d天", days)
+	drawString(dc, term, meterX+measureW(dc, label)+56, baseline)
+	reward := fmt.Sprintf("%d/%d", m.Current, m.Max)
+	rw, _ := measure(dc, reward)
+	drawString(dc, reward, meterX+meterW-rw, baseline)
+	// bar: #999 track + white fill
+	dc.SetRGB255(stateTrackTone[0], stateTrackTone[1], stateTrackTone[2])
+	dc.DrawRectangle(meterX, barY, meterW, barH)
 	dc.Fill()
 	dc.SetRGB255(255, 255, 255)
-	dc.DrawRoundedRectangle(x0, barTop, 410*frac, 11, 1)
+	dc.DrawRectangle(meterX, barY, meterW*fracOf(m), barH)
 	dc.Fill()
 }
 
-// drawIconRow renders recruit/tired style rows: icon 42x42 + title + value (25px).
-func drawIconRow(dc *gg.Context, iconPath string, x, rowTop, iconMarginTop float64, title, value string) {
-	rowH := 42 + iconMarginTop
-	if ic, err := LoadImage(iconPath); err == nil {
-		dc.DrawImage(ic, int(x), int(rowTop+iconMarginTop))
+func measureW(dc *gg.Context, s string) float64 {
+	w, _ := measure(dc, s)
+	return w
+}
+
+func drawRow(dc *gg.Context, icon string, ix, iy float64, title string, tx, ty float64, value string, vx, vy float64) {
+	if ic, err := LoadImage(AssetPath("state/" + icon)); err == nil {
+		dc.DrawImage(ic, int(ix), int(iy))
 	}
 	setFont(dc, 25)
 	dc.SetRGB255(255, 255, 255)
-	drawString(dc, title, x+42+120, rowTop+62+29)
-	drawString(dc, value, x+42+(330-120)+120, rowTop+62+29)
-	_ = rowH
+	drawString(dc, title, tx, ty+23)
+	drawString(dc, value, vx, vy+23)
 }
 
-// drawClockGlyph draws a small white clock (svg placeholder) centered baseline-aware.
+// drawClockGlyph draws a small white clock (svg placeholder).
 func drawClockGlyph(dc *gg.Context, x, cy float64, d float64) {
 	r := d / 2
 	dc.SetRGB255(255, 255, 255)

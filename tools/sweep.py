@@ -2,6 +2,8 @@
 import re, subprocess, sys
 
 P = 'src/ggrender/scene_depot.go'
+import os
+P = os.environ.get('SWEEP_FILE', P)
 
 def setknob(key, val):
     s = open(P, encoding='utf-8').read()
@@ -13,7 +15,8 @@ def run():
     r = subprocess.run(['go', 'test', './ggrender/', '-run', 'TestGGPixelParity'],
                        cwd='src', capture_output=True, text=True, timeout=600,
                        encoding='utf-8', errors='replace')
-    m = re.search(r'scene depot\s+\S+ scale=\S+ similarity=([\d.]+)', r.stdout + r.stderr)
+    scene = os.path.basename(P).replace('scene_', '').replace('.go', '')
+    m = re.search(rf'scene {scene}\s+\S+ scale=\S+ similarity=([\d.]+)', r.stdout + r.stderr)
     return float(m.group(1)) if m else None
 
 if __name__ == '__main__':
@@ -22,3 +25,13 @@ if __name__ == '__main__':
         setknob(key, val)
         score = run()
         print(f'{key}={val} -> {score}')
+
+
+def sweep_tone():
+    import os
+    key = os.environ['TONE_KEY']
+    for t in os.environ['TONES'].split(';'):
+        s = open(P, encoding='utf-8').read()
+        s2 = re.sub(rf'{key} = \[3\]int\{{[\d, ]+\}}', f'{key} = [3]int{{{t}}}', s)
+        open(P, 'w', encoding='utf-8').write(s2)
+        print(t, '->', run(), flush=True)

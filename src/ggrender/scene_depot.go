@@ -59,7 +59,7 @@ func fetchCached(url string) image.Image {
 // depot layout knobs (CSS px; canvas scaled 1.5x). Calibrated via harness score.
 const (
 	depotPitchX = 83.87 // item stride incl. whitespace
-	depotRowH   = 80.0  // line pitch
+	depotRowH   = 82.0  // line pitch
 	depotIconPx = 77    // rendered icon box px @1.5 (art circle d=70/75 of box)
 	depotIconOX = 0.0   // icon box origin correction within tile
 	depotIconOY = -1.7  // row circle top at y=row*80 device-exact
