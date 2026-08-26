@@ -175,13 +175,21 @@ async function loadFont() {
 //   97.6594, SB36 97.6444 all worse; the legacy nested 23px span inside the
 //   32px h1 needs an in-component +7.3px baseline compensation because satori
 //   center-aligns inline children where Chromium baseline-aligns them)
+//   help +1.914 (98.5569 SB33 vs 96.6428 real-600; SB40 98.4611, SB30 98.5395,
+//   SB27 98.4818 -- card text dominates the frame and the Skia synthetic-bold
+//   stroke at fs15 is heavier than lighter emboldens; per-component face via
+//   BOLD_FACE_BY_COMPONENT)
 // enemy's iteration history tuned compensations against the real-600 face, so
 // it stays on real-600 until retuned. Selection is static per component from
 // offline measurement only -- never decided at render time from baseline data.
-const SYNTHETIC_BOLD_COMPONENTS = new Set(['base', 'gacha']);
+const SYNTHETIC_BOLD_COMPONENTS = new Set(['base', 'gacha', 'help']);
+// help: card text dominates the frame; measured SB33 98.5569 > SB30 98.5395
+// > SB27 98.4818 > SB36 98.5321 > real-600 96.6428 (the Skia synthetic-bold
+// stroke at fs15 is heavier than the SB27 embolden).
+const BOLD_FACE_BY_COMPONENT = Object.freeze({ help: 'assets/font/NotoSansSC-SB33.ttf' });
 function loadBoldFont(component) {
   const file = SYNTHETIC_BOLD_COMPONENTS.has(component)
-    ? 'assets/font/NotoSansSC-SB27.ttf'
+    ? (BOLD_FACE_BY_COMPONENT[component] ?? 'assets/font/NotoSansSC-SB27.ttf')
     : 'assets/font/NotoSansSC-600.ttf';
   return { name: 'NotoSansHans', data: readFileSync(path.join(REPO_ROOT, file)), weight: 600, style: 'normal' };
 }
