@@ -29,7 +29,7 @@ const ATTR_ROWS = [
   [['法抗', 'res'], ['攻击间隔', 'interval'], ['再部署时间', 'reDeploy']],
   [['阻挡数', 'block'], ['部署费用', 'cost'], ['所属', 'logo']],
 ];
-const cell = (x, y, w, bg, fg, value) => box({ left: x, top: y, width: w, height: 26, backgroundColor: bg, paddingLeft: 1 },
+const cell = (x, y, w, bg, fg, value) => box({ left: x, top: y, width: w, height: 26, backgroundColor: bg, paddingLeft: 1, paddingTop: 1.33 },
   text(value, { color: fg, fontSize: 16, lineHeight: '24px', whiteSpace: 'nowrap' }));
 
 export default async function render(props, { image }) {
@@ -50,9 +50,9 @@ export default async function render(props, { image }) {
   }));
 
   // potential table: header 26 at y=118, data rows 26 at y=144/170, table 139 wide
-  const potentialRows = (props.potentials ?? []).map((p, i) => box({ left: 0, top: 144 + i * 26, width: 139, height: 26, backgroundColor: PANEL_BG },
+  const potentialRows = (props.potentials ?? []).map((p, i) => box({ left: 0, top: 146 + i * 26, width: 139, height: 26, backgroundColor: PANEL_BG },
     h('img', { src: potentialIcons[i], width: 20, height: 18.67, style: { position: 'absolute', left: 3, top: 3.67 } }),
-    text(p.desc, { position: 'absolute', left: 27, top: 1, fontSize: 16, lineHeight: '24px', whiteSpace: 'nowrap' })));
+    text(p.desc, { position: 'absolute', left: 27, top: 3.67, fontSize: 16, lineHeight: '24px', whiteSpace: 'nowrap' })));
 
   // pb block: measured (10,482.39) 300x155.09
   const pb = box({ left: 10, top: 482.39, width: 300, height: 155.09, backgroundColor: PANEL_BG },
@@ -82,7 +82,7 @@ export default async function render(props, { image }) {
   const bskRows = (props.buildingSkills ?? []).map((item, i) => item.desc
     ? box({ left: 600, top: 80 + i * 38, width: 600, height: 38, backgroundColor: GRAY_ROW },
       text(item.evolve, { position: 'absolute', left: 1, top: 1, fontSize: 12, lineHeight: '18px', color: '#000', whiteSpace: 'nowrap' }),
-      i === 0 ? h('img', { src: building, width: 36, height: 36, style: { position: 'absolute', left: 95.3, top: 1 } }) : null,
+      i === 0 ? h('img', { src: building, width: 36, height: 36, style: { position: 'absolute', left: 93.3, top: 1 } }) : null,
       text(item.name, { position: 'absolute', left: 174, top: 1, fontSize: 12, lineHeight: '18px', color: '#000', whiteSpace: 'nowrap' }),
       text(item.desc, { position: 'absolute', left: 276, top: 1, fontSize: 12, lineHeight: '18px', color: '#000' }))
     : box({ left: 600, top: 80 + i * 38, width: 600, height: 38, backgroundColor: GRAY_ROW },
@@ -93,21 +93,23 @@ export default async function render(props, { image }) {
     const top = 118 + i * 72;
     return box({ left: 600, top, width: 600, height: 72, backgroundColor: DARK_ROW },
       i === 0 ? h('img', { src: skill, width: 50, height: 50, style: { position: 'absolute', left: 33.3, top: 1 } }) : null,
-      text(item.name, { position: 'absolute', left: 0, top: 53, width: 116.6, fontSize: 12, lineHeight: '18px', color: '#fff', textAlign: 'center', whiteSpace: 'nowrap' }),
+      box({ left: 0, top: 53, width: 116.6, height: 18, justifyContent: 'center', alignItems: 'center' },
+        text(item.name, { fontSize: 12, lineHeight: '18px', color: '#fff', whiteSpace: 'nowrap' })),
       box({ left: 116.6, top: 1, width: 452, height: 18, justifyContent: 'center', alignItems: 'center' },
         ...(item.spType ?? []).map((sp) => text(sp, { fontSize: 12, lineHeight: '18px', color: '#fff', whiteSpace: 'nowrap', marginRight: 5 })),
         h('div', { style: { display: 'flex', height: 12, backgroundColor: '#808080', borderRadius: 3, paddingLeft: 5, paddingRight: 5, marginRight: 8.3 } },
           text(`技力${item.spInit}/${item.spCost}`, { fontSize: 12, lineHeight: '12px', color: '#fff', whiteSpace: 'nowrap' })),
         item.duration ? h('div', { style: { display: 'flex', height: 12, backgroundColor: '#808080', borderRadius: 3, paddingLeft: 5, paddingRight: 5 } },
           text(`持续时间${item.duration}s`, { fontSize: 12, lineHeight: '12px', color: '#fff', whiteSpace: 'nowrap' })) : null),
-      text(item.desc, { position: 'absolute', left: 127.6, top: 37, fontSize: 12, lineHeight: '18px', color: '#fff' }),
-      text(item.skillRange, { position: 'absolute', left: 568.6, top: 1, width: 31.4, height: 70, fontSize: 12, lineHeight: '18px', color: '#fff', textAlign: 'center' }));
+      text(item.desc, { position: 'absolute', left: 128.93, top: 37, fontSize: 12, lineHeight: '18px', color: '#fff' }),
+      box({ left: 568.6, top: 1, width: 31.4, height: 70, justifyContent: 'center', alignItems: 'center' },
+        text(item.skillRange, { fontSize: 12, lineHeight: '18px', color: '#fff', whiteSpace: 'nowrap' })));
   });
 
   return box({ left: 0, top: 0, width: 1200, height: 800, backgroundImage: `url(${background})`, backgroundSize: 'cover', fontFamily: 'NotoSansHans', fontSize: 16, color: '#000', overflow: 'hidden' },
     h('img', { src: painting, width: 650, height: 650, style: { position: 'absolute', left: 60, top: 150 } }),
     ...attrCells,
-    box({ left: 0, top: 118, width: 139, height: 26, backgroundColor: HEADER_BG, paddingLeft: 1 },
+    box({ left: 0, top: 120, width: 139, height: 26, backgroundColor: HEADER_BG, paddingLeft: 1, paddingTop: 1.33 },
       text('潜能提升', { color: HEADER_FG, fontSize: 16, lineHeight: '24px' })),
     ...potentialRows,
     pb, names,
