@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "fixtureService": "controlled isolated legacy-template service; never starts the Bot, MySQL, Redis, or production renderer",
+  "viewport": {"width": 1280, "height": 720},
+  "browserDeterminism": {
+    "timezoneId": "Asia/Shanghai",
+    "frozenDateUTC": "2025-01-15T12:00:00Z",
+    "frozenDateUnixMilliseconds": 1736942400000,
+    "initScript": "Use a MockDate that fixes only Date.now() and new Date() without arguments. Preserve RealDate for new Date(value), Date.parse, Date.UTC, and the Date prototype; Gacha values stay milliseconds while State epoch-second fields keep State.js semantics."
+  },
+  "font": {
+    "path": "assets/font/NotoSansHans-Regular.ttf",
+    "cacheMode": "local fixture cache",
+    "sha256": "record in generated baseline manifest"
+  },
+  "remoteResourceCache": {
+    "mode": "offline local cache",
+    "requireHashes": true,
+    "note": "The legacy generator must resolve every fixture image/font request from its captured local cache and write URL-to-SHA-256 mappings into manifest.json."
+  },
+  "jpegQualitySweep": {
+    "qualities": [70, 75, 80, 85, 90, 95, 100],
+    "source": "fixed new-renderer PNG re-encoded with Go image/jpeg then decoded before whole-image comparison against legacy JPEG",
+    "record": ["per-template best quality", "uniform quality that clears threshold for every template"],
+    "rule": "A quality choice never waives a failed uncompressed PNG layout comparison."
+  },
+  "scenes": [
+    {"id":"base","template":"Base.tmpl","route":"/base","caller":"plugins/player/base_handle.go","fixture":"base-minimal","fixtureSource":"isolated-template-minimal","input":{"userId":"10001","uid":"fixture-uid","sklandId":"fixture-skland"},"scale":1.5,"waitMs":0,"legacyFormat":"jpeg","candidateFormats":["png","jpeg"]},
+    {"id":"box","template":"Box.tmpl","route":"/box","caller":"plugins/player/box_handle.go","fixture":"box-minimal","fixtureSource":"isolated-template-minimal","input":{"userId":"10001","uid":"fixture-uid","param":"6","sklandId":"fixture-skland"},"scale":1.5,"waitMs":0,"legacyFormat":"jpeg","candidateFormats":["png","jpeg"]},
+    {"id":"box-detail","template":"BoxDetail.tmpl","route":"/boxDetail","caller":"plugins/player/box_detail_handle.go","fixture":"box-detail-minimal","fixtureSource":"isolated-template-minimal","input":{"userId":"10001","uid":"fixture-uid","param":"6","sklandId":"fixture-skland"},"scale":1.5,"waitMs":0,"legacyFormat":"jpeg","candidateFormats":["png","jpeg"]},
+    {"id":"box-summary","template":"BoxSummary.tmpl","route":"/boxSummary","caller":"plugins/player/box_summary_handle.go","fixture":"box-summary-minimal","fixtureSource":"isolated-template-minimal","input":{"userId":"10001","uid":"fixture-uid","sklandId":"fixture-skland"},"scale":1.5,"waitMs":0,"legacyFormat":"jpeg","candidateFormats":["png","jpeg"]},
+    {"id":"calendar","template":"Calendar.tmpl","route":"/calendar","caller":"plugins/system/calendar_handle.go","fixture":"calendar-minimal","fixtureSource":"isolated-calendar-data","reason":"Live route fetches api.calendar. Freeze deterministic parsed event data instead of the network response.","input":{},"scale":1.5,"waitMs":0,"legacyFormat":"jpeg","candidateFormats":["png","jpeg"]},
+    {"id":"card","template":"Card.tmpl","route":"/card","caller":"plugins/player/card_handle.go","fixture":"card-minimal","fixtureSource":"isolated-template-minimal","input":{"userId":"10001","uid":"fixture-uid","sklandId":"fixture-skland"},"scale":1,"waitMs":0,"legacyFormat":"jpeg","candidateFormats":["png","jpeg"]},
+    {"id":"depot","template":"Depot.tmpl","route":"/depot","caller":"plugins/player/depot_handle.go","fixture":"depot-minimal","fixtureSource":"isolated-template-minimal","input":{"userId":"10001","uid":"fixture-uid","sklandId":"fixture-skland"},"scale":1.5,"waitMs":0,"legacyFormat":"jpeg","candidateFormats":["png","jpeg"]},
+    {"id":"enemy","template":"Enemy.tmpl","route":"/enemy","caller":"plugins/enemy/enemy_handle.go","fixture":"enemy-minimal","fixtureSource":"isolated-template-minimal","input":{"name":"fixture-enemy"},"scale":1.5,"waitMs":0,"legacyFormat":"jpeg","candidateFormats":["png","jpeg"]},
+    {"id":"gacha","template":"Gacha.tmpl","route":"/gacha","caller":"plugins/player/gacha_handle.go","fixture":"gacha-minimal","fixtureSource":"legacy-template-new-date-milliseconds","reason":"Compatibility fixture uses the legacy template's new Date(Ts) millisecond interpretation; do not normalize historical seconds/milliseconds during migration. Four rarity counts are non-zero so AvgN remains finite.","gachaTsUnit":"milliseconds","input":{"userId":"10001","uid":"fixture-uid","Ts":"1711929600000","rarity6Count":"1","rarity5Count":"2","rarity4Count":"4","rarity3Count":"8","star6Info":[{"Name":"阿米娅","Avatar":"https://media.prts.wiki/3/36/%E5%A4%B4%E5%83%8F_%E9%98%BF%E7%B1%B3%E5%A8%85.png?image_process=format,webp/quality,Q_90","Ts":"1736856000000","Count":"5","IsNew":true,"PoolName":"测试卡池甲","PoolOrder":"1"},{"Name":"能天使","Avatar":"https://media.prts.wiki/a/ad/%E5%A4%B4%E5%83%8F_%E8%83%BD%E5%A4%A9%E4%BD%BF.png?image_process=format,webp/quality,Q_90","Ts":"1736942400000","Count":"5","IsNew":false,"PoolName":"测试卡池乙","PoolOrder":"1"}],"chars":[{"Name":"阿米娅","Avatar":"https://media.prts.wiki/3/36/%E5%A4%B4%E5%83%8F_%E9%98%BF%E7%B1%B3%E5%A8%85.png?image_process=format,webp/quality,Q_90","Ts":"1736856000000","Count":"5","IsNew":true,"PoolName":"测试卡池甲","PoolOrder":"1"},{"Name":"能天使","Avatar":"https://media.prts.wiki/a/ad/%E5%A4%B4%E5%83%8F_%E8%83%BD%E5%A4%A9%E4%BD%BF.png?image_process=format,webp/quality,Q_90","Ts":"1736942400000","Count":"5","IsNew":false,"PoolName":"测试卡池乙","PoolOrder":"1"}]},"scale":1.5,"waitMs":3000,"legacyFormat":"jpeg","candidateFormats":["png","jpeg"]},
+    {"id":"headhunt","template":"Headhunt.tmpl","route":"/headhunt","caller":"plugins/system/headhunt_handle.go","fixture":"headhunt-minimal","fixtureSource":"isolated-deterministic-rolls","reason":"Live route depends on crypto randomness, Redis, and mutable rate counters; freeze a deterministic ten-roll payload.","input":{"userId":"10001"},"scale":1,"waitMs":0,"legacyFormat":"jpeg","candidateFormats":["png","jpeg"]},
+    {"id":"help","template":"Help.tmpl","route":"/help","caller":"plugins/system/help_handle.go","fixture":"help-minimal","fixtureSource":"isolated-template-minimal","input":{},"scale":1.5,"waitMs":0,"legacyFormat":"jpeg","candidateFormats":["png","jpeg"]},
+    {"id":"lottery","template":"Lottery.tmpl","route":"/lotteryDetail","caller":"plugins/lottery/lottery_handle.go","fixture":"lottery-minimal","fixtureSource":"isolated-template-minimal","input":{"lotteryId":"fixture-lottery"},"scale":1.5,"waitMs":0,"legacyFormat":"jpeg","candidateFormats":["png","jpeg"]},
+    {"id":"missing","template":"Missing.tmpl","route":"/missing","caller":"plugins/player/missing_handle.go","fixture":"missing-minimal","fixtureSource":"isolated-template-minimal","input":{"userId":"10001","uid":"fixture-uid","param":"6","sklandId":"fixture-skland"},"scale":1.5,"waitMs":0,"legacyFormat":"jpeg","candidateFormats":["png","jpeg"]},
+    {"id":"operator","template":"Operator.tmpl","route":"/operator","caller":"plugins/operator/operator_handle.go","fixture":"operator-minimal","fixtureSource":"isolated-template-minimal","input":{"name":"fixture-operator"},"scale":1.5,"waitMs":0,"legacyFormat":"jpeg","candidateFormats":["png","jpeg"]},
+    {"id":"recruit","template":"Recruit.tmpl","route":"/recruit","caller":"plugins/system/recruit_handle.go","fixture":"recruit-minimal","fixtureSource":"isolated-template-minimal","input":{"tags":"先锋干员 输出","client":"cn"},"scale":1.5,"waitMs":0,"legacyFormat":"jpeg","candidateFormats":["png","jpeg"]},
+    {"id":"state","template":"State.tmpl","route":"/state","caller":"plugins/player/state_handle.go","fixture":"state-minimal","fixtureSource":"isolated-template-minimal","input":{"userId":"10001","uid":"fixture-uid","sklandId":"fixture-skland"},"scale":1,"waitMs":0,"legacyFormat":"jpeg","candidateFormats":["png","jpeg"]}
+  ],
+  "newRendererAcceptance": [
+    {"id":"png-output","check":"real Gin to new renderer call accepts and preserves PNG output without a browser"},
+    {"id":"jpeg-output","check":"real Gin to new renderer call accepts and preserves JPEG output without a browser"},
+    {"id":"scale","check":"scale 1 and 1.5 produce manifest-sized output"},
+    {"id":"render-error","check":"renderer errors propagate without a partial image"},
+    {"id":"timeout","check":"context deadline stops rendering and returns an error"},
+    {"id":"remote-cache","check":"remote image and font first fetch is cached; warm render is offline and records URL SHA-256"},
+    {"id":"concurrency","check":"parallel renders use isolated output and pass race detection"},
+    {"id":"close","check":"renderer close is idempotent and rejects renders after close"},
+    {"id":"performance","check":"same host and fixture records Playwright cold/hot and new-path cold/hot elapsed time plus peak RSS"}
+  ]
+}

@@ -4,7 +4,7 @@
 
 一个基于 [Telegram Bot API](https://core.telegram.org/bots/api) 的明日方舟（Arknights）群组机器人，使用 Go 语言编写。
 
-本机器人设计用于群组 [明日方舟 / Arknights 中文交流](https://t.me/ArknightsZH)，包含**入群验证、森空岛签到、游戏数据查询、群组小游戏、抽奖、寻访模拟**等丰富功能，并可通过 Web 模板 + Playwright 截图生成精美的查询图片。
+本机器人设计用于群组 [明日方舟 / Arknights 中文交流](https://t.me/ArknightsZH)，包含**入群验证、森空岛签到、游戏数据查询、群组小游戏、抽奖、寻访模拟**等丰富功能，并可通过 Node.js 24 + Satori/resvg 常驻渲染生成查询图片。
 
 ## 功能特性
 
@@ -14,7 +14,7 @@
 - **群组小游戏**：猜干员（立绘/剪影/看脚模式）、寻访模拟、公招计算（图片识别）。
 - **抽奖功能**：发起/停止/结束抽奖、报名与中奖详情。
 - **定时任务**：B站动态推送、生日祝福、自动签到、理智检查、数据源每周自动更新、延迟删消息、每日寻访次数重置。
-- **图片渲染**：基于本地 Web 服务（Gin）渲染模板，由 Playwright 截图生成查询图片。
+- **图片渲染**：Gin 输出 RenderSpec，由 Node.js 24 + Satori/resvg 常驻 runtime 生成 PNG。
 
 ## 指令列表
 
@@ -94,7 +94,7 @@
 - [FFmpeg](https://ffmpeg.org/)（用于 B站动态视频转码）
 - 中文字体（用于生成图片，Docker 镜像已内置 `fonts-noto-*`）
 
-> 图片查询功能依赖 Playwright，首次启动会自动安装浏览器内核，请确保网络可访问 Playwright 下载源。
+> 图片查询依赖本地 Node.js 24 renderer；Satori 负责布局，resvg 负责 PNG 光栅化，sharp 负责 WebP 归一化。
 
 ### 方式一：直接编译运行
 
@@ -161,7 +161,7 @@ docker compose up -d --build
 - `./arknights.yaml`：配置文件
 - `./assets`、`./template`：静态资源与图片模板
 - `./logs`：入群审计日志（`join.log`）
-- Playwright 浏览器缓存（持久化卷）
+- Node.js renderer 依赖（随镜像通过 `npm ci --omit=dev` 安装）
 
 ### 配置文件说明
 
@@ -236,7 +236,8 @@ docker compose up -d --build
 - **数据库**：GORM + MySQL/MariaDB
 - **缓存**：go-redis
 - **Telegram**：`github.com/ijnkawakaze/telegram-bot-api`
-- **截图**：playwright-go
+- **截图**：Node.js 24 + Satori + resvg（常驻 NDJSON runtime）
+- **图片资产**：sharp（WebP 无损 PNG 归一化）
 - **视频**：ffmpeg-go
 
 ### 本地开发

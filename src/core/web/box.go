@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
-	"net/http"
 	"regexp"
 	"sort"
 	"strconv"
@@ -31,7 +30,6 @@ type Char struct {
 
 func Box(r *gin.Engine) {
 	r.GET("/box", func(c *gin.Context) {
-		r.LoadHTMLFiles("./template/Box.tmpl")
 		var box BoxInfo
 		userId, _ := strconv.ParseInt(c.Query("userId"), 10, 64)
 		uid := c.Query("uid")
@@ -101,7 +99,7 @@ func Box(r *gin.Engine) {
 			return
 		}
 
-		c.HTML(http.StatusOK, "Box.tmpl", box)
+		RenderSpec(c, "box", 700, 357, box)
 	})
 }
 

@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
-	"net/http"
 	"sort"
 	"strconv"
 )
@@ -25,7 +24,6 @@ type MissingChar struct {
 
 func Missing(r *gin.Engine) {
 	r.GET("/missing", func(c *gin.Context) {
-		r.LoadHTMLFiles("./template/Missing.tmpl")
 		var missingInfo MissingInfo
 		param := c.Query("param")
 		userId, _ := strconv.ParseInt(c.Query("userId"), 10, 64)
@@ -101,6 +99,6 @@ func Missing(r *gin.Engine) {
 			return
 		}
 
-		c.HTML(http.StatusOK, "Missing.tmpl", missingInfo)
+		RenderSpec(c, "missing", 700, 357, missingInfo)
 	})
 }

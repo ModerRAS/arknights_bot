@@ -5,7 +5,6 @@ import (
 	"arknights_bot/plugins/skland"
 	"github.com/gin-gonic/gin"
 	"log"
-	"net/http"
 	"sort"
 	"strconv"
 )
@@ -33,7 +32,6 @@ type Equip struct {
 
 func BoxDetail(r *gin.Engine) {
 	r.GET("/boxDetail", func(c *gin.Context) {
-		r.LoadHTMLFiles("./template/BoxDetail.tmpl")
 		var detailList []Detail
 		userId, _ := strconv.ParseInt(c.Query("userId"), 10, 64)
 		uid := c.Query("uid")
@@ -114,6 +112,6 @@ func BoxDetail(r *gin.Engine) {
 			}
 			return detailList[i].Rarity > detailList[j].Rarity
 		})
-		c.HTML(http.StatusOK, "BoxDetail.tmpl", detailList)
+		RenderSpec(c, "box-detail", 481, 186, detailList)
 	})
 }

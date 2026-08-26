@@ -14,6 +14,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type PlayerCard struct {
@@ -23,6 +24,7 @@ type PlayerCard struct {
 	Resume            string   `json:"resume"`
 	Level             int      `json:"level"`
 	RegTime           int      `json:"regTime"`
+	RegisteredOn      string   `json:"registeredOn"`
 	MainStageProgress string   `json:"mainStageProgress"`
 	Avatar            string   `json:"avatar"`
 	SecretaryName     string   `json:"secretaryName"`
@@ -78,7 +80,6 @@ func init() {
 
 func Card(r *gin.Engine) {
 	r.GET("/card", func(c *gin.Context) {
-		r.LoadHTMLFiles("./template/Card.tmpl")
 		userId, _ := strconv.ParseInt(c.Query("userId"), 10, 64)
 		uid := c.Query("uid")
 		sklandId := c.Query("sklandId")
@@ -88,7 +89,7 @@ func Card(r *gin.Engine) {
 			renderError(c, err)
 			return
 		}
-		c.HTML(http.StatusOK, "Card.tmpl", playerCard)
+		RenderSpec(c, "card", 1280, 720, playerCard)
 	})
 }
 
@@ -148,6 +149,7 @@ func cardData(userId int64, sklandId, uid string) (PlayerCard, error) {
 	playerCard.Uid = playerData.Status.UID
 	playerCard.Level = playerData.Status.Level
 	playerCard.RegTime = playerData.Status.RegisterTs
+	playerCard.RegisteredOn = registeredOn(playerCard.RegTime)
 	playerCard.MainStageProgress = playerData.StageInfoMap[playerData.Status.MainStageProgress].Code
 	/*avatarId := playerData.Status.Avatar.Id
 	if strings.HasPrefix(avatarId, "char") {
@@ -196,6 +198,10 @@ func cardData(userId int64, sklandId, uid string) (PlayerCard, error) {
 		}
 	}
 	return playerCard, nil
+}
+
+func registeredOn(unix int) string {
+	return time.Unix(int64(unix), 0).In(time.FixedZone("UTC+8", 8*60*60)).Format("2006-01-02")
 }
 
 func getSkinUrl(secretaryName, skinId string) (string, string, error) {

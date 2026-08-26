@@ -1,0 +1,311 @@
+{
+  "schemaVersion": 1,
+  "ids": [
+    "base",
+    "box",
+    "box-detail",
+    "box-summary",
+    "calendar",
+    "card",
+    "depot",
+    "enemy",
+    "gacha",
+    "headhunt",
+    "help",
+    "lottery",
+    "missing",
+    "operator",
+    "recruit",
+    "state"
+  ],
+  "threshold": 0.99,
+  "pages": [
+    {
+      "id": "box",
+      "width": 1050,
+      "height": 536,
+      "oldWidth": 1050,
+      "oldHeight": 536,
+      "newWidth": 1050,
+      "newHeight": 536,
+      "scale": 1.5,
+      "oldFormat": "jpeg",
+      "newFormat": "png",
+      "oldSha256": "cf10f5d37fe6c3738eb19b77e3761861a5cda8d4448cc50b333d25ace4c1c8d9",
+      "newSha256": "f8b5eb89e572c5e1c0b58d96f7beb002a541a2c2b98566bd1b0e9ca2c4a65482",
+      "similarity": 0.9542408528087852,
+      "rawSimilarity": 0.9542408528087852,
+      "alignedSimilarity": 0.9542408528087852,
+      "globalOffset": {
+        "dx": 0,
+        "dy": 0
+      },
+      "localPass": false,
+      "diffBBox": {
+        "x": 0,
+        "y": 0,
+        "width": 1050,
+        "height": 536
+      },
+      "alignedDiffBBox": {
+        "x": 0,
+        "y": 0,
+        "width": 1050,
+        "height": 536
+      },
+      "pass": false,
+      "oldPath": "images/box.jpg",
+      "newPath": "new/box.png",
+      "diffPath": "compare/box.diff.png",
+      "heatmapPath": "compare/box.heatmap.png",
+      "alignedDiffPath": "compare/box.aligned.diff.png",
+      "alignedHeatmapPath": "compare/box.aligned.heatmap.png"
+    },
+    {
+      "id": "box-detail",
+      "width": 722,
+      "height": 279,
+      "oldWidth": 722,
+      "oldHeight": 279,
+      "newWidth": 722,
+      "newHeight": 279,
+      "scale": 1.5,
+      "oldFormat": "jpeg",
+      "newFormat": "png",
+      "oldSha256": "047ad057ac193e97aed8ff3442ad29f8505b8cbdbf575837456e1fbd82e6e457",
+      "newSha256": "0ae54a78591d6adf11c544c87b599cb8edb1339d2fb5f3e4e026c9c996fde635",
+      "similarity": 0.9054412791635981,
+      "rawSimilarity": 0.8927088157714659,
+      "alignedSimilarity": 0.9054412791635981,
+      "globalOffset": {
+        "dx": -16,
+        "dy": -11
+      },
+      "localPass": false,
+      "diffBBox": {
+        "x": 0,
+        "y": 0,
+        "width": 722,
+        "height": 279
+      },
+      "alignedDiffBBox": {
+        "x": 0,
+        "y": 0,
+        "width": 722,
+        "height": 279
+      },
+      "pass": false,
+      "oldPath": "images/box-detail.jpg",
+      "newPath": "new/box-detail.png",
+      "diffPath": "compare/box-detail.diff.png",
+      "heatmapPath": "compare/box-detail.heatmap.png",
+      "alignedDiffPath": "compare/box-detail.aligned.diff.png",
+      "alignedHeatmapPath": "compare/box-detail.aligned.heatmap.png"
+    },
+    {
+      "id": "box-summary",
+      "width": 1350,
+      "height": 723,
+      "oldWidth": 1350,
+      "oldHeight": 723,
+      "newWidth": 1350,
+      "newHeight": 723,
+      "scale": 1.5,
+      "oldFormat": "jpeg",
+      "newFormat": "png",
+      "oldSha256": "6a4633e048410f14271b0b6728d14d4307c2b32af7411c5446a72cea8624f071",
+      "newSha256": "43cd247ba4affa5e8e7978ace41532e5941fd388d57eb28bc0b1274477849a51",
+      "similarity": 0.9301943999975893,
+      "rawSimilarity": 0.9301943999975893,
+      "alignedSimilarity": 0.9301943999975893,
+      "globalOffset": {
+        "dx": 0,
+        "dy": 0
+      },
+      "localPass": false,
+      "diffBBox": {
+        "x": 0,
+        "y": 0,
+        "width": 1350,
+        "height": 720
+      },
+      "alignedDiffBBox": {
+        "x": 0,
+        "y": 0,
+        "width": 1350,
+        "height": 720
+      },
+      "pass": false,
+      "oldPath": "images/box-summary.jpg",
+      "newPath": "new/box-summary.png",
+      "diffPath": "compare/box-summary.diff.png",
+      "heatmapPath": "compare/box-summary.heatmap.png",
+      "alignedDiffPath": "compare/box-summary.aligned.diff.png",
+      "alignedHeatmapPath": "compare/box-summary.aligned.heatmap.png"
+    },
+    {
+      "id": "depot",
+      "width": 1275,
+      "height": 234,
+      "oldWidth": 1275,
+      "oldHeight": 234,
+      "newWidth": 1275,
+      "newHeight": 234,
+      "scale": 1.5,
+      "oldFormat": "jpeg",
+      "newFormat": "png",
+      "oldSha256": "d09c01dbd30062e6f876f0bc3af79d6458f0f4f698699d46250280a225cd98d7",
+      "newSha256": "27f36f0a52f8cd26627db928e7a40934b0bbebfe09ac81593a96c785a363e83a",
+      "similarity": 0.9739919919031799,
+      "rawSimilarity": 0.9701009309371478,
+      "alignedSimilarity": 0.9739919919031799,
+      "globalOffset": {
+        "dx": 1,
+        "dy": 0
+      },
+      "localPass": false,
+      "diffBBox": {
+        "x": 0,
+        "y": 0,
+        "width": 1248,
+        "height": 234
+      },
+      "alignedDiffBBox": {
+        "x": 0,
+        "y": 0,
+        "width": 1248,
+        "height": 234
+      },
+      "pass": false,
+      "oldPath": "images/depot.jpg",
+      "newPath": "new/depot.png",
+      "diffPath": "compare/depot.diff.png",
+      "heatmapPath": "compare/depot.heatmap.png",
+      "alignedDiffPath": "compare/depot.aligned.diff.png",
+      "alignedHeatmapPath": "compare/depot.aligned.heatmap.png"
+    },
+    {
+      "id": "headhunt",
+      "width": 1049,
+      "height": 576,
+      "oldWidth": 1049,
+      "oldHeight": 576,
+      "newWidth": 1049,
+      "newHeight": 576,
+      "scale": 1,
+      "oldFormat": "jpeg",
+      "newFormat": "png",
+      "oldSha256": "879933afa3b94a80c08d37e0d8e053729639df59f01e47658944e48699434cf8",
+      "newSha256": "c30a7f66c61823298abe5a7c2240c1a8f6f52aef1c06e13de54655fc0d1f1afa",
+      "similarity": 0.8619984524632859,
+      "rawSimilarity": 0.8598745680085401,
+      "alignedSimilarity": 0.8619984524632859,
+      "globalOffset": {
+        "dx": 7,
+        "dy": 0
+      },
+      "localPass": false,
+      "diffBBox": {
+        "x": 0,
+        "y": 0,
+        "width": 1049,
+        "height": 576
+      },
+      "alignedDiffBBox": {
+        "x": 0,
+        "y": 0,
+        "width": 1049,
+        "height": 576
+      },
+      "pass": false,
+      "oldPath": "images/headhunt.jpg",
+      "newPath": "new/headhunt.png",
+      "diffPath": "compare/headhunt.diff.png",
+      "heatmapPath": "compare/headhunt.heatmap.png",
+      "alignedDiffPath": "compare/headhunt.aligned.diff.png",
+      "alignedHeatmapPath": "compare/headhunt.aligned.heatmap.png"
+    },
+    {
+      "id": "missing",
+      "width": 1050,
+      "height": 536,
+      "oldWidth": 1050,
+      "oldHeight": 536,
+      "newWidth": 1050,
+      "newHeight": 536,
+      "scale": 1.5,
+      "oldFormat": "jpeg",
+      "newFormat": "png",
+      "oldSha256": "cc58fea684f3c1a9fc879da163cf50e9438753b3ebcb7ecf3a5ef3b2f8a8ca47",
+      "newSha256": "69842f2ecd69ecbeb2272c090e58d1a920b11a199a58f9b60d33e9fe8a909324",
+      "similarity": 0.9314793957383949,
+      "rawSimilarity": 0.9314793957383949,
+      "alignedSimilarity": 0.9314793957383949,
+      "globalOffset": {
+        "dx": 0,
+        "dy": 0
+      },
+      "localPass": false,
+      "diffBBox": {
+        "x": 0,
+        "y": 0,
+        "width": 1050,
+        "height": 536
+      },
+      "alignedDiffBBox": {
+        "x": 0,
+        "y": 0,
+        "width": 1050,
+        "height": 536
+      },
+      "pass": false,
+      "oldPath": "images/missing.jpg",
+      "newPath": "new/missing.png",
+      "diffPath": "compare/missing.diff.png",
+      "heatmapPath": "compare/missing.heatmap.png",
+      "alignedDiffPath": "compare/missing.aligned.diff.png",
+      "alignedHeatmapPath": "compare/missing.aligned.heatmap.png"
+    },
+    {
+      "id": "recruit",
+      "width": 1350,
+      "height": 534,
+      "oldWidth": 1350,
+      "oldHeight": 534,
+      "newWidth": 1350,
+      "newHeight": 534,
+      "scale": 1.5,
+      "oldFormat": "jpeg",
+      "newFormat": "png",
+      "oldSha256": "4a01136f4b12e9a17458998ec67d4285c73b1990fbaff7e11fef735c06fb5ffc",
+      "newSha256": "81f9df7187ebdbe24cf780bca3280dfbb345c746de2991eca0285ef3a8aa051e",
+      "similarity": 0.8300332264408052,
+      "rawSimilarity": 0.8300332264408052,
+      "alignedSimilarity": 0.8300332264408052,
+      "globalOffset": {
+        "dx": 0,
+        "dy": 0
+      },
+      "localPass": false,
+      "diffBBox": {
+        "x": 0,
+        "y": 0,
+        "width": 1350,
+        "height": 534
+      },
+      "alignedDiffBBox": {
+        "x": 0,
+        "y": 0,
+        "width": 1350,
+        "height": 534
+      },
+      "pass": false,
+      "oldPath": "images/recruit.jpg",
+      "newPath": "new/recruit.png",
+      "diffPath": "compare/recruit.diff.png",
+      "heatmapPath": "compare/recruit.heatmap.png",
+      "alignedDiffPath": "compare/recruit.aligned.diff.png",
+      "alignedHeatmapPath": "compare/recruit.aligned.heatmap.png"
+    }
+  ]
+}

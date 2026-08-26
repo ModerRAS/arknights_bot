@@ -52,7 +52,6 @@ func init() {
 
 func Depot(r *gin.Engine) {
 	r.GET("/depot", func(c *gin.Context) {
-		r.LoadHTMLFiles("./template/Depot.tmpl")
 		var depotItems []DepotItem
 		var userAccount account.UserAccount
 		var skAccount skland.Account
@@ -90,6 +89,6 @@ func Depot(r *gin.Engine) {
 		sort.Slice(depotItems, func(i, j int) bool {
 			return depotItems[i].SortId < depotItems[j].SortId
 		})
-		c.HTML(http.StatusOK, "Depot.tmpl", depotItems)
+		RenderSpec(c, "depot", 850, 156, depotItems)
 	})
 }

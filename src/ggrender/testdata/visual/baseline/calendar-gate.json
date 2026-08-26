@@ -1,0 +1,17 @@
+{
+  "scene": "calendar",
+  "width": 2880,
+  "height": 1620,
+  "scale": 1.5,
+  "similarity": 0.9944076154381506,
+  "bbox": [
+    0,
+    0,
+    2863,
+    1619
+  ],
+  "hashOld": "80f31c1cfb132ff3781a3d940120cfdd31acf26aa1baf0e96c5fa75e68c4b00b",
+  "hashNew": "d8e1709bd9c08e00e60dfb6a40abd4dfd76843723d97aa50f1735d2eb8001f8a",
+  "passed": true,
+  "gate": 0.99
+}

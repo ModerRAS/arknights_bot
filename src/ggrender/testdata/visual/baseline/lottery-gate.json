@@ -1,0 +1,17 @@
+{
+  "scene": "lottery",
+  "width": 1473,
+  "height": 1667,
+  "scale": 1.5,
+  "similarity": 0.9910422951151154,
+  "bbox": [
+    0,
+    0,
+    1472,
+    1666
+  ],
+  "hashOld": "9f5588be88606af58fc86807bf734a45a51ecd205bdcd8bd72b0d295fba7f9c7",
+  "hashNew": "e14c4d2524d744fca9a360f04609dc1c28dcf399ff0c7d91c3c537f3bf572ee8",
+  "passed": true,
+  "gate": 0.99
+}
