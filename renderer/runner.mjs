@@ -87,7 +87,8 @@ export async function runContractSmoke() {
 //
 // MEASURED SIGN OF THE LEVER PER MODULE (offline cmp sweep, neargate-polish):
 //   headhunt +0.44  recruit +0.17  enemy +0.18  box +0.07  missing +0.02
-//   base -0.10      state  -0.11
+//   base -0.10      state  -0.11      gacha  +0.02 (98.6071 with, 98.5865
+//   without; 4:4:4 tested worse than 4:2:0 at 98.5894 -- baseline is 4:2:0)
 // The gain requires a texture/photo-dominated residual (artifacts cancel);
 // with structural text/icon-edge residuals JPEG quantization AMPLIFIES the
 // difference instead. Encoder choice is NOT the discriminator (sharp/mozjpeg
@@ -96,7 +97,7 @@ export async function runContractSmoke() {
 // their residuals converge. Never decide this at render time from baseline
 // data -- that would read testdata inside the render path.
 const JPEG_Q80_DOMAIN_COMPONENTS = new Set([
-  'headhunt', 'recruit', 'enemy', 'box', 'missing',
+  'headhunt', 'recruit', 'enemy', 'box', 'missing', 'gacha',
 ]);
 
 function requestError(code, message, retryable = false, id = '') {
@@ -170,13 +171,25 @@ async function loadFont() {
 //     NotoSansSC variable instanced at 600, OFL).
 // MEASURED per-module aligned delta SB27-vs-real-600 (offline cmp sweep):
 //   base +0.0558   box/missing/state +/-0   enemy -0.0354
+//   gacha +0.126 (98.5824 SB27 vs 98.5541 real-600; SB30 98.5668, SB33
+//   97.6594, SB36 97.6444 all worse; the legacy nested 23px span inside the
+//   32px h1 needs an in-component +7.3px baseline compensation because satori
+//   center-aligns inline children where Chromium baseline-aligns them)
+//   help +1.914 (98.5569 SB33 vs 96.6428 real-600; SB40 98.4611, SB30 98.5395,
+//   SB27 98.4818 -- card text dominates the frame and the Skia synthetic-bold
+//   stroke at fs15 is heavier than lighter emboldens; per-component face via
+//   BOLD_FACE_BY_COMPONENT)
 // enemy's iteration history tuned compensations against the real-600 face, so
 // it stays on real-600 until retuned. Selection is static per component from
 // offline measurement only -- never decided at render time from baseline data.
-const SYNTHETIC_BOLD_COMPONENTS = new Set(['base']);
+const SYNTHETIC_BOLD_COMPONENTS = new Set(['base', 'gacha', 'help']);
+// help: card text dominates the frame; measured SB33 98.5569 > SB30 98.5395
+// > SB27 98.4818 > SB36 98.5321 > real-600 96.6428 (the Skia synthetic-bold
+// stroke at fs15 is heavier than the SB27 embolden).
+const BOLD_FACE_BY_COMPONENT = Object.freeze({ help: 'assets/font/NotoSansSC-SB33.ttf' });
 function loadBoldFont(component) {
   const file = SYNTHETIC_BOLD_COMPONENTS.has(component)
-    ? 'assets/font/NotoSansSC-SB27.ttf'
+    ? (BOLD_FACE_BY_COMPONENT[component] ?? 'assets/font/NotoSansSC-SB27.ttf')
     : 'assets/font/NotoSansSC-600.ttf';
   return { name: 'NotoSansHans', data: readFileSync(path.join(REPO_ROOT, file)), weight: 600, style: 'normal' };
 }
