@@ -38,7 +38,7 @@ export default async function render(props, { image }) {
 
   // Per-element absolute positioning: tops measured against frozen baseline via cross-correlation (honest fast_sim workflow).
   const info = box({ position: 'absolute', top: 20, left: 20, flexDirection: 'column', color: '#fff', width: 330 },
-    box({ position: 'absolute', top: 0, left: 2, height: 24, width: 132, backgroundColor: '#0098dc', color: '#111', alignItems: 'center' }, label('入职日', { width: 50, textAlign: 'center' }), label(props.registeredOn ?? props.regTime, { marginLeft: 4, backgroundColor: '#fff', paddingLeft: 3, paddingRight: 3, flexShrink: 0 })),
+    box({ position: 'absolute', top: 0, left: 2, height: 24, width: 132, backgroundColor: '#0098dc', color: '#111', alignItems: 'center' }, label('入职日', { width: 50, textAlign: 'center', whiteSpace: 'nowrap' }), label(props.registeredOn ?? props.regTime, { marginLeft: 4, backgroundColor: '#fff', paddingLeft: 3, paddingRight: 3, flexShrink: 0 })),
     box({ position: 'absolute', top: 30, left: 0, width: 16, height: 42, backgroundColor: '#0098dc', maskImage: `url(${circleIcon})`, maskSize: '16px 42px', maskRepeat: 'no-repeat' }),
     h('img', { src: xIcon, width: 16, height: 15, style: { position: 'absolute', top: 76, left: 0 } }),
     label('助理', { position: 'absolute', top: 101, left: 0, width: 50, backgroundColor: '#fff', color: '#111', textAlign: 'center' }),

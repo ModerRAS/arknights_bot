@@ -96,7 +96,7 @@ export async function runContractSmoke() {
 // their residuals converge. Never decide this at render time from baseline
 // data -- that would read testdata inside the render path.
 const JPEG_Q80_DOMAIN_COMPONENTS = new Set([
-  'headhunt', 'recruit', 'enemy', 'box', 'missing',
+  'headhunt', 'recruit', 'enemy', 'box', 'missing', 'card',
 ]);
 
 function requestError(code, message, retryable = false, id = '') {
