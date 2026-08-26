@@ -51,7 +51,7 @@ export default async function render(props, { image }) {
     h('span', { style: { position: 'absolute', left: 945, top: 53, fontSize: 25, color: props.checkedIn ? '#5d9a00' : '#cd2828' } }, props.checkedIn ? '已签到' : '未签到'),
     h('img', { src: campaignIcon, width: 105, height: 108, style: { position: 'absolute', left: 931, top: 127 } }),
     h('span', { style: { position: 'absolute', left: 972, top: 252, color: '#fff', fontSize: 20 } }, `${props.reward.current}/${props.reward.max}`),
-    h('span', { style: { position: 'absolute', left: 925, top: 215, color: '#fff', fontSize: 16, backgroundColor: 'rgba(0,0,0,.5)' } }, props.reward.label),
+    h('div', { style: style({ position: 'absolute', left: 927, top: 213, width: 112, height: 21, alignItems: 'center', paddingLeft: 16, color: '#fff', fontSize: 16, backgroundColor: 'rgba(0,0,0,.5)' }) }, clock({ marginRight: 4, width: 14, height: 14 }), h('span', null, props.reward.label)),
     ...row(recruitIcon, '公开招募', `${props.recruitment.current}/${props.recruitment.max}`, 49, 329, 120, 339, 330, 339),
     ...row(tiredIcon, '干员疲劳', String(props.tiredChars), 49, 431, 115, 439, 325, 439),
     ...row(tradingIcon, '订单进度', `${props.trading.current}/${props.trading.max}`, 460, 338, 520, 341, 780, 341),
