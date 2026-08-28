@@ -16,20 +16,41 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"runtime"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/fogleman/gg"
 	"golang.org/x/image/draw"
+	_ "golang.org/x/image/webp"
 )
 
+// ggRepoRoot resolves this worktree's repository root from the helper source.
+// Keeping asset resolution local prevents one worktree from borrowing another's files.
+func ggRepoRoot() string {
+	if _, thisFile, _, ok := runtime.Caller(0); ok {
+		if abs, err := filepath.Abs(thisFile); err == nil {
+			return filepath.Dir(filepath.Dir(filepath.Dir(abs)))
+		}
+	}
+	if abs, err := filepath.Abs("../.."); err == nil {
+		return abs
+	}
+	return "."
+}
+
 var (
-	// AssetRoot absolute path for assets.
-	AssetRoot = "C:/WorkSpace/Golang/arknights_bot/assets"
+	AssetRoot = func() string {
+		root := filepath.Join(ggRepoRoot(), "assets")
+		if info, err := os.Stat(root); err == nil && info.IsDir() {
+			return root
+		}
+		return filepath.Join("..", "..", "assets")
+	}()
 	// FontCandidates tried in order.
 	FontCandidates = []string{
-		"C:/WorkSpace/Golang/arknights_bot/assets/font/NotoSansHans-Regular.ttf",
+		filepath.Join(ggRepoRoot(), "assets", "font", "NotoSansHans-Regular.ttf"),
 		"C:/Windows/Fonts/msyh.ttc",
 		"C:/Windows/Fonts/simhei.ttf",
 		"C:/Windows/Fonts/msyh.ttf",
@@ -141,7 +162,7 @@ func ScaleContain(img image.Image, w, h int) *image.RGBA {
 		nh = 1
 	}
 	dst := image.NewRGBA(image.Rect(0, 0, nw, nh))
-	draw.NearestNeighbor.Scale(dst, dst.Bounds(), img, img.Bounds(), draw.Over, nil)
+	draw.BiLinear.Scale(dst, dst.Bounds(), img, img.Bounds(), draw.Over, nil)
 	return dst
 }
 
@@ -154,11 +175,24 @@ func ScaleCover(img image.Image, w, h int) *image.RGBA {
 	scale := math.Max(float64(w)/float64(srcW), float64(h)/float64(srcH))
 	nw, nh := int(math.Round(float64(srcW)*scale)), int(math.Round(float64(srcH)*scale))
 	tmp := image.NewRGBA(image.Rect(0, 0, nw, nh))
-	draw.NearestNeighbor.Scale(tmp, tmp.Bounds(), img, img.Bounds(), draw.Over, nil)
+	draw.BiLinear.Scale(tmp, tmp.Bounds(), img, img.Bounds(), draw.Over, nil)
 	out := image.NewRGBA(image.Rect(0, 0, w, h))
 	sx, sy := (nw-w)/2, (nh-h)/2
 	draw.Draw(out, out.Bounds(), tmp, image.Pt(sx, sy), draw.Over)
 	return out
+}
+
+// ScaleExactCR stretches to w*h with high-quality resampling for photos.
+func ScaleExactCR(img image.Image, w, h int) *image.RGBA {
+	if w <= 0 {
+		w = 1
+	}
+	if h <= 0 {
+		h = 1
+	}
+	dst := image.NewRGBA(image.Rect(0, 0, w, h))
+	draw.CatmullRom.Scale(dst, dst.Bounds(), img, img.Bounds(), draw.Over, nil)
+	return dst
 }
 
 // ScaleExact stretches to w*h.
@@ -170,7 +204,7 @@ func ScaleExact(img image.Image, w, h int) *image.RGBA {
 		h = 1
 	}
 	dst := image.NewRGBA(image.Rect(0, 0, w, h))
-	draw.NearestNeighbor.Scale(dst, dst.Bounds(), img, img.Bounds(), draw.Over, nil)
+	draw.BiLinear.Scale(dst, dst.Bounds(), img, img.Bounds(), draw.Over, nil)
 	return dst
 }
 
