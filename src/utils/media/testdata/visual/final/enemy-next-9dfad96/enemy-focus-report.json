@@ -1,0 +1,133 @@
+{
+  "id": "enemy",
+  "baselinePath": "old/enemy.jpg",
+  "candidatePath": "new/enemy.png",
+  "baselineSha256": "7aae46ad6d8292139bf20d0032e2638bee920637e7de479d807fa5890fa6909b",
+  "candidateSha256": "950f9c788455205f3077365e7de953b0e45405f824530c9144546d1b9893d005",
+  "baselineWidth": 984,
+  "baselineHeight": 477,
+  "candidateWidth": 984,
+  "candidateHeight": 477,
+  "threshold": 0.99,
+  "rawSimilarity": 0.9940003011141223,
+  "alignedSimilarity": 0.9940003011141223,
+  "globalOffset": {
+    "DX": 0,
+    "DY": 0
+  },
+  "localPass": false,
+  "meaningful": [
+    {
+      "bbox": {
+        "X": 1,
+        "Y": 7,
+        "Width": 94,
+        "Height": 22
+      },
+      "pixels": 837,
+      "meanDelta": 78.14070351758794
+    },
+    {
+      "bbox": {
+        "X": 433,
+        "Y": 48,
+        "Width": 115,
+        "Height": 37
+      },
+      "pixels": 1145,
+      "meanDelta": 102.07142857142857
+    },
+    {
+      "bbox": {
+        "X": 549,
+        "Y": 208,
+        "Width": 297,
+        "Height": 32
+      },
+      "pixels": 3167,
+      "meanDelta": 71.11184210526316
+    },
+    {
+      "bbox": {
+        "X": 159,
+        "Y": 256,
+        "Width": 81,
+        "Height": 29
+      },
+      "pixels": 56,
+      "meanDelta": 39
+    },
+    {
+      "bbox": {
+        "X": 165,
+        "Y": 352,
+        "Width": 95,
+        "Height": 64
+      },
+      "pixels": 1162,
+      "meanDelta": 59
+    },
+    {
+      "bbox": {
+        "X": 658,
+        "Y": 352,
+        "Width": 95,
+        "Height": 64
+      },
+      "pixels": 1041,
+      "meanDelta": 35
+    },
+    {
+      "bbox": {
+        "X": 843,
+        "Y": 352,
+        "Width": 98,
+        "Height": 64
+      },
+      "pixels": 1071,
+      "meanDelta": 67.625
+    },
+    {
+      "bbox": {
+        "X": 462,
+        "Y": 352,
+        "Width": 104,
+        "Height": 116
+      },
+      "pixels": 2125,
+      "meanDelta": 65.89285714285714
+    }
+  ],
+  "objectShifts": [
+    {
+      "bbox": {
+        "X": 1,
+        "Y": 7,
+        "Width": 94,
+        "Height": 22
+      },
+      "offset": {
+        "DX": -8,
+        "DY": 8
+      },
+      "improvement": 0.15411909362374845
+    }
+  ],
+  "diffBBox": {
+    "X": 0,
+    "Y": 0,
+    "Width": 984,
+    "Height": 477
+  },
+  "alignedDiffBBox": {
+    "X": 0,
+    "Y": 0,
+    "Width": 984,
+    "Height": 477
+  },
+  "pass": false,
+  "rawDiffPath": "compare/enemy.diff.png",
+  "rawHeatmapPath": "compare/enemy.heatmap.png",
+  "alignedDiffPath": "compare/enemy.aligned.diff.png",
+  "alignedHeatmapPath": "compare/enemy.aligned.heatmap.png"
+}
