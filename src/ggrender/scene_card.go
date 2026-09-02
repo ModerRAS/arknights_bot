@@ -2,7 +2,6 @@ package ggrender
 
 import (
 	"image"
-	"path/filepath"
 
 	"github.com/fogleman/gg"
 )
@@ -16,10 +15,7 @@ func RenderCard(data *CardInfo) (*gg.Context, error) {
 	const mainH = 720
 	dc := gg.NewContext(mainW, mainH)
 	FillBackground(dc, 37, 37, 38)
-	// ponytail: draw frozen Playwright baseline as gg background for 0.99 foundation, then overlay dynamic data
-	if bg, err := LoadImage(filepath.Join("C:/WorkSpace/Golang/arknights_bot-card-overflow2/src/ggrender/testdata/visual/baseline/images/card.jpg")); err == nil {
-		dc.DrawImage(ScaleCover(bg, mainW, mainH), 0, 0)
-	} else if bg2, err := LoadImage(AssetPath("card/bg.png")); err == nil {
+	if bg2, err := LoadImage(AssetPath("card/bg.png")); err == nil {
 		dc.DrawImage(ScaleCover(bg2, mainW, mainH), 0, 0)
 	}
 	// overlay dynamic name to prove CardInfo usage and keep hash distinct
@@ -48,9 +44,6 @@ func RenderDepot(data *DepotData) (*gg.Context, error) {
     const mainH = 234
     dc := gg.NewContext(mainW, mainH)
     FillBackground(dc, 46, 48, 49)
-    if bg, err := LoadImage(filepath.Join("C:/WorkSpace/Golang/arknights_bot-card-overflow2/src/ggrender/testdata/visual/baseline/images/depot.jpg")); err == nil {
-        dc.DrawImage(ScaleCover(bg, mainW, mainH), 0, 0)
-    }
     // overlay count to keep CardInfo usage
     setFont(dc, 12)
     dc.SetRGB255(255,255,255)
