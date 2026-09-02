@@ -125,7 +125,7 @@ func RenderState(data *StateInfo) (*gg.Context, error) {
 
 	setFont(dc, 30)
 	white()
-	drawString(dc, "Dr "+data.PlayerName, 98, 79)
+	drawString(dc, "Dr "+data.PlayerName, 98, 78)
 
 	setFont(dc, 25)
 	if data.CheckedIn {
@@ -147,10 +147,10 @@ func RenderState(data *StateInfo) (*gg.Context, error) {
 	drawString(dc, fmt.Sprintf("%d/%d", data.Ap.Current, data.Ap.Max), 146, 171)
 	setFont(dc, 21)
 	if data.Ap.Current >= data.Ap.Max {
-		drawString(dc, "理智已全部恢复", 146, 215)
+		drawString(dc, "理智已全部恢复", 145, 216)
 	} else {
 		hours, minutes := jsHoursMinutes(data.Ap.RecoverTs)
-		drawString(dc, fmt.Sprintf("%d时%d分后恢复", hours, minutes), 146, 215)
+		drawString(dc, fmt.Sprintf("%d时%d分后恢复", hours, minutes), 145, 216)
 	}
 
 	lowerDays := jsDays(data.TowerLower.RecoverTs)
@@ -163,7 +163,7 @@ func RenderState(data *StateInfo) (*gg.Context, error) {
 	}
 	setFont(dc, 20)
 	white()
-	drawString(dc, fmt.Sprintf("%d/%d", data.Reward.Current, data.Reward.Max), 975, 265)
+	drawString(dc, fmt.Sprintf("%d/%d", data.Reward.Current, data.Reward.Max), 973, 265)
 	dc.SetRGBA255(0, 0, 0, 128)
 	dc.DrawRectangle(927, 213, 112, 21)
 	dc.Fill()
@@ -191,7 +191,7 @@ func RenderState(data *StateInfo) (*gg.Context, error) {
 		drawClockGlyph(dc, 930, 422, 16)
 		drawString(dc, jsFormatTime(data.Training.LeftSeconds), 950, 427)
 		setFont(dc, 30)
-		drawString(dc, "训练室", 946, 481)
+		drawString(dc, "训练室", 945, 481)
 	}
 	return dc, nil
 }
@@ -214,13 +214,14 @@ func drawMeter(dc *gg.Context, label string, days int, meter StateMeter, labelTo
 	setFont(dc, 25)
 	dc.SetRGB255(255, 255, 255)
 	baseline := labelTop + 21
-	drawString(dc, label, meterX, baseline)
+	drawString(dc, label, meterX, baseline+1)
 	drawClockGlyph(dc, meterX+measureW(dc, label)+30, baseline-11.5, 16)
 	term := fmt.Sprintf("%d天", days)
-	drawString(dc, term, meterX+measureW(dc, label)+56, baseline)
+	drawString(dc, term, meterX+measureW(dc, label)+56, baseline+1)
 	reward := fmt.Sprintf("%d/%d", meter.Current, meter.Max)
 	rewardWidth, _ := measure(dc, reward)
-	drawString(dc, reward, meterX+meterW-rewardWidth, baseline)
+	// flex layout: reward sits 13px right of the right-aligned anchor (gap after term)
+	drawString(dc, reward, meterX+meterW-rewardWidth+13, baseline+1)
 
 	dc.SetRGB255(stateTrackTone[0], stateTrackTone[1], stateTrackTone[2])
 	dc.DrawRectangle(meterX, barY, meterW, 11)
@@ -241,17 +242,17 @@ func drawRow(dc *gg.Context, icon string, ix, iy float64, title string, tx, ty f
 	}
 	setFont(dc, 25)
 	dc.SetRGB255(255, 255, 255)
-	drawString(dc, title, tx, ty+23)
-	drawString(dc, value, vx, vy+23)
+	drawString(dc, title, tx, ty+22)
+	drawString(dc, value, vx, vy+22)
 }
 
 func drawClockGlyph(dc *gg.Context, x, cy, diameter float64) {
 	radius := diameter / 2
 	dc.SetRGB255(255, 255, 255)
 	dc.SetLineWidth(1.6)
-	dc.DrawCircle(x+radius, cy, radius-0.8)
+	dc.DrawCircle(x+radius-2, cy, radius-0.8)
 	dc.Stroke()
-	dc.DrawLine(x+radius, cy, x+radius, cy-radius+2.8)
-	dc.DrawLine(x+radius, cy, x+radius+3.2, cy+1)
+	dc.DrawLine(x+radius-3, cy, x+radius-3, cy-radius+2.8)
+	dc.DrawLine(x+radius-2, cy, x+radius+1.2, cy+5)
 	dc.Stroke()
 }
