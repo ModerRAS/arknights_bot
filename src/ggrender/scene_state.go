@@ -144,7 +144,7 @@ func RenderState(data *StateInfo) (*gg.Context, error) {
 	}
 	setFont(dc, 30)
 	white()
-	drawString(dc, fmt.Sprintf("%d/%d", data.Ap.Current, data.Ap.Max), 146, 174)
+	drawString(dc, fmt.Sprintf("%d/%d", data.Ap.Current, data.Ap.Max), 146, 171)
 	setFont(dc, 21)
 	if data.Ap.Current >= data.Ap.Max {
 		drawString(dc, "理智已全部恢复", 146, 215)
@@ -163,7 +163,7 @@ func RenderState(data *StateInfo) (*gg.Context, error) {
 	}
 	setFont(dc, 20)
 	white()
-	drawString(dc, fmt.Sprintf("%d/%d", data.Reward.Current, data.Reward.Max), 972, 269)
+	drawString(dc, fmt.Sprintf("%d/%d", data.Reward.Current, data.Reward.Max), 975, 265)
 	dc.SetRGBA255(0, 0, 0, 128)
 	dc.DrawRectangle(927, 213, 112, 21)
 	dc.Fill()
@@ -191,7 +191,7 @@ func RenderState(data *StateInfo) (*gg.Context, error) {
 		drawClockGlyph(dc, 930, 422, 16)
 		drawString(dc, jsFormatTime(data.Training.LeftSeconds), 950, 427)
 		setFont(dc, 30)
-		drawString(dc, "训练室", 928, 489)
+		drawString(dc, "训练室", 946, 481)
 	}
 	return dc, nil
 }
