@@ -117,3 +117,5 @@ arknights.yaml
 # Arknights binary files
 arknights_bot
 arknights_bot.exe
+# generated pixel-compare output
+tmp/

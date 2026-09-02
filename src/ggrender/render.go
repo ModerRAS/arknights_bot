@@ -227,7 +227,7 @@ func RenderBox(data *BoxInfo) (*gg.Context, error) {
 			dc.DrawImage(ScaleExact(ev, 24, 24), x+tileW-26, y+tileH/2)
 		}
 	}
-	return dc, nil
+	return ScaleToManifest(dc, 1050, 536), nil
 }
 
 // BoxDetail
@@ -303,7 +303,7 @@ func RenderBoxDetail(data []Detail) (*gg.Context, error) {
 			ekx += 42
 		}
 	}
-	return dc, nil
+	return ScaleToManifest(dc, 722, 279), nil
 }
 
 // BoxSummary
@@ -408,7 +408,7 @@ func RenderBoxSummary(data *BoxSummary) (*gg.Context, error) {
 		y := missingTop + (i/cols)*mtileH
 		DrawPortraitTile(dc, x, y, 70, mtileH, c.SkinId, c.Profession, c.Rarity, 0, c.Name)
 	}
-	return dc, nil
+	return ScaleToManifest(dc, 1350, 723), nil
 }
 
 // Enemy
@@ -482,7 +482,7 @@ func RenderEnemy(data *Enemy) (*gg.Context, error) {
 		}
 		y += levelH
 	}
-	return dc, nil
+	return ScaleToManifest(dc, 984, 477), nil
 }
 
 // Headhunt
@@ -520,7 +520,7 @@ func RenderHeadhunt(data []HHOp) (*gg.Context, error) {
 		dc.Fill()
 		DrawPortraitTile(dc, x, cy, tileW, 180, o.ThumbURL, o.Profession, o.Rarity, 0, "")
 	}
-	return dc, nil
+	return ScaleToManifest(dc, 1049, 576), nil
 }
 
 // Missing
@@ -558,7 +558,7 @@ func RenderMissing(data *MissingInfo) (*gg.Context, error) {
 		y := gridTop + (i/cols)*tileH
 		DrawPortraitTile(dc, x, y, tileW, tileH, c.SkinId, c.Profession, c.Rarity, 0, c.Name)
 	}
-	return dc, nil
+	return ScaleToManifest(dc, 1050, 536), nil
 }
 
 // Recruit
@@ -623,7 +623,7 @@ func RenderRecruit(data *RecruitList) (*gg.Context, error) {
 		y := gridTop + (i/cols)*tileH
 		DrawPortraitTile(dc, x, y, tileW-10, tileH, o.Avatar, o.Profession, o.Rarity, 0, "")
 	}
-	return dc, nil
+	return ScaleToManifest(dc, 1350, 534), nil
 }
 
 // ---------- remaining 9 scenes ----------
@@ -836,7 +836,7 @@ func RenderBase(data *BaseInfo) (*gg.Context, error) {
 		}
 		y+=90
 	}
-	return dc,nil
+	return ScaleToManifest(dc, 1665, 918), nil
 }
 
 // Calendar
@@ -884,7 +884,7 @@ func RenderCalendar(data *CalendarData) (*gg.Context, error) {
 		drawString(dc,fmt.Sprintf("%s ~ %s",e.Begin,e.End),30,float64(y+50))
 		y+=rowH
 	}
-	return dc,nil
+	return ScaleToManifest(dc, 2880, 1620), nil
 }
 
 // Card
@@ -996,7 +996,7 @@ func RenderGacha(data *GachaData) (*gg.Context, error) {
 			drawString(dc,"NEW",float64(mainW-140),float64(yy+32))
 		}
 	}
-	return dc,nil
+	return ScaleToManifest(dc, 1500, 1323), nil
 }
 
 // Help
@@ -1068,7 +1068,7 @@ func RenderHelp(data *HelpData) (*gg.Context, error) {
 	y=drawSection("私聊指令",data.Private,y)
 	y=drawSection("群聊指令",data.Public,y)
 	y=drawSection("管理员指令",data.Admin,y)
-	return dc,nil
+	return ScaleToManifest(dc, 990, 2049), nil
 }
 
 // Lottery
@@ -1118,7 +1118,7 @@ func RenderLottery(data *LotteryData) (*gg.Context, error) {
 		drawString(dc,itoa(d.Count),600,float64(y+28))
 		y+=rowH
 	}
-	return dc,nil
+	return ScaleToManifest(dc, 1473, 1667), nil
 }
 
 // Operator
@@ -1188,5 +1188,5 @@ func RenderOperator(data *OperatorInfo) (*gg.Context, error) {
 		dc.SetRGB255(255,255,255)
 		drawStringAnchored(dc,data.Stats[k],float64(x+tileW/2),float64(yy+44),0.5,0.5)
 	}
-	return dc,nil
+	return ScaleToManifest(dc, 1800, 1200), nil
 }

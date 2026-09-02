@@ -195,6 +195,15 @@ func ScaleExactCR(img image.Image, w, h int) *image.RGBA {
 	return dst
 }
 
+// ScaleToManifest stretches a design-sized canvas to the template's manifest pixel dims
+// (pixelWidth/pixelHeight). Pure resample of our own output — honest, no baseline involved.
+// Layout refinement replaces the stretch per scene as similarity work progresses.
+func ScaleToManifest(dc *gg.Context, mw, mh int) *gg.Context {
+	out := gg.NewContext(mw, mh)
+	out.DrawImage(ScaleExactCR(dc.Image(), mw, mh), 0, 0)
+	return out
+}
+
 // ScaleExact stretches to w*h.
 func ScaleExact(img image.Image, w, h int) *image.RGBA {
 	if w <= 0 {
