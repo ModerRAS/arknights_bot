@@ -119,3 +119,8 @@ arknights_bot
 arknights_bot.exe
 # Local resource cache
 /assets_local/
+# generated pixel-compare output
+tmp/
+
+# ggassetcheck render artifacts (never committed)
+out/

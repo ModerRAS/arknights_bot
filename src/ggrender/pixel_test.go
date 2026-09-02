@@ -346,9 +346,16 @@ func TestGGPixelParity_Negative(t *testing.T) {
 	draw.Draw(orig, b, img, b.Min, draw.Src)
 	rgba := imageToRGBA(img)
 	w, h := rgba.Bounds().Dx(), rgba.Bounds().Dy()
-	// 扰动：左上角 100x100 填充纯红
-	for y := 0; y < 100 && y < h; y++ {
-		for x := 0; x < 100 && x < w; x++ {
+	// 扰动：左上角 w/3 x h/3 区域填充纯红（区域随画布尺寸成比例，保证任意画布尺寸下扰动幅度足够）
+	pw, ph := w/3, h/3
+	if pw < 50 {
+		pw = 50
+	}
+	if ph < 50 {
+		ph = 50
+	}
+	for y := 0; y < ph && y < h; y++ {
+		for x := 0; x < pw && x < w; x++ {
 			rgba.SetRGBA(x, y, color.RGBA{R: 255, G: 0, B: 0, A: 255})
 		}
 	}
