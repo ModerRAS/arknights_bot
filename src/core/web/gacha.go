@@ -8,8 +8,8 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
-	"net/http"
 	"strconv"
+	"time"
 )
 
 type GachaLog struct {
@@ -53,9 +53,93 @@ type PoolCount struct {
 	PoolCount int    `json:"count"`
 }
 
+type GachaRenderProps struct {
+	Name      string              `json:"name"`
+	Total     int                 `json:"total"`
+	Period    string              `json:"period"`
+	Today     string              `json:"today"`
+	Rarities  []GachaRarityProps  `json:"rarities"`
+	Averages  []GachaAverageProps `json:"averages"`
+	Pools     []PoolCount         `json:"pools"`
+	Chars     []GachaEntryProps   `json:"chars"`
+	Star6Info []GachaEntryProps   `json:"star6Info"`
+}
+
+type GachaRarityProps struct {
+	Label   string  `json:"label"`
+	Count   int     `json:"count"`
+	Percent float64 `json:"percent"`
+	Color   string  `json:"color"`
+}
+
+type GachaAverageProps struct {
+	Label string  `json:"label"`
+	Count int     `json:"count"`
+	Avg   float64 `json:"avg"`
+}
+
+type GachaEntryProps struct {
+	Name   string `json:"name"`
+	Avatar string `json:"avatar"`
+	IsNew  bool   `json:"isNew"`
+	Date   string `json:"date"`
+	Pool   string `json:"pool"`
+	Count  int    `json:"count,omitempty"`
+}
+
+const gachaTimestampMilliseconds = "milliseconds"
+
+func buildGachaProps(log GachaLog, now time.Time, timestampUnit string) (GachaRenderProps, error) {
+	if timestampUnit != gachaTimestampMilliseconds {
+		return GachaRenderProps{}, fmt.Errorf("unsupported gacha timestamp unit %q", timestampUnit)
+	}
+	props := GachaRenderProps{
+		Name:   log.Name,
+		Total:  log.Total,
+		Period: fmt.Sprintf("%s——%s", gachaTimestamp(log.BegTime, now.Location(), true), gachaTimestamp(log.EndTime, now.Location(), true)),
+		Today:  now.Format("2006年01月02日"),
+		Pools:  log.PoolCount,
+		Rarities: []GachaRarityProps{
+			{Label: "6星", Count: log.Star6, Percent: gachaPercent(log.Star6, log.Total), Color: "rgba(244,110,30,1)"},
+			{Label: "5星", Count: log.Star5, Percent: gachaPercent(log.Star5, log.Total), Color: "rgba(247,171,55,1)"},
+			{Label: "4星", Count: log.Star4, Percent: gachaPercent(log.Star4, log.Total), Color: "rgba(161,53,246,1)"},
+			{Label: "3星", Count: log.Star3, Percent: gachaPercent(log.Star3, log.Total), Color: "rgba(109,116,126,1)"},
+		},
+		Averages: []GachaAverageProps{
+			{Label: "6星", Count: log.Star6, Avg: log.Avg6},
+			{Label: "5星", Count: log.Star5, Avg: log.Avg5},
+			{Label: "4星", Count: log.Star4, Avg: log.Avg4},
+			{Label: "3星", Count: log.Star3, Avg: log.Avg3},
+		},
+	}
+	props.Chars = make([]GachaEntryProps, len(log.Chars))
+	for i, entry := range log.Chars {
+		props.Chars[i] = GachaEntryProps{Name: entry.CharName, Avatar: entry.Avatar, IsNew: entry.IsNew, Date: gachaTimestamp(entry.Ts, now.Location(), false), Pool: entry.PoolName}
+	}
+	props.Star6Info = make([]GachaEntryProps, len(log.Star6Info))
+	for i, entry := range log.Star6Info {
+		props.Star6Info[i] = GachaEntryProps{Name: entry.Name, Avatar: entry.Avatar, IsNew: entry.IsNew, Date: gachaTimestamp(entry.Ts, now.Location(), false), Pool: entry.PoolName, Count: entry.Count}
+	}
+	return props, nil
+}
+
+func gachaPercent(count, total int) float64 {
+	if total == 0 {
+		return 0
+	}
+	return float64(count) * 100 / float64(total)
+}
+
+func gachaTimestamp(value int64, location *time.Location, withTime bool) string {
+	format := "2006-01-02"
+	if withTime {
+		format = "2006-01-02 15:04:05"
+	}
+	return time.UnixMilli(value).In(location).Format(format)
+}
+
 func Gacha(r *gin.Engine) {
 	r.GET("/gacha", func(c *gin.Context) {
-		r.LoadHTMLFiles("./template/Gacha.tmpl")
 		var gachaLog GachaLog
 		var userGacha []player.UserGacha
 		var gachaChars []GachaChar
@@ -169,6 +253,10 @@ func Gacha(r *gin.Engine) {
 			gachaLog.PoolCount = poolCount[len(poolCount)-10:]
 		}
 
-		c.HTML(http.StatusOK, "Gacha.tmpl", gachaLog)
+		if props, err := buildGachaProps(gachaLog, time.Now(), gachaTimestampMilliseconds); err != nil {
+			renderError(c, err)
+		} else {
+			RenderSpec(c, "gacha", 1000, 882, props)
+		}
 	})
 }

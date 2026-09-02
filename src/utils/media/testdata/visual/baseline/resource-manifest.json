@@ -1,0 +1,511 @@
+{
+  "status": "frozen",
+  "missing": [],
+  "fallbacks": [],
+  "resources": [
+    {
+      "sourceURL": "https://media.prts.wiki/d/dd/%E7%AB%8B%E7%BB%98_%E9%98%BF%E7%B1%B3%E5%A8%85_1.png",
+      "requestAlias": "https://media.prts.wiki/d/dd/%E7%AB%8B%E7%BB%98_%E9%98%BF%E7%B1%B3%E5%A8%85_1.png",
+      "cachePath": "cache/card-secretary-1024.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 1024,
+        "height": 1024
+      },
+      "bytes": 275992,
+      "sha256": "4f1fbd58d7ef30567bdf17c14a72ded448ea4fa8cd7a11425cf004c11fa6200b",
+      "targets": [
+        "Card Secretary",
+        "Operator Painting"
+      ]
+    },
+    {
+      "sourceURL": "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_002_amiya%231.png",
+      "requestAlias": "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_002_amiya%231.png",
+      "cachePath": "cache/card-player-portrait-180x360.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 180,
+        "height": 360
+      },
+      "bytes": 143206,
+      "sha256": "01a573d2b8c4a6be80d07dc0b90ff09d218829b21624d800f536b4b31038251e",
+      "targets": [
+        "Card Avatar",
+        "Box portrait"
+      ]
+    },
+    {
+      "sourceURL": "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/char_002_amiya%231.png",
+      "requestAlias": "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/char_002_amiya%231.png",
+      "cachePath": "cache/avatar-amiya-180.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 180,
+        "height": 180
+      },
+      "bytes": 65206,
+      "sha256": "e95afb7bc8ba2b0b4619e55ae3933bade79e78abc1c30d013b1f2b8eee10ae85",
+      "targets": [
+        "Card assistant",
+        "Base control",
+        "State avatar"
+      ]
+    },
+    {
+      "sourceURL": "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/char_103_angel%231.png",
+      "requestAlias": "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/char_103_angel%231.png",
+      "cachePath": "cache/avatar-angel-180.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 180,
+        "height": 180
+      },
+      "bytes": 60784,
+      "sha256": "49f0b4ea43162b0a7fabade7f619b117f55d4b2467dfdb53861b3ced9ae9c8f8",
+      "targets": [
+        "Card assistant",
+        "Base dormitory"
+      ]
+    },
+    {
+      "sourceURL": "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/char_102_texas%231.png",
+      "requestAlias": "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/char_102_texas%231.png",
+      "cachePath": "cache/avatar-texas-180.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 180,
+        "height": 180
+      },
+      "bytes": 56371,
+      "sha256": "19cd16c61a53ea80ec34e2403bc4a23d41d5ad2e30f661cdc5c6237124db8ff3",
+      "targets": [
+        "Card assistant",
+        "Base trading"
+      ]
+    },
+    {
+      "sourceURL": "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_002_amiya%231.png",
+      "requestAlias": "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_002_amiya%231.png",
+      "cachePath": "cache/box-portrait-amiya.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 180,
+        "height": 360
+      },
+      "bytes": 143206,
+      "sha256": "01a573d2b8c4a6be80d07dc0b90ff09d218829b21624d800f536b4b31038251e",
+      "targets": [
+        "Box portrait"
+      ]
+    },
+    {
+      "sourceURL": "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/char_002_amiya%231.png",
+      "requestAlias": "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/char_002_amiya%231.png",
+      "cachePath": "cache/boxdetail-avatar-amiya.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 180,
+        "height": 180
+      },
+      "bytes": 65206,
+      "sha256": "e95afb7bc8ba2b0b4619e55ae3933bade79e78abc1c30d013b1f2b8eee10ae85",
+      "targets": [
+        "BoxDetail avatar"
+      ]
+    },
+    {
+      "sourceURL": "https://web.hycdn.cn/arknights/game/assets/char_skill/skcom_magic_rage%5B3%5D.png",
+      "requestAlias": "https://web.hycdn.cn/arknights/game/assets/char_skill/skcom_magic_rage%5B3%5D.png",
+      "cachePath": "cache/boxdetail-skill-amiya.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 128,
+        "height": 128
+      },
+      "bytes": 16059,
+      "sha256": "54ee21a6306c19621db7b233a609a676df71cdb7a3757ada1a4d44ee0e518396",
+      "targets": [
+        "BoxDetail skill"
+      ]
+    },
+    {
+      "sourceURL": "https://web.hycdn.cn/arknights/game/assets/uniequip/type/icon/original.png",
+      "requestAlias": "https://web.hycdn.cn/arknights/game/assets/uniequip/type/icon/original.png",
+      "cachePath": "cache/boxdetail-equip-original.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 82,
+        "height": 58
+      },
+      "bytes": 212,
+      "sha256": "3680ff6efaea8b7d19dd261d9e25b07242c34b6d97226387d4edb858e5d6284b",
+      "targets": [
+        "BoxDetail equip"
+      ]
+    },
+    {
+      "sourceURL": "https://media.prts.wiki/a/a0/%E5%8D%8A%E8%BA%AB%E5%83%8F_%E9%98%BF%E7%B1%B3%E5%A8%85_1.png?image_process=format,webp/quality,Q_90",
+      "requestAlias": "https://media.prts.wiki/a/a0/%E5%8D%8A%E8%BA%AB%E5%83%8F_%E9%98%BF%E7%B1%B3%E5%A8%85_1.png?image_process=format,webp/quality,Q_90",
+      "cachePath": "cache/amiya-half.webp",
+      "mime": "image/webp",
+      "sourceSize": {
+        "width": 180,
+        "height": 360
+      },
+      "bytes": 26066,
+      "sha256": "7560d950e1b123a9026efe44f735de752bc8e2a223f9f5abf4e576bf479b3143",
+      "targets": [
+        "Missing",
+        "Headhunt"
+      ]
+    },
+    {
+      "sourceURL": "https://media.prts.wiki/3/36/%E5%A4%B4%E5%83%8F_%E9%98%BF%E7%B1%B3%E5%A8%85.png?image_process=format,webp/quality,Q_90",
+      "requestAlias": "https://media.prts.wiki/3/36/%E5%A4%B4%E5%83%8F_%E9%98%BF%E7%B1%B3%E5%A8%85.png?image_process=format,webp/quality,Q_90",
+      "cachePath": "cache/amiya-avatar.webp",
+      "mime": "image/webp",
+      "sourceSize": {
+        "width": 180,
+        "height": 180
+      },
+      "bytes": 13898,
+      "sha256": "deeccae95d8cf11e9b9ae9aa8ecd218598f358517a37a434c9e3848333bbde71",
+      "targets": [
+        "BoxSummary",
+        "Recruit",
+        "Gacha Amiya"
+      ]
+    },
+    {
+      "sourceURL": "https://media.prts.wiki/thumb/6/6a/%E9%81%93%E5%85%B7_%E5%B8%A6%E6%A1%86_%E9%BE%99%E9%97%A8%E5%B8%81.png/75px-%E9%81%93%E5%85%B7_%E5%B8%A6%E6%A1%86_%E9%BE%99%E9%97%A8%E5%B8%81.png",
+      "requestAlias": "https://media.prts.wiki/thumb/6/6a/%E9%81%93%E5%85%B7_%E5%B8%A6%E6%A1%86_%E9%BE%99%E9%97%A8%E5%B8%81.png/75px-%E9%81%93%E5%85%B7_%E5%B8%A6%E6%A1%86_%E9%BE%99%E9%97%A8%E5%B8%81.png",
+      "cachePath": "cache/depot-lmd.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 75,
+        "height": 75
+      },
+      "bytes": 15206,
+      "sha256": "18ab78256c635cf090f9d82893929067bf1f6f6f19be76cf2ee68622858935c6",
+      "targets": [
+        "Depot"
+      ]
+    },
+    {
+      "sourceURL": "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/char_112_siege%231.png",
+      "requestAlias": "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/char_112_siege%231.png",
+      "cachePath": "cache/base-avatar-siege-180.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 180,
+        "height": 180
+      },
+      "bytes": 88036,
+      "sha256": "bbf8d31ee35a94ea1a447a73f94e5d8e60657c2d65f7715b34daa1812a79e99d",
+      "targets": [
+        "Base manufacture"
+      ]
+    },
+    {
+      "sourceURL": "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/char_202_demkni%231.png",
+      "requestAlias": "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/char_202_demkni%231.png",
+      "cachePath": "cache/base-avatar-saria-180.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 180,
+        "height": 180
+      },
+      "bytes": 70994,
+      "sha256": "5b8e29625fbc4340d401f89489646215f6146deebbe15ffb6947243ae31edede",
+      "targets": [
+        "Base powers"
+      ]
+    },
+    {
+      "sourceURL": "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/char_003_kalts%231.png",
+      "requestAlias": "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/char_003_kalts%231.png",
+      "cachePath": "cache/base-avatar-kalts-180.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 180,
+        "height": 180
+      },
+      "bytes": 66713,
+      "sha256": "9c45b7c79e2855d93cee4f50f0ad34700e79b488165e0ee4de7dcf5bcc4ae5e0",
+      "targets": [
+        "Base meeting"
+      ]
+    },
+    {
+      "sourceURL": "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/char_172_svrash%231.png",
+      "requestAlias": "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/char_172_svrash%231.png",
+      "cachePath": "cache/base-avatar-silverash-180.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 180,
+        "height": 180
+      },
+      "bytes": 66219,
+      "sha256": "ec4d94b571cb5581d768af086d004d32b955bc60532e496d8a5cc75a97936a29",
+      "targets": [
+        "Base hire"
+      ]
+    },
+    {
+      "sourceURL": "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/char_180_amgoat%231.png",
+      "requestAlias": "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/char_180_amgoat%231.png",
+      "cachePath": "cache/base-avatar-eyjafjalla-180.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 180,
+        "height": 180
+      },
+      "bytes": 70238,
+      "sha256": "ed40860be8b8b63384353b20a0f8b839a5f7c6c9ab1623f3b822a40cfd5a5a2c",
+      "targets": [
+        "Base training"
+      ]
+    },
+    {
+      "sourceURL": "https://web.hycdn.cn/arknights/game/assets/char_skill/skchr_amiya_3.png",
+      "requestAlias": "https://web.hycdn.cn/arknights/game/assets/char_skill/skchr_amiya_3.png",
+      "cachePath": "cache/base-skill-amiya-128.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 128,
+        "height": 128
+      },
+      "bytes": 17211,
+      "sha256": "c24637521dd02665bcf31fd259ac9f107023bbc7e212db0026537aeb9510e997",
+      "targets": [
+        "Base training skill"
+      ]
+    },
+    {
+      "sourceURL": "https://media.prts.wiki/d/dd/%E7%AB%8B%E7%BB%98_%E9%98%BF%E7%B1%B3%E5%A8%85_1.png",
+      "requestAlias": "https://media.prts.wiki/d/dd/%E7%AB%8B%E7%BB%98_%E9%98%BF%E7%B1%B3%E5%A8%85_1.png",
+      "cachePath": "cache/operator-painting-1024.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 1024,
+        "height": 1024
+      },
+      "bytes": 275992,
+      "sha256": "4f1fbd58d7ef30567bdf17c14a72ded448ea4fa8cd7a11425cf004c11fa6200b",
+      "targets": [
+        "Operator painting"
+      ]
+    },
+    {
+      "sourceURL": "https://torappu.prts.wiki/assets/build_skill_icon/bskill_ctrl_t_spd.png",
+      "requestAlias": "https://torappu.prts.wiki/assets/build_skill_icon/bskill_ctrl_t_spd.png",
+      "cachePath": "cache/operator-building-36.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 36,
+        "height": 36
+      },
+      "bytes": 1738,
+      "sha256": "9b3cb1f07158d929b582cb86b29e88feefc6c73579d1b65da02f000c570221f3",
+      "targets": [
+        "Operator building"
+      ]
+    },
+    {
+      "sourceURL": "https://web.hycdn.cn/arknights/game/assets/char_skill/skchr_amiya_2.png",
+      "requestAlias": "https://web.hycdn.cn/arknights/game/assets/char_skill/skchr_amiya_2.png",
+      "cachePath": "cache/operator-skill-128.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 128,
+        "height": 128
+      },
+      "bytes": 19162,
+      "sha256": "66f497f40ac0c9188d31dacab3a1dd00f687fbca4c4778026b5a09e78f19010d",
+      "targets": [
+        "Operator skill"
+      ]
+    },
+    {
+      "sourceURL": "https://media.prts.wiki/3/3e/%E5%A4%B4%E5%83%8F_%E6%95%8C%E4%BA%BA_%E6%BA%90%E7%9F%B3%E8%99%AB.png",
+      "requestAlias": "https://media.prts.wiki/3/3e/%E5%A4%B4%E5%83%8F_%E6%95%8C%E4%BA%BA_%E6%BA%90%E7%9F%B3%E8%99%AB.png",
+      "cachePath": "cache/enemy-originium-slug-158.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 158,
+        "height": 158
+      },
+      "bytes": 33746,
+      "sha256": "34e239ab7817e3cfe8bca38223769f2b240eabb961b60ff36d7a2051f9917dd1",
+      "targets": [
+        "Enemy pic"
+      ]
+    },
+    {
+      "sourceURL": "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/char_002_amiya%231.png",
+      "requestAlias": "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/char_002_amiya%231.png",
+      "cachePath": "cache/state-avatar-amiya-180.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 180,
+        "height": 180
+      },
+      "bytes": 65206,
+      "sha256": "e95afb7bc8ba2b0b4619e55ae3933bade79e78abc1c30d013b1f2b8eee10ae85",
+      "targets": [
+        "State avatar"
+      ]
+    },
+    {
+      "sourceURL": "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/char_1001_amiya2%232.png",
+      "requestAlias": "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/char_1001_amiya2%232.png",
+      "cachePath": "cache/state-training-amiya-180.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 180,
+        "height": 180
+      },
+      "bytes": 73173,
+      "sha256": "d5a485452fa9e43cf1f338761661695ae5772aff085f871e0d14b6a5f46810de",
+      "targets": [
+        "State training"
+      ]
+    },
+    {
+      "sourceURL": "https://media.prts.wiki/3/36/%E5%A4%B4%E5%83%8F_%E9%98%BF%E7%B1%B3%E5%A8%85.png?image_process=format,webp/quality,Q_90",
+      "requestAlias": "https://media.prts.wiki/3/36/%E5%A4%B4%E5%83%8F_%E9%98%BF%E7%B1%B3%E5%A8%85.png?image_process=format,webp/quality,Q_90",
+      "cachePath": "cache/gacha-avatar-amiya.webp",
+      "mime": "image/webp",
+      "sourceSize": {
+        "width": 180,
+        "height": 180
+      },
+      "bytes": 13898,
+      "sha256": "deeccae95d8cf11e9b9ae9aa8ecd218598f358517a37a434c9e3848333bbde71",
+      "targets": [
+        "Gacha Amiya"
+      ]
+    },
+    {
+      "sourceURL": "https://media.prts.wiki/a/ad/%E5%A4%B4%E5%83%8F_%E8%83%BD%E5%A4%A9%E4%BD%BF.png?image_process=format,webp/quality,Q_90",
+      "requestAlias": "https://media.prts.wiki/a/ad/%E5%A4%B4%E5%83%8F_%E8%83%BD%E5%A4%A9%E4%BD%BF.png?image_process=format,webp/quality,Q_90",
+      "cachePath": "cache/gacha-avatar-exusiai.webp",
+      "mime": "image/webp",
+      "sourceSize": {
+        "width": 180,
+        "height": 180
+      },
+      "bytes": 15346,
+      "sha256": "0ee41510fd6a9e62f3d3b03589a0527b2e3813984f972459d6b0f1e931ca901f",
+      "targets": [
+        "Gacha Exusiai"
+      ]
+    },
+    {
+      "sourceURL": "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_102_texas%231.png",
+      "requestAlias": "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_102_texas%231.png",
+      "cachePath": "cache/base-portrait-texas.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 180,
+        "height": 360
+      },
+      "bytes": 122829,
+      "sha256": "4fabea39365caedcfe16940ad7367d37288794d191f18f81b40874fc25243621",
+      "targets": [
+        "Base facility avatars"
+      ]
+    },
+    {
+      "sourceURL": "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_112_siege%231.png",
+      "requestAlias": "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_112_siege%231.png",
+      "cachePath": "cache/base-portrait-siege.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 180,
+        "height": 360
+      },
+      "bytes": 160252,
+      "sha256": "d8e138304d15bcb69fcb2d38de0013aae56093372bdbf6aa4a78d8233338c384",
+      "targets": [
+        "Base facility avatars"
+      ]
+    },
+    {
+      "sourceURL": "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_202_demkni%231.png",
+      "requestAlias": "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_202_demkni%231.png",
+      "cachePath": "cache/base-portrait-demkni.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 180,
+        "height": 360
+      },
+      "bytes": 139127,
+      "sha256": "26519c88e5c2e43b53966a31e63e41e11d92734a0002395e85341854d2a8027b",
+      "targets": [
+        "Base facility avatars"
+      ]
+    },
+    {
+      "sourceURL": "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_003_kalts%231.png",
+      "requestAlias": "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_003_kalts%231.png",
+      "cachePath": "cache/base-portrait-kalts.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 180,
+        "height": 360
+      },
+      "bytes": 140163,
+      "sha256": "23b374fc0eae7b9722cf91388119e301d32cb62a9b7f928eef917b29426bb16c",
+      "targets": [
+        "Base facility avatars"
+      ]
+    },
+    {
+      "sourceURL": "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_172_svrash%231.png",
+      "requestAlias": "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_172_svrash%231.png",
+      "cachePath": "cache/base-portrait-svrash.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 180,
+        "height": 360
+      },
+      "bytes": 127577,
+      "sha256": "ea729435e26d9612fe0738ff522c1da5cba26eb4ce1d6001b3969d4fdde04c05",
+      "targets": [
+        "Base facility avatars"
+      ]
+    },
+    {
+      "sourceURL": "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_180_amgoat%231.png",
+      "requestAlias": "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_180_amgoat%231.png",
+      "cachePath": "cache/base-portrait-amgoat.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 180,
+        "height": 360
+      },
+      "bytes": 143865,
+      "sha256": "8f3e7746e77e3dcbb8c0bd41322c4bd59ddb858cab00932a9421e988166f0675",
+      "targets": [
+        "Base facility avatars"
+      ]
+    },
+    {
+      "sourceURL": "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_103_angel%231.png",
+      "requestAlias": "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_103_angel%231.png",
+      "cachePath": "cache/base-portrait-angel.png",
+      "mime": "image/png",
+      "sourceSize": {
+        "width": 180,
+        "height": 360
+      },
+      "bytes": 123387,
+      "sha256": "630f99ab2c166a9536c9b5c59b908948aeada8f5361be5a15e83198b5aa5603c",
+      "targets": [
+        "Base facility avatars"
+      ]
+    }
+  ]
+}

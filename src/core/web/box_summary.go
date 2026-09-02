@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
-	"net/http"
 	"sort"
 	"strconv"
 )
@@ -54,7 +53,6 @@ type BoxSummary struct {
 
 func Summary(r *gin.Engine) {
 	r.GET("/boxSummary", func(c *gin.Context) {
-		r.LoadHTMLFiles("./template/BoxSummary.tmpl")
 		userId, _ := strconv.ParseInt(c.Query("userId"), 10, 64)
 		uid := c.Query("uid")
 		sklandId := c.Query("sklandId")
@@ -286,7 +284,7 @@ func Summary(r *gin.Engine) {
 			}
 			return boxSummary.MissingChars[i].Profession > boxSummary.MissingChars[j].Profession
 		})
-		c.HTML(http.StatusOK, "BoxSummary.tmpl", boxSummary)
+		RenderSpec(c, "box-summary", 900, 482, boxSummary)
 	})
 }
 

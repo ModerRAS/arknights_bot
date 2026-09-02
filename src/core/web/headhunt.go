@@ -8,7 +8,6 @@ import (
 	"crypto/rand"
 	"fmt"
 	"math/big"
-	"net/http"
 	"strconv"
 	"strings"
 	"time"
@@ -19,7 +18,6 @@ import (
 
 func Headhunt(r *gin.Engine) {
 	r.GET("/headhunt", func(c *gin.Context) {
-		r.LoadHTMLFiles("./template/Headhunt.tmpl")
 		r6prob := 2.0
 		r5prob := 8.0
 		r4prob := 50.0
@@ -43,7 +41,7 @@ func Headhunt(r *gin.Engine) {
 			times++
 		}
 		cache.RedisSet(key, strconv.Itoa(times), 0)
-		c.HTML(http.StatusOK, "Headhunt.tmpl", operators)
+		RenderSpec(c, "headhunt", 1049, 576, operators)
 	})
 }
 

@@ -10,7 +10,6 @@ require (
 	github.com/ijnkawakaze/telegram-bot-api v1.1.1
 	github.com/matoous/go-nanoid/v2 v2.0.0
 	github.com/mozillazg/go-pinyin v0.20.0
-	github.com/mxschmitt/playwright-go v0.6201.0
 	github.com/robfig/cron/v3 v3.0.0
 	github.com/spf13/viper v1.14.0
 	github.com/starudream/go-lib/core/v2 v2.0.15

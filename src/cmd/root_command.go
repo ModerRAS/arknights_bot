@@ -6,6 +6,7 @@ import (
 	"arknights_bot/core/cron"
 	"arknights_bot/core/shutdown"
 	"arknights_bot/core/web"
+	"arknights_bot/utils/media"
 	"flag"
 	"log"
 	"os"
@@ -45,6 +46,7 @@ func Launch() {
 	//注册优雅退出清理
 	shutdown.Register(cron.Stop)
 	shutdown.Register(web.Shutdown)
+	shutdown.Register(media.Shutdown)
 	shutdown.Register(config.Close)
 	//开启http服务
 	go web.Start()

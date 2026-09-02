@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "status": "resolved-for-exporter-replay",
+  "scope": "calendar,state,gacha",
+  "originalManifestDeclaration": {
+    "path": "baseline/manifest.json",
+    "browserDeterminism": {
+      "timezoneId": "Asia/Shanghai",
+      "frozenDateUTC": "2025-01-15T12:00:00Z",
+      "frozenDateUnixMilliseconds": 1736942400000
+    },
+    "error": "The 2025 declaration did not match actual output: Calendar used the live Go capture clock, while State and Gacha browser clock values also followed live capture time."
+  },
+  "immutableBaselineEvidence": [
+    {
+      "id": "calendar",
+      "path": "baseline/images/calendar.jpg",
+      "sha256": "80f31c1cfb132ff3781a3d940120cfdd31acf26aa1baf0e96c5fa75e68c4b00b",
+      "mtimeUTC": "2026-08-18T16:29:01.800Z",
+      "mtimeUnixMilliseconds": 1787070541800,
+      "captureClockUnixSeconds": 1787070541,
+      "resolution": { "width": 2880, "height": 1620 },
+      "visibleText": ["2026年8月19日", "星期三"]
+    },
+    {
+      "id": "gacha",
+      "path": "baseline/images/gacha.jpg",
+      "sha256": "b037cf55e967c61db80507ebcba9b55416f4b4aab5876d546a803ce117a131dc",
+      "mtimeUTC": "2026-08-18T16:29:07.749Z",
+      "mtimeUnixMilliseconds": 1787070547749,
+      "captureClockUnixSeconds": 1787070547,
+      "resolution": { "width": 1500, "height": 1323 },
+      "visibleText": ["2025-01-14 20:00:00—2025-01-15", "2026年08月19日"]
+    },
+    {
+      "id": "state",
+      "path": "baseline/images/state.jpg",
+      "sha256": "2c3d37795bacf18c04d84b3ed72c2ef6532a4f2b9d25d629cb9555da0a721872",
+      "mtimeUTC": "2026-08-18T16:29:12.915Z",
+      "mtimeUnixMilliseconds": 1787070552915,
+      "captureClockUnixSeconds": 1787070552,
+      "resolution": { "width": 1092, "height": 510 },
+      "visibleText": ["-578天", "-2时-56分后恢复", "26:03:04"]
+    }
+  ],
+  "resolution": {
+    "typedRoots": "unchanged",
+    "baselineJPEGs": "unchanged",
+    "effectiveStateGachaBrowserClock": "The effective browser Date.now() and no-argument Date() values followed the page capture clocks despite the declaration.",
+    "calendarGoClock": "Calendar server-side Go time.Now() followed its page capture clock.",
+    "visualExporterClock": "Use each page's captureClockUnixSeconds in Asia/Shanghai when rebuilding calendar, state, and gacha RenderSpec props.",
+    "acceptance": "A merged spec produced with the former 2025 exporter clock is provisional/superseded evidence only and must not drive formal candidate acceptance."
+  },
+  "verification": {
+    "jpegSHA256": "verified from immutable local files",
+    "mtime": "observed filesystem mtime corroborated by visible text and State arithmetic",
+    "visibleText": "OCR evidence from immutable local files",
+    "resolution": "decoded local JPEG dimensions"
+  }
+}
