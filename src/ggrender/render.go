@@ -912,54 +912,6 @@ func RenderBase(data *BaseInfo) (*gg.Context, error) {
 	return ScaleToManifest(dc, 1665, 918), nil
 }
 
-// Calendar
-type CalendarData struct {
-	Entries []struct{ Title, Begin, End string }
-}
-
-func SampleCalendar() *CalendarData {
-	c := &CalendarData{}
-	c.Entries = []struct{ Title, Begin, End string }{
-		{"主线活动「破碎日冕」", "2025-08-01", "2025-08-14"},
-		{"危机合约", "2025-08-05", "2025-08-19"},
-		{"常驻寻访", "2025-08-01", "2025-08-30"},
-		{"愚人号复刻", "2025-08-10", "2025-08-24"},
-		{"感谢庆典", "2025-08-15", "2025-08-29"},
-	}
-	return c
-}
-
-func RenderCalendar(data *CalendarData) (*gg.Context, error) {
-	const mainW = 900
-	rowH := 70
-	headerH := 80
-	mainH := headerH + len(data.Entries)*rowH + 40
-	dc := gg.NewContext(mainW, mainH)
-	FillBackground(dc, 46, 48, 49)
-	dc.SetRGB255(60, 62, 64)
-	dc.DrawRectangle(0, 0, float64(mainW), float64(headerH))
-	dc.Fill()
-	setFont(dc, 26)
-	dc.SetRGB255(255, 255, 255)
-	drawString(dc, "活动日历", 25, 50)
-	y := headerH + 10
-	for i, e := range data.Entries {
-		if i%2 == 0 {
-			fillRoundedCard(dc, 10, float64(y), float64(mainW-20), float64(rowH-10), 8, 10)
-		} else {
-			fillRoundedCard(dc, 10, float64(y), float64(mainW-20), float64(rowH-10), 8, 6)
-		}
-		setFont(dc, 16)
-		dc.SetRGB255(255, 255, 255)
-		drawString(dc, e.Title, 30, float64(y+28))
-		setFont(dc, 13)
-		dc.SetRGB255(180, 200, 220)
-		drawString(dc, fmt.Sprintf("%s ~ %s", e.Begin, e.End), 30, float64(y+50))
-		y += rowH
-	}
-	return ScaleToManifest(dc, 2880, 1620), nil
-}
-
 // Card
 type CardInfo struct {
 	Name, Uid, ServerName, Resume                             string
