@@ -169,10 +169,10 @@ func renderContext(scene string, data interface{}) (*gg.Context, error) {
 
 // Char mirrors Box.
 type Char struct {
-	CharId, SkinId, Name                 string
-	Level, EvolvePhase, PotentialRank    int
-	FavorPercent, Rarity                 int
-	Profession                            string
+	CharId, SkinId, Name              string
+	Level, EvolvePhase, PotentialRank int
+	FavorPercent, Rarity              int
+	Profession                        string
 }
 
 type BoxInfo struct {
@@ -186,12 +186,12 @@ func SampleBox() *BoxInfo {
 	for i := 0; i < 18; i++ {
 		r := 3 + i%4
 		chars = append(chars, Char{
-			SkinId:      fmt.Sprintf("char_%03d_amiya_%d", i, i%3+1),
-			Name:        fmt.Sprintf("干员%d", i+1),
-			Rarity:      r,
-			Profession:  profs[i%len(profs)],
-			Level:       30 + i%60,
-			EvolvePhase: i % 3,
+			SkinId:        fmt.Sprintf("char_%03d_amiya_%d", i, i%3+1),
+			Name:          fmt.Sprintf("干员%d", i+1),
+			Rarity:        r,
+			Profession:    profs[i%len(profs)],
+			Level:         30 + i%60,
+			EvolvePhase:   i % 3,
 			PotentialRank: i % 6,
 		})
 	}
@@ -232,13 +232,19 @@ func RenderBox(data *BoxInfo) (*gg.Context, error) {
 
 // BoxDetail
 
-type Skill struct{ Id string; Level int }
-type Equip struct{ Id string; Level int }
+type Skill struct {
+	Id    string
+	Level int
+}
+type Equip struct {
+	Id    string
+	Level int
+}
 type Detail struct {
-	Name, Id                            string
+	Name, Id                                  string
 	Rarity, Level, EvolvePhase, PotentialRank int
-	Skills                              []Skill
-	Equips                              []Equip
+	Skills                                    []Skill
+	Equips                                    []Equip
 }
 type BoxDetailList struct{ Items []Detail }
 
@@ -308,18 +314,22 @@ func RenderBoxDetail(data []Detail) (*gg.Context, error) {
 
 // BoxSummary
 
-type MissingChar struct{ SkinId, Name string; Rarity int; Profession string }
+type MissingChar struct {
+	SkinId, Name string
+	Rarity       int
+	Profession   string
+}
 type BoxSummary struct {
-	Name                                                                   string
-	AllCharCnt, Star6CharCnt, Star5CharCnt, Star4CharCnt                   string
+	Name                                                                                 string
+	AllCharCnt, Star6CharCnt, Star5CharCnt, Star4CharCnt                                 string
 	AllEvolvePhase2Cnt, Star6EvolvePhase2Cnt, Star5EvolvePhase2Cnt, Star4EvolvePhase2Cnt int
-	AllSkill10Cnt, Star6Skill10Cnt, Star5Skill10Cnt, Star4Skill10Cnt       int
-	AllSkill9Cnt, Star6Skill9Cnt, Star5Skill9Cnt, Star4Skill9Cnt           int
-	AllSkill8Cnt, Star6Skill8Cnt, Star5Skill8Cnt, Star4Skill8Cnt           int
-	AllEquipStage3Cnt, Star6EquipStage3Cnt, Star5EquipStage3Cnt, Star4EquipStage3Cnt int
-	AllEquipStage2Cnt, Star6EquipStage2Cnt, Star5EquipStage2Cnt, Star4EquipStage2Cnt int
-	AllEquipStage1Cnt, Star6EquipStage1Cnt, Star5EquipStage1Cnt, Star4EquipStage1Cnt int
-	MissingChars []MissingChar
+	AllSkill10Cnt, Star6Skill10Cnt, Star5Skill10Cnt, Star4Skill10Cnt                     int
+	AllSkill9Cnt, Star6Skill9Cnt, Star5Skill9Cnt, Star4Skill9Cnt                         int
+	AllSkill8Cnt, Star6Skill8Cnt, Star5Skill8Cnt, Star4Skill8Cnt                         int
+	AllEquipStage3Cnt, Star6EquipStage3Cnt, Star5EquipStage3Cnt, Star4EquipStage3Cnt     int
+	AllEquipStage2Cnt, Star6EquipStage2Cnt, Star5EquipStage2Cnt, Star4EquipStage2Cnt     int
+	AllEquipStage1Cnt, Star6EquipStage1Cnt, Star5EquipStage1Cnt, Star4EquipStage1Cnt     int
+	MissingChars                                                                         []MissingChar
 }
 
 func SampleBoxSummary() *BoxSummary {
@@ -373,7 +383,7 @@ func RenderBoxSummary(data *BoxSummary) (*gg.Context, error) {
 		drawString(dc, h, colX[i], float64(tableTop)+20)
 	}
 	metrics := []struct {
-		name        string
+		name              string
 		total, s6, s5, s4 int
 	}{
 		{"干员数", atoiSafe(data.AllCharCnt), atoiSafe(data.Star6CharCnt), atoiSafe(data.Star5CharCnt), atoiSafe(data.Star4CharCnt)},
@@ -415,20 +425,20 @@ func RenderBoxSummary(data *BoxSummary) (*gg.Context, error) {
 type EnemySkill struct{ Name, SpInit, SpCost, Desc string }
 type EnemyLevel struct {
 	Desc, AttackType, Motion, HpRecovery, HP, ATK, DEF, Res, ATKRadius, Weight, MoveSpeed, Interval, DamageRes, ElementRes, Ridicule, Point, Abnormal string
-	Skills []EnemySkill
-	Talent string
+	Skills                                                                                                                                            []EnemySkill
+	Talent                                                                                                                                            string
 }
 type Enemy struct {
 	Name, Pic, Desc, EnemyRace, EnemyLevel, AttackType, Motion string
-	Ability string
-	Levels []EnemyLevel
+	Ability                                                    string
+	Levels                                                     []EnemyLevel
 }
 
 func SampleEnemy() *Enemy {
 	return &Enemy{
 		Name: "霜星", Pic: "", Desc: "雪怪小队领袖，擅长冰属性法术。", EnemyRace: "人类", EnemyLevel: "精英", AttackType: "法术", Motion: "地面",
 		Ability: "攻击造成法术伤害，并施加寒冷。",
-		Levels: []EnemyLevel{{HP: "12000", ATK: "850", DEF: "300", Res: "40", Talent: "攻击范围内我方单位移动速度降低。", Skills: []EnemySkill{{Name: "冰封", SpInit: "10", SpCost: "30", Desc: "对范围内单位造成大量法术伤害并冻结。"}}}},
+		Levels:  []EnemyLevel{{HP: "12000", ATK: "850", DEF: "300", Res: "40", Talent: "攻击范围内我方单位移动速度降低。", Skills: []EnemySkill{{Name: "冰封", SpInit: "10", SpCost: "30", Desc: "对范围内单位造成大量法术伤害并冻结。"}}}},
 	}
 }
 
@@ -486,7 +496,11 @@ func RenderEnemy(data *Enemy) (*gg.Context, error) {
 }
 
 // Headhunt
-type HHOp struct{ Rarity int; ThumbURL string; Profession string }
+type HHOp struct {
+	Rarity     int
+	ThumbURL   string
+	Profession string
+}
 type HeadhuntData struct{ Ops []HHOp }
 
 func SampleHeadhunt() []HHOp {
@@ -524,7 +538,10 @@ func RenderHeadhunt(data []HHOp) (*gg.Context, error) {
 }
 
 // Missing
-type MissingInfo struct{ Name string; Chars []MissingChar }
+type MissingInfo struct {
+	Name  string
+	Chars []MissingChar
+}
 
 func SampleMissing() *MissingInfo {
 	chars := make([]MissingChar, 0, 12)
@@ -562,7 +579,10 @@ func RenderMissing(data *MissingInfo) (*gg.Context, error) {
 }
 
 // Recruit
-type RecruitOp struct{ Avatar, Profession string; Rarity int }
+type RecruitOp struct {
+	Avatar, Profession string
+	Rarity             int
+}
 type RecruitList struct {
 	Tags      []string
 	Operators []RecruitOp
@@ -630,16 +650,51 @@ func RenderRecruit(data *RecruitList) (*gg.Context, error) {
 
 // Base
 type BaseInfo struct {
-	Name string
-	Labor struct{ Cur, Total int }
-	Control struct{ Level int; Chars []string }
-	Tradings []struct{ Level int; Chars []string; Cur, Total int; Strategy string }
-	Manufactures []struct{ Level int; Chars []string; Cur, Total int; Item, Speed string }
-	Powers []struct{ Level int; Chars []string; Power int }
-	Meeting struct{ Level int; Chars []string; Board []int; Sharing bool }
-	Hire struct{ Level int; Chars []string; Refresh int }
-	Training struct{ Level int; Chars []string; Skill string; SLevel int }
-	Dorms []struct{ Level int; Chars []string; Comfort int }
+	Name    string
+	Labor   struct{ Cur, Total int }
+	Control struct {
+		Level int
+		Chars []string
+	}
+	Tradings []struct {
+		Level      int
+		Chars      []string
+		Cur, Total int
+		Strategy   string
+	}
+	Manufactures []struct {
+		Level       int
+		Chars       []string
+		Cur, Total  int
+		Item, Speed string
+	}
+	Powers []struct {
+		Level int
+		Chars []string
+		Power int
+	}
+	Meeting struct {
+		Level   int
+		Chars   []string
+		Board   []int
+		Sharing bool
+	}
+	Hire struct {
+		Level   int
+		Chars   []string
+		Refresh int
+	}
+	Training struct {
+		Level  int
+		Chars  []string
+		Skill  string
+		SLevel int
+	}
+	Dorms []struct {
+		Level   int
+		Chars   []string
+		Comfort int
+	}
 }
 
 func SampleBase() *BaseInfo {
@@ -648,15 +703,29 @@ func SampleBase() *BaseInfo {
 	b.Labor.Total = 120
 	b.Control.Level = 5
 	b.Control.Chars = []string{"阿米娅", "凯尔希", "煌"}
-	b.Tradings = []struct{ Level int; Chars []string; Cur, Total int; Strategy string }{
+	b.Tradings = []struct {
+		Level      int
+		Chars      []string
+		Cur, Total int
+		Strategy   string
+	}{
 		{Level: 3, Chars: []string{"能天使", "德克萨斯"}, Cur: 3, Total: 5, Strategy: "贵金属订单"},
 		{Level: 3, Chars: []string{"拉普兰德"}, Cur: 2, Total: 5, Strategy: "源石订单"},
 	}
-	b.Manufactures = []struct{ Level int; Chars []string; Cur, Total int; Item, Speed string }{
+	b.Manufactures = []struct {
+		Level       int
+		Chars       []string
+		Cur, Total  int
+		Item, Speed string
+	}{
 		{Level: 3, Chars: []string{"夜烟", "远山"}, Cur: 10, Total: 20, Item: "中级作战记录", Speed: "120%"},
 		{Level: 3, Chars: []string{"砾"}, Cur: 8, Total: 20, Item: "赤金", Speed: "100%"},
 	}
-	b.Powers = []struct{ Level int; Chars []string; Power int }{
+	b.Powers = []struct {
+		Level int
+		Chars []string
+		Power int
+	}{
 		{Level: 3, Chars: []string{"格雷伊"}, Power: 270},
 		{Level: 3, Chars: []string{"清流"}, Power: 270},
 	}
@@ -671,7 +740,11 @@ func SampleBase() *BaseInfo {
 	b.Training.Chars = []string{"赫拉格", "华法琳"}
 	b.Training.Skill = "阿米娅-奇美拉"
 	b.Training.SLevel = 2
-	b.Dorms = []struct{ Level int; Chars []string; Comfort int }{
+	b.Dorms = []struct {
+		Level   int
+		Chars   []string
+		Comfort int
+	}{
 		{Level: 5, Chars: []string{"星熊", "塞雷娅"}, Comfort: 5000},
 		{Level: 5, Chars: []string{"夜莺"}, Comfort: 4800},
 	}
@@ -706,8 +779,8 @@ func RenderBase(data *BaseInfo) (*gg.Context, error) {
 	dc.SetRGB255(180, 220, 255)
 	drawString(dc, fmt.Sprintf("控制中枢 Lv%d", data.Control.Level), float64(pad+20), float64(y+28))
 	for i, n := range data.Control.Chars {
-		cx := float64(pad+20 + i*90)
-		cy := float64(y+65)
+		cx := float64(pad + 20 + i*90)
+		cy := float64(y + 65)
 		dc.SetRGB255(80, 80, 90)
 		dc.DrawCircle(cx+22, cy, 22)
 		dc.Fill()
@@ -723,8 +796,8 @@ func RenderBase(data *BaseInfo) (*gg.Context, error) {
 		dc.SetRGB255(220, 200, 120)
 		drawString(dc, fmt.Sprintf("贸易站 Lv%d · %s %d/%d", t.Level, t.Strategy, t.Cur, t.Total), float64(pad+20), float64(y+28))
 		for i, n := range t.Chars {
-			cx := float64(pad+20 + i*70)
-			cy := float64(y+60)
+			cx := float64(pad + 20 + i*70)
+			cy := float64(y + 60)
 			dc.SetRGB255(90, 90, 100)
 			dc.DrawCircle(cx+16, cy, 16)
 			dc.Fill()
@@ -741,8 +814,8 @@ func RenderBase(data *BaseInfo) (*gg.Context, error) {
 		dc.SetRGB255(120, 220, 160)
 		drawString(dc, fmt.Sprintf("制造站 Lv%d · %s %d/%d %s", m.Level, m.Item, m.Cur, m.Total, m.Speed), float64(pad+20), float64(y+28))
 		for i, n := range m.Chars {
-			cx := float64(pad+20 + i*70)
-			cy := float64(y+60)
+			cx := float64(pad + 20 + i*70)
+			cy := float64(y + 60)
 			dc.SetRGB255(90, 90, 100)
 			dc.DrawCircle(cx+16, cy, 16)
 			dc.Fill()
@@ -759,8 +832,8 @@ func RenderBase(data *BaseInfo) (*gg.Context, error) {
 		dc.SetRGB255(120, 180, 255)
 		drawString(dc, fmt.Sprintf("发电站 Lv%d · %d 电力", p.Level, p.Power), float64(pad+20), float64(y+28))
 		for i, n := range p.Chars {
-			cx := float64(pad+20 + i*70)
-			cy := float64(y+55)
+			cx := float64(pad + 20 + i*70)
+			cy := float64(y + 55)
 			dc.SetRGB255(90, 90, 100)
 			dc.DrawCircle(cx+16, cy, 16)
 			dc.Fill()
@@ -776,8 +849,8 @@ func RenderBase(data *BaseInfo) (*gg.Context, error) {
 	dc.SetRGB255(220, 180, 220)
 	drawString(dc, fmt.Sprintf("会客室 Lv%d · 线索 %v 共享:%v", data.Meeting.Level, data.Meeting.Board, data.Meeting.Sharing), float64(pad+20), float64(y+28))
 	for i, n := range data.Meeting.Chars {
-		cx := float64(pad+20 + i*70)
-		cy := float64(y+55)
+		cx := float64(pad + 20 + i*70)
+		cy := float64(y + 55)
 		dc.SetRGB255(90, 90, 100)
 		dc.DrawCircle(cx+16, cy, 16)
 		dc.Fill()
@@ -792,14 +865,14 @@ func RenderBase(data *BaseInfo) (*gg.Context, error) {
 	dc.SetRGB255(220, 200, 180)
 	drawString(dc, fmt.Sprintf("办公室 Lv%d · 刷新 %d", data.Hire.Level, data.Hire.Refresh), float64(pad+20), float64(y+28))
 	for i, n := range data.Hire.Chars {
-		cx := float64(pad+20 + i*70)
-		cy := float64(y+50)
+		cx := float64(pad + 20 + i*70)
+		cy := float64(y + 50)
 		dc.SetRGB255(90, 90, 100)
 		dc.DrawCircle(cx+16, cy, 16)
 		dc.Fill()
 		setFont(dc, 10)
-		dc.SetRGB255(255,255,255)
-		drawStringAnchored(dc, n, cx+16, cy+20, 0.5,0.5)
+		dc.SetRGB255(255, 255, 255)
+		drawStringAnchored(dc, n, cx+16, cy+20, 0.5, 0.5)
 	}
 	y += 80
 	// training
@@ -808,33 +881,33 @@ func RenderBase(data *BaseInfo) (*gg.Context, error) {
 	dc.SetRGB255(180, 220, 200)
 	drawString(dc, fmt.Sprintf("训练室 Lv%d · %s 专精%d", data.Training.Level, data.Training.Skill, data.Training.SLevel), float64(pad+20), float64(y+28))
 	for i, n := range data.Training.Chars {
-		cx := float64(pad+20 + i*70)
-		cy := float64(y+55)
-		dc.SetRGB255(90,90,100)
-		dc.DrawCircle(cx+16,cy,16)
+		cx := float64(pad + 20 + i*70)
+		cy := float64(y + 55)
+		dc.SetRGB255(90, 90, 100)
+		dc.DrawCircle(cx+16, cy, 16)
 		dc.Fill()
-		setFont(dc,10)
-		dc.SetRGB255(255,255,255)
-		drawStringAnchored(dc,n,cx+16,cy+20,0.5,0.5)
+		setFont(dc, 10)
+		dc.SetRGB255(255, 255, 255)
+		drawStringAnchored(dc, n, cx+16, cy+20, 0.5, 0.5)
 	}
 	y += 90
 	// dorms
 	for _, d := range data.Dorms {
 		fillRoundedCard(dc, float64(pad), float64(y), float64(mainW-2*pad), 80, 8, 12)
-		setFont(dc,14)
-		dc.SetRGB255(200,200,220)
+		setFont(dc, 14)
+		dc.SetRGB255(200, 200, 220)
 		drawString(dc, fmt.Sprintf("宿舍 Lv%d · 舒适度 %d", d.Level, d.Comfort), float64(pad+20), float64(y+28))
 		for i, n := range d.Chars {
-			cx:=float64(pad+20+i*70)
-			cy:=float64(y+55)
-			dc.SetRGB255(90,90,100)
-			dc.DrawCircle(cx+16,cy,16)
+			cx := float64(pad + 20 + i*70)
+			cy := float64(y + 55)
+			dc.SetRGB255(90, 90, 100)
+			dc.DrawCircle(cx+16, cy, 16)
 			dc.Fill()
-			setFont(dc,10)
-			dc.SetRGB255(255,255,255)
-			drawStringAnchored(dc,n,cx+16,cy+20,0.5,0.5)
+			setFont(dc, 10)
+			dc.SetRGB255(255, 255, 255)
+			drawStringAnchored(dc, n, cx+16, cy+20, 0.5, 0.5)
 		}
-		y+=90
+		y += 90
 	}
 	return ScaleToManifest(dc, 1665, 918), nil
 }
@@ -863,36 +936,36 @@ func RenderCalendar(data *CalendarData) (*gg.Context, error) {
 	mainH := headerH + len(data.Entries)*rowH + 40
 	dc := gg.NewContext(mainW, mainH)
 	FillBackground(dc, 46, 48, 49)
-	dc.SetRGB255(60,62,64)
-	dc.DrawRectangle(0,0,float64(mainW),float64(headerH))
+	dc.SetRGB255(60, 62, 64)
+	dc.DrawRectangle(0, 0, float64(mainW), float64(headerH))
 	dc.Fill()
-	setFont(dc,26)
-	dc.SetRGB255(255,255,255)
-	drawString(dc,"活动日历",25,50)
-	y:=headerH+10
+	setFont(dc, 26)
+	dc.SetRGB255(255, 255, 255)
+	drawString(dc, "活动日历", 25, 50)
+	y := headerH + 10
 	for i, e := range data.Entries {
-		if i%2==0 {
-			fillRoundedCard(dc,10,float64(y),float64(mainW-20),float64(rowH-10),8,10)
+		if i%2 == 0 {
+			fillRoundedCard(dc, 10, float64(y), float64(mainW-20), float64(rowH-10), 8, 10)
 		} else {
-			fillRoundedCard(dc,10,float64(y),float64(mainW-20),float64(rowH-10),8,6)
+			fillRoundedCard(dc, 10, float64(y), float64(mainW-20), float64(rowH-10), 8, 6)
 		}
-		setFont(dc,16)
-		dc.SetRGB255(255,255,255)
-		drawString(dc,e.Title,30,float64(y+28))
-		setFont(dc,13)
-		dc.SetRGB255(180,200,220)
-		drawString(dc,fmt.Sprintf("%s ~ %s",e.Begin,e.End),30,float64(y+50))
-		y+=rowH
+		setFont(dc, 16)
+		dc.SetRGB255(255, 255, 255)
+		drawString(dc, e.Title, 30, float64(y+28))
+		setFont(dc, 13)
+		dc.SetRGB255(180, 200, 220)
+		drawString(dc, fmt.Sprintf("%s ~ %s", e.Begin, e.End), 30, float64(y+50))
+		y += rowH
 	}
 	return ScaleToManifest(dc, 2880, 1620), nil
 }
 
 // Card
 type CardInfo struct {
-	Name, Uid, ServerName, Resume string
-	Level, RegTime int
+	Name, Uid, ServerName, Resume                             string
+	Level, RegTime                                            int
 	MainStageProgress, Avatar, SecretaryName, SecretaryEnName string
-	CharCnt, FurnitureCnt, SkinCnt, EquipCnt int
+	CharCnt, FurnitureCnt, SkinCnt, EquipCnt                  int
 }
 
 func SampleCard() *CardInfo {
@@ -908,92 +981,112 @@ func SampleCard() *CardInfo {
 
 // Gacha
 type GachaData struct {
-	Name string; Total, Star6, Star5, Star4, Star3 int; Avg6, Avg5, Avg4, Avg3 float64
-	Chars []struct{ PoolName, CharName string; Rarity int64; IsNew bool }
+	Name                              string
+	Total, Star6, Star5, Star4, Star3 int
+	Avg6, Avg5, Avg4, Avg3            float64
+	Chars                             []struct {
+		PoolName, CharName string
+		Rarity             int64
+		IsNew              bool
+	}
 }
 
 func SampleGacha() *GachaData {
-	g:=&GachaData{Name:"博士的寻访记录", Total:120, Star6:6, Star5:18, Star4:50, Star3:46, Avg6:20.0, Avg5:6.6, Avg4:2.4, Avg3:2.6}
-	names:=[]string{"能天使","银灰","艾雅法拉","星熊","塞雷娅","闪灵","夜莺","斯卡蒂","陈","推进之王"}
-	for i,n:=range names {
-		r:=int64(5)
-		if i%3==0 {r=4}
-		if i%5==0 {r=3}
-		g.Chars=append(g.Chars, struct{ PoolName, CharName string; Rarity int64; IsNew bool }{PoolName:"常驻", CharName:n, Rarity:r, IsNew: i%4==0})
+	g := &GachaData{Name: "博士的寻访记录", Total: 120, Star6: 6, Star5: 18, Star4: 50, Star3: 46, Avg6: 20.0, Avg5: 6.6, Avg4: 2.4, Avg3: 2.6}
+	names := []string{"能天使", "银灰", "艾雅法拉", "星熊", "塞雷娅", "闪灵", "夜莺", "斯卡蒂", "陈", "推进之王"}
+	for i, n := range names {
+		r := int64(5)
+		if i%3 == 0 {
+			r = 4
+		}
+		if i%5 == 0 {
+			r = 3
+		}
+		g.Chars = append(g.Chars, struct {
+			PoolName, CharName string
+			Rarity             int64
+			IsNew              bool
+		}{PoolName: "常驻", CharName: n, Rarity: r, IsNew: i%4 == 0})
 	}
 	return g
 }
 
 func RenderGacha(data *GachaData) (*gg.Context, error) {
-	const mainW=900
-	headerH:=90
-	statsH:=120
-	charsH:= 20*74
-	mainH:=headerH+statsH+charsH+40
-	dc:=gg.NewContext(mainW,mainH)
-	FillBackground(dc,27,29,30)
+	const mainW = 900
+	headerH := 90
+	statsH := 120
+	charsH := 20 * 74
+	mainH := headerH + statsH + charsH + 40
+	dc := gg.NewContext(mainW, mainH)
+	FillBackground(dc, 27, 29, 30)
 	// header
-	dc.SetRGB255(45,48,55)
-	dc.DrawRectangle(0,0,float64(mainW),float64(headerH))
+	dc.SetRGB255(45, 48, 55)
+	dc.DrawRectangle(0, 0, float64(mainW), float64(headerH))
 	dc.Fill()
-	setFont(dc,24)
-	dc.SetRGB255(255,255,255)
-	drawString(dc,data.Name,25,52)
-	setFont(dc,14)
-	dc.SetRGB255(180,200,220)
-	drawString(dc,fmt.Sprintf("共 %d 抽 · 6星%d 5星%d 4星%d 3星%d",data.Total,data.Star6,data.Star5,data.Star4,data.Star3),25,74)
+	setFont(dc, 24)
+	dc.SetRGB255(255, 255, 255)
+	drawString(dc, data.Name, 25, 52)
+	setFont(dc, 14)
+	dc.SetRGB255(180, 200, 220)
+	drawString(dc, fmt.Sprintf("共 %d 抽 · 6星%d 5星%d 4星%d 3星%d", data.Total, data.Star6, data.Star5, data.Star4, data.Star3), 25, 74)
 	// stats avg
-	y:=headerH+16
-	stats:=[]struct{label string; val float64; cnt int}{
-		{"6星",data.Avg6,data.Star6},{"5星",data.Avg5,data.Star5},{"4星",data.Avg4,data.Star4},{"3星",data.Avg3,data.Star3},
+	y := headerH + 16
+	stats := []struct {
+		label string
+		val   float64
+		cnt   int
+	}{
+		{"6星", data.Avg6, data.Star6}, {"5星", data.Avg5, data.Star5}, {"4星", data.Avg4, data.Star4}, {"3星", data.Avg3, data.Star3},
 	}
-	x:=20
-	for _,s:=range stats {
-		dc.SetRGBA255(255,255,255,12)
-		RoundRect(dc,float64(x),float64(y),200,80,8)
-		setFont(dc,14)
-		dc.SetRGB255(180,200,220)
-		drawStringAnchored(dc,s.label,float64(x+100),float64(y+24),0.5,0.5)
-		setFont(dc,22)
-		dc.SetRGB255(255,240,120)
-		drawStringAnchored(dc,fmt.Sprintf("%.1f",s.val),float64(x+100),float64(y+52),0.5,0.5)
-		setFont(dc,11)
-		dc.SetRGB255(200,200,200)
-		drawStringAnchored(dc,fmt.Sprintf("(%d)",s.cnt),float64(x+100),float64(y+68),0.5,0.5)
-		x+=220
+	x := 20
+	for _, s := range stats {
+		dc.SetRGBA255(255, 255, 255, 12)
+		RoundRect(dc, float64(x), float64(y), 200, 80, 8)
+		setFont(dc, 14)
+		dc.SetRGB255(180, 200, 220)
+		drawStringAnchored(dc, s.label, float64(x+100), float64(y+24), 0.5, 0.5)
+		setFont(dc, 22)
+		dc.SetRGB255(255, 240, 120)
+		drawStringAnchored(dc, fmt.Sprintf("%.1f", s.val), float64(x+100), float64(y+52), 0.5, 0.5)
+		setFont(dc, 11)
+		dc.SetRGB255(200, 200, 200)
+		drawStringAnchored(dc, fmt.Sprintf("(%d)", s.cnt), float64(x+100), float64(y+68), 0.5, 0.5)
+		x += 220
 	}
-	y+=110
+	y += 110
 	// chars list
-	setFont(dc,14)
-	dc.SetRGB255(200,220,200)
-	drawString(dc,"最近获得",20,float64(y))
-	y+=20
-	for i,ch:=range data.Chars {
-		if i>=20 {break}
-		yy:=y+i*74
-		fillRoundedCard(dc,20,float64(yy),float64(mainW-40),64,8,10)
+	setFont(dc, 14)
+	dc.SetRGB255(200, 220, 200)
+	drawString(dc, "最近获得", 20, float64(y))
+	y += 20
+	for i, ch := range data.Chars {
+		if i >= 20 {
+			break
+		}
+		yy := y + i*74
+		fillRoundedCard(dc, 20, float64(yy), float64(mainW-40), 64, 8, 10)
 		// avatar
-		dc.SetRGB255(80,80,90)
-		dc.DrawCircle(50,float64(yy+32),22)
+		dc.SetRGB255(80, 80, 90)
+		dc.DrawCircle(50, float64(yy+32), 22)
 		dc.Fill()
-		setFont(dc,14)
-		dc.SetRGB255(255,255,255)
-		drawString(dc,ch.CharName,80,float64(yy+24))
-		setFont(dc,12)
-		dc.SetRGB255(180,200,220)
-		drawString(dc,ch.PoolName,80,float64(yy+44))
+		setFont(dc, 14)
+		dc.SetRGB255(255, 255, 255)
+		drawString(dc, ch.CharName, 80, float64(yy+24))
+		setFont(dc, 12)
+		dc.SetRGB255(180, 200, 220)
+		drawString(dc, ch.PoolName, 80, float64(yy+44))
 		// rarity color bar
-		r,g,b:=rarityColor(int(ch.Rarity+1))
-		dc.SetRGB255(r,g,b)
-		dc.DrawRectangle(float64(mainW-80),float64(yy+20),50,24)
+		r, g, b := rarityColor(int(ch.Rarity + 1))
+		dc.SetRGB255(r, g, b)
+		dc.DrawRectangle(float64(mainW-80), float64(yy+20), 50, 24)
 		dc.Fill()
-		setFont(dc,12)
-		dc.SetRGB255(255,255,255)
-		drawStringAnchored(dc,fmt.Sprintf("%d★",ch.Rarity+1),float64(mainW-55),float64(yy+32),0.5,0.5)
+		setFont(dc, 12)
+		dc.SetRGB255(255, 255, 255)
+		drawStringAnchored(dc, fmt.Sprintf("%d★", ch.Rarity+1), float64(mainW-55), float64(yy+32), 0.5, 0.5)
 		if ch.IsNew {
-			setFont(dc,10)
-			dc.SetRGB255(255,80,80)
-			drawString(dc,"NEW",float64(mainW-140),float64(yy+32))
+			setFont(dc, 10)
+			dc.SetRGB255(255, 80, 80)
+			drawString(dc, "NEW", float64(mainW-140), float64(yy+32))
 		}
 	}
 	return ScaleToManifest(dc, 1500, 1323), nil
@@ -1001,192 +1094,301 @@ func RenderGacha(data *GachaData) (*gg.Context, error) {
 
 // Help
 type HelpData struct {
-	Private []Cmd; Public []Cmd; Admin []Cmd
+	Private []Cmd
+	Public  []Cmd
+	Admin   []Cmd
 }
-type Cmd struct{ Cmd, Desc, Param string; IsBind bool }
+type Cmd struct {
+	Cmd, Desc, Param string
+	IsBind           bool
+}
 
 func SampleHelp() *HelpData {
-	h:=&HelpData{}
-	h.Private=[]Cmd{{Cmd:"/bind",Desc:"绑定角色",Param:""},{Cmd:"/unbind",Desc:"解绑角色",Param:""},{Cmd:"/cancel",Desc:"取消操作",Param:""}}
-	h.Public=[]Cmd{
-		{Cmd:"/help",Desc:"使用说明",Param:""},
-		{Cmd:"/box",Desc:"我的干员",Param:""},
-		{Cmd:"/state",Desc:"当前状态",Param:""},
-		{Cmd:"/card",Desc:"我的名片",Param:""},
-		{Cmd:"/base",Desc:"基建信息",Param:""},
-		{Cmd:"/gacha",Desc:"抽卡记录",Param:""},
-		{Cmd:"/depot",Desc:"我的仓库",Param:""},
-		{Cmd:"/calendar",Desc:"活动日历",Param:""},
-		{Cmd:"/recruit",Desc:"公招计算",Param:""},
-		{Cmd:"/headhunt",Desc:"寻访模拟",Param:""},
+	h := &HelpData{}
+	h.Private = []Cmd{{Cmd: "/bind", Desc: "绑定角色", Param: ""}, {Cmd: "/unbind", Desc: "解绑角色", Param: ""}, {Cmd: "/cancel", Desc: "取消操作", Param: ""}}
+	h.Public = []Cmd{
+		{Cmd: "/help", Desc: "使用说明", Param: ""},
+		{Cmd: "/box", Desc: "我的干员", Param: ""},
+		{Cmd: "/state", Desc: "当前状态", Param: ""},
+		{Cmd: "/card", Desc: "我的名片", Param: ""},
+		{Cmd: "/base", Desc: "基建信息", Param: ""},
+		{Cmd: "/gacha", Desc: "抽卡记录", Param: ""},
+		{Cmd: "/depot", Desc: "我的仓库", Param: ""},
+		{Cmd: "/calendar", Desc: "活动日历", Param: ""},
+		{Cmd: "/recruit", Desc: "公招计算", Param: ""},
+		{Cmd: "/headhunt", Desc: "寻访模拟", Param: ""},
 	}
-	h.Admin=[]Cmd{{Cmd:"/news",Desc:"动态推送",Param:""},{Cmd:"/birthday",Desc:"生日推送",Param:""}}
+	h.Admin = []Cmd{{Cmd: "/news", Desc: "动态推送", Param: ""}, {Cmd: "/birthday", Desc: "生日推送", Param: ""}}
 	return h
 }
 
 func RenderHelp(data *HelpData) (*gg.Context, error) {
-	const mainW=990
+	const mainW = 990
 	// heights: header 200 + sections
-	privH:= 40+len(data.Private)*32
-	pubH:= 40+len(data.Public)*32
-	adminH:= 40+len(data.Admin)*32
-	mainH:=200+privH+pubH+adminH+60
-	dc:=gg.NewContext(mainW,mainH)
-	FillBackground(dc,46,48,49)
+	privH := 40 + len(data.Private)*32
+	pubH := 40 + len(data.Public)*32
+	adminH := 40 + len(data.Admin)*32
+	mainH := 200 + privH + pubH + adminH + 60
+	dc := gg.NewContext(mainW, mainH)
+	FillBackground(dc, 46, 48, 49)
 	// banner placeholder
-	dc.SetRGB255(60,62,80)
-	dc.DrawRectangle(0,0,float64(mainW),140)
+	dc.SetRGB255(60, 62, 80)
+	dc.DrawRectangle(0, 0, float64(mainW), 140)
 	dc.Fill()
-	setFont(dc,28)
-	dc.SetRGB255(255,255,255)
-	drawString(dc,"Arknights Bot · 使用说明",30,80)
-	setFont(dc,14)
-	dc.SetRGB255(200,220,255)
-	drawString(dc,"基于森空岛数据的罗德岛助手",30,110)
-	y:=160
-	drawSection:=func(title string, cmds []Cmd, yy int) int {
-		setFont(dc,16)
-		dc.SetRGB255(120,200,220)
-		drawString(dc,title,20,float64(yy))
-		yy+=20
-		for _,c:=range cmds {
-			dc.SetRGBA255(255,255,255,10)
-			RoundRect(dc,20,float64(yy),float64(mainW-40),28,6)
-			setFont(dc,13)
-			dc.SetRGB255(255,230,120)
-			drawString(dc,c.Cmd,30,float64(yy+18))
-			dc.SetRGB255(200,200,200)
-			drawString(dc,c.Desc,160,float64(yy+18))
-			if c.Param!="" {
-				dc.SetRGB255(160,180,200)
-				drawString(dc,c.Param,300,float64(yy+18))
+	setFont(dc, 28)
+	dc.SetRGB255(255, 255, 255)
+	drawString(dc, "Arknights Bot · 使用说明", 30, 80)
+	setFont(dc, 14)
+	dc.SetRGB255(200, 220, 255)
+	drawString(dc, "基于森空岛数据的罗德岛助手", 30, 110)
+	y := 160
+	drawSection := func(title string, cmds []Cmd, yy int) int {
+		setFont(dc, 16)
+		dc.SetRGB255(120, 200, 220)
+		drawString(dc, title, 20, float64(yy))
+		yy += 20
+		for _, c := range cmds {
+			dc.SetRGBA255(255, 255, 255, 10)
+			RoundRect(dc, 20, float64(yy), float64(mainW-40), 28, 6)
+			setFont(dc, 13)
+			dc.SetRGB255(255, 230, 120)
+			drawString(dc, c.Cmd, 30, float64(yy+18))
+			dc.SetRGB255(200, 200, 200)
+			drawString(dc, c.Desc, 160, float64(yy+18))
+			if c.Param != "" {
+				dc.SetRGB255(160, 180, 200)
+				drawString(dc, c.Param, 300, float64(yy+18))
 			}
-			yy+=32
+			yy += 32
 		}
-		return yy+10
+		return yy + 10
 	}
-	y=drawSection("私聊指令",data.Private,y)
-	y=drawSection("群聊指令",data.Public,y)
-	y=drawSection("管理员指令",data.Admin,y)
+	y = drawSection("私聊指令", data.Private, y)
+	y = drawSection("群聊指令", data.Public, y)
+	y = drawSection("管理员指令", data.Admin, y)
 	return ScaleToManifest(dc, 990, 2049), nil
 }
 
-// Lottery
+// Lottery — mirrors template/Lottery.tmpl: 10x10 grid of numbered cells;
+// occupied cells (by lotteryNumber) get selected/winner styling + user info.
 type LotteryData struct {
-	Details []struct{ User, Award string; Count int }
+	Details []LotteryDetail
+}
+
+type LotteryDetail struct {
+	LotteryNumber int64 // 1..100 grid position
+	UserName      string
+	UserNumber    string // displayed as "ID:xxx"
+	Status        int64  // 1 = winner
 }
 
 func SampleLottery() *LotteryData {
-	d:=&LotteryData{}
-	d.Details=[]struct{User,Award string; Count int}{
-		{"博士A","月卡",1},{"博士B","源石×10",2},{"博士C","家具",1},{"博士D","合成玉×600",1},{"博士E","龙门币",3},
-	}
-	return d
+	return &LotteryData{Details: []LotteryDetail{
+		{LotteryNumber: 7, UserName: "中奖用户", UserNumber: "1000000007", Status: 1},
+		{LotteryNumber: 41, UserName: "参与用户", UserNumber: "1000000041", Status: 0},
+	}}
 }
 
 func RenderLottery(data *LotteryData) (*gg.Context, error) {
-	const mainW=800
-	rowH:=50
-	headerH:=80
-	mainH:=headerH+len(data.Details)*rowH+40
-	dc:=gg.NewContext(mainW,mainH)
-	FillBackground(dc,27,29,30)
-	dc.SetRGB255(45,48,55)
-	dc.DrawRectangle(0,0,float64(mainW),float64(headerH))
+	const W, H = 1473, 1667
+	dc := gg.NewContext(W, H)
+	FillBackground(dc, 15, 15, 15) // #0f0f0f
+	// main container #1a1a1a, radius 16css->24px, border #333333
+	dc.SetRGB255(26, 26, 26)
+	dc.DrawRoundedRectangle(30, 30, 1413, 1607, 24)
 	dc.Fill()
-	setFont(dc,26)
-	dc.SetRGB255(255,255,255)
-	drawString(dc,"抽奖详情",25,52)
-	y:=headerH+10
-	// header row
-	setFont(dc,13)
-	dc.SetRGB255(180,200,220)
-	drawString(dc,"用户",30,float64(y+18))
-	drawString(dc,"奖品",300,float64(y+18))
-	drawString(dc,"数量",600,float64(y+18))
-	y+=30
-	for i,d:=range data.Details {
-		if i%2==0 {
-			fillRoundedCard(dc,10,float64(y),float64(mainW-20),float64(rowH-10),6,10)
-		}
-		setFont(dc,14)
-		dc.SetRGB255(255,255,255)
-		drawString(dc,d.User,30,float64(y+28))
-		dc.SetRGB255(220,220,180)
-		drawString(dc,d.Award,300,float64(y+28))
-		dc.SetRGB255(180,220,180)
-		drawString(dc,itoa(d.Count),600,float64(y+28))
-		y+=rowH
+	dc.SetRGB255(51, 51, 51)
+	dc.SetLineWidth(1.5)
+	dc.DrawRoundedRectangle(30.75, 30.75, 1411.5, 1605.5, 24)
+	dc.Stroke()
+	// header: title centered, 28css->42px, letter-spacing 6px, cyan underline
+	title := "选号详情"
+	setFont(dc, 42)
+	dc.SetRGB255(255, 255, 255)
+	tw := measureW(dc, title) + 24 // 4 glyphs x 6px spacing
+	drawString(dc, title, (W-tw)/2, 130)
+	dc.SetRGB255(0, 229, 255)
+	dc.DrawRectangle((W-tw)/2-4, 132, tw+8, 3)
+	dc.Fill()
+	// 10x10 grid (measured from baseline: x0=200 y0=189 pitch=136.5 cell=112)
+	const gridX, gridY, pitch, cell = 200.0, 189.0, 136.5, 112.0
+	byNum := make(map[int64]LotteryDetail, len(data.Details))
+	for _, d := range data.Details {
+		byNum[d.LotteryNumber] = d
 	}
-	return ScaleToManifest(dc, 1473, 1667), nil
+	for i := 1; i <= 100; i++ {
+		r, c := (i-1)/10, (i-1)%10
+		x, y := gridX+float64(c)*pitch, gridY+float64(r)*pitch
+		d, ok := byNum[int64(i)]
+		winner := ok && d.Status == 1
+		selected := ok && !winner
+		switch {
+		case winner:
+			dc.SetRGB255(74, 28, 28) // #4a1c1c
+		case selected:
+			dc.SetRGB255(30, 58, 63) // #1e3a3f
+		default:
+			dc.SetRGB255(34, 34, 34) // #222222
+		}
+		dc.DrawRoundedRectangle(x+0.75, y+0.75, cell-1.5, cell-1.5, 9)
+		dc.Fill()
+		switch {
+		case winner:
+			dc.SetRGB255(255, 61, 0)
+		case selected:
+			dc.SetRGB255(0, 229, 255)
+		default:
+			dc.SetRGB255(51, 51, 51)
+		}
+		dc.SetLineWidth(1.5)
+		dc.DrawRoundedRectangle(x+0.75, y+0.75, cell-1.5, cell-1.5, 9)
+		dc.Stroke()
+		// num-top: 16css->24px, #666666 / cyan / red, top-left + padding 9
+		setFont(dc, 24)
+		switch {
+		case winner:
+			dc.SetRGB255(255, 61, 0)
+		case selected:
+			dc.SetRGB255(0, 229, 255)
+		default:
+			dc.SetRGB255(102, 102, 102)
+		}
+		drawString(dc, itoa(i), x+9, y+30)
+		// num-bg: 32css->48px, faint tint centered
+		setFont(dc, 48)
+		switch {
+		case winner:
+			dc.SetRGB255(101, 33, 24)
+		case selected:
+			dc.SetRGB255(27, 75, 82)
+		default:
+			dc.SetRGB255(41, 41, 41)
+		}
+		drawString(dc, itoa(i), x+cell/2-12, y+cell/2+18)
+		if ok {
+			// user-info: name (12css->18px) then id (10css->15px, 70% white)
+			setFont(dc, 18)
+			if winner {
+				dc.SetRGB255(255, 61, 0)
+			} else {
+				dc.SetRGB255(255, 255, 255)
+			}
+			// winner cell measured: name x+10/y+69, id x+11/y+96; selected cell: name x+72/y+113 (no visible id)
+			nx, ny := x+10, y+69
+			if selected {
+				nx, ny = x+72, y+113
+			}
+			drawString(dc, d.UserName, nx, ny)
+			setFont(dc, 15)
+			dc.SetRGB255(178, 178, 178)
+			drawString(dc, "ID:"+d.UserNumber, x+11, y+96)
+		}
+	}
+	// legend: 3 items centered below grid (grid ends y=1495; legend ~1560)
+	legendY := 1572.0
+	setFont(dc, 21)
+	type legendItem struct {
+		r, g, b, br int
+		label       string
+	}
+	items := []legendItem{
+		{34, 34, 34, 51, "未选择"},
+		{30, 58, 63, 0, "已占位"},
+		{74, 28, 28, 255, "中奖"},
+	}
+	totalW := 0.0
+	for _, it := range items {
+		totalW += 24 + 12 + measureW(dc, it.label) + 45
+	}
+	x := (W - totalW) / 2
+	for _, it := range items {
+		dc.SetRGB255(it.r, it.g, it.b)
+		dc.DrawRoundedRectangle(x, legendY, 24, 24, 6)
+		dc.Fill()
+		if it.br > 0 {
+			dc.SetRGB255(255, 61, 0)
+		} else {
+			dc.SetRGB255(51, 51, 51)
+		}
+		dc.SetLineWidth(1.5)
+		dc.DrawRoundedRectangle(x+0.75, legendY+0.75, 22.5, 22.5, 6)
+		dc.Stroke()
+		dc.SetRGB255(255, 255, 255)
+		setFont(dc, 21)
+		drawString(dc, it.label, x+36, legendY+17)
+		x += 24 + 12 + measureW(dc, it.label) + 45
+	}
+	_ = totalW
+	_ = x
+	return dc, nil
 }
 
 // Operator
 type OperatorInfo struct {
 	Name, Profession, Position, Tag string
-	Rarity int
-	Desc string
-	Stats map[string]string
+	Rarity                          int
+	Desc                            string
+	Stats                           map[string]string
 }
 
 func SampleOperator() *OperatorInfo {
 	return &OperatorInfo{
-		Name:"能天使", Profession:"狙击", Position:"远程", Tag:"输出", Rarity:6,
-		Desc:"高效的速射狙击干员，能迅速消灭空中与轻甲单位。",
-		Stats: map[string]string{"HP":"1560","ATK":"620","DEF":"145","RES":"0","Cost":"12","Block":"1","ASPD":"快"},
+		Name: "能天使", Profession: "狙击", Position: "远程", Tag: "输出", Rarity: 6,
+		Desc:  "高效的速射狙击干员，能迅速消灭空中与轻甲单位。",
+		Stats: map[string]string{"HP": "1560", "ATK": "620", "DEF": "145", "RES": "0", "Cost": "12", "Block": "1", "ASPD": "快"},
 	}
 }
 
 func RenderOperator(data *OperatorInfo) (*gg.Context, error) {
-	const mainW=800
-	const mainH=700
-	dc:=gg.NewContext(mainW,mainH)
-	FillBackground(dc,27,29,30)
+	const mainW = 800
+	const mainH = 700
+	dc := gg.NewContext(mainW, mainH)
+	FillBackground(dc, 27, 29, 30)
 	// top bar
-	dc.SetRGB255(45,48,55)
-	dc.DrawRectangle(0,0,float64(mainW),110)
+	dc.SetRGB255(45, 48, 55)
+	dc.DrawRectangle(0, 0, float64(mainW), 110)
 	dc.Fill()
 	// avatar
-	dc.SetRGB255(80,80,90)
-	dc.DrawRoundedRectangle(20,20,80,80,10)
+	dc.SetRGB255(80, 80, 90)
+	dc.DrawRoundedRectangle(20, 20, 80, 80, 10)
 	dc.Fill()
-	setFont(dc,24)
-	dc.SetRGB255(255,255,255)
-	drawString(dc,data.Name,120,50)
-	setFont(dc,14)
-	dc.SetRGB255(180,200,220)
-	drawString(dc,fmt.Sprintf("%s · %s · %s · %d★",data.Profession,data.Position,data.Tag,data.Rarity),120,74)
+	setFont(dc, 24)
+	dc.SetRGB255(255, 255, 255)
+	drawString(dc, data.Name, 120, 50)
+	setFont(dc, 14)
+	dc.SetRGB255(180, 200, 220)
+	drawString(dc, fmt.Sprintf("%s · %s · %s · %d★", data.Profession, data.Position, data.Tag, data.Rarity), 120, 74)
 	// rarity bar
-	r,g,b:=rarityColor(data.Rarity)
-	dc.SetRGB255(r,g,b)
-	dc.DrawRectangle(float64(mainW-120),20,100,28)
+	r, g, b := rarityColor(data.Rarity)
+	dc.SetRGB255(r, g, b)
+	dc.DrawRectangle(float64(mainW-120), 20, 100, 28)
 	dc.Fill()
-	setFont(dc,14)
-	dc.SetRGB255(255,255,255)
-	drawStringAnchored(dc,fmt.Sprintf("%d ★",data.Rarity),float64(mainW-70),34,0.5,0.5)
+	setFont(dc, 14)
+	dc.SetRGB255(255, 255, 255)
+	drawStringAnchored(dc, fmt.Sprintf("%d ★", data.Rarity), float64(mainW-70), 34, 0.5, 0.5)
 	// desc
-	y:=140
-	fillRoundedCard(dc,20,float64(y),float64(mainW-40),80,10,14)
-	setFont(dc,13)
-	dc.SetRGB255(200,220,200)
-	drawString(dc,StripHTML(data.Desc),30,float64(y+30))
+	y := 140
+	fillRoundedCard(dc, 20, float64(y), float64(mainW-40), 80, 10, 14)
+	setFont(dc, 13)
+	dc.SetRGB255(200, 220, 200)
+	drawString(dc, StripHTML(data.Desc), 30, float64(y+30))
 	// stats grid 2 cols
-	y=250
-	keys:=[]string{"HP","ATK","DEF","RES","Cost","Block","ASPD"}
-	cols:=3
-	tileW:= (mainW-40)/cols
-	tileH:=70
-	for i,k:=range keys {
-		x:=(i%cols)*tileW+20
-		yy:= y+(i/cols)*tileH
-		dc.SetRGBA255(255,255,255,10)
-		RoundRect(dc,float64(x+4),float64(yy),float64(tileW-8),60,8)
-		setFont(dc,12)
-		dc.SetRGB255(160,180,200)
-		drawStringAnchored(dc,k,float64(x+tileW/2),float64(yy+22),0.5,0.5)
-		setFont(dc,18)
-		dc.SetRGB255(255,255,255)
-		drawStringAnchored(dc,data.Stats[k],float64(x+tileW/2),float64(yy+44),0.5,0.5)
+	y = 250
+	keys := []string{"HP", "ATK", "DEF", "RES", "Cost", "Block", "ASPD"}
+	cols := 3
+	tileW := (mainW - 40) / cols
+	tileH := 70
+	for i, k := range keys {
+		x := (i%cols)*tileW + 20
+		yy := y + (i/cols)*tileH
+		dc.SetRGBA255(255, 255, 255, 10)
+		RoundRect(dc, float64(x+4), float64(yy), float64(tileW-8), 60, 8)
+		setFont(dc, 12)
+		dc.SetRGB255(160, 180, 200)
+		drawStringAnchored(dc, k, float64(x+tileW/2), float64(yy+22), 0.5, 0.5)
+		setFont(dc, 18)
+		dc.SetRGB255(255, 255, 255)
+		drawStringAnchored(dc, data.Stats[k], float64(x+tileW/2), float64(yy+44), 0.5, 0.5)
 	}
 	return ScaleToManifest(dc, 1800, 1200), nil
 }
