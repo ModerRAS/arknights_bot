@@ -14,7 +14,7 @@
 //
 // DESTRUCTIVE: the ablation sweep renames assets in this checkout IN PLACE (asset -> asset.ablate). The restore is a plain call, NOT a defer, and the leftover check (os.Exit(1)) only runs at the end of a normal run — so a Ctrl-C or crash in between leaves an asset stuck as *.ablate that must be renamed back by hand.
 //
-// Ablation works on the real checkout with rename+defer-restore because the package
+// Ablation works on the real checkout with rename-then-restore because the package
 // caches amiyaPath at init: pointing AssetRoot at a shadow dir would leave the
 // fallback path live and hide the very failures we are looking for.
 package main
