@@ -1,0 +1,156 @@
+# GG pixel-parity score evidence — 16 scenes vs frozen Playwright baseline
+#
+# measured-at: 4bdbc64 (feat/gg-render-recruit-headhunt; integration of
+#              feat/gg-render-headhunt into the ec440bf base)
+# change:      headhunt only. Two commits, merged --no-ff as 4bdbc64:
+#                5ad23b3  A-class asset wiring + SampleHeadhunt rarity data fix
+#                          + geometry alignment      0.79983 -> 0.90357
+#                df01ade  C-class portrait (amiya-half.webp)  0.90357 -> 0.96476
+#              No gate logic touched, no similarityNormalized body touched, no
+#              0.99 threshold touched, pixel_test.go / helpers.go / scene_card.go
+#              untouched. render.go is the only source file changed, plus one
+#              added binary asset (assets/headhunt/amiya-half.webp).
+# verified:    independently by lead-8, NOT by the worker's own claim. A BEFORE
+#              snapshot of all 16 scene lines was taken at ec440bf in a separate
+#              worktree before any change, then diffed against the post-change
+#              run. Result: exactly one line differs (headhunt). The other 15
+#              scenes are byte-identical. The merge itself was also verified
+#              (integration tree vs branch tip => diff_exit=0, i.e. the merge
+#              changed no pixel).
+# reproduce:   cd src && go test ./ggrender/ -run TestGGPixelParity -v
+#
+# provenance:  This file did NOT exist on feat/gg-render-card-atomic (ec440bf);
+#              `git ls-tree -r --name-only ec440bf | grep pixel-parity-scores`
+#              exits 1 with empty output. It was introduced by 0ea71c6
+#              (fix/pixel-test-gofmt) and has copies on that branch plus
+#              fix/gate-hardening (aa88012) and fix/card-text-color (5331064),
+#              each reflecting that branch's own change point. This copy is
+#              created on feat/gg-render-recruit-headhunt.
+#              Evidence for the "not on ec440bf" claim:
+#                git merge-base --is-ancestor 0ea71c6 ec440bf   => exit 1
+#                git branch --contains 0ea71c6 => fix/card-text-color,
+#                                                fix/gate-hardening,
+#                                                fix/pixel-test-gofmt
+#
+# ---------------------------------------------------------------------------
+# CAVEAT
+#
+# 1. This baseline does NOT include the uncommitted MS-YaHei font change to
+#    src/ggrender/render.go that lives in the card-atomic worktree. In
+#    particular lottery reads 0.98358 here, not the 0.98393 measured in that
+#    dirty worktree.
+#
+# 2. Three scenes measure a DEGENERATE FIXTURE, not a realistic render. Passing
+#    0.99 on them says the renderer faithfully reproduces a degraded fixture —
+#    it does NOT say the scene is correct under real data:
+#      · headhunt — the 10 ops share ONE ThumbURL, so the baseline draws 10
+#        identical portraits. Rendering 10 DIFFERENT operators would score
+#        WORSE. headhunt at 0.99 would not mean headhunt is right.
+#      · recruit  — resource-manifest.json declares exactly ONE resource whose
+#        target mentions Recruit (cache/amiya-avatar.webp), so the baseline
+#        draws the same Amiya portrait in all 14 slots. Same caveat.
+#      · box     — 11 identical Amiya cards; the template's
+#        onerror="this.src='assets/common/amiya.png'" fallback is what fired.
+#    NOTE: for headhunt and recruit this is FIXTURE DEGENERATION, not
+#    onerror degradation. requestStats shows failedRequests/fallbackCount/
+#    missingResources all zero for all 16 scenes — that field returns the same
+#    answer for every input (including the known-degraded box), so it carries
+#    zero information and must NOT be used to classify a scene.
+#
+# 3. Two measured NET-NEGATIVE results, recorded so nobody repeats them:
+#      · Restoring the baseline's 2 tag groups (recruit class-B structure
+#        repair): 0.61351 -> 0.54379 (-0.06972). A pure-refactor CONTROL
+#        reproduced 0.61351 exactly, so the drop is attributable to the
+#        structure change, not refactor noise. Root cause: ScaleToManifest
+#        hard-stretches the natural canvas to 1350x534, so any change that
+#        alters canvas height changes the global scale and misaligns
+#        everything. Fixing class B requires fixing the scaling first (D2).
+#      · Deleting content we draw that the baseline does not have is ALSO
+#        net-negative before the background is fixed: 0.61351 -> 0.57894
+#        (-0.03457). The extra pixels are currently NOT deep-background, and
+#        deep-background is our single most expensive error (27.61% of diff
+#        mass). Deleting them is removing a fig leaf, not a correction.
+#    Generalised: a scalar similarity gate rewards drawing MORE over drawing
+#    MORE-ACCURATELY whenever un-drawn area is penalised differently. For any
+#    low-scoring scene, ask first "is something over-drawn masking a bigger
+#    error?" — not "what is missing?"
+#
+# 4. headhunt 0.96476 vs the 0.99 gate: PART of the gap is NOT a rendering
+#    defect but an ENCODING PATH difference. The frozen baseline is a Chromium
+#    JPEG screenshot (lossy, 4:2:0 chroma subsampling, measured 16/16); our
+#    output is a lossless re-encode from the original webp. The compression
+#    damage on the baseline side cannot be removed without reproducing that
+#    damage. Injecting matching quantisation noise would be a BASELINE-DERIVED
+#    ASSET, which this project forbids — the red line concerns the asset's
+#    PROVENANCE, not the file extension, and re-encoding does not change the
+#    provenance. Therefore 0.96476 must NOT be read as "adjust the geometry and
+#    it will reach 0.99". The geometry is already aligned; the one genuinely
+#    improvable region is the right strip (RMS 16.998, a 25px seam
+#    extrapolation), not a re-encode.
+#
+# 5. Boundary observed when fixing SampleHeadhunt's data:
+#      INPUT must match the baseline's input. GEOMETRY/COORDINATES must be
+#      computed by the renderer, never back-derived from the baseline image.
+#    What was changed is the DATA VALUE (Rarity), justified by two
+#    baseline-independent facts: the old Rarity: 3+i%4 produced two ops with
+#    Rarity=6, and back_6.png / Rarity_6.png DO NOT EXIST under
+#    assets/headhunt/ (i.e. the renderer was reading a non-existent asset and
+#    drawing no star bar at all — this needs no score argument); and
+#    Rarity_5.png was proven to hold 6 stars by connected-component counting
+#    while Rarity_0..4 hold 1..5. NOT ONE coordinate was copied off the
+#    baseline image. If you ever see someone editing fixture COORDINATES to
+#    raise the score, that is the line being crossed.
+#    Same boundary applied to assets/headhunt/amiya-half.webp: the CHOICE of
+#    that image is input-side and is proven by a format-level impossibility
+#    (all 16 baseline images are JPEG mode=RGB with no alpha channel, while
+#    this file is WebP RGBA with alpha extrema (0,255) — it cannot be a crop
+#    of any of them). Its placement and scale were derived from the asset's
+#    own 180x360 = 1:2 ratio and the pixel-measured 95x190 = 1:2 frame, not
+#    from measuring the baseline jpg.
+#
+# 6. Known gate limitations (quoted from docs/audit/verifier-review-20260929.md,
+#    2026-09-29 verifier review; sign-off "conditional pass, 4 must-fix + 1
+#    ruled unimplementable and recorded as a known limitation"):
+#      · Defect #6, self-validating trust anchor [UNFIXED]: pixel_test.go's
+#        hash gate only checks "baseline file sha256 == the sha256 in the same
+#        manifest record", and both can be changed together. Replacing the
+#        baseline with a self-made image AND updating the manifest sha256 still
+#        passes every check. The only defence today is git tracking plus human
+#        review — that is not a cryptographic anchor.
+#      · Defect #7, baseline as backdrop plus small perturbation [UNHANDLED]:
+#        sim >= 0.99 permits sum <= 0.01*w*h*4*255 and a single pixel can
+#        contribute 765, so roughly 1.33% of the canvas can be completely
+#        wrong and still pass. Measured: gatePassed(0.9995, non-empty bbox)
+#        returns true.
+#    When you read ANY 0.99xx score in this file, you must know these two.
+#
+# 7. Gate limitation in the OPPOSITE direction — over-strict, not over-lenient:
+#    single-pixel differences are killed. Per ruling, NOT fixed. A legitimate
+#    near-perfect render (measured single-pixel difference sim=0.99992) is
+#    judged a gate failure, because the zero-area bbox guard uses closed-interval
+#    semantics and a single-pixel difference yields [x,y,x,y], which is
+#    numerically indistinguishable from the zero-difference [0,0,0,0]. Not
+#    fixing it is a RULING, not an oversight: the fix would require relaxing the
+#    zero-span test from <= 0 to < 0, which is relaxing the gate. (The sentinel
+#    has since been changed to [-1,-1,-1,-1] so the two cases are separable in
+#    value, yet BOTH are still judged failures.)
+#    Together with items 6 and 7: the gate may let 1.33% of the canvas be wrong,
+#    and may also reject sim=0.99992. THE BIAS IS BIDIRECTIONAL. Do not read
+#    this harness as merely lenient.
+# ---------------------------------------------------------------------------
+scene base         1665x918 scale=1.5 similarity=0.95900 bbox=[0 0 1664 917] hashOld=3a82d70486f9 hashNew=1aafad90d714 passed=false
+scene box          1050x536 scale=1.5 similarity=0.82504 bbox=[0 0 1049 535] hashOld=cf10f5d37fe6 hashNew=55d299b08d3a passed=false
+scene box-detail   722x279 scale=1.5 similarity=0.87844 bbox=[0 0 721 278] hashOld=047ad057ac19 hashNew=92d22b58aade passed=false
+scene box-summary  1350x723 scale=1.5 similarity=0.88098 bbox=[0 0 1349 722] hashOld=6a4633e04841 hashNew=45e63a36e647 passed=false
+scene calendar     2880x1620 scale=1.5 similarity=0.99432 bbox=[0 0 2863 1619] hashOld=80f31c1cfb13 hashNew=e7939ca718d0 passed=true
+scene card         1280x720 scale=1.0 similarity=0.96020 bbox=[0 0 1279 711] hashOld=75fea0acb6d2 hashNew=26fd5664a1c2 passed=false
+scene depot        1275x234 scale=1.5 similarity=0.91728 bbox=[0 0 1247 233] hashOld=d09c01dbd300 hashNew=5de23d50dc14 passed=false
+scene enemy        984x477 scale=1.5 similarity=0.91951 bbox=[0 0 983 476] hashOld=7aae46ad6d82 hashNew=bc7b5af135de passed=false
+scene gacha        1500x1323 scale=1.5 similarity=0.90251 bbox=[0 0 1499 1322] hashOld=b037cf55e967 hashNew=e43865641c03 passed=false
+scene headhunt     1049x576 scale=1.0 similarity=0.96476 bbox=[0 0 1048 575] hashOld=879933afa3b9 hashNew=6d314d14384f passed=false
+scene help         990x2049 scale=1.5 similarity=0.83943 bbox=[0 0 989 2048] hashOld=43bcdee85548 hashNew=e984bc7e9ffa passed=false
+scene lottery      1473x1667 scale=1.5 similarity=0.98358 bbox=[0 0 1472 1666] hashOld=9f5588be8860 hashNew=37a15ba596de passed=false
+scene missing      1050x536 scale=1.5 similarity=0.87614 bbox=[0 0 1049 535] hashOld=cc58fea684f3 hashNew=01b88d9597b9 passed=false
+scene operator     1800x1200 scale=1.5 similarity=0.69063 bbox=[0 0 1799 1199] hashOld=2c2834c7e048 hashNew=b50d020fb104 passed=false
+scene recruit      1350x534 scale=1.5 similarity=0.61351 bbox=[0 0 1349 533] hashOld=4a01136f4b12 hashNew=9ef36c3b0894 passed=false
+scene state        1092x510 scale=1.0 similarity=0.99093 bbox=[32 32 1079 507] hashOld=2c3d37795bac hashNew=79f31688bbe0 passed=true
