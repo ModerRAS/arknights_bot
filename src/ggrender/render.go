@@ -658,7 +658,23 @@ func RenderRecruit(data *RecruitList) (*gg.Context, error) {
 			ty += 26
 		}
 	}
-	gridTop := int(tagY) + 10
+	// D2b2: gridTop 44 -> 31, tileH and everything else untouched.
+	// Derivation: the frozen baseline's first operator-cell art top is at output y=46; the
+	// manifest scale is a uniform 1.5, so in design space that is 46/1.5 = 30.67 px.
+	// QUANTISATION, stated rather than hidden: gridTop is an int and 30.67 is not
+	// representable, so 31 (nearest) is used. At 1.5 that lands the art top at 46.5 output px
+	// instead of 46, i.e. a residual 0.5 px. The layout constants being integer-typed is itself
+	// a defect for a scene whose geometry is measured to fractions of a pixel; that belongs to
+	// the A-class batch, not here, so this variant stays single-variable.
+	// Only y = gridTop + (i/cols)*tileH depends on gridTop, so it moves the grid's vertical
+	// start and NOTHING horizontal: horizontal leakage is impossible by construction
+	// (grep 'gridTop' | grep 'x :=' => 0 hits), not merely unobserved.
+	// BAND-B is NOT a leak control. The grid lives inside BAND-B under both variants
+	// (D2b1 first-row art top at output y=66.0, D2b2 at 46.5; BAND-B spans y 47..365),
+	// so moving gridTop necessarily moves BAND-B. In D2b2 BAND-B improved by 8.77M, which is
+	// the intended effect, not a leak. The correct control for "only the vertical start moves"
+	// is a horizontal invariant, not "a region containing the grid stays put".
+	gridTop := 31
 	for i, o := range data.Operators {
 		x := (i%cols)*tileW + pad
 		y := gridTop + (i/cols)*tileH
