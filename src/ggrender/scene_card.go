@@ -15,7 +15,9 @@ const cardAscFrac = 0.80
 var (
 	cardBlue = color.RGBA{R: 0, G: 152, B: 220, A: 255}
 	cardGray = color.RGBA{R: 163, G: 163, B: 162, A: 255}
-	cardDark = color.RGBA{R: 17, G: 17, B: 17, A: 255}
+	// Template declares no color at either use site, so the browser default
+	// black is the ground truth; #111111 is not in the frozen baseline.
+	cardDark = color.RGBA{R: 0, G: 0, B: 0, A: 255}
 )
 
 func cardAsset(rel string) image.Image {
@@ -139,6 +141,7 @@ func RenderCard(data *CardInfo) (*gg.Context, error) {
 	dc.DrawRectangle(22, 20, 132, 24)
 	dc.Fill()
 	setFont(dc, 16)
+	dc.SetColor(cardDark)
 	cardTextCenter(dc, "入职日", 47, 32)
 	date := cardDate(data.RegTime)
 	dateW, _ := measure(dc, date)

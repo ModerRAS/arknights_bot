@@ -1,22 +1,40 @@
 # GG pixel-parity score evidence — 16 scenes vs frozen Playwright baseline
 #
-# measured-at: ec440bf (feat/gg-render-card-atomic)
-# change:      gofmt/duplicate-import cleanup in src/ggrender/pixel_test.go only
-#              (no gate logic, no similarityNormalized, no 0.99 threshold touched)
-# verified:    all 16 lines below are byte-identical to the pre-change run,
-#              proven by `git stash` before/after + `diff` in the same worktree.
+# measured-at: 0ea71c6 (fix/card-text-color) + uncommitted colour fix
+# change:      src/ggrender/scene_card.go only, 4 insertions / 1 deletion:
+#              1. RenderCard: explicit dc.SetColor(cardDark) before the 入职日
+#                 label, which previously inherited cardBlue and painted
+#                 #0098dc glyphs on a #0098dc chip (245 glyph px lost).
+#              2. cardDark #111111 -> #000000. Both use sites (date chip,
+#                 助理 label) sit on template elements that declare no
+#                 color, so the browser default black is ground truth;
+#                 assets/css/common.css has zero color declarations
+#                 (grep -c color -> 0, exit=1) and template/Card.tmpl
+#                 #regTime / #regTime div / 助理 div declare none either.
+#              No coordinates, no font, no gate logic, no pixel_test.go.
+# verified:    15 of 16 scenes are byte-identical before/after, proven by
+#              `diff` of two `go test -run TestGGPixelParity -v` captures in
+#              this worktree. ONLY the card line differs.
+#              CAVEAT ON DIRECTION: card moved 0.96020 -> 0.96015 (-0.00005),
+#              i.e. DOWN, not up. Per-region pixel counts show the colour fix
+#              is correct (入职日 dark px 0 -> 258 vs baseline 245) but the
+#              gg glyphs land ~3px higher and thicker than the Playwright
+#              baseline, so the restored ink adds more mismatch than the
+#              missing ink cost. See the report; this is a font-fidelity
+#              follow-up, not a colour reversal.
 # reproduce:   cd src && go test ./ggrender/ -run TestGGPixelParity -v
 #
 # CAVEAT: these scores do NOT include the uncommitted MS-YaHei font change to
 # src/ggrender/render.go that lives in the card-atomic worktree. In particular
 # lottery reads 0.98358 here, not the 0.98393 measured in that dirty worktree.
+# (Re-measured on this branch: lottery = 0.98358, CAVEAT still holds.)
 #
 scene base         1665x918 scale=1.5 similarity=0.95900 bbox=[0 0 1664 917] hashOld=3a82d70486f9 hashNew=1aafad90d714 passed=false
 scene box          1050x536 scale=1.5 similarity=0.82504 bbox=[0 0 1049 535] hashOld=cf10f5d37fe6 hashNew=55d299b08d3a passed=false
 scene box-detail   722x279 scale=1.5 similarity=0.87844 bbox=[0 0 721 278] hashOld=047ad057ac19 hashNew=92d22b58aade passed=false
 scene box-summary  1350x723 scale=1.5 similarity=0.88098 bbox=[0 0 1349 722] hashOld=6a4633e04841 hashNew=45e63a36e647 passed=false
 scene calendar     2880x1620 scale=1.5 similarity=0.99432 bbox=[0 0 2863 1619] hashOld=80f31c1cfb13 hashNew=e7939ca718d0 passed=true
-scene card         1280x720 scale=1.0 similarity=0.96020 bbox=[0 0 1279 711] hashOld=75fea0acb6d2 hashNew=26fd5664a1c2 passed=false
+scene card         1280x720 scale=1.0 similarity=0.96015 bbox=[0 0 1279 711] hashOld=75fea0acb6d2 hashNew=96200ec144b5 passed=false
 scene depot        1275x234 scale=1.5 similarity=0.91728 bbox=[0 0 1247 233] hashOld=d09c01dbd300 hashNew=5de23d50dc14 passed=false
 scene enemy        984x477 scale=1.5 similarity=0.91951 bbox=[0 0 983 476] hashOld=7aae46ad6d82 hashNew=bc7b5af135de passed=false
 scene gacha        1500x1323 scale=1.5 similarity=0.90251 bbox=[0 0 1499 1322] hashOld=b037cf55e967 hashNew=e43865641c03 passed=false
