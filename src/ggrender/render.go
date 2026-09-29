@@ -1280,17 +1280,40 @@ type OperatorInfo struct {
 	Name, Profession, Position, Tag string
 	Rarity                          int
 	Desc                            string
-	Stats                           map[string]string
 	// Painting is an assets/-relative path to the operator full-body art,
 	// drawn behind the UI chrome. Empty means "no art".
 	Painting string
+	// B1 属性面板的 9 项，字段顺序即 template/Operator.tmpl #attr 的行序：
+	// 最大生命值/攻击力/防御力/法抗/攻击间隔/再部署时间/阻挡数/部署费用/所属。
+	//
+	// TODO(game-data): 接真实干员数据源。字段与 src/utils/model/model.go 的
+	// Operator.HP/ATK/DEF/Res/Interval/ReDeploy/Block/Cost/Logo 严格一一对应，
+	// 实际填充点是 src/plugins/datasource/update_data_source.go（抓 prts.wiki 的
+	// #filter-data 属性 0..21，attrs[14]=ReDeploy、attrs[3]=Logo、attrs[17]=Interval）。
+	// 本包刻意不 import 那个 goquery 爬虫包：渲染层不该耦合 web 抓取层，
+	// 所以这里是渲染契约的独立副本，字段名对齐即可由调用方注入。
+	MaxHP, ATK, DEF, RES, Interval, ReDeploy, Block, Cost, Logo string
 }
 
 func SampleOperator() *OperatorInfo {
+	// 默认值取自冻结基线 images/operator.jpg（阿米娅）的人工转录，逐项可核。
+	// 出处定性：这些是浏览器从 prts.wiki 数据源收到的「值」，在 Boss 批准的边界内。
+	// 本轮没有、也不允许从该图反推任何「几何」——面板位置尺寸全部由模板 CSS 推出。
+	// 仓库内不存在阿米娅记录（git grep -F '精神融合' / '战术咏唱' / '合作协议'
+	// 在 265555f 均 exit=1 且无输出，尺子：同判据 grep -F '1742' 有命中），
+	// 故离线只能如此；真实数据通路见 OperatorInfo 的 TODO(game-data)。
 	return &OperatorInfo{
-		Name: "能天使", Profession: "狙击", Position: "远程", Tag: "输出", Rarity: 6,
-		Desc:  "高效的速射狙击干员，能迅速消灭空中与轻甲单位。",
-		Stats: map[string]string{"HP": "1560", "ATK": "620", "DEF": "145", "RES": "0", "Cost": "12", "Block": "1", "ASPD": "快"},
+		Name: "阿米娅", Profession: "术师", Position: "远程位", Tag: "输出", Rarity: 6,
+		// 模板 Operator.tmpl 没有 Desc 字段，基线本就没有干员描述，
+		// 所以留空而不是编一段——原先那段能天使描述是我们凭空造的，只会白丢像素。
+		Desc: "",
+		// B1 九项转录值（标签见 labels.go）：
+		//   最大生命值 1742 / 攻击力 699 / 防御力 121 / 法抗 10 / 攻击间隔 1.6s
+		//   再部署时间 70s / 阻挡数 1 / 部署费用 18 / 所属 罗德岛
+		MaxHP: "1742", ATK: "699", DEF: "121", RES: "10", Interval: "1.6s",
+		ReDeploy: "70s", Block: "1", Cost: "18", Logo: "罗德岛",
+		// assets/operator/painting-1024.png 与基线缓存 operator-painting-1024.png
+		// 字节完全相同（同一 blob 4caf646a），已经是 legacy 页面用的那张，本轮不动。
 		Painting: "operator/painting-1024.png",
 	}
 }
@@ -1333,23 +1356,35 @@ func RenderOperator(data *OperatorInfo) (*gg.Context, error) {
 	setFont(dc, 13)
 	dc.SetRGB255(200, 220, 200)
 	drawString(dc, StripHTML(data.Desc), 30, float64(y+30))
-	// stats grid 2 cols
-	y = 250
-	keys := []string{"HP", "ATK", "DEF", "RES", "Cost", "Block", "ASPD"}
-	cols := 3
-	tileW := (mainW - 40) / cols
-	tileH := 70
-	for i, k := range keys {
-		x := (i%cols)*tileW + 20
-		yy := y + (i/cols)*tileH
-		dc.SetRGBA255(255, 255, 255, 10)
-		RoundRect(dc, float64(x+4), float64(yy), float64(tileW-8), 60, 8)
-		setFont(dc, 12)
-		dc.SetRGB255(160, 180, 200)
-		drawStringAnchored(dc, k, float64(x+tileW/2), float64(yy+22), 0.5, 0.5)
-		setFont(dc, 18)
+	// ---- B1 顶部属性面板：照 template/Operator.tmpl 的 #attr 表 ----
+	// 几何来源（不从基线图像素反推）：manifest bbox 1200x800 scale 1.5；
+	// #attr{margin-top:20px;border-spacing:0}，其容器 div 为 position:absolute 且无偏移，
+	// 配 common.css 的 body{margin:0} -> 表原点落在 (0,20)；
+	// .b 宽 100px、.w 宽 70px；common.css 未设 font-size -> 浏览器默认 16px。
+	// 已知并保留的缺陷：ScaleToManifest 随后把 800x700 拉到 1800x1200，
+	// x 向比 y 向多拉伸 1.5 倍，而基线是各向同性 1.5。故绘制字号取 x 向折算值，
+	// 使「文字宽 / 单元格宽」比值与基线一致；y 向欠填留给布局重排轮（须等 bg.png 落地）。
+	sx, sy := float64(mainW)/cssPanelW, float64(mainH)/cssPanelH
+	// 行高 = 字体真实行高 + 上下各 1px 的 td 内边距；模板未设 line-height。
+	rowH := (cssLineHeight(cssFontPx) + 2*cssCellPad) * sy
+	setFont(dc, cssFontPx*sx)
+	labelW, valueW := cssLabelW*sx, cssValueW*sx
+	top, pad := cssPanelTop*sy, cssCellPad*sx
+	for i, st := range data.operatorStats() {
+		cx := float64(i%3) * (labelW + valueW)
+		cy := top + float64(i/3)*rowH
+		// .b：黑底白字 opacity .8
+		dc.SetRGBA255(0, 0, 0, cellAlpha)
+		dc.DrawRectangle(cx, cy, labelW, rowH)
+		dc.Fill()
+		// .w：#efeeef 底黑字 opacity .8
+		dc.SetRGBA255(239, 238, 239, cellAlpha)
+		dc.DrawRectangle(cx+labelW, cy, valueW, rowH)
+		dc.Fill()
 		dc.SetRGB255(255, 255, 255)
-		drawStringAnchored(dc, data.Stats[k], float64(x+tileW/2), float64(yy+44), 0.5, 0.5)
+		drawStringAnchored(dc, st.label, cx+pad, cy+rowH/2, 0, 0.5)
+		dc.SetRGB255(0, 0, 0)
+		drawStringAnchored(dc, st.value, cx+labelW+pad, cy+rowH/2, 0, 0.5)
 	}
 	return ScaleToManifest(dc, 1800, 1200), nil
 }
