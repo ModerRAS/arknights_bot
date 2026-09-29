@@ -1,0 +1,174 @@
+{
+  "chain": "Go HTTP RenderSpec -\u003e media.ScreenshotPNG -\u003e one resident Node runner",
+  "specFiles": {
+    "complex_render_specs.ndjson": "305b4a8c11dcabccc16bcc74aa599eaef172e75e3be659b2983ee959634c290b",
+    "dynamic-render-specs.ndjson": "4a1ff7d17898c2b3daa686678f2ffff265f59ab31e484200414ca36c0a299986",
+    "static-specs.ndjson": "ecc5c7b5cbcf4fed738c254cb5aa79b943c24d0d6bb0cbb51d35f6a62f28523e"
+  },
+  "expectedIds": [
+    "base",
+    "box",
+    "box-detail",
+    "box-summary",
+    "calendar",
+    "card",
+    "depot",
+    "enemy",
+    "gacha",
+    "headhunt",
+    "help",
+    "lottery",
+    "missing",
+    "operator",
+    "recruit",
+    "state"
+  ],
+  "results": [
+    {
+      "id": "base",
+      "path": "new/base.png",
+      "sha256": "50422f6c95f44fa7c6d30831e60f11dfc07b1ce9f6bd51e69c8bc7a5fe1af5ab",
+      "width": 1665,
+      "height": 918,
+      "scale": 1.5,
+      "format": "png"
+    },
+    {
+      "id": "box",
+      "path": "new/box.png",
+      "sha256": "c3f0d9811ae71003ad7ec16ea90e0e0c59dfd6bdc9152feefe41d8688cae8ed9",
+      "width": 1050,
+      "height": 536,
+      "scale": 1.5,
+      "format": "png"
+    },
+    {
+      "id": "box-detail",
+      "path": "new/box-detail.png",
+      "sha256": "ed18b77d6bf622e70f505ce1dba425f629ec7959357c89790e28b041b46955aa",
+      "width": 722,
+      "height": 279,
+      "scale": 1.5,
+      "format": "png"
+    },
+    {
+      "id": "box-summary",
+      "path": "new/box-summary.png",
+      "sha256": "1cd54451401c8523b76e5551a9fc421a03ad74f1367a44690e5a8a7062ddb5a5",
+      "width": 1350,
+      "height": 723,
+      "scale": 1.5,
+      "format": "png"
+    },
+    {
+      "id": "calendar",
+      "path": "new/calendar.png",
+      "sha256": "432fec50f2426316a1871f15a2a0416f91dab44fa04e2d148acaa7df725200d7",
+      "width": 2880,
+      "height": 1620,
+      "scale": 1.5,
+      "format": "png"
+    },
+    {
+      "id": "card",
+      "path": "new/card.png",
+      "sha256": "759c419910d64b0cf6e0d0fcee8199dc446ae4d4792725632146d57945c1b3b6",
+      "width": 1280,
+      "height": 720,
+      "scale": 1,
+      "format": "png"
+    },
+    {
+      "id": "depot",
+      "path": "new/depot.png",
+      "sha256": "45b21e091a8250c0e2278b6d2e12de3db27e8a0441736eb67428898e5c80ec5b",
+      "width": 1275,
+      "height": 234,
+      "scale": 1.5,
+      "format": "png"
+    },
+    {
+      "id": "enemy",
+      "path": "new/enemy.png",
+      "sha256": "85369791e79def22917640a06ece13c24c3a4d127e17fca3eb3d332cbd45d9b6",
+      "width": 984,
+      "height": 477,
+      "scale": 1.5,
+      "format": "png"
+    },
+    {
+      "id": "gacha",
+      "path": "new/gacha.png",
+      "sha256": "da355ddf35137eceb23ce19df6d6333ab25de7f1da42d8fe10c3b302b60ec23f",
+      "width": 1500,
+      "height": 1323,
+      "scale": 1.5,
+      "format": "png"
+    },
+    {
+      "id": "headhunt",
+      "path": "new/headhunt.png",
+      "sha256": "9723dafa05fccaf9311db5d9032236f7e259cac4c9f083e4abd09efae6c12214",
+      "width": 1049,
+      "height": 576,
+      "scale": 1,
+      "format": "png"
+    },
+    {
+      "id": "help",
+      "path": "new/help.png",
+      "sha256": "42af048edf022383a5efa7f0aa663d1212409f4ec65e51456af72e1b15d394d2",
+      "width": 990,
+      "height": 2049,
+      "scale": 1.5,
+      "format": "png"
+    },
+    {
+      "id": "lottery",
+      "path": "new/lottery.png",
+      "sha256": "3bf9e9a34c303e7486f07417983b21987e084d306062471a625b6f434aee8650",
+      "width": 1473,
+      "height": 1667,
+      "scale": 1.5,
+      "format": "png"
+    },
+    {
+      "id": "missing",
+      "path": "new/missing.png",
+      "sha256": "d5b3d4c420b7135e34d940ecf4a24eedde594d3681c631846eae8db0ac12e043",
+      "width": 1050,
+      "height": 536,
+      "scale": 1.5,
+      "format": "png"
+    },
+    {
+      "id": "operator",
+      "path": "new/operator.png",
+      "sha256": "4c593be5cfe5de2cb9153279744ace300f62cf12b213f15a22664d9825f99fc6",
+      "width": 1800,
+      "height": 1200,
+      "scale": 1.5,
+      "format": "png"
+    },
+    {
+      "id": "recruit",
+      "path": "new/recruit.png",
+      "sha256": "0d59c056b5cddca7b6f4c30685d689220a65a6c8aa58639cdb33cfd87e5d8328",
+      "width": 1350,
+      "height": 534,
+      "scale": 1.5,
+      "format": "png"
+    },
+    {
+      "id": "state",
+      "path": "new/state.png",
+      "sha256": "af641b6c403fc44dc9e7a9b496e18c11f077bda21f6b36e86cf494e4bdf1ca1b",
+      "width": 1092,
+      "height": 510,
+      "scale": 1,
+      "format": "png"
+    }
+  ],
+  "rendered": 16,
+  "failed": 0
+}
