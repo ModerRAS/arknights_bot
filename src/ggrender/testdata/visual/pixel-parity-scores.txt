@@ -1,5 +1,6 @@
 # GG pixel-parity score evidence — 16 scenes vs frozen Playwright baseline
 #
+# --- round 2/6: origin/fix/gate-hardening @ 38b25b7, merged into consolidate/gg-mainline ---
 # measured-at: 0ea71c6 (fix/pixel-test-gofmt) + fix/gate-hardening HEAD
 # change:      门禁加固，仅碰 src/ggrender/pixel_test.go 一个文件：
 #              (1) Task 2 — 新增 TestGGPixelParity_Negative_ThresholdGate，
@@ -18,6 +19,22 @@
 #              diff exit=0, 16/16 unchanged.
 # reproduce:   cd src && go test ./ggrender/ -run TestGGPixelParity -v -count=1
 #
+# --- round 3/6: origin/fix/operator-art-and-portrait-url @ b2f03c6, merged into consolidate/gg-mainline ---
+# measured-at: fix/operator-art-and-portrait-url (branch head, based on ec440bf / feat/gg-render-card-atomic)
+# change:      RenderOperator draws assets/operator/bg.png (LoadImage+AssetPath) instead of the flat
+#              FillBackground(27,29,30) fill. src/ggrender/render.go only, +7/-0.
+#              No gate logic, no similarityNormalized, no 0.99 threshold touched.
+# verified:    all 16 lines below were captured from one `go test ./ggrender/ -run TestGGPixelParity -v`
+#              run and diffed against the pre-change run; 15/16 lines are byte-identical
+#              (same hashOld and hashNew), only `scene operator` moved.
+# reproduce:   cd src && go test ./ggrender/ -run TestGGPixelParity -v
+# ---------------------------------------------------------------------------
+# NOTE (merge 3/6, worker-26): the two `change:` blocks above are kept in full
+# because each documents a different merge round into consolidate/gg-mainline.
+# The 16 data lines below are NOT transcribed by hand — they are the verbatim
+# `go test ./ggrender/ -run TestGGPixelParity -v` output captured in the
+# consolidate worktree AFTER the 3/6 merge commit.
+#
 # CAVEAT: these scores do NOT include the uncommitted MS-YaHei font change to
 # src/ggrender/render.go that lives in the card-atomic worktree. In particular
 # lottery reads 0.98358 here, not the 0.98393 measured in that dirty worktree.
@@ -35,6 +52,6 @@ scene headhunt     1049x576 scale=1.0 similarity=0.79983 bbox=[0 0 1048 575] has
 scene help         990x2049 scale=1.5 similarity=0.83943 bbox=[0 0 989 2048] hashOld=43bcdee85548 hashNew=e984bc7e9ffa passed=false
 scene lottery      1473x1667 scale=1.5 similarity=0.98358 bbox=[0 0 1472 1666] hashOld=9f5588be8860 hashNew=37a15ba596de passed=false
 scene missing      1050x536 scale=1.5 similarity=0.87614 bbox=[0 0 1049 535] hashOld=cc58fea684f3 hashNew=01b88d9597b9 passed=false
-scene operator     1800x1200 scale=1.5 similarity=0.69063 bbox=[0 0 1799 1199] hashOld=2c2834c7e048 hashNew=b50d020fb104 passed=false
+scene operator     1800x1200 scale=1.5 similarity=0.84554 bbox=[0 0 1799 1199] hashOld=2c2834c7e048 hashNew=eb5d35e2e9ee passed=false
 scene recruit      1350x534 scale=1.5 similarity=0.61351 bbox=[0 0 1349 533] hashOld=4a01136f4b12 hashNew=9ef36c3b0894 passed=false
 scene state        1092x510 scale=1.0 similarity=0.99093 bbox=[32 32 1079 507] hashOld=2c3d37795bac hashNew=79f31688bbe0 passed=true
