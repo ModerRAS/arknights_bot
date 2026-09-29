@@ -1281,6 +1281,9 @@ type OperatorInfo struct {
 	Rarity                          int
 	Desc                            string
 	Stats                           map[string]string
+	// Painting is an assets/-relative path to the operator full-body art,
+	// drawn behind the UI chrome. Empty means "no art".
+	Painting string
 }
 
 func SampleOperator() *OperatorInfo {
@@ -1288,6 +1291,7 @@ func SampleOperator() *OperatorInfo {
 		Name: "能天使", Profession: "狙击", Position: "远程", Tag: "输出", Rarity: 6,
 		Desc:  "高效的速射狙击干员，能迅速消灭空中与轻甲单位。",
 		Stats: map[string]string{"HP": "1560", "ATK": "620", "DEF": "145", "RES": "0", "Cost": "12", "Block": "1", "ASPD": "快"},
+		Painting: "operator/painting-1024.png",
 	}
 }
 
@@ -1296,6 +1300,11 @@ func RenderOperator(data *OperatorInfo) (*gg.Context, error) {
 	const mainH = 700
 	dc := gg.NewContext(mainW, mainH)
 	FillBackground(dc, 27, 29, 30)
+	// operator full-body art, contained and centred behind the UI chrome
+	if art := cardAsset(data.Painting); art != nil {
+		fit := ScaleContain(art, mainW, mainH)
+		dc.DrawImage(fit, (mainW-fit.Bounds().Dx())/2, (mainH-fit.Bounds().Dy())/2)
+	}
 	// top bar
 	dc.SetRGB255(45, 48, 55)
 	dc.DrawRectangle(0, 0, float64(mainW), 110)
