@@ -621,7 +621,13 @@ func RenderRecruit(data *RecruitList) (*gg.Context, error) {
 	}
 	mainH := int(tagY+10) + rows*tileH + pad
 	dc := gg.NewContext(mainW, mainH)
-	FillBackground(dc, 27, 29, 30)
+	// D1: Recruit.tmpl declares no background on #main or body, so the frozen Playwright
+	// baseline's background is the browser default page colour #ffffff, not an asset.
+	// Measured: pure 255,255,255 covers 48.60% of the baseline; the 7.92% at 250..254 is
+	// anti-alias halo around content (80.6% of it within 3px of a real-content pixel), and the
+	// remaining 0.85% of canvas is a 3-4px band pinned to rows y=0..3 (JPEG top-edge ringing).
+	// Upper bound on the residual: 0.85% of canvas. See _recruit_measure/step-1.json, step-3.json.
+	FillBackground(dc, 255, 255, 255)
 	setFont(dc, 14)
 	tx := float64(pad)
 	ty := float64(pad) + 14
