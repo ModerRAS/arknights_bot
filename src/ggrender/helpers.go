@@ -19,6 +19,7 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/fogleman/gg"
@@ -48,12 +49,10 @@ var (
 		}
 		return filepath.Join("..", "..", "assets")
 	}()
-	// FontCandidates tried in order.
+	// FontCandidates tried in order. In-repo only: host font dirs are
+	// worktree-external resources and the red line forbids them in rendering.
 	FontCandidates = []string{
 		filepath.Join(ggRepoRoot(), "assets", "font", "NotoSansHans-Regular.ttf"),
-		"C:/Windows/Fonts/msyh.ttc",
-		"C:/Windows/Fonts/simhei.ttf",
-		"C:/Windows/Fonts/msyh.ttf",
 	}
 )
 
@@ -235,7 +234,12 @@ func StrokeRoundRect(dc *gg.Context, x, y, w, h, r float64) {
 	dc.Stroke()
 }
 
-// LoadDefaultFont tries candidates.
+// fontFailOnce keeps the missing-font report to one line per test run.
+var fontFailOnce sync.Once
+
+// LoadDefaultFont tries candidates. A total failure is reported on stderr once
+// instead of being swallowed: silently rendering without a font shifts every
+// pixel score without failing anything.
 func LoadDefaultFont(dc *gg.Context, size float64) error {
 	var last error
 	for _, p := range FontCandidates {
@@ -245,6 +249,9 @@ func LoadDefaultFont(dc *gg.Context, size float64) error {
 			last = err
 		}
 	}
+	fontFailOnce.Do(func() {
+		fmt.Fprintf(os.Stderr, "ggrender: no font face loaded, tried %v: %v\n", FontCandidates, last)
+	})
 	return last
 }
 
