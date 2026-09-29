@@ -19,7 +19,7 @@ function decode(uri) {
   return Buffer.from(uri.slice(uri.indexOf(',') + 1), 'base64');
 }
 
-test('frozen manifest has 26 exact cache entries and aliases hit without fetch', async () => {
+test('frozen manifest has 33 exact cache entries and aliases hit without fetch', async () => {
   let fetches = 0;
   const load = createAssetLoader({
     repoRoot,
@@ -29,12 +29,31 @@ test('frozen manifest has 26 exact cache entries and aliases hit without fetch',
       throw new Error('network must not be used for a manifest alias');
     },
   });
-  assert.equal(manifest.resources.length, 26);
-  assert.equal(new Set(manifest.resources.map((entry) => entry.cachePath)).size, 26);
+  assert.equal(manifest.resources.length, 33);
+  assert.equal(new Set(manifest.resources.map((entry) => entry.cachePath)).size, 33);
   for (const entry of manifest.resources) {
     const value = await load(entry.requestAlias);
     assert.match(value, /^data:image\/(?:png|jpeg);base64,/);
     assert.ok(decode(value).byteLength > 0);
+  }
+  // 37d6f84 added the 7 base-module char_skin/portrait entries. They are real manifest
+  // entries, so their provenance is 'frozen-manifest'; only the 8 fixture-cache.invalid
+  // aliases in FROZEN_FIXTURE_CACHE_ALIASES carry 'frozen-manifest-fixture-alias'.
+  for (const alias of [
+    'https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_102_texas%231.png',
+    'https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_112_siege%231.png',
+    'https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_202_demkni%231.png',
+    'https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_003_kalts%231.png',
+    'https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_172_svrash%231.png',
+    'https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_180_amgoat%231.png',
+    'https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/char_103_angel%231.png',
+  ]) {
+    const materialized = load.materializations().find((entry) => entry.source === alias);
+    assert.ok(materialized, `missing materialization for ${alias}`);
+    assert.equal(materialized.provenance, 'frozen-manifest');
+    assert.match(path.basename(materialized.cachePath), /^base-portrait-/);
+    assert.match(materialized.materializedSha256, /^[a-f0-9]{64}$/);
+    assert.equal(materialized.manifestSource, manifestPath);
   }
   assert.equal(fetches, 0);
   assert.equal(load.stats().cacheEntries, new Set(manifest.resources.map((entry) => entry.requestAlias)).size);
@@ -133,7 +152,7 @@ async function makeManifestFixture() {
     'operator-building-36.png', 'operator-skill-128.png', 'enemy-originium-slug-158.png',
     'amiya-avatar.webp', 'depot-lmd.png',
   ];
-  for (let index = 0; index < 26; index += 1) {
+  for (let index = 0; index < 33; index += 1) {
     const name = cacheNames[index] ?? `fixture-${index}.png`;
     const bytes = pngBytes;
     await writeFile(path.join(cache, name), bytes);
