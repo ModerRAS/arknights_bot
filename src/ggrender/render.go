@@ -506,35 +506,81 @@ type HeadhuntData struct{ Ops []HHOp }
 func SampleHeadhunt() []HHOp {
 	ops := make([]HHOp, 0, 10)
 	for i := 0; i < 10; i++ {
-		ops = append(ops, HHOp{Rarity: 3 + i%4, ThumbURL: "", Profession: "WARRIOR"})
+		ops = append(ops, HHOp{Rarity: 5, ThumbURL: "", Profession: "WARRIOR"})
 	}
 	return ops
 }
 
+// Headhunt layout constants are measured off the frozen Playwright baseline
+// (testdata/visual/baseline/images/headhunt.jpg, 1049x576), not copied from
+// template/Headhunt.tmpl. CSS is cross-validation only; measured wins on conflict.
+//
+//	card content width 95px  <- gold run width at y=497 (runs: 24..119, 124..218, ...)
+//	card content top   230px <- face top; CSS .bg margin-top130+padding-top100 agrees
+//	card content height 270px <- gold bottom y=499; CSS .bg height:270 agrees
+//	first card left edge  x=24 <- CSS #main padding-left:25 agrees within 1px
+//	card pitch        98.67px <- left edges 24,124,222,321,419,518,617,715,814,912
+const (
+	hhOutW, hhOutH = 1049, 576
+	hhCardW        = 95
+	hhCardTop      = 230 // measured: face top; CSS .bg margin-top130+padding-top100 agrees
+	hhCardH        = 270 // measured: gold bottom y=499; CSS .bg height:270 agrees
+	hhBackTop      = 130 // measured: backdrop top y~182 (back_*.png has its own transparent head)
+	hhBackH        = 370 // CSS .bg box = margin-top130 + padding-top100 + height270
+	hhFirstX       = 24.0
+	hhPitch        = 98.6667
+	hhFaceH        = 190 // measured: face box y230..420; CSS .lh height:190 agrees
+	hhIconDX       = 12  // measured: WARRIOR.png white square x=cardX+18, asset inset 6
+	hhIconDY       = 191 // measured: white square y=421; CSS .profession margin-top:190 agrees
+	hhStarDX       = 14  // measured: Rarity_5 star0 x=cardX+16, asset inset 4
+	hhStarDY       = 1   // measured: star0 y=235, asset inset 4
+)
+
 func RenderHeadhunt(data []HHOp) (*gg.Context, error) {
-	const mainW, mainH = 1024, 576
-	dc := gg.NewContext(mainW, mainH)
+	dc := gg.NewContext(hhOutW, hhOutH)
 	FillBackground(dc, 27, 29, 30)
-	n := len(data)
-	if n < 1 {
-		n = 1
+	// Starfield backdrop. bg.png is 1024x576 and the baseline shows a seam at
+	// x=1024, so the 25px remainder continues the image's own right edge column.
+	if bg, err := LoadImage(AssetPath("headhunt/bg.png")); err == nil {
+		dc.DrawImage(bg, 0, 0)
+		if b := bg.Bounds(); b.Dx() == 1024 && b.Dy() == hhOutH {
+			col := image.NewRGBA(image.Rect(0, 0, 1, hhOutH))
+			for y := 0; y < hhOutH; y++ {
+				col.Set(0, y, bg.At(b.Max.X-1, b.Min.Y+y))
+			}
+			dc.DrawImage(ScaleExact(col, hhOutW-1024, hhOutH), 1024, 0)
+		}
 	}
-	tileW := mainW / n
-	if tileW > 120 {
-		tileW = 120
-	}
-	startX := (mainW - tileW*n) / 2
-	cy := mainH/2 - 90
 	for i, o := range data {
-		x := startX + i*tileW
-		// back per rarity color
-		r, g, b := rarityColor(o.Rarity)
-		dc.SetRGB255(r, g, b)
-		dc.DrawRectangle(float64(x), float64(cy), float64(tileW), 180)
-		dc.Fill()
-		DrawPortraitTile(dc, x, cy, tileW, 180, o.ThumbURL, o.Profession, o.Rarity, 0, "")
+		x := int(hhFirstX + float64(i)*hhPitch)
+		// Rarity backdrop: background-size:cover into the full .bg box (padding included).
+		if bk, err := LoadImage(AssetPath(fmt.Sprintf("headhunt/back_%d.png", o.Rarity))); err == nil {
+			dc.DrawImage(ScaleCover(bk, hhCardW, hhBackH), x, hhBackTop)
+		} else {
+			r, g, b := rarityColor(o.Rarity)
+			dc.SetRGB255(r, g, b)
+			dc.DrawRectangle(float64(x), float64(hhBackTop), float64(hhCardW), float64(hhBackH))
+			dc.Fill()
+		}
+		// Portrait. C class: the baseline card face is the prts half-body, which is
+		// not in assets/ this round, so this still resolves to common/amiya.png.
+		var port image.Image
+		if o.ThumbURL != "" {
+			port = FetchImage(o.ThumbURL, amiyaPath)
+		} else {
+			port = tryLocal("common/amiya.png")
+		}
+		dc.DrawImage(ScaleExact(port, hhCardW, hhFaceH), x, hhCardTop)
+		// Profession icon at natural size.
+		if ic, err := LoadImage(AssetPath("headhunt/" + o.Profession + ".png")); err == nil {
+			dc.DrawImage(ic, x+hhIconDX, hhCardTop+hhIconDY)
+		}
+		// Rarity star bar at natural size.
+		if rb, err := LoadImage(AssetPath(fmt.Sprintf("headhunt/Rarity_%d.png", o.Rarity))); err == nil {
+			dc.DrawImage(rb, x+hhStarDX, hhCardTop+hhStarDY)
+		}
 	}
-	return ScaleToManifest(dc, 1049, 576), nil
+	return dc, nil
 }
 
 // Missing
