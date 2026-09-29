@@ -1,0 +1,258 @@
+<html>
+<head>
+    <meta name="referrer" content="no-referrer" />
+    <title>干员信息</title>
+    <link rel="stylesheet" href="/assets/css/common.css" />
+    <style>
+        #main {
+            background-image: url("assets/operator/bg.png");
+            width: 1200px;
+            min-height: 800px;
+            height: auto;
+            position: absolute;
+            background-size: cover;
+        }
+        #painting {
+            position: absolute;
+            height: 650px;
+            bottom: 0;
+            left: 5%;
+            z-index: 0;
+        }
+        #attr {
+            margin-top: 20px;
+            border-spacing: 0;
+        }
+        .b {
+            background-color: black;
+            color: white;
+            width: 100px;
+            opacity: 0.8;
+        }
+        .w {
+            background-color: #efeeef;
+            color: black;
+            width: 70px;
+            opacity: 0.8;
+        }
+        #potential {
+            margin-top: 20px;
+            background-color: rgba(239,238,239,0.4);
+        }
+        .potential {
+            width: 20px;
+        }
+        #pb {
+            width: 300px;
+            margin-bottom: 5%;
+            background-color: rgba(239,238,239,0.4);
+        }
+        #names {
+            background-color: rgba(239,238,239,0.4);
+        }
+        #names table {
+            white-space: nowrap;
+        }
+        #code {
+            background-color: black;
+            color: white;
+        }
+        #talent {
+            position: relative;
+            z-index: 9999;
+            width: 600px;
+            margin-top: 20px;
+            border-spacing: 0;
+        }
+        #talent td {
+            font-size: 12px;
+            background-color: rgba(176,177,177,0.7);
+        }
+        #talent span {
+            color: black !important;
+        }
+        #bsk {
+            position: relative;
+            z-index: 9999;
+            width: 600px;
+            border-spacing: 0;
+        }
+        #bsk td {
+            font-size: 12px;
+            background-color: rgba(176,177,177,0.7);
+        }
+        #skill {
+            position: relative;
+            z-index: 9999;
+            width: 600px;
+            border-spacing: 0;
+        }
+        #skill td {
+            font-size: 12px;
+            color: white;
+            background-color: rgba(63,63,62,0.99);
+        }
+        #skill .term {
+            color: white !important;
+        }
+        #skill mark {
+            color: white;
+        }
+        mark {
+            background-color: transparent !important;
+        }
+        sup {
+            display: none;
+        }
+        .skill {
+            width: 50px;
+        }
+    </style>
+</head>
+<body>
+<div id="main">
+    <img id="painting" src="src/utils/media/testdata/visual/baseline/cache/operator-painting-1024.png"/>
+    <div style="position: absolute;">
+        <table id="attr">
+            <tr>
+                <td class="b">最大生命值</td>
+                <td class="w">1742</td>
+                <td class="b">攻击力</td>
+                <td class="w">699</td>
+                <td class="b">防御力</td>
+                <td class="w">121</td>
+            </tr>
+            <tr>
+                <td class="b">法抗</td>
+                <td class="w">10</td>
+                <td class="b">攻击间隔</td>
+                <td class="w">1.6s</td>
+                <td class="b">再部署时间</td>
+                <td class="w">70s</td>
+            </tr>
+            <tr>
+                <td class="b">阻挡数</td>
+                <td class="w">1</td>
+                <td class="b">部署费用</td>
+                <td class="w">18</td>
+                <td class="b">所属</td>
+                <td class="w">罗德岛</td>
+            </tr>
+        </table>
+        <table id="potential">
+            <tr>
+                <td colspan="2" style="background-color: black;color: white;opacity: 0.8;">潜能提升</td>
+            </tr>
+            
+            <tr>
+                <td><img class="potential" src="/assets/box/Potential_1.png"/></td>
+                <td>部署费用-1</td>
+            </tr>
+            
+            <tr>
+                <td><img class="potential" src="/assets/box/Potential_2.png"/></td>
+                <td>再部署时间-4秒</td>
+            </tr>
+            
+        </table>
+    </div>
+    <div style="position: absolute;bottom: 5%;left: 10px;">
+        <table id="pb">
+            <tr>
+                <td style="width: 75px" rowspan="2">
+                    <img src="/assets/box/CASTER.png"/>
+                </td>
+                <td><img src="/assets/box/Rarity_5.png"/></td>
+            </tr>
+            <tr>
+                <td><h3>中坚术师</h3></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    远程位 输出
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2"><h5>攻击造成法术伤害</h5></td>
+            </tr>
+        </table>
+        <div id="names">
+            <table>
+                <tr>
+                    <td>
+                        <h1>阿米娅</h1>
+                    </td>
+                    <td>
+                        □
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h3 id="code" style="display: inline">R001</h3>
+                    </td>
+                    <td>
+                        <h3 style="display: inline">Amiya</h3>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div style="float: right">
+        <table id="talent">
+            <tr>
+                <td colspan="3" style="background-color: black;color: white;opacity: 0.8;width: 100px">天赋</td>
+            </tr>
+            
+                
+                <tr>
+                    <td style="white-space: nowrap">精英化1</td>
+                    <td style="white-space: nowrap">精神融合</td>
+                    <td>攻击力 &#43;10%</td>
+                </tr>
+                
+            
+        </table>
+        <table id="bsk">
+            <tr>
+                <td colspan="4" style="background-color: black;color: white;opacity: 0.8;width: 100px">基建技能</td>
+            </tr>
+            
+            <tr>
+                
+                <td style="white-space: nowrap">精英化0</td>
+                <td><img src="src/utils/media/testdata/visual/baseline/cache/operator-building-36.png"/></td>
+                <td style="white-space: nowrap">合作协议</td>
+                <td>控制中枢内线索搜集速度提升</td>
+                
+            </tr>
+            
+        </table>
+        <table id="skill">
+            
+            <tr>
+                <td style="text-align: center" rowspan="2">
+                    <img class="skill" src="src/utils/media/testdata/visual/baseline/cache/operator-skill-128.png" onerror="this.src='assets/common/amiya.png'"/>
+                </td>
+                <td style="text-align: center">
+                    
+                    自动回复
+                    
+                    <span style="cursor: help;margin-left:5px;padding-left:5px;padding-right:5px;background-color:#808080;border-radius:3px;color:#FFF;">技力0/45</span>
+                    
+                    <span style="cursor: help;margin-left:5px;padding-left:5px;padding-right:5px;background-color:#808080;border-radius:3px;color:#FFF;">持续时间30s</span>
+                    
+                </td>
+                <td style="text-align: center" rowspan="3">□</td>
+            </tr>
+            <tr>
+                <td style="padding-left: 10px" rowspan="2">攻击力提升</td>
+            </tr>
+            <tr style="text-align: center">
+                <td style="white-space: nowrap;vertical-align: top">战术咏唱</td>
+            </tr>
+            
+        </table>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,8 @@
+[
+ {"name":"original(no translate)","repl":[["__NONE__","x"]]},
+ {"name":"tr(0.67,-1.33)","repl":[["WebkitTextStrokeColor: '#fff' } }, header, body)","WebkitTextStrokeColor: '#fff', transform: 'translateX(0.67px) translateY(-1.33px)' } }, header, body)"]]},
+ {"name":"tr(1,-2)","repl":[["WebkitTextStrokeColor: '#fff' } }, header, body)","WebkitTextStrokeColor: '#fff', transform: 'translateX(1px) translateY(-2px)' } }, header, body)"]]},
+ {"name":"tr(0.33,-0.67)","repl":[["WebkitTextStrokeColor: '#fff' } }, header, body)","WebkitTextStrokeColor: '#fff', transform: 'translateX(0.33px) translateY(-0.67px)' } }, header, body)"]]},
+ {"name":"tr(1,-1.33)","repl":[["WebkitTextStrokeColor: '#fff' } }, header, body)","WebkitTextStrokeColor: '#fff', transform: 'translateX(1px) translateY(-1.33px)' } }, header, body)"]]},
+ {"name":"tr(0.67,-2)","repl":[["WebkitTextStrokeColor: '#fff' } }, header, body)","WebkitTextStrokeColor: '#fff', transform: 'translateX(0.67px) translateY(-2px)' } }, header, body)"]]}
+]

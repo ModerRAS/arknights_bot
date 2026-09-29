@@ -1,0 +1,1 @@
+[{"name": "avatar blit", "repl": [["export default async function render", "import { skiaBilinearDataUri } from '../lib/skia-scale.mjs';\nexport default async function render"], ["avatar:await image(item.avatar,fallback)", "avatar:await skiaBilinearDataUri(await image(item.avatar,fallback),100,100)"]]}]

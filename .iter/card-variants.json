@@ -1,0 +1,15 @@
+[
+ {"name":"jpeg keep","repl":[
+   ["const JPEG_Q80_DOMAIN_COMPONENTS = new Set([\n  'headhunt', 'recruit', 'enemy', 'box', 'missing',\n]);","const JPEG_Q80_DOMAIN_COMPONENTS = new Set([\n  'headhunt', 'recruit', 'enemy', 'box', 'missing', 'card',\n]);","runner"]]},
+ {"name":"jpeg+入职日 nowrap","repl":[
+   ["const JPEG_Q80_DOMAIN_COMPONENTS = new Set([\n  'headhunt', 'recruit', 'enemy', 'box', 'missing',\n]);","const JPEG_Q80_DOMAIN_COMPONENTS = new Set([\n  'headhunt', 'recruit', 'enemy', 'box', 'missing', 'card',\n]);","runner"],
+   ["label('入职日', { width: 50, textAlign: 'center' })","label('入职日', { width: 50, textAlign: 'center', whiteSpace: 'nowrap' })"]]},
+ {"name":"jpeg+nowrap+LV marginTop4","repl":[
+   ["const JPEG_Q80_DOMAIN_COMPONENTS = new Set([\n  'headhunt', 'recruit', 'enemy', 'box', 'missing',\n]);","const JPEG_Q80_DOMAIN_COMPONENTS = new Set([\n  'headhunt', 'recruit', 'enemy', 'box', 'missing', 'card',\n]);","runner"],
+   ["label('入职日', { width: 50, textAlign: 'center' })","label('入职日', { width: 50, textAlign: 'center', whiteSpace: 'nowrap' })"],
+   ["label('LV', { fontSize: 14 })","label('LV', { fontSize: 14, marginTop: 4 })"]]},
+ {"name":"jpeg+nowrap+LV marginTop8","repl":[
+   ["const JPEG_Q80_DOMAIN_COMPONENTS = new Set([\n  'headhunt', 'recruit', 'enemy', 'box', 'missing',\n]);","const JPEG_Q80_DOMAIN_COMPONENTS = new Set([\n  'headhunt', 'recruit', 'enemy', 'box', 'missing', 'card',\n]);","runner"],
+   ["label('入职日', { width: 50, textAlign: 'center' })","label('入职日', { width: 50, textAlign: 'center', whiteSpace: 'nowrap' })"],
+   ["label('LV', { fontSize: 14 })","label('LV', { fontSize: 14, marginTop: 8 })"]]}
+]
