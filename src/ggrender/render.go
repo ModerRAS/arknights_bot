@@ -3,6 +3,7 @@ package ggrender
 import (
 	"fmt"
 	"image"
+	"os"
 
 	"github.com/fogleman/gg"
 )
@@ -1296,6 +1297,24 @@ func RenderOperator(data *OperatorInfo) (*gg.Context, error) {
 	const mainH = 700
 	dc := gg.NewContext(mainW, mainH)
 	FillBackground(dc, 27, 29, 30)
+	// R6 A/B probe, env-driven so one edit covers every variant (reverted after measuring):
+	//   GGOPBG=bg|card_bg -> paint assets/operator/<rel>.png as the canvas background
+	//   GGOPRING=1        -> overlay assets/operator/ring.png centred
+	// Reads only assets/ inside THIS worktree; no frozen baseline is ever loaded.
+	if rel := os.Getenv("GGOPBG"); rel != "" {
+		if img, err := LoadImage(AssetPath("operator/" + rel + ".png")); err == nil {
+			dc.DrawImage(ScaleCover(img, mainW, mainH), 0, 0)
+		} else {
+			fmt.Fprintf(os.Stderr, "R6PROBE bg %s load failed: %v\n", rel, err)
+		}
+	}
+	if os.Getenv("GGOPRING") == "1" {
+		if img, err := LoadImage(AssetPath("operator/ring.png")); err == nil {
+			dc.DrawImage(ScaleContain(img, 300, 300), (mainW-300)/2, (mainH-300)/2)
+		} else {
+			fmt.Fprintf(os.Stderr, "R6PROBE ring load failed: %v\n", err)
+		}
+	}
 	// top bar
 	dc.SetRGB255(45, 48, 55)
 	dc.DrawRectangle(0, 0, float64(mainW), 110)
