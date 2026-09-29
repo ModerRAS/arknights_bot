@@ -206,7 +206,63 @@ grep -rn cache src/ggrender/*.go   ->  空
 4. **把 `resource-manifest.json` 的 26 个资源接进 `assets/`**。缺的是 `operator-painting-1024`（立绘，占 operator 画布约 21%）、`enemy-originium-slug-158`、`depot-lmd`、`gacha-avatar-*`、`boxdetail-*`、`base-avatar-*`。属**网络抓取**（URL 已在 `resource-manifest.json` 里现成）—— 但要先决定是否允许从 `cache/` 搬到 `assets/`。
 5. **operator 版式按基线实测坐标重排**。现状 800×700 被 `ScaleToManifest` 非等比拉伸到 1800×1200（宽高比 1.14→1.5），几何本身就歪；且缺 9 格属性表 / 天赋技能面板 / 潜能面板 / 职业图标。属最大工作量，建议按 measured-geometry 路线单独立项。
 
-## 8. 复现
+### 7.1 operator 剩余 0.15 差距的重新定位（measured-geometry 工作量估算）
+
+背景已由 V3 修掉（+0.155），剩下的 0.84554 → 0.99 差距来自**结构与主体**，三块：
+
+| 差距来源 | 性质 | 说明 |
+|---|---|---|
+| **中央立绘缺失** | 资源 + 代码 | `cache/operator-painting-1024.png`（1024×1024）只在 `cache/`，`assets/` 无对应文件，GG 零代码。占画布约 **21%**（≈465k / 2.16M 像素）。**属最大单项**，且需先决定是否允许把 `cache/` 素材搬进 `assets/`。 |
+| **布局结构不同** | 代码 | 基线 6 个独立面板：①满幅碎片背景 ②中央立绘 ③左上 3×3 属性表（9 格）④右上天赋/技能面板（含技能图标 + 技力胶囊）⑤左中潜能提升面板 ⑥左下职业图标 + 6 星 + 定位标签 + 底部姓名/编号。GG 画的是「顶部 name bar + 描述卡 + 3 列属性网格」，无一对应。 |
+| **画布非等比拉伸** | 代码（前置） | 800×700 → 1800×1200，宽高比 1.14→1.5。**必须先修**，否则所有坐标测量都建立在错误变换上。 |
+
+**工作量估算（对比法，非实测工时）**
+
+以本仓库已有同类重建为标尺：`calendar` 0.46492 → 0.99432（1 个提交 `fd31d2e`）、`state` 0.85 → 0.99093（2 个提交 `bc477f4` + `a35d1d9`）。operator 需要 6 个面板 + 1 个前置修复 + 1 项资源决策，**量级约等于 calendar + state 之和，估 3–5 个聚焦提交**。
+
+建议顺序：① 先改原生 1800×1200 画布（去掉拉伸）② 接立绘 ③ 逐面板实测坐标对齐 ④ 迭代收敛。每轮校准成本极低 —— 完整 harness 跑一次仅 6.5s，消融扫描 10min 只在需要复核资源时跑。
+
+> 注：此估算基于同仓库同类场景的提交粒度对比，**不是实测工时**，需人工判断是否接受。
+
+## 8. 取证证据附录（所有否定性结论的 exit code）
+
+规则：否定性结论必须 `exit≠0` 且输出为空，或有自校验；否则一律标注为**视觉判读**。禁止 `|| echo none` 兜底（它会把「查询失败」伪装成「未命中」）。
+
+| # | 否定性结论 | 命令 | exit | 输出 | 判定 |
+|---|---|---|---|---|---|
+| N1 | ggrender 不引用 skland | `grep -rn "skland" src/ggrender/*.go` | **1** | 空 | ✅ 真无命中 |
+| N2 | ggrender 不 import core/web | `grep -rn "core/web" src/ggrender/*.go` | **1** | 空 | ✅ 真无命中 |
+| N3 | 无任何生产代码调用 RenderGG | `grep -rn RenderGG --include=*.go src/ \| grep -v src/ggrender/ \| grep -v _test \| grep -v ggassetcheck` | **1** | 空 | ✅ 真无命中 |
+| N4 | rebase 前后 src/ggrender 逐字节相同 | `git diff --quiet ec440bf 71e7875 -- src/ggrender/` | **0** | — | ✅ 0 = 无差异（此处 0 才是「成立」） |
+| N5 | ggrender 不引用 card_bg / ring.png | `git grep -n -iE "card_bg\|ring\.png" 71e7875 -- src/ggrender` | **1** | 空 | ✅ 真无命中 |
+| N6 | ggrender 代码不读 baseline/cache/ | 6 个 pattern 逐一试（`baseline/cache`、`"cache"`、`cache/`、`CachePath`、`resource-manifest` 等） | **全部 1** | 全空 | ✅ 真无命中 |
+| N6c | manifest/cache 仅被**测试**引用 | `git grep -ln 'testdata/visual' -- src/ggrender/*.go` | 0 | 仅 `pixel_test.go` | ✅ 渲染代码零引用 |
+| N7 | rebase 后无未合并路径 | `git diff --name-only --diff-filter=U` | 0 | 空 | ✅ |
+| N8 | .gitignore 无冲突标记 | `grep -c '<<<<<<<' .gitignore` | **1** | `0` | ✅ |
+| N9 | 43 张基线图枚举完整 | Python `assert len(imgs)==43` | 0 | `enumeration self-check: PASS (43)` | ✅ 枚举本身可证 |
+| N10 | card_bg/ring 非基线抠图 | Python 逐张 sha256 + 同尺寸逐像素 RGBA 全等比对 | 0 | 0 字节匹配 / 0 像素匹配 | ✅ 循环确实执行（ring 实际比了 2 张同尺寸） |
+
+### 8.1 行尾纠正（我先前报错过）
+先前我说「仓库是 CRLF」，**是错的**。权威字节证据：
+```
+$ head -c 40 src/ggrender/render.go | od -c
+0000000   p   a   c   k   a   g   e       g   g   r   e   n   d   e   r
+0000020  \n  \n   i   m   p   o   r   t       (  \n
+```
+仓库是 **LF**。之前的误判来自 `git show ... | grep -c $'\r'` —— 管道经过 MSYS 时引号展开不可靠，**不可用作行尾取证**。我新建的两个文件（`main.go`、`UPSTREAM_GG_CHECK.md`）同样是 LF，与仓库一致。所有提交均为**纯新增、0 删除**（`git diff --numstat` 已核），无整文件重写、无行尾膨胀。
+
+### 8.2 哪些是视觉判读而非 grep
+
+以下**来自我实际打开 `src/ggrender/testdata/visual/baseline/images/operator.jpg`（1800×1200）用眼睛看**，不是 grep 结论，特此标明：
+
+- 「基线里**没有头像环**」
+- 「基线里**没有模组（module）图标**」
+
+判读方式与局限：用图像读取工具直接打开该 JPEG 缩略查看。局限：缩略后极小的图标可能漏看；这两条属于「未见」，强度弱于像素级证据。若需升级为硬证据，应对头像区域做像素级模板比对。**不影响 R6 结论方向** —— 因为 `ring.png` 的 A/B 分数是**实测下降 0.012**（硬数字），比「基线无环」的目视判读更强。
+
+其余所有元素（碎片背景、属性表、天赋/技能面板、潜能面板、职业图标 + 6 星、姓名/编号）均为同一张图的视觉判读，同此声明。
+
+## 9. 复现
 
 ```bash
 cd C:/WorkSpace/Golang/arknights_bot-upstream-check/src
@@ -214,3 +270,11 @@ go build -o ggac.exe ./cmd/ggassetcheck/
 ./ggac.exe            # 全量：消融扫描（约 10 分钟）+ 真实网络运行层
 ./ggac.exe runtime    # 只跑运行层（秒级）
 ```
+
+## 10. 产出物定位
+
+| 分支 | 内容 | 定位 |
+|---|---|---|
+| `check/upstream-gg` | `src/cmd/ggassetcheck/main.go` + 本报告 | **1632 次消融实测的可复现凭据**。不推远端。 |
+| `feat/gg-rebase-upstream` (`71e7875`) | 纯 rebase，12 提交，`src/ggrender/` 零改动 | 已推远端（单条新分支，不 force） |
+| `check/operator-img-ab` (`846cea0`) | R6 的 env 驱动探针（`GGOPBG` / `GGOPRING`） | **实验用，不推远端**。未设环境变量时输出与实验前**逐位一致**（V0 复现 0.69063 已验证），可随时 revert。 |
