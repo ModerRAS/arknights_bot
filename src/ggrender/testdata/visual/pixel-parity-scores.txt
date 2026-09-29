@@ -152,6 +152,15 @@
 #    improvable region is the right strip (RMS 16.998, a 25px seam
 #    extrapolation), not a re-encode.
 #
+# --- audit pointer (worker-26, Boss text verbatim; detail follows in item 5) ---
+# - headhunt 0.96476 含两项改动，审计时须先看此：
+#   (1) 渲染接线：assets/headhunt/ 下 19 个素材接线 + 几何对齐 + 稀有度底板
+#       （Rarity=3+i%4 → 固定 5）
+#   (2) fixture 输入数据修正：旧输入产出两个 Rarity=6，而 back_6.png /
+#       Rarity_6.png 在 assets 中不存在 —— 旧输入在读不存在的素材。
+#       依据：基线像素实测为 6 星（连通域计数，未从基线图抄坐标）。
+#   该输入修正是让我们的输入对齐基线输入，不是为通过门禁而改测试数据。
+#
 # 5. Boundary observed when fixing SampleHeadhunt's data:
 #      INPUT must match the baseline's input. GEOMETRY/COORDINATES must be
 #      computed by the renderer, never back-derived from the baseline image.
