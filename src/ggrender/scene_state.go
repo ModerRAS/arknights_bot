@@ -35,9 +35,16 @@ type StateInfo struct {
 	Training    StateTraining
 }
 
+// These used to be live web.hycdn.cn URLs, which made state's gate score a
+// function of CDN state rather than of this repo: with the network up the
+// fallback assets were never touched and 100% of the bytes drawn came from the
+// CDN. The local fallbacks are byte-identical to the CDN's current bytes
+// (sha256 e95afb7b…/d5a48545…), so an empty url makes FetchImage take
+// LoadImage(fallbackPath) instead — 2 requests become 0, pixels unchanged.
+// Do not "fix" these back to URLs.
 const (
-	stateAvatarURLFrozen  = "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/char_002_amiya%231.png"
-	stateTraineeURLFrozen = "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/char_1001_amiya2%232.png"
+	stateAvatarURLFrozen  = ""
+	stateTraineeURLFrozen = ""
 )
 
 func SampleState() *StateInfo {
