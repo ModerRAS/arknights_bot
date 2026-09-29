@@ -1,11 +1,22 @@
 # GG pixel-parity score evidence — 16 scenes vs frozen Playwright baseline
 #
-# measured-at: ec440bf (feat/gg-render-card-atomic)
-# change:      gofmt/duplicate-import cleanup in src/ggrender/pixel_test.go only
-#              (no gate logic, no similarityNormalized, no 0.99 threshold touched)
+# measured-at: 0ea71c6 (fix/pixel-test-gofmt) + fix/gate-hardening HEAD
+# change:      门禁加固，仅碰 src/ggrender/pixel_test.go 一个文件：
+#              (1) Task 2 — 新增 TestGGPixelParity_Negative_ThresholdGate，
+#                  调真实 gatePassed 锁死 0.99 阈值（补上原先的测试覆盖缺口）。
+#              (2) Task 3 — 零差异哨兵 bbox=[-1 -1 -1 -1]（原 [0 0 0 0] 会与位于
+#                  (0,0) 的单像素差异撞值），零差异与单像素差异分开报错；
+#                  删掉事实错误文案 "no pixel actually compared"。
+#              0.99 阈值字面量与 similarityNormalized 的相似度计算本体均未动。
+#              **本次不含 manifest 树哈希校验（必改项 1）**——已穷举
+#              feat/satori-renderer 全历史 473 个 commit 判定该测量**不可实施**，
+#              详见 src/ggrender/pixel_test.go 中「为什么这里没有 manifest 树哈希校验」
+#              注释块。缺陷 #6（信任锚自证）**未被修复**，属已记录在案的已知缺口。
 # verified:    all 16 lines below are byte-identical to the pre-change run,
-#              proven by `git stash` before/after + `diff` in the same worktree.
-# reproduce:   cd src && go test ./ggrender/ -run TestGGPixelParity -v
+#              proven by dropping the test output to disk before/after in the same
+#              worktree and `diff`-ing them (line-number prefix stripped);
+#              diff exit=0, 16/16 unchanged.
+# reproduce:   cd src && go test ./ggrender/ -run TestGGPixelParity -v -count=1
 #
 # CAVEAT: these scores do NOT include the uncommitted MS-YaHei font change to
 # src/ggrender/render.go that lives in the card-atomic worktree. In particular
