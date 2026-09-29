@@ -11,8 +11,6 @@ import (
 	"image/draw"
 	"image/jpeg"
 	"image/png"
-	_ "image/jpeg"
-	_ "image/png"
 	"os"
 	"path/filepath"
 	"strings"
@@ -39,14 +37,14 @@ type ReportEntry struct {
 
 type manifestFile struct {
 	Entries []struct {
-		ID         string  `json:"id"`
-		Baseline   string  `json:"baseline"`
-		Sha256     string  `json:"sha256"`
-		Scale      float64 `json:"scale"`
-		Format     string  `json:"format"`
-		PixelWidth int     `json:"pixelWidth"`
-		PixelHeight int    `json:"pixelHeight"`
-		BBox       struct {
+		ID          string  `json:"id"`
+		Baseline    string  `json:"baseline"`
+		Sha256      string  `json:"sha256"`
+		Scale       float64 `json:"scale"`
+		Format      string  `json:"format"`
+		PixelWidth  int     `json:"pixelWidth"`
+		PixelHeight int     `json:"pixelHeight"`
+		BBox        struct {
 			X      float64 `json:"x"`
 			Y      float64 `json:"y"`
 			Width  float64 `json:"width"`
@@ -169,21 +167,21 @@ func TestGGPixelParity(t *testing.T) {
 		t.Fatalf("解析 manifest 失败: %v", err)
 	}
 	manifestMap := make(map[string]struct {
-		Sha256     string
-		Scale      float64
-		Format     string
-		PixelWidth int
+		Sha256      string
+		Scale       float64
+		Format      string
+		PixelWidth  int
 		PixelHeight int
-		Baseline   string
+		Baseline    string
 	})
 	for _, e := range mf.Entries {
 		manifestMap[e.ID] = struct {
-			Sha256     string
-			Scale      float64
-			Format     string
-			PixelWidth int
+			Sha256      string
+			Scale       float64
+			Format      string
+			PixelWidth  int
 			PixelHeight int
-			Baseline   string
+			Baseline    string
 		}{Sha256: e.Sha256, Scale: e.Scale, Format: e.Format, PixelWidth: e.PixelWidth, PixelHeight: e.PixelHeight, Baseline: e.Baseline}
 	}
 	if len(manifestMap) != 16 {
