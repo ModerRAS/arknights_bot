@@ -15,6 +15,7 @@ import (
 	_ "image/png"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -111,6 +112,19 @@ func similarityNormalized(old, new *image.RGBA) (float64, [4]int) {
 		bbox = [4]int{0, 0, 0, 0}
 	}
 	return sim, bbox
+}
+
+// gatePassed 是唯一的门禁判定点。相似度达标还不够：diff bbox 必须非空。
+// 零面积 bbox 说明没有任何像素被真正比对（空画布/空比较），此时 similarityNormalized
+// 走 maxX<0 分支恒返回 sim=1.0，直接放行就是伪通过。
+func gatePassed(sim float64, bbox [4]int) (bool, string) {
+	if bbox[2]-bbox[0] <= 0 || bbox[3]-bbox[1] <= 0 {
+		return false, fmt.Sprintf("empty bbox=%v (zero-area diff region: no pixel actually compared)", bbox)
+	}
+	if sim < 0.99 {
+		return false, fmt.Sprintf("%.5f <0.99 bbox=%v", sim, bbox)
+	}
+	return true, ""
 }
 
 func TestGGPixelParity(t *testing.T) {
@@ -285,7 +299,7 @@ func TestGGPixelParity(t *testing.T) {
 		_ = os.WriteFile(diffPath, diffBuf.Bytes(), 0644)
 		_ = os.WriteFile(heatmapPath, diffBuf.Bytes(), 0644)
 
-		passed := sim >= 0.99
+		passed, reason := gatePassed(sim, bbox)
 		entry := ReportEntry{
 			Scene: scene, Width: w, Height: h, Format: ent.Format, Scale: ent.Scale,
 			HashOld: hashOldHex, HashNew: hashNewHex, Hash: hashNewHex,
@@ -294,7 +308,7 @@ func TestGGPixelParity(t *testing.T) {
 		}
 		entries = append(entries, entry)
 		if !passed {
-			failed = append(failed, fmt.Sprintf("%s %.5f <0.99 bbox=%v", scene, sim, bbox))
+			failed = append(failed, fmt.Sprintf("%s %s", scene, reason))
 		}
 		t.Logf("scene %-12s %dx%d scale=%.1f similarity=%.5f bbox=%v hashOld=%s hashNew=%s passed=%v", scene, w, h, ent.Scale, sim, bbox, hashOldHex[:12], hashNewHex[:12], passed)
 	}
@@ -365,4 +379,37 @@ func TestGGPixelParity_Negative(t *testing.T) {
 		t.Fatalf("负向测试失败: 扰动后相似度仍 %.5f >=0.99, harness 可能伪 1.0", sim)
 	}
 	t.Logf("negative test passed: perturbed %s similarity=%.5f <0.99 (honest harness)", scene, sim)
+}
+
+// TestGGPixelParity_Negative_EmptyBBoxGate 零面积 bbox 不得通过门禁（防空比较伪通过）
+func TestGGPixelParity_Negative_EmptyBBoxGate(t *testing.T) {
+	// 两张完全相同的图：similarityNormalized 走 maxX<0 分支，产出退化 bbox=[0 0 0 0] 且 sim=1.0
+	img := image.NewRGBA(image.Rect(0, 0, 64, 64))
+	for y := 0; y < 64; y++ {
+		for x := 0; x < 64; x++ {
+			img.SetRGBA(x, y, color.RGBA{R: uint8(x), G: uint8(y), B: 7, A: 255})
+		}
+	}
+	sim, bbox := similarityNormalized(img, img)
+	if sim < 0.99 {
+		t.Fatalf("前置条件不成立: 相同图 sim=%.5f 应为 1.0", sim)
+	}
+	passed, reason := gatePassed(sim, bbox)
+	if passed {
+		t.Fatalf("门禁伪通过: 空 bbox sim=%.5f bbox=%v 不应通过", sim, bbox)
+	}
+	if !strings.Contains(reason, "empty bbox") {
+		t.Fatalf("失败信息须写明 empty bbox, 实际 %q", reason)
+	}
+	// 宽或高单独为 0 同样要拦
+	for _, b := range [][4]int{{10, 10, 10, 40}, {10, 10, 40, 10}} {
+		if ok, _ := gatePassed(1.0, b); ok {
+			t.Fatalf("门禁伪通过: 零面积 bbox=%v 不应通过", b)
+		}
+	}
+	// 反向：非空 bbox 且分数达标不应被守卫误伤
+	if ok, _ := gatePassed(0.995, [4]int{0, 0, 10, 10}); !ok {
+		t.Fatalf("非空 bbox 且分数达标时不应被守卫拦截")
+	}
+	t.Logf("empty-bbox guard rejected vacuous pass: sim=%.5f bbox=%v reason=%s", sim, bbox, reason)
 }
