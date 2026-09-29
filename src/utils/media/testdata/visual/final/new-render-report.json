@@ -27,16 +27,13 @@
     {
       "id": "base",
       "path": "new/base.png",
-      "sha256": "50422f6c95f44fa7c6d30831e60f11dfc07b1ce9f6bd51e69c8bc7a5fe1af5ab",
-      "width": 1665,
-      "height": 918,
       "scale": 1.5,
-      "format": "png"
+      "error": "asset_error: remote asset is absent from the frozen manifest"
     },
     {
       "id": "box",
       "path": "new/box.png",
-      "sha256": "c3f0d9811ae71003ad7ec16ea90e0e0c59dfd6bdc9152feefe41d8688cae8ed9",
+      "sha256": "31fa97081bccc12f2425ab04d83235d37790bebd04966509bd33c88b2689035d",
       "width": 1050,
       "height": 536,
       "scale": 1.5,
@@ -45,7 +42,7 @@
     {
       "id": "box-detail",
       "path": "new/box-detail.png",
-      "sha256": "ed18b77d6bf622e70f505ce1dba425f629ec7959357c89790e28b041b46955aa",
+      "sha256": "e4a1c58c3f2ad917c245aae2ffe2b865948c49d2950c719667c9f926affae41f",
       "width": 722,
       "height": 279,
       "scale": 1.5,
@@ -54,7 +51,7 @@
     {
       "id": "box-summary",
       "path": "new/box-summary.png",
-      "sha256": "1cd54451401c8523b76e5551a9fc421a03ad74f1367a44690e5a8a7062ddb5a5",
+      "sha256": "0382f5cc963a83a19cac7b0d723650e89adcc2d1afa079d7cca682e8aa559d21",
       "width": 1350,
       "height": 723,
       "scale": 1.5,
@@ -63,7 +60,7 @@
     {
       "id": "calendar",
       "path": "new/calendar.png",
-      "sha256": "432fec50f2426316a1871f15a2a0416f91dab44fa04e2d148acaa7df725200d7",
+      "sha256": "54fe36915e0744de790ffca336b352ef097856d0934f8d69a25733f255e4defa",
       "width": 2880,
       "height": 1620,
       "scale": 1.5,
@@ -72,7 +69,7 @@
     {
       "id": "card",
       "path": "new/card.png",
-      "sha256": "759c419910d64b0cf6e0d0fcee8199dc446ae4d4792725632146d57945c1b3b6",
+      "sha256": "0bb7c4fee38f36e04416d90306c50e8376cde6531cc01db6e9d5ba13fc343e74",
       "width": 1280,
       "height": 720,
       "scale": 1,
@@ -81,7 +78,7 @@
     {
       "id": "depot",
       "path": "new/depot.png",
-      "sha256": "45b21e091a8250c0e2278b6d2e12de3db27e8a0441736eb67428898e5c80ec5b",
+      "sha256": "928658f9c72e094cc056bd262813c01671f5d587438266c43c7e26ac8579aeee",
       "width": 1275,
       "height": 234,
       "scale": 1.5,
@@ -90,7 +87,7 @@
     {
       "id": "enemy",
       "path": "new/enemy.png",
-      "sha256": "85369791e79def22917640a06ece13c24c3a4d127e17fca3eb3d332cbd45d9b6",
+      "sha256": "950f9c788455205f3077365e7de953b0e45405f824530c9144546d1b9893d005",
       "width": 984,
       "height": 477,
       "scale": 1.5,
@@ -99,7 +96,7 @@
     {
       "id": "gacha",
       "path": "new/gacha.png",
-      "sha256": "da355ddf35137eceb23ce19df6d6333ab25de7f1da42d8fe10c3b302b60ec23f",
+      "sha256": "889ea0aa3e7bec9b46dcc2c2d056f31ac4cd93a96fb0afa91acff186e788168f",
       "width": 1500,
       "height": 1323,
       "scale": 1.5,
@@ -108,7 +105,7 @@
     {
       "id": "headhunt",
       "path": "new/headhunt.png",
-      "sha256": "9723dafa05fccaf9311db5d9032236f7e259cac4c9f083e4abd09efae6c12214",
+      "sha256": "bc8f7924533d951ac49e6a25128c81ac42c4987d28c1fcdbf71284cb3e904158",
       "width": 1049,
       "height": 576,
       "scale": 1,
@@ -117,16 +114,13 @@
     {
       "id": "help",
       "path": "new/help.png",
-      "sha256": "42af048edf022383a5efa7f0aa663d1212409f4ec65e51456af72e1b15d394d2",
-      "width": 990,
-      "height": 2049,
       "scale": 1.5,
-      "format": "png"
+      "error": "render_error: ENOENT: no such file or directory, open 'C:\\WorkSpace\\Golang\\arknights_bot-satori-w4-neargate\\assets\\font\\NotoSansSC-SB30.ttf'"
     },
     {
       "id": "lottery",
       "path": "new/lottery.png",
-      "sha256": "3bf9e9a34c303e7486f07417983b21987e084d306062471a625b6f434aee8650",
+      "sha256": "618ac59764c3dddc14d785503781b910965e268dd7d3e51bd64d1a42df404e2e",
       "width": 1473,
       "height": 1667,
       "scale": 1.5,
@@ -135,7 +129,7 @@
     {
       "id": "missing",
       "path": "new/missing.png",
-      "sha256": "d5b3d4c420b7135e34d940ecf4a24eedde594d3681c631846eae8db0ac12e043",
+      "sha256": "0a89f7cc45a780ef23f7db54164bf18a57875b681576f8c195d9fe5969958703",
       "width": 1050,
       "height": 536,
       "scale": 1.5,
@@ -144,7 +138,7 @@
     {
       "id": "operator",
       "path": "new/operator.png",
-      "sha256": "4c593be5cfe5de2cb9153279744ace300f62cf12b213f15a22664d9825f99fc6",
+      "sha256": "d71052ba1e2eaaded91f06c9365d26750d6d45eac14b8d91f7bafd503dcb8b07",
       "width": 1800,
       "height": 1200,
       "scale": 1.5,
@@ -153,7 +147,7 @@
     {
       "id": "recruit",
       "path": "new/recruit.png",
-      "sha256": "0d59c056b5cddca7b6f4c30685d689220a65a6c8aa58639cdb33cfd87e5d8328",
+      "sha256": "6ca270aea53e953e19a019ba31aa3ad55a7489f6ed7e021c927c5fb663883656",
       "width": 1350,
       "height": 534,
       "scale": 1.5,
@@ -162,13 +156,13 @@
     {
       "id": "state",
       "path": "new/state.png",
-      "sha256": "af641b6c403fc44dc9e7a9b496e18c11f077bda21f6b36e86cf494e4bdf1ca1b",
+      "sha256": "3533747657099458e018129d30092256e96f20ca2b26a7dab78c380190e92b67",
       "width": 1092,
       "height": 510,
       "scale": 1,
       "format": "png"
     }
   ],
-  "rendered": 16,
-  "failed": 0
+  "rendered": 14,
+  "failed": 2
 }
