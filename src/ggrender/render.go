@@ -598,7 +598,7 @@ func SampleRecruit() *RecruitList {
 
 func RenderRecruit(data *RecruitList) (*gg.Context, error) {
 	const mainW = 900
-	tileW, tileH := 100, 120
+	tileW, tileH := 100, 100
 	cols := mainW / tileW
 	pad := 20
 	m := gg.NewContext(mainW, 10)
@@ -622,9 +622,18 @@ func RenderRecruit(data *RecruitList) (*gg.Context, error) {
 	// D2a: render into the manifest DESIGN canvas (900x356) instead of our own natural height,
 	// so ScaleToManifest applies the uniform 1.5 the manifest declares (900*1.5=1350, 356*1.5=534)
 	// instead of the 1.7566 vertical over-stretch the natural height produced.
-	// ISOLATION VARIANT: tileH and gridTop are deliberately left untouched, so this measures the
-	// transform alone. See _recruit_measure/step-6.json.
+	// ISOLATION VARIANT: gridTop is deliberately left untouched, so D2a measures the transform
+	// alone. See _recruit_measure/step-6.json and step-7.json.
 	_ = rows
+	// D2b1: tileH 120 -> 100 only. gridTop stays at 44 so this variant isolates the cell height.
+	// CSS truth: .avatar{width:100px} with a 180x180 source gives a 100x100 CSS cell, and the
+	// baseline's measured cell pitch is 100 design px plus inter-element whitespace. tileH only
+	// feeds y = gridTop + (i/cols)*tileH and the DrawPortraitTile height; it does not touch the
+	// global transform, so it is independently attributable -- unlike B4, which was
+	// unattributable because it changed the ScaleToManifest denominator.
+	// NOTED, NOT FIXED HERE: DrawPortraitTile is called with width tileW-10 = 90, but the CSS cell
+	// is 100 wide. Left alone on purpose so this stays a single-variable change.
+	// See _recruit_measure/step-8.json.
 	mainH := 356
 	dc := gg.NewContext(mainW, mainH)
 	// D1: Recruit.tmpl declares no background on #main or body, so the frozen Playwright
