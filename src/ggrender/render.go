@@ -619,7 +619,13 @@ func RenderRecruit(data *RecruitList) (*gg.Context, error) {
 	if rows < 1 {
 		rows = 1
 	}
-	mainH := int(tagY+10) + rows*tileH + pad
+	// D2a: render into the manifest DESIGN canvas (900x356) instead of our own natural height,
+	// so ScaleToManifest applies the uniform 1.5 the manifest declares (900*1.5=1350, 356*1.5=534)
+	// instead of the 1.7566 vertical over-stretch the natural height produced.
+	// ISOLATION VARIANT: tileH and gridTop are deliberately left untouched, so this measures the
+	// transform alone. See _recruit_measure/step-6.json.
+	_ = rows
+	mainH := 356
 	dc := gg.NewContext(mainW, mainH)
 	// D1: Recruit.tmpl declares no background on #main or body, so the frozen Playwright
 	// baseline's background is the browser default page colour #ffffff, not an asset.
