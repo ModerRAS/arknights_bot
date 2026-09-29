@@ -19,6 +19,7 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+	"sync/atomic"
 	"time"
 
 	"github.com/fogleman/gg"
@@ -89,10 +90,32 @@ func rarityColor(r int) (int, int, int) {
 	}
 }
 
+// Both helpers keep their silent-fallback behaviour — LoadImage still returns
+// (nil, err) and tryLocal/FetchImage still walk on to amiya then a 1x1 pixel.
+// These only leave a trace on stderr: a render that quietly swapped in another
+// image looks exactly like a clean one.
+var (
+	fetchFallbacks  atomic.Int64
+	loadImageMisses atomic.Int64
+)
+
+// relAsset keeps log lines greppable and machine-independent; falls back to the
+// absolute path when the file lives outside AssetRoot.
+func relAsset(path string) string {
+	if rel, err := filepath.Rel(AssetRoot, path); err == nil && !strings.HasPrefix(rel, "..") {
+		return filepath.ToSlash(rel)
+	}
+	return path
+}
+
 // LoadImage loads local image.
 func LoadImage(path string) (image.Image, error) {
 	f, err := os.Open(path)
 	if err != nil {
+		// Not "fell back to amiya": LoadImage cannot see its callers, and
+		// cardAsset in scene_card.go has no amiya fallback at all.
+		fmt.Fprintf(os.Stderr, "ggrender: LoadImage miss #%d: %s (%v)\n",
+			loadImageMisses.Add(1), relAsset(path), err)
 		return nil, err
 	}
 	defer f.Close()
@@ -134,9 +157,12 @@ func fetch(url string) (image.Image, error) {
 // Matches poc logic and Playwright's resource error fallback.
 func FetchImage(url, fallbackPath string) image.Image {
 	if url != "" {
-		if img, err := fetch(url); err == nil {
+		img, err := fetch(url)
+		if err == nil {
 			return img
 		}
+		fmt.Fprintf(os.Stderr, "ggrender: FetchImage fallback #%d: %v for %q -> %s\n",
+			fetchFallbacks.Add(1), err, url, relAsset(fallbackPath))
 	}
 	if img, err := LoadImage(fallbackPath); err == nil {
 		return img
