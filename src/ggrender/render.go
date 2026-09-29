@@ -1296,6 +1296,13 @@ func RenderOperator(data *OperatorInfo) (*gg.Context, error) {
 	const mainH = 700
 	dc := gg.NewContext(mainW, mainH)
 	FillBackground(dc, 27, 29, 30)
+	if bg, err := LoadImage(AssetPath("operator/bg.png")); err == nil {
+		// template/Operator.tmpl gives #main a 1200x800 box with background-size:cover. Fitting the
+		// art to the 800x700 design canvas (cover: 1024x576 -> 1244x700 at x=-222) and letting
+		// ScaleToManifest stretch it to 1800x1200 reproduces the frozen baseline background better
+		// than fitting cover to the 1800x1200 output space first (measured per-region, see report).
+		dc.DrawImage(ScaleExact(bg, 1244, 700), -222, 0)
+	}
 	// top bar
 	dc.SetRGB255(45, 48, 55)
 	dc.DrawRectangle(0, 0, float64(mainW), 110)
