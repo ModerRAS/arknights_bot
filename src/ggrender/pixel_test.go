@@ -62,31 +62,45 @@ type manifestFile struct {
 // 「baseline 文件的 sha256 == 同一条 manifest 记录里的 sha256」——两者可同改。
 //
 // 曾经考虑用 manifest.json 自带的 templateTreeSHA256 / assetTreeSHA256 做锚。
-// **已穷举验证，该测量不可实施。** 理由有两条，第二条更根本：
+// **已穷举验证，该测量不可实施。** 理由有三条（另加一条固定附加的残余风险），
+// 按强度排列，第一条是决定性理由：
 //
-//  1. 值不可复现。算法本身是明确且可复现的 —— 它在 8873add 引入的
-//     src/cmd/visual-regression/main.go 的 treeSHA256() 里：filepath.WalkDir
-//     递归收集目录下全部文件，sort.Strings 后把每行
-//     `相对路径\x00<该文件内容的 hex sha256>\n` 喂进 sha256。照此实现逐 commit
-//     重算 feat/satori-renderer 的**全部 473 个 commit**（tOK=473 aOK=473），
-//     templateTree 出现 69 种互不相同的值、assetTree 21 种，与 manifest 里那两个
-//     字面量**零交集**（0 命中）。4bda363、8873add、8873add^ 与本树 HEAD 也
-//     个个对不上。那两个字面量的来源已不可考，无法写成一份能自动判定真伪的校验。
+//  1. **决定性理由：量错了对象。** `templateTreeSHA256` / `assetTreeSHA256` 的根是
+//     `<repoRoot>/template` 与 `<repoRoot>/assets`，**不覆盖
+//     `baseline/images/*.jpg`**。而缺陷 #6 问的是基线图有没有被换。**即便这两个值
+//     完美可复现，钉住它们也检测不到 #6** —— 那不是弱一点的校验，那是校验了另一个
+//     东西。
 //
-//  2. **即便算法可复现，也没有可对齐的参照物。** 那两个字段的根是
-//     <repoRoot>/template 与 <repoRoot>/assets。template/ 两树一致（各 20 个
-//     文件），但 assets/ **gg 树 102 个文件 vs satori 树 100 个文件**——文件数
-//     本身就对不上，无论用什么顺序、哈希什么内容都对不齐。
+//  2. **覆盖范围两树对不齐。** `assets/` **gg 树 102 个文件 vs satori 树 100 个
+//     文件**（`template/` 两树一致，各 20 个）。文件数本身就不对不上，无论用什么
+//     顺序、哈希什么内容都对不齐。
 //
-//     另有一条更直接的观察：**这两个字段的覆盖范围根本不包含冻结基线图。**
-//     它们的两个根是 template/ 与 assets/，而「基线有没有被换过」问的是
-//     baseline/images/*.jpg。把这两个字面量写成常量锁住，锁的是两个与基线图无关的
-//     字段，会给人虚假的安全感，而缺陷 #6 依旧畅通。故不写。
+//  3. **值不可复现。** 穷举 `feat/satori-renderer` 全历史 **473 个 commit，0 命中**
+//     （`tOK=473 aOK=473`，`templateTree` 69 种互异值、`assetTree` 21 种、
+//     MATCH=0）。正控制：两树 `template/` 哈希**完全相同**
+//     （`1fccd181f7b38565ad4a2eda36a96c031ac9bd47c8554b346b6fde5ff0680e7c`），证明
+//     算法复现无误 —— 否则 0 命中会被误读成「算法写错了」。算法本身有确切实现
+//     （`8873add` 引入的 `src/cmd/visual-regression/main.go` 的 `treeSHA256()`：
+//     `filepath.WalkDir` 递归不过滤 + `sort.Strings` + 逐行
+//     `路径\x00<文件 hex sha256>\n` 喂进 sha256），它**确实是**树哈希，只是算不出
+//     manifest 里那两个字面量。
 //
 // **本 harness 不校验基线完整性。** 缺陷 #6 未被修复，属已记录在案的已知缺口。
-// 它的防线完全在仓库之外：manifest.json 必须始终处于 git 跟踪之下，且任何改动
-// 都必须经过人工审查。**这是流程纪律，不是密码学锚点。** 当前没有任何机制能
-// 自动区分「合法地重抓了基线」与「把基线换成了自己画的答案」。
+// 当前没有任何机制能自动区分「合法地重抓了基线」与「把基线换成了自己画的答案」。
+//
+// ---
+// 固定附加（与上面三条并列，非「理由」）：
+//
+// 残余风险：把 baseline 换成自制图 + 同步改 manifest 的 sha256，仍能通过全部检查。
+// 当前防线只有 git 跟踪 + 人工审查，**不是密码学锚点**。
+//
+// ---
+// 另有一个**实测有效但因工程理由被否决**的方案：把 16 张 baseline images 的 sha256
+// 写成与 manifest 相互独立的测试内常量表。它不需要树哈希可复现性，且实测能真正拦下
+// 缺陷 #6。被否决的理由是「多一处需手工同步 + 不是更强的信任锚」，**不是**「它复现不了」。
+// 原文见 .audit/rejected-anchor-approach.patch。
+// 「有一个有效方案但被否决」与「没有方案」是两回事 —— 前者让后来者知道路存在，
+// 值不值得走由他们判断；后者会让人重新发明一遍。
 //
 // unified similarity: 1 - sum(|dR|+|dG|+|dB|+|dA|)/(w*h*4*255)
 func similarityNormalized(old, new *image.RGBA) (float64, [4]int) {
