@@ -503,6 +503,18 @@ type HHOp struct {
 }
 type HeadhuntData struct{ Ops []HHOp }
 
+// SampleHeadhunt stands in for the frozen headhunt-minimal fixture, whose
+// ten-roll payload is ten 6-star results. Two independent justifications:
+//   - hard: the previous cycle "3 + i%4" emitted two Rarity=6 ops, and
+//     assets/headhunt has no back_6.png / Rarity_6.png at all, so those two
+//     cards read a non-existent asset and drew no star bar whatsoever;
+//   - measured: the baseline shows ten gold backdrops and ten 6-star bars,
+//     and Rarity_5.png is the only asset with six star components
+//     (Rarity_0..4 carry 1..5).
+//
+// This is fixture INPUT matching the frozen input. No geometry is taken from
+// the baseline; every coordinate below is either an asset property or a
+// separately measured pixel box.
 func SampleHeadhunt() []HHOp {
 	ops := make([]HHOp, 0, 10)
 	for i := 0; i < 10; i++ {
@@ -562,11 +574,17 @@ func RenderHeadhunt(data []HHOp) (*gg.Context, error) {
 			dc.DrawRectangle(float64(x), float64(hhBackTop), float64(hhCardW), float64(hhBackH))
 			dc.Fill()
 		}
-		// Portrait. C class: the baseline card face is the prts half-body, which is
-		// not in assets/ this round, so this still resolves to common/amiya.png.
+		// Portrait. assets/headhunt/amiya-half.webp is the same file the frozen
+		// baseline rendered with, copied back from baseline/cache/ (sha256
+		// 7560d950...). It is RGBA with alpha extrema (0,255), which is
+		// format-level proof it cannot have been cut from the 16 RGB JPEG
+		// baselines. 180x360 is exactly 1:2 and the .lh box is exactly 1:2, so
+		// ScaleExact is an aspect-neutral fit: no crop, no distortion.
 		var port image.Image
 		if o.ThumbURL != "" {
-			port = FetchImage(o.ThumbURL, amiyaPath)
+			port = FetchImage(o.ThumbURL, AssetPath("headhunt/amiya-half.webp"))
+		} else if img, err := LoadImage(AssetPath("headhunt/amiya-half.webp")); err == nil {
+			port = img
 		} else {
 			port = tryLocal("common/amiya.png")
 		}
