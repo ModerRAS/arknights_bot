@@ -241,15 +241,16 @@ func RenderCard(data *CardInfo) (*gg.Context, error) {
 	dc.DrawImage(cardFadeBottom(ScaleExactCR(sec, sec.Bounds().Dx()*720/sec.Bounds().Dy(), 720)), 64, 0)
 
 	// ================= left info column =================
-	// 入职日 bar: #0098dc 132x24 at (22,20); dark text, date on white chip
+	// 入职日 bar: #0098dc 132x24 at (20,20); white label, date on white chip
 	dc.SetRGB255(0, 152, 220)
-	dc.DrawRectangle(22, 20, 132, 24)
+	dc.DrawRectangle(20, 20, 132, 24)
 	dc.Fill()
 	setFont(dc, 16)
-	cardTextCenter(dc, "入职日", 47, 32)
+	dc.SetRGB255(255, 255, 255) // template: label inherits no override -> body white? baseline: white glyphs on blue
+	cardTextCenter(dc, "入职日", 45, 32)
 	dateW, _ := measure(dc, data.RegisteredOn)
-	chipX := 76.0
-	chipW := dateW + 6
+	chipX := 68.0
+	chipW := dateW // baseline chip hugs text: 68..150
 	dc.SetRGB255(255, 255, 255)
 	dc.DrawRectangle(chipX, 20, chipW, 24)
 	dc.Fill()
@@ -293,7 +294,7 @@ func RenderCard(data *CardInfo) (*gg.Context, error) {
 	dc.SetRGB255(255, 255, 255)
 // SKIN-TBL-PATCH-START
 	setFont(dc, 16)
-	cardTextCenter(dc, "时装保有数", 122, 416)
+	cardTextCenter(dc, "时装保有数", 122, 414)
 	if 0 > 0 {
 		_, lh := measure(dc, "时装保有数")
 		drawString(dc, "时装保有数", 122-lh/2-0/2, 416+lh*(cardAscFrac-0.5))
@@ -313,8 +314,9 @@ func RenderCard(data *CardInfo) (*gg.Context, error) {
 		dc.DrawImage(ScaleExact(hr, 114, 35), 160, 455)
 	}
 
-	// char count 55px
+	// char count 55px — template color: white
 	setFont(dc, 55)
+	dc.SetColor(cardWhiteC)
 	cardTextTop(dc, itoa(data.CharCnt), cardCntX, cardCntTop)
 
 	// nation flags 30x30 pitch 37: flag==1 -> blue silhouette, flag==-1 -> 20% opacity
@@ -336,7 +338,7 @@ func RenderCard(data *CardInfo) (*gg.Context, error) {
 
 	// ================= right name card =================
 	// bg 638x223 floats right: x=642; measured baseline effective top -39 (viewport-clipped float)
-	const ncY = -41.0
+	const ncY = -39.0
 	if nc, err := LoadImage(AssetPath("card/name_card_short.png")); err == nil {
 		dc.DrawImage(ScaleExact(nc, 638, 223), 642, ncY)
 	}
@@ -347,13 +349,13 @@ func RenderCard(data *CardInfo) (*gg.Context, error) {
 	portrait := FetchImage(data.Avatar, AssetPath("common/amiya.png"))
 	dc.DrawImage(ScaleExact(portrait, 130, 260), 681, ncY+11)
 	if lb, err := LoadImage(AssetPath("card/level_bg.png")); err == nil {
-		dc.DrawImage(ScaleExact(lb, 84, 84), 676, ncY+3+0)
+		dc.DrawImage(ScaleExact(lb, 84, 84), 647, ncY+3) // baseline ring fit (647,-36)
 	}
 	dc.SetRGB255(255, 255, 255)
 	setFont(dc, 20)
-	cardTextTopCenter(dc, itoa(data.Level), 718, ncY+11+0)
+	cardTextTopCenter(dc, itoa(data.Level), 689, ncY+18)
 	setFont(dc, 14)
-	cardTextTopCenter(dc, "LV", 718, ncY+39+0)
+	cardTextTopCenter(dc, "LV", 689, ncY+46) // baseline LV glyphs (682..695, top 7)
 	// name fs30 at (842,+55)
 	setFont(dc, 30)
 // NAME-PATCH-START (tuned against frozen baseline)
@@ -430,10 +432,10 @@ func RenderCard(data *CardInfo) (*gg.Context, error) {
 	})
 	dc.DrawImage(modules, int(modX), int(modY))
 	if mb, err := LoadImage(AssetPath("card/module_collection_bg.png")); err == nil {
-		dc.DrawImage(ScaleExact(mb, 612, 178), 656, 442)
+		dc.DrawImage(ScaleExact(mb, 612, 178), 652, 449) // baseline-measured (alpha-profile vote)
 	}
 	if mi, err := LoadImage(AssetPath("card/module_collection_bg_icon.png")); err == nil {
-		dc.DrawImage(cardWithOpacity(ScaleExact(mi, 175, 163), 77), modX+40, modY+14)
+		dc.DrawImage(cardWithOpacity(ScaleExact(mi, 175, 163), 77), modX+60, modY+5) // baseline (699,468)
 	}
 	// numbers row right-aligned at modX+605, number tops modY+69, titles modY+156
 	cols := []struct {
