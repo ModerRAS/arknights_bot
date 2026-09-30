@@ -1,0 +1,204 @@
+{
+  "schema": "gg-content-mask-overlap/1",
+  "provenance": "retroactive-migration",
+  "original_path": "C:/WorkSpace/Golang/_lead4/false-friend-scan-16.json",
+  "original_script_path": null,
+  "original_script_recovered_from": "C:/Users/ModerRAS/.pi/agent/sessions/--C--WorkSpace-Golang--/2026-09-30T01-03-02-285Z_01a0efd6-1e8c-761a-a158-2582d00bd136.jsonl (lead-4 session, toolCallId call_function_6xsn6ccngb3p_1)",
+  "why_retroactive": "the generating script was never written to disk; _lead4/ held 8 PNG + 3 JSON + 1 MD and no script. The definition was recovered verbatim from the producing session transcript, so this archive is itself a retroactive migration.",
+  "definition": {
+    "background": "exact modal 24-bit RGB per image (np.argmax over unique-value counts, no quantization)",
+    "ink_mask": "np.abs(pixel-bg).sum(axis=2) > 30  (L1 over R+G+B, threshold 30)",
+    "overlap": "Jaccard: |A and B| / |A or B| * 100",
+    "rowCorr": "Pearson r of per-row ink counts",
+    "colCorr": "Pearson r of per-column ink counts",
+    "flatBgPct": "100 * max(modal pixel count over the two images) / (H*W)",
+    "verdict_rule": "STRUCT-RELATED if inkOv>=50 and max(|rowCorr|,|colCorr|)>=0.5; UNRELATED/FAKE if inkOv<50 and max<0.5; else BORDERLINE"
+  },
+  "measured_at": {
+    "worktree": "C:/WorkSpace/Golang/arknights_bot-gg-card-atomic (detached probe at ec440bf)",
+    "commit": "ec440bf",
+    "command": "cd src && go test ./ggrender/ -run 'TestGGPixelParity$' -v -count=1"
+  },
+  "gate_threshold_source": "src/ggrender/pixel_test.go :: gatePassed() -> sim < 0.99 fails",
+  "cross_validation": {
+    "reference_commit": "1b433bc (consolidate/gg-mainline)",
+    "rows_identical": 14,
+    "rows_total": 16,
+    "rows_differing": [
+      "headhunt",
+      "operator"
+    ],
+    "note": "the two differing rows (headhunt, operator) are the two scenes whose similarity itself differs between the two commits, i.e. different input renders, not a definition difference."
+  },
+  "scenes": [
+    {
+      "scene": "base",
+      "sim": 0.9589964211295751,
+      "passed": false,
+      "inkOv": 28.1,
+      "rowCorr": 0.568,
+      "colCorr": 0.296,
+      "flatBgPct": 76.2,
+      "verdict": "BORDERLINE"
+    },
+    {
+      "scene": "box",
+      "sim": 0.8250372524631744,
+      "passed": false,
+      "inkOv": 42.1,
+      "rowCorr": 0.375,
+      "colCorr": -0.323,
+      "flatBgPct": 35.2,
+      "verdict": "UNRELATED/FAKE"
+    },
+    {
+      "scene": "box-detail",
+      "sim": 0.8784374903269025,
+      "passed": false,
+      "inkOv": 9.9,
+      "rowCorr": 0.025,
+      "colCorr": 0.075,
+      "flatBgPct": 76.1,
+      "verdict": "UNRELATED/FAKE"
+    },
+    {
+      "scene": "box-summary",
+      "sim": 0.8809750314141331,
+      "passed": false,
+      "inkOv": 15.5,
+      "rowCorr": 0.122,
+      "colCorr": 0.152,
+      "flatBgPct": 53.0,
+      "verdict": "UNRELATED/FAKE"
+    },
+    {
+      "scene": "calendar",
+      "sim": 0.99432366536721,
+      "passed": true,
+      "inkOv": 86.7,
+      "rowCorr": 0.373,
+      "colCorr": 1.0,
+      "flatBgPct": 87.0,
+      "verdict": "STRUCT-RELATED"
+    },
+    {
+      "scene": "card",
+      "sim": 0.9601980124080882,
+      "passed": false,
+      "inkOv": 77.6,
+      "rowCorr": 0.909,
+      "colCorr": 0.929,
+      "flatBgPct": 23.0,
+      "verdict": "STRUCT-RELATED"
+    },
+    {
+      "scene": "depot",
+      "sim": 0.9172816240959263,
+      "passed": false,
+      "inkOv": 0.0,
+      "rowCorr": 0.081,
+      "colCorr": -0.01,
+      "flatBgPct": 100.0,
+      "verdict": "UNRELATED/FAKE"
+    },
+    {
+      "scene": "enemy",
+      "sim": 0.9195071737682478,
+      "passed": false,
+      "inkOv": 12.2,
+      "rowCorr": -0.201,
+      "colCorr": 0.059,
+      "flatBgPct": 69.8,
+      "verdict": "UNRELATED/FAKE"
+    },
+    {
+      "scene": "gacha",
+      "sim": 0.9025141429411271,
+      "passed": false,
+      "inkOv": 9.1,
+      "rowCorr": 0.097,
+      "colCorr": 0.23,
+      "flatBgPct": 53.2,
+      "verdict": "UNRELATED/FAKE"
+    },
+    {
+      "scene": "headhunt",
+      "sim": 0.7998304534119018,
+      "passed": false,
+      "inkOv": 29.4,
+      "rowCorr": 0.206,
+      "colCorr": -0.034,
+      "flatBgPct": 68.8,
+      "verdict": "UNRELATED/FAKE"
+    },
+    {
+      "scene": "help",
+      "sim": 0.839432182957432,
+      "passed": false,
+      "inkOv": 35.9,
+      "rowCorr": 0.615,
+      "colCorr": 0.004,
+      "flatBgPct": 43.7,
+      "verdict": "BORDERLINE"
+    },
+    {
+      "scene": "lottery",
+      "sim": 0.9835808689865397,
+      "passed": false,
+      "inkOv": 8.2,
+      "rowCorr": 0.048,
+      "colCorr": -0.021,
+      "flatBgPct": 45.3,
+      "verdict": "UNRELATED/FAKE"
+    },
+    {
+      "scene": "missing",
+      "sim": 0.8761380684114441,
+      "passed": false,
+      "inkOv": 50.8,
+      "rowCorr": 0.61,
+      "colCorr": 0.442,
+      "flatBgPct": 37.1,
+      "verdict": "STRUCT-RELATED"
+    },
+    {
+      "scene": "operator",
+      "sim": 0.6906304752178649,
+      "passed": false,
+      "inkOv": 25.0,
+      "rowCorr": 0.076,
+      "colCorr": -0.296,
+      "flatBgPct": 53.5,
+      "verdict": "UNRELATED/FAKE"
+    },
+    {
+      "scene": "recruit",
+      "sim": 0.6135057512531993,
+      "passed": false,
+      "inkOv": 39.9,
+      "rowCorr": 0.431,
+      "colCorr": 0.051,
+      "flatBgPct": 48.6,
+      "verdict": "UNRELATED/FAKE"
+    },
+    {
+      "scene": "state",
+      "sim": 0.9909337226595012,
+      "passed": true,
+      "inkOv": 71.8,
+      "rowCorr": 0.95,
+      "colCorr": 0.978,
+      "flatBgPct": 70.7,
+      "verdict": "STRUCT-RELATED"
+    }
+  ],
+  "measurement_point": {
+    "commit": "ec440bf",
+    "note": "measured at ec440bf; the commit this archive lands on is a later HEAD (5aa2ac3). git diff --stat ec440bf..5aa2ac3 -- src/ggrender/scene_card.go src/ggrender/render.go is empty, so the card render is unchanged and the numbers still hold -- but that is a separate verified claim, not that this file measured HEAD."
+  },
+  "reading_notes": {
+    "depot_inkOv_0.0": "NOT A MEASUREMENT, NOT A VERDICT. depot flatBgPct=100.0 means the canvas is a single flat color, so the ink mask is the empty set by construction; an empty mask intersects nothing and its union equals the other mask, so inkOv is necessarily 0.0. The metric has no resolving power on a flat-color canvas. UNTESTABLE != UNQUALIFIED -- this row must not be read as depot faking or depot being structurally unrelated.",
+    "lottery_most_dangerous_row": "sim 0.98358 is the closest non-passing row to the 0.99 gate, while inkOv=8.2 (second lowest of 16) and max(|rowCorr|,|colCorr|)=0.048 (lowest of 16) -> UNRELATED/FAKE. Highest score proximity, lowest structural relatedness. This row is what must stop the next person from trying to push lottery over the 0.99 gate: the score is carried by flat dark background, and raising similarity further would move a structurally unrelated page over the line without moving it toward the baseline.",
+    "cross_validation_boundary": "14 of 16 rows are identical to the last digit across all 5 metric fields. The 2 that differ (headhunt, operator) differ because the INPUT RENDERS differ between the two commits (their similarity differs too: 0.96476->0.79983 and 0.84554->0.69063), NOT because the definitions differ. There are not two definitions in conflict; there are two commits that rendered different images. Definition-level agreement is established independently by the calendar row (86.7 / +0.373 / +1.000 / 87.0) and the state row (71.8 / +0.950 / +0.978 / 70.7)."
+  }
+}
