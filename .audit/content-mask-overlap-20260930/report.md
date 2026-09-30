@@ -134,3 +134,80 @@
   **不 import 仓库任何代码**，**不参与渲染**，**不修改任何评分代码**。
 - `content_mask_overlap` **没有**被实现进 harness；`pixel_test.go` 一个字节未动。
   门禁仍然只算 `similarityNormalized`，本指标是**门禁之外的一次性判别**。
+
+## 8. 第二次测量：`1b433bc`（PR #5 源分支 tip）
+
+> 本节为**追加**，第 1–7 节一字未改。第 4/5 节的表与全部数字是 `ec440bf` 上的测量；
+> 本节是 `1b433bc` 上的另一次测量，**两者的差异归因见 8.3**。
+
+### 8.1 测量点与三次确认
+
+| 项 | 值 |
+|---|---|
+| `measurement_point.commit` | `1b433bc17b453523c7bb11ce23eb29a89f644064`（`consolidate/gg-mainline` tip，PR #5 源分支） |
+| 跑法 | 临时 detached worktree，跑完 `git worktree remove`；未切 card-atomic |
+| 命令 | `cd src && go test ./ggrender/ -run 'TestGGPixelParity$' -v -count=1`（7.67s），再用本目录的 `mask_overlap.py` |
+| 产物 | `report-1b433bc.json`（与本文件同目录） |
+| 图像 | 零 |
+
+**三次确认（这是本次重跑的全部意义）：**
+
+1. **定义正确** —— 定义来自 lead-4 会话 transcript 的逐字恢复，与 lead-4 当年**手写脚本**是两条独立路径。
+2. **实现正确** —— 恢复出来的脚本复算出的数，与 lead-4 当年那份裸 JSON **16/16 行、六个字段零差异**
+   （`sim` / `inkOv` / `rowCorr` / `colCorr` / `flatBgPct` / `verdict`）。
+3. **测量点正确** —— 输入渲染图取自 `1b433bc`，而 lead-4 当年也用 `1b433bc`。
+
+三者的交集是唯一变量：只有「测量点」被换掉过，两条代码路径给出同一个数。
+
+### 8.2 `1b433bc` 上的 16 行
+
+| 场景 | sim | 过 0.99 | inkOv% | rowCorr | colCorr | flatBg% | 判定 |
+|---|---|---|---|---|---|---|---|
+| headhunt | 0.96476 | 否 | 98.3 | +0.965 | +0.887 | 4.6 | STRUCT-RELATED |
+| calendar | 0.99432 | 是 | 86.7 | +0.373 | +1.000 | 87.0 | STRUCT-RELATED |
+| card | 0.96015 | 否 | 77.6 | +0.909 | +0.929 | 23.0 | STRUCT-RELATED |
+| operator | 0.84554 | 否 | 76.8 | +0.882 | +0.602 | 28.0 | STRUCT-RELATED |
+| state | 0.99093 | 是 | 71.8 | +0.950 | +0.978 | 70.7 | STRUCT-RELATED |
+| missing | 0.87614 | 否 | 50.8 | +0.610 | +0.442 | 37.1 | STRUCT-RELATED |
+| base | 0.95900 | 否 | 28.1 | +0.568 | +0.296 | 76.2 | BORDERLINE |
+| help | 0.83943 | 否 | 35.9 | +0.615 | +0.004 | 43.7 | BORDERLINE |
+| box | 0.82504 | 否 | 42.1 | +0.375 | -0.323 | 35.2 | UNRELATED/FAKE |
+| recruit | 0.61351 | 否 | 39.9 | +0.431 | +0.051 | 48.6 | UNRELATED/FAKE |
+| box-summary | 0.88098 | 否 | 15.5 | +0.122 | +0.152 | 53.0 | UNRELATED/FAKE |
+| enemy | 0.91951 | 否 | 12.2 | -0.201 | +0.059 | 69.8 | UNRELATED/FAKE |
+| gacha | 0.90251 | 否 | 9.1 | +0.097 | +0.230 | 53.2 | UNRELATED/FAKE |
+| box-detail | 0.87844 | 否 | 9.9 | +0.025 | +0.075 | 76.1 | UNRELATED/FAKE |
+| lottery | 0.98358 | 否 | 8.2 | +0.048 | -0.021 | 45.3 | UNRELATED/FAKE |
+| depot | 0.91728 | 否 | 0.0 | +0.081 | -0.010 | 100.0 | UNRELATED/FAKE（不可测，见 5.1） |
+
+计数：**STRUCT-RELATED 6 / BORDERLINE 2 / UNRELATED-FAKE 8**（门禁仍 2/16 通过）。
+
+### 8.3 与第 4/5 节（`ec440bf`）的差异归因
+
+`1b433bc` 是 `ec440bf` 的**后代，领先 26 个提交**
+（`git merge-base --is-ancestor ec440bf 1b433bc` exit 0；反向 exit 1；
+`git rev-list --count ec440bf..1b433bc` = 26，反向 = 0；期间 `render.go +111/-20`、`pixel_test.go +203`）。
+
+| 行 | 度量字段 | sim | 归因 |
+|---|---|---|---|
+| `headhunt` | 五个全变（98.3→29.4、+0.965→+0.206、+0.887→-0.034、4.6→68.8、STRUCT-RELATED→UNRELATED/FAKE） | 0.96476 vs 0.79983 | 输入渲染图不同 |
+| `operator` | 五个全变（76.8→25.0、+0.882→+0.076、+0.602→-0.296、28.0→53.5、STRUCT-RELATED→UNRELATED/FAKE） | 0.84554 vs 0.69063 | 输入渲染图不同 |
+| `card` | **全同**（77.6 / +0.909 / +0.929 / 23.0 / STRUCT-RELATED） | 0.9601504863664215 vs 0.9601980124080882（差在第 6 位） | 渲染几乎相同，仅有亚阈值色差 |
+| 其余 13 行 | 全同 | 全同 | — |
+
+**两处 verdict 翻转的原因是输入代码不同，不是定义分歧。** 本指标在两个测量点上都是同一把尺子。
+
+### 8.4 两份测量点的计数对照（引用时务必带测量点）
+
+| 测量点 | STRUCT-RELATED | BORDERLINE | UNRELATED/FAKE | 门禁通过 |
+|---|---|---|---|---|
+| `ec440bf`（本文件第 4/5 节、`report.json`） | 4 | 2 | 10 | 2/16 |
+| `1b433bc`（本节、`report-1b433bc.json`） | **6** | 2 | **8** | 2/16 |
+
+PR #5 的源分支是 `consolidate/gg-mainline`，因此**对外应引用 `1b433bc` 这一组，即 8/16**。
+
+### 8.5 在 `1b433bc` 上追加的三条限定
+
+- `lottery 0.98358` 仍是 `UNRELATED/FAKE`（inkOv 8.2、maxCorr 0.048）—— 判据不变，仍是全表最危险的一行。
+- `missing 50.8` 只高出 50 线 **0.8pp**，且 `colCorr 0.442` 本身低于 0.5，判定完全靠 `max(0.610, 0.442) = 0.610 >= 0.5` 撑住 —— **全表最脆弱的一个 STRUCT-RELATED 判定**。
+- `headhunt 98.3` 的 `flatBg` 只有 **4.6%**，高分**不是**背景给的，与 `lottery` 机制相反 —— 可作「分数高低 ≠ 结构相关性」的对照样本。
