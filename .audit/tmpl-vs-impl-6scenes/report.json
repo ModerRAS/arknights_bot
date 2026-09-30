@@ -207,8 +207,56 @@
       "src/ggrender/scene_lottery.go"
     ]
   },
+  "item_naming_convention": {
+    "rule": "本表同一属性跨场景同名同写法，取名自属性本身；背景色与背景图分清 color 与 image",
+    "background_color_criterion": "值为颜色（background-color: #xxx）则命名为「背景色」",
+    "background_image_criterion": "值为图片引用（background-image: url(...)）才命名为「背景图」",
+    "unverifiable_rule": "核实不了写「未声明」，不硬套名字",
+    "row_names_unified": ["背景色", "背景图", "头像尺寸"],
+    "row_occurrences_each": 6,
+    "old_names_removed": ["底色", "容器底色", "底图", "图标尺寸"],
+    "old_names_residual_check": {
+      "command": "grep -nE '^\\| (底色|容器底色|底图|图标尺寸) ' report.md",
+      "exit_code": 1,
+      "output": "",
+      "conclusion": "无残留"
+    },
+    "per_scene_background_verification": {
+      "method": "grep -nE 'background' template/<T>.tmpl，逐个看值到底是 color 还是 image，不按旧名顺推",
+      "base": {"color": "8: background-color: #2b333d; (#main)", "image": "未声明", "verdict": "仅 color"},
+      "gacha": {"color": "47: background-color: #0c0d0c; (#article; #main 未声明背景)", "image": "43: background-image: url(\"assets/gacha/header.png\"); (#header) / 76: background-image: url(\"assets/gacha/footer.png\"); (#footer)", "verdict": "两者兼有，两行都需列"},
+      "enemy": {"color": "8: background-color: #323332; (#main)", "image": "未声明", "verdict": "仅 color"},
+      "box-detail": {"color": "9: background-color: #2e3031; (#main)", "image": "未声明", "verdict": "仅 color"},
+      "help": {"color": "未声明（#main 两条 background 命中为 background-image 与 background-size）", "image": "10: background-image: url(\"/assets/help/bg.jpg\"); (#main) / 71: background-image: linear-gradient(...), url('/assets/help/amiya.png'); (.bg)", "verdict": "仅 image"},
+      "depot": {"color": "9: background-color: #2e3031; (#main)", "image": "未声明", "verdict": "仅 color"}
+    }
+  },
+  "supplemented_items": [
+    {
+      "id": "help-avatar-size-row",
+      "reason": "九个必查项里唯一六场景没全覆盖的缺口",
+      "verdict": "未声明 —— help 模板无任何头像元素",
+      "negative_evidence_command": "grep -nE 'avatar|头像|portrait|char_skin|char_avatar' template/Help.tmpl",
+      "negative_evidence_exit_code": 1,
+      "negative_evidence_output": "",
+      "nearest_actual_graphics": "81/banner.png 受 14: width: 100%; 约束；93,111,129/label.png 受 38: height: 40px; 39: width: 100%; 约束；84,101,119,137 四处内联 width=\"16\" height=\"16\" 的 svg"
+    },
+    {
+      "id": "unify-item-names",
+      "reason": "同一属性曾有三个名字（底色 / 容器底色 / 底图），且 gacha 整行缺失",
+      "resolved_to": ["背景色", "背景图", "头像尺寸"],
+      "gacha_gap_closed": "gacha 原表无背景行，实为同时声明了 background-color 与 background-image，已补两行"
+    },
+    {
+      "id": "naming-convention-header",
+      "reason": "不加此行，下一个人还会再造一个名字",
+      "added_section": "项名命名约定"
+    }
+  ],
+  "scenes_where_font_size_and_line_height_undeclared_both_sides_note": "见 undeclared_verdict_protocol",
   "process_notes": [
-    "本轮自查出一处取证缺陷：排查 box-detail 复用时两条 grep 误接 | head，其后的 $? 取的是 head 的退出码而非 grep 的，会把查询失败与结果为空压成同一信号。已改为 out=$(grep ...); rc=$? 不接管道重做，本文件所载均为重做后的真实退出码。"
+    "本轮自查出一处取证缺陷：排查 box-detail 复用时两条 grep 误接 | head，其后的 $? 取的是 head 的退出码而非 grep 的，会把查询失败与结果为空压成同一信号。已改为 out=$(grep ...); rc=$? 不接管道重做，本文件所载均为重做后的真实退出码。",
+    "补三处时核实到：help 模板确实无头像元素（grep 退出码 1、输出为空），故该项写「未声明」而非套用别的场景的名字；gacha 同时声明了 color 与 image，因此背景拆成两行而不是二选一。"
   ],
   "images": 0,
   "scoring_code_modified": false

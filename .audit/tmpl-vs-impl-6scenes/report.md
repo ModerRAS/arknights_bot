@@ -6,6 +6,14 @@
 - 共享样式表：`C:\WorkSpace\Golang\arknights_bot\assets\css\common.css`
 - 实现侧：`C:\WorkSpace\Golang\arknights_bot-gg-card-revival\src\ggrender\`
 
+## 项名命名约定
+
+本表同一属性跨场景同名同写法，取名自属性本身：
+`背景色` 与 `背景图` 分清 color 与 image ——
+值是颜色（`background-color: #xxx`）就叫「背景色」，值是图片引用（`background-image: url(...)`）才叫「背景图」。
+
+项名取自核实后的属性，不按旧名顺推。核实不了的写「未声明」，不硬套一个名字。
+
 ## 判「未声明」的口径
 
 必须 `*.tmpl` 与 `assets/css/common.css` **两侧都查过**才写「未声明」。
@@ -122,7 +130,8 @@ box-detail 确实已实现，位置是 `render.go:256 RenderBoxDetail`，**不�
 |---|---|---|
 | 容器宽 | `9: width: 1110px;` | `610: const mainW = 1100` |
 | 容器高 | 未声明（`#main` 无 height；`common.css` 亦无） | `613: h := 60 + 50 + 100 + len(data.Tradings)*110 + len(data.Manufactures)*110 + len(data.Powers)*80 + 90 + 80 + 90 + len(data.Dorms)*90 + 40` |
-| 容器底色 | `8: background-color: #2b333d;` | `615: FillBackground(dc, 30, 32, 33)` = `#1e2021` |
+| 背景色 | `8: background-color: #2b333d;`（`#main`） | `615: FillBackground(dc, 30, 32, 33)` = `#1e2021` |
+| 背景图 | 未声明（`grep -nE 'background' template/Base.tmpl` 三条命中全为 `background-color` 或 `progress::-webkit-progress-value{ background: white; }`，无 `background-image`） | 未绘制背景图 |
 | display | `.base` 段 `17: display: inline-flex;`；`.title` 段 `42: display: flex;` | 无 flex 概念；逐块 `fillRoundedCard` 绝对定位 |
 | flex-direction | `18: flex-direction: column;` | 无 |
 | 卡片宽 | `13: width: 550px;`；另 `85:` 与 `128:` 两处内联覆盖 `<div class="base" style="width: 1105px;">` | `mainW-2*pad` = 1100−32 = 1068（`625` 等处 `fillRoundedCard(..., float64(mainW-2*pad), ...)`） |
@@ -144,6 +153,8 @@ box-detail 确实已实现，位置是 `render.go:256 RenderBoxDetail`，**不�
 |---|---|---|
 | 容器宽 | `9: width: 1000px;` | `793: const mainW=900` |
 | 容器高 | 未声明（`#main` 无 height；`common.css` 亦无） | `797: mainH:=headerH+statsH+charsH+40`，其中 `794: headerH:=90`、`795: statsH:=120`、`796: charsH:= 20*74` |
+| 背景色 | `47: background-color: #0c0d0c;`（`#article`；`#main` 未声明背景） | `799: FillBackground(dc,27,29,30)` = `#1b1d1e` |
+| 背景图 | `43: background-image: url("assets/gacha/header.png");`（`#header`）；`76: background-image: url("assets/gacha/footer.png");`（`#footer`） | 均未绘制 |
 | display | `.item` 段 `24: display: inline-block;`；`#article table` 段 `51: display: inline-block;`；`.chars` 段 `65: display: inline-table;` | 无 |
 | flex-direction | 未声明（模板无 `flex-direction`；`common.css` 亦无） | 无 |
 | 头部高 | `44: height: 400px;`（`#header`） | `794: headerH:=90`；`802: dc.DrawRectangle(0,0,float64(mainW),float64(headerH))` |
@@ -164,7 +175,8 @@ box-detail 确实已实现，位置是 `render.go:256 RenderBoxDetail`，**不�
 |---|---|---|
 | 容器宽 | `8: width: 656px;`（`#main`） | `37: const W, H = 984, 477`（= 656×1.5、318×1.5） |
 | 容器高 | `9: height: auto;` | `37: const W, H = 984, 477` 固定 477 |
-| 底色 | `7: background-color: #323332;` | `38: FillBackground(dc, 50, 51, 50)` = `#323332` ✓ |
+| 背景色 | `8: background-color: #323332;`（`#main`） | `38: FillBackground(dc, 50, 51, 50)` = `#323332` ✓ |
+| 背景图 | 未声明（两条 background 命中全为 `background-color`：`8` 与 `15`） | 未绘制背景图 |
 | display | 未声明（模板为 `<table>` 流；无 `display` / `flex-direction` 声明） | 绝对坐标逐行绘制 |
 | flex-direction | 未声明（`common.css` 亦无） | 无 |
 | 表格宽 | `17: width: 656px;`（`#base`）；`33: width: 656px;`（`.level`） | `W` = 984 |
@@ -185,7 +197,8 @@ box-detail 确实已实现，位置是 `render.go:256 RenderBoxDetail`，**不�
 |---|---|---|
 | 容器宽 | 未声明（`#main` 段 `7-11` 只有 `position: absolute;` 与 `background-color: #2e3031;`；`common.css` 亦无 width） | `257: const mainW = 900` |
 | 容器高 | 未声明（同上） | `260: mainH := pad + len(data)*cardH + pad`，`258: const cardH = 155`、`259: const pad = 10` |
-| 底色 | `9: background-color: #2e3031;` | `261: FillBackground(dc, 27, 29, 30)` = `#1b1d1e` |
+| 背景色 | `9: background-color: #2e3031;`（`#main`） | `261: FillBackground(dc, 27, 29, 30)` = `#1b1d1e` |
+| 背景图 | 未声明（唯一 background 命中为 `9: background-color: #2e3031;`） | 未绘制背景图 |
 | display | 内联 `style="display: inline-flex;align-items: center;width: 100%;"`（干员单元格）；`style="display: inline-flex;align-items: center;flex-direction: column"`（等级/潜能/技能/模组单元格） | 绝对定位 |
 | flex-direction | 内联 `flex-direction: column`（同上三处） | 无 |
 | 表格对齐 | `24-28: td { vertical-align: middle; text-align: center; white-space: nowrap; }` | `DrawRoundedRectangle` 卡片 + 左对齐 `drawString` |
@@ -206,13 +219,15 @@ box-detail 确实已实现，位置是 `render.go:256 RenderBoxDetail`，**不�
 |---|---|---|
 | 容器宽 | `8: width: 660px;`（`#main`） | `893: const mainW=990` |
 | 容器高 | 未声明（`#main` 无 height；`common.css` 亦无） | `897-900`：`mainH:=200+privH+pubH+adminH+60`，其中 `privH/pubH/adminH := 40+len(...)*32` |
-| 底图 | `9-10: background-image: url("/assets/help/bg.jpg"); background-size: cover;` | `894: FillBackground(dc,46,48,49)` = `#2e3031` 纯色 |
+| 背景色 | 未声明（`#main` 两条 background 命中为 `10: background-image` 与 `11: background-size`，无 `background-color`） | `894: FillBackground(dc,46,48,49)` = `#2e3031` 纯色 |
+| 背景图 | `10: background-image: url("/assets/help/bg.jpg");` + `11: background-size: cover;`（`#main`）；另有 `71: background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('/assets/help/amiya.png');`（`.bg`） | 未绘制背景图，改画纯色块 |
 | display | `.cmd` `44: float: left;`；`.label` `36: float: left;`；`.cmdType` `40: float: left;`；`.banner img` `14: float: left;`；`.banner h1` `18: float: left;`；`.banner p` `25: float: left;` | 无 |
 | flex-direction | 未声明（模板无 `flex-direction`；`common.css` 亦无） | 无 |
 | 网格列数 | `.cmd` 段 `42: width: 150px;` + `45: margin-left: 10px;`，容器 660px → 每行 4 个（160×4=640 ≤ 660） | 指令行单列纵向堆叠 |
 | 间距 | `.cmd` `45: margin-top: 15px;` `46: margin-left: 10px;`；`.cmd p` `50-52: margin-bottom: 0; margin-top: 3px; margin-left: 5px;`；`.label` `37: margin-top: 10px;`；`.cmdType` `41: margin-top: -32px; margin-left: 25px;`；`.banner img` `15: margin-top: 10px;`；`.banner h1` `19: margin-top: -110px; margin-left: 20px;`；`.banner p` `26-27: margin-left: 20px; margin-top: -45px;` | `1017` 附近步进 32（`yy+=32`），标题步进 20 |
 | 横幅图高 | `13-15: .banner img { width: 100%; margin-top: 10px; float: left; }` | `1003: dc.DrawRectangle(0,0,float64(mainW),140)` 纯色块 |
 | 标签图高 | `32-35: .label img { height: 40px; width: 100%; float: left; }` | 未绘制 |
+| 头像尺寸 | 未声明 —— help 模板无任何头像元素。`grep -nE 'avatar\|头像\|portrait\|char_skin\|char_avatar' template/Help.tmpl` **退出码 1、输出为空**。模板内仅有的图形元素是：`81`/`<img src="/assets/help/banner.png"/>` 受 `14: width: 100%;` 约束；`93`/`111`/`129` 的 `<img src="/assets/help/label.png"/>` 受 `38: height: 40px;` `39: width: 100%;` 约束；`84`/`101`/`119`/`137` 四处内联 `width="16" height="16"` 的 svg | 未绘制任何图形；`1003: dc.DrawRectangle(0,0,float64(mainW),140)` 为纯色块 |
 | 指令块 | `41-48: .cmd { width: 150px; float: left; margin-top: 15px; margin-left: 10px; border: solid 1px; font-size: 15px; border-radius: 10px; color: white; font-weight: 600; }` | `1019: RoundRect(dc,20,float64(yy),float64(mainW-40),28,6)` 宽 950 高 28 圆角 6 |
 | 字号 | `54: font-size: 15px;`（`.cmd`） | `1005: setFont(dc,28)`；`1008/1013: setFont(dc,14/16)`；`1020: setFont(dc,13)` |
 | 行高 | 未声明（模板无 `line-height`；`common.css` 亦无） | 未显式设置 |
@@ -225,14 +240,15 @@ box-detail 确实已实现，位置是 `render.go:256 RenderBoxDetail`，**不�
 |---|---|---|
 | 容器宽 | `8: width: 850px;`（`#main`） | `37: const w, h = 1275, 234`（= 850×1.5、156×1.5） |
 | 容器高 | 未声明（`#main` 无 height；`common.css` 亦无） | `37: const w, h = 1275, 234` 固定 234 |
-| 底色 | `9: background-color: #2e3031;` | `39: dc.SetRGB(0.96, 0.96, 0.95)` = `#f5f5f2` 浅色 |
+| 背景色 | `9: background-color: #2e3031;`（`#main`） | `39: dc.SetRGB(0.96, 0.96, 0.95)` = `#f5f5f2` 浅色 |
+| 背景图 | 未声明（两条 background 命中为 `9: background-color` 与 `23: background-color: rgba(0, 0 ,0 ,0.5);`，均非 image） | 未绘制背景图 |
 | display | `.item` `12: display: inline-flex;` | 无 flex，逐格绝对定位 |
 | flex-direction | `13: flex-direction: column;` | 无 |
 | 格子宽 | `15: width: 80px;` | `45: const cellW, cellH = 152, 102`；绘制 `cellW-12` = 140 宽 |
 | 格子高 | 未声明（`.item` 无 height；`common.css` 亦无） | `45: cellH = 102`；绘制 `cellH-14` = 88 高 |
 | 网格列数 | 模板无 grid / 无固定列数声明；`.item` 为 `inline-flex` 80px 宽，容器 850px → 每行最多 10 个（80×10=800 ≤ 850） | `44: const cols = 8`，即固定 8 列 |
 | 间距 | 未声明（模板无 margin / gap；`common.css` 亦无） | `45: cellW=152, cellH=102`；起点 `x = 20 + (i%cols)*cellW`、`y = 16 + (i/cols)*cellH` |
-| 图标尺寸 | `17-19: .icon { width: 75px; }` | `dc.DrawRectangle(float64(x+8), float64(y+8), 52, 52)` 纯色块 52×52 |
+| 头像尺寸 | 未声明。模板侧的对应元素是 `.icon`（非头像）：`17-19: .icon { width: 75px; }`，`grep -nE 'avatar\|头像\|portrait\|char_skin' template/Depot.tmpl` 退出码 1、输出为空 | `dc.DrawRectangle(float64(x+8), float64(y+8), 52, 52)` 纯色块 52×52，非真实图片 |
 | 计数块 | `20-27: .count { position: absolute; color: white; background-color: rgba(0, 0 ,0 ,0.5); font-size: 12px; margin-top: 50px; margin-right: -30px; }` | `dc.DrawStringAnchored(it.Count, float64(x+cellW-20), float64(y+18), 1, 0)`，无背景块 |
 | 字号 | `24: font-size: 12px;`（`.count`） | `41: LoadDefaultFont(dc, 20)`，全场景统一 20 |
 | 行高 | 未声明（模板无 `line-height`；`common.css` 亦无） | 未显式设置 |
