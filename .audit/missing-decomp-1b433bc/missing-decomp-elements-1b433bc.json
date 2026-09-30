@@ -1,0 +1,59 @@
+{
+  "scene": "missing",
+  "measurement_point": "1b433bc",
+  "total_err": 71103685,
+  "elements": [
+    {
+      "element": "profession icon 15x15 @+3,+3",
+      "px": 2700,
+      "canvas_pct": 0.48,
+      "err": 655303,
+      "err_share_pct": 0.922,
+      "mean_abs_l1": 242.7
+    },
+    {
+      "element": "rarity dots (circles) top-right",
+      "px": 6000,
+      "canvas_pct": 1.066,
+      "err": 2620388,
+      "err_share_pct": 3.685,
+      "mean_abs_l1": 436.73
+    },
+    {
+      "element": "level badge circle (undeclared)",
+      "px": 4800,
+      "canvas_pct": 0.853,
+      "err": 874636,
+      "err_share_pct": 1.23,
+      "mean_abs_l1": 182.22
+    },
+    {
+      "element": "name bar 13px (declared)",
+      "px": 16380,
+      "canvas_pct": 2.91,
+      "err": 2926642,
+      "err_share_pct": 4.116,
+      "mean_abs_l1": 178.67
+    }
+  ],
+  "portrait_area": {
+    "px": 234720,
+    "err_share_pct": 69.415,
+    "mean_abs_l1": 210.28
+  },
+  "label_band": {
+    "px": 110250,
+    "err_share_pct": 16.756,
+    "mean_abs_l1": 108.07
+  },
+  "provenance": "retroactive-migration",
+  "original_path": "C:/WorkSpace/Golang/_lead2/<same filename>",
+  "why_retroactive": "The decomposition was produced outside the repository, on 2026-09-30, before the decision to archive it was taken; it was written to C:/WorkSpace/Golang/_lead2/ and the results stayed there while the definition (mask_overlap.py) went into the repository. Archiving the results without the generator would have created a second instance of \"the numbers are here, the instrument is not\".",
+  "external_chain": [
+    "C:/WorkSpace/Golang/_lead2/missing-decomp.py imports mask_overlap from C:/WorkSpace/Golang/arknights_bot-gg-card-atomic/.audit/content-mask-overlap-20260930/mask_overlap.py (archived at 6f444a1, extended at 1fd7f31) and uses its modal-RGB background and L1>30 ink mask verbatim. It reimplements nothing.",
+    "C:/WorkSpace/Golang/_lead2/missing-skinid-provenance-audit.md and missing-decomp-report.md are the prose companions of these numbers; they stayed in _lead2/ and are NOT archived here."
+  ],
+  "not_archived": "C:/WorkSpace/Golang/_lead2/report-section8.md - an orphaned fragment, deliberately left out (see content-mask-overlap report.md section 8.6).",
+  "precision": "Precision convention, stated because two archives now carry the same measurement at different precision and that is NOT a contradiction. THIS file (missing-decomp-*) is the AUTHORITATIVE precision: inkOv_pct 50.84, rowCorr 0.6102, colCorr 0.4423, flatBg 37.06. The content-mask-overlap archive rounds the same numbers to one decimal for display (50.8 / +0.610 / +0.442 / 37.1) because its own table is a 16-row human-readable summary; that archive is authoritative for the 16-scene comparison and the verdict rule, this one for the digits. Rounding: inkOv 1 decimal, corr 3 decimals, flatBg 1 decimal. No value differs between the two beyond rounding.",
+  "authoritative_for": "the per-digit values of the missing-scene decomposition"
+}

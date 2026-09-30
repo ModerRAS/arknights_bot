@@ -1,0 +1,48 @@
+{
+  "total_err": 71103685,
+  "canvas_px": 562800,
+  "bands": [
+    {
+      "band": "label+title band (device y 0..105)",
+      "y": [
+        0,
+        105
+      ],
+      "px": 110250,
+      "err": 11914471,
+      "err_share_pct": 16.756,
+      "mean_abs_l1": 108.068,
+      "canvas_share_pct": 19.59
+    },
+    {
+      "band": "grid area (device y 105..536)",
+      "y": [
+        105,
+        536
+      ],
+      "px": 452550,
+      "err": 59189214,
+      "err_share_pct": 83.244,
+      "mean_abs_l1": 130.79,
+      "canvas_share_pct": 80.41
+    }
+  ],
+  "portrait_tiles": {
+    "grid": "10 cols x 2 rows, 105x210 device px, grid_top 105 (design cols=10 x tileW70 x1.5, labelH 60 + 10 gap)",
+    "new_distinct_tiles": 14,
+    "new_total_tiles": 20,
+    "new_pairs_pixel_identical": 21,
+    "old_distinct_tiles": 20,
+    "old_total_tiles": 20
+  },
+  "provenance": "retroactive-migration",
+  "original_path": "C:/WorkSpace/Golang/_lead2/<same filename>",
+  "why_retroactive": "The decomposition was produced outside the repository, on 2026-09-30, before the decision to archive it was taken; it was written to C:/WorkSpace/Golang/_lead2/ and the results stayed there while the definition (mask_overlap.py) went into the repository. Archiving the results without the generator would have created a second instance of \"the numbers are here, the instrument is not\".",
+  "external_chain": [
+    "C:/WorkSpace/Golang/_lead2/missing-decomp.py imports mask_overlap from C:/WorkSpace/Golang/arknights_bot-gg-card-atomic/.audit/content-mask-overlap-20260930/mask_overlap.py (archived at 6f444a1, extended at 1fd7f31) and uses its modal-RGB background and L1>30 ink mask verbatim. It reimplements nothing.",
+    "C:/WorkSpace/Golang/_lead2/missing-skinid-provenance-audit.md and missing-decomp-report.md are the prose companions of these numbers; they stayed in _lead2/ and are NOT archived here."
+  ],
+  "not_archived": "C:/WorkSpace/Golang/_lead2/report-section8.md - an orphaned fragment, deliberately left out (see content-mask-overlap report.md section 8.6).",
+  "precision": "Precision convention, stated because two archives now carry the same measurement at different precision and that is NOT a contradiction. THIS file (missing-decomp-*) is the AUTHORITATIVE precision: inkOv_pct 50.84, rowCorr 0.6102, colCorr 0.4423, flatBg 37.06. The content-mask-overlap archive rounds the same numbers to one decimal for display (50.8 / +0.610 / +0.442 / 37.1) because its own table is a 16-row human-readable summary; that archive is authoritative for the 16-scene comparison and the verdict rule, this one for the digits. Rounding: inkOv 1 decimal, corr 3 decimals, flatBg 1 decimal. No value differs between the two beyond rounding.",
+  "authoritative_for": "the per-digit values of the missing-scene decomposition"
+}
