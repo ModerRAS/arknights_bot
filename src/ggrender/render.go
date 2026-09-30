@@ -1144,6 +1144,10 @@ func SampleLottery() *LotteryData {
 func RenderLottery(data *LotteryData) (*gg.Context, error) {
 	const W, H = 1473, 1667
 	dc := gg.NewContext(W, H)
+	// Lottery.tmpl font-family is "Microsoft YaHei" — render lottery text with the extracted YaHei face
+	lotteryFont := AssetPath("font/msyh-regular.ttf")
+	setFontP := func(size float64) { _ = dc.LoadFontFace(lotteryFont, size) }
+	setFontP(42)
 	FillBackground(dc, 15, 15, 15) // #0f0f0f
 	// main container #1a1a1a, radius 16css->24px, border #333333
 	dc.SetRGB255(26, 26, 26)
@@ -1155,12 +1159,12 @@ func RenderLottery(data *LotteryData) (*gg.Context, error) {
 	dc.Stroke()
 	// header: title centered, 28css->42px, letter-spacing 6px, cyan underline
 	title := "选号详情"
-	setFont(dc, 42)
+	setFontP(42)
 	dc.SetRGB255(255, 255, 255)
 	tw := measureW(dc, title) + 24 // 4 glyphs x 6px spacing
-	drawString(dc, title, (W-tw)/2, 130)
+	drawString(dc, title, (W-tw)/2, 108)
 	dc.SetRGB255(0, 229, 255)
-	dc.DrawRectangle((W-tw)/2-4, 132, tw+8, 3)
+	dc.DrawRectangle((W-tw)/2, 132, tw, 3)
 	dc.Fill()
 	// 10x10 grid (measured from baseline: x0=200 y0=189 pitch=136.5 cell=112)
 	const gridX, gridY, pitch, cell = 200.0, 189.0, 136.5, 112.0
@@ -1196,7 +1200,7 @@ func RenderLottery(data *LotteryData) (*gg.Context, error) {
 		dc.DrawRoundedRectangle(x+0.75, y+0.75, cell-1.5, cell-1.5, 9)
 		dc.Stroke()
 		// num-top: 16css->24px, #666666 / cyan / red, top-left + padding 9
-		setFont(dc, 24)
+		setFontP(24)
 		switch {
 		case winner:
 			dc.SetRGB255(255, 61, 0)
@@ -1207,7 +1211,7 @@ func RenderLottery(data *LotteryData) (*gg.Context, error) {
 		}
 		drawString(dc, itoa(i), x+9, y+30)
 		// num-bg: 32css->48px, faint tint centered
-		setFont(dc, 48)
+		setFontP(48)
 		switch {
 		case winner:
 			dc.SetRGB255(101, 33, 24)
@@ -1219,7 +1223,7 @@ func RenderLottery(data *LotteryData) (*gg.Context, error) {
 		drawString(dc, itoa(i), x+cell/2-12, y+cell/2+18)
 		if ok {
 			// user-info: name (12css->18px) then id (10css->15px, 70% white)
-			setFont(dc, 18)
+			setFontP(18)
 			if winner {
 				dc.SetRGB255(255, 61, 0)
 			} else {
@@ -1231,14 +1235,14 @@ func RenderLottery(data *LotteryData) (*gg.Context, error) {
 				nx, ny = x+72, y+113
 			}
 			drawString(dc, d.UserName, nx, ny)
-			setFont(dc, 15)
+			setFontP(15)
 			dc.SetRGB255(178, 178, 178)
 			drawString(dc, "ID:"+d.UserNumber, x+11, y+96)
 		}
 	}
 	// legend: 3 items centered below grid (grid ends y=1495; legend ~1560)
 	legendY := 1572.0
-	setFont(dc, 21)
+	setFontP(21)
 	type legendItem struct {
 		r, g, b, br int
 		label       string
@@ -1266,7 +1270,7 @@ func RenderLottery(data *LotteryData) (*gg.Context, error) {
 		dc.DrawRoundedRectangle(x+0.75, legendY+0.75, 22.5, 22.5, 6)
 		dc.Stroke()
 		dc.SetRGB255(255, 255, 255)
-		setFont(dc, 21)
+		setFontP(21)
 		drawString(dc, it.label, x+36, legendY+17)
 		x += 24 + 12 + measureW(dc, it.label) + 45
 	}
