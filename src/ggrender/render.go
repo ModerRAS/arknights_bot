@@ -512,7 +512,7 @@ func SampleHeadhunt() []HHOp {
 }
 
 func RenderHeadhunt(data []HHOp) (*gg.Context, error) {
-	const mainW, mainH = 1024, 576
+	const mainW, mainH = 1049, 576
 	dc := gg.NewContext(mainW, mainH)
 	FillBackground(dc, 27, 29, 30)
 	n := len(data)
@@ -1292,8 +1292,8 @@ func SampleOperator() *OperatorInfo {
 }
 
 func RenderOperator(data *OperatorInfo) (*gg.Context, error) {
-	const mainW = 800
-	const mainH = 700
+	const mainW = 1200
+	const mainH = 800
 	dc := gg.NewContext(mainW, mainH)
 	FillBackground(dc, 27, 29, 30)
 	// top bar
