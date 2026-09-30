@@ -337,7 +337,10 @@
       "origin_source": "css",
       "honored_now": "⊘",
       "impl_now": "未实现",
-      "blocked_reason": "数据不可得：progress.ap 宽度 150 虽已声明，但 value 依赖 AP，AP 不可得"
+      "classification": "necessary_not_sufficient",
+      "layer1_type_flattening": "BaseInfo.Chars 为 []string，Avatar/AP 在进入渲染器之前就被丢弃。web 层 src/core/web/base.go:86,88,89 的 BaseChar 确有 Name/Avatar/AP。这一层我们能修，改为携带 Avatar/AP 的结构即可打通渲染路径。",
+      "layer2_fixture_has_no_values": "SampleBase() 的 Chars 全是 []string{name}，一个 Avatar/AP 值都没有（render.go:769/776/777/785/786/793/794 全是名字）。harness 走的正是 SampleBase()，因此即使修好类型也喂不出值。这一层与 card 的头像属于同一类阻塞，需要数据来源。",
+      "expectation": "只修 layer1 不会让本原子翻成 ✓。这是「必要非充分」：layer1 是必要条件，layer2 才是充分条件。不要以为做完类型修复这 6 项就该动了。"
     },
     {
       "id": "E02",
@@ -346,7 +349,10 @@
       "origin_source": "css",
       "honored_now": "⊘",
       "impl_now": "未实现",
-      "blocked_reason": "数据不可得：同上"
+      "classification": "necessary_not_sufficient",
+      "layer1_type_flattening": "BaseInfo.Chars 为 []string，Avatar/AP 在进入渲染器之前就被丢弃。web 层 src/core/web/base.go:86,88,89 的 BaseChar 确有 Name/Avatar/AP。这一层我们能修，改为携带 Avatar/AP 的结构即可打通渲染路径。",
+      "layer2_fixture_has_no_values": "SampleBase() 的 Chars 全是 []string{name}，一个 Avatar/AP 值都没有（render.go:769/776/777/785/786/793/794 全是名字）。harness 走的正是 SampleBase()，因此即使修好类型也喂不出值。这一层与 card 的头像属于同一类阻塞，需要数据来源。",
+      "expectation": "只修 layer1 不会让本原子翻成 ✓。这是「必要非充分」：layer1 是必要条件，layer2 才是充分条件。不要以为做完类型修复这 6 项就该动了。"
     },
     {
       "id": "E03",
@@ -355,7 +361,10 @@
       "origin_source": "css",
       "honored_now": "⊘",
       "impl_now": "未实现",
-      "blocked_reason": "数据不可得：同上"
+      "classification": "necessary_not_sufficient",
+      "layer1_type_flattening": "BaseInfo.Chars 为 []string，Avatar/AP 在进入渲染器之前就被丢弃。web 层 src/core/web/base.go:86,88,89 的 BaseChar 确有 Name/Avatar/AP。这一层我们能修，改为携带 Avatar/AP 的结构即可打通渲染路径。",
+      "layer2_fixture_has_no_values": "SampleBase() 的 Chars 全是 []string{name}，一个 Avatar/AP 值都没有（render.go:769/776/777/785/786/793/794 全是名字）。harness 走的正是 SampleBase()，因此即使修好类型也喂不出值。这一层与 card 的头像属于同一类阻塞，需要数据来源。",
+      "expectation": "只修 layer1 不会让本原子翻成 ✓。这是「必要非充分」：layer1 是必要条件，layer2 才是充分条件。不要以为做完类型修复这 6 项就该动了。"
     },
     {
       "id": "E04",
@@ -436,7 +445,10 @@
       "origin_source": "template-declared",
       "honored_now": "⊘",
       "impl_now": "未实现",
-      "blocked_reason": "数据不可得：web 层 BaseChar 有 Avatar 字段，但 gg 侧 BaseInfo.Chars 为 []string，且仓内无 base fixture 数据文件；唯一能确定角色立绘来源的剩余途径是冻结基线图本身，属红线，不取"
+      "classification": "necessary_not_sufficient",
+      "layer1_type_flattening": "BaseInfo.Chars 为 []string，Avatar/AP 在进入渲染器之前就被丢弃。web 层 src/core/web/base.go:86,88,89 的 BaseChar 确有 Name/Avatar/AP。这一层我们能修，改为携带 Avatar/AP 的结构即可打通渲染路径。",
+      "layer2_fixture_has_no_values": "SampleBase() 的 Chars 全是 []string{name}，一个 Avatar/AP 值都没有（render.go:769/776/777/785/786/793/794 全是名字）。harness 走的正是 SampleBase()，因此即使修好类型也喂不出值。这一层与 card 的头像属于同一类阻塞，需要数据来源。",
+      "expectation": "只修 layer1 不会让本原子翻成 ✓。这是「必要非充分」：layer1 是必要条件，layer2 才是充分条件。不要以为做完类型修复这 6 项就该动了。"
     },
     {
       "id": "F10",
@@ -453,7 +465,10 @@
       "origin_source": "template-declared",
       "honored_now": "⊘",
       "impl_now": "未实现",
-      "blocked_reason": "数据不可得：同上，AP 值不可得，三态图标无法确定"
+      "classification": "necessary_not_sufficient",
+      "layer1_type_flattening": "BaseInfo.Chars 为 []string，Avatar/AP 在进入渲染器之前就被丢弃。web 层 src/core/web/base.go:86,88,89 的 BaseChar 确有 Name/Avatar/AP。这一层我们能修，改为携带 Avatar/AP 的结构即可打通渲染路径。",
+      "layer2_fixture_has_no_values": "SampleBase() 的 Chars 全是 []string{name}，一个 Avatar/AP 值都没有（render.go:769/776/777/785/786/793/794 全是名字）。harness 走的正是 SampleBase()，因此即使修好类型也喂不出值。这一层与 card 的头像属于同一类阻塞，需要数据来源。",
+      "expectation": "只修 layer1 不会让本原子翻成 ✓。这是「必要非充分」：layer1 是必要条件，layer2 才是充分条件。不要以为做完类型修复这 6 项就该动了。"
     },
     {
       "id": "F12",
@@ -462,7 +477,10 @@
       "origin_source": "template-declared",
       "honored_now": "⊘",
       "impl_now": "未实现",
-      "blocked_reason": "数据不可得：同上"
+      "classification": "necessary_not_sufficient",
+      "layer1_type_flattening": "BaseInfo.Chars 为 []string，Avatar/AP 在进入渲染器之前就被丢弃。web 层 src/core/web/base.go:86,88,89 的 BaseChar 确有 Name/Avatar/AP。这一层我们能修，改为携带 Avatar/AP 的结构即可打通渲染路径。",
+      "layer2_fixture_has_no_values": "SampleBase() 的 Chars 全是 []string{name}，一个 Avatar/AP 值都没有（render.go:769/776/777/785/786/793/794 全是名字）。harness 走的正是 SampleBase()，因此即使修好类型也喂不出值。这一层与 card 的头像属于同一类阻塞，需要数据来源。",
+      "expectation": "只修 layer1 不会让本原子翻成 ✓。这是「必要非充分」：layer1 是必要条件，layer2 才是充分条件。不要以为做完类型修复这 6 项就该动了。"
     },
     {
       "id": "F13",
@@ -665,5 +683,24 @@
       "F15": "会客室线索交流开启中块未实现：含 20x20 svg，且需绝对定位 -200px 基准"
     },
     "label_corrections": "Phase 1 把 title_icon 的字段并进标题，Phase 2 已按模板行号归位；其中两处 Phase 1 画错了标签：发电站模板 298 行只有裸数字 {{.Power}}，Phase 1 画成了「N 电力」；办公室模板 415 行是「刷新次数N」，Phase 1 画成了「刷新 N」。两处均已改正。"
+  },
+  "phase3_result": {
+    "type_fix_status": "本轮降级，不做。理由：它今天不改变任何可测量的东西——harness 走 SampleBase() 喂不出值，6 个原子翻不了、完成度不动。为一个今天测不出差异的改动单独立项是花钱买「看起来在修」。已搭进下一次 base 改动。",
+    "score_annotation": "画布已自洽（fx==fy=1.5，Phase 1 顺带修正了尾部 +40）。但内容底边 944 > 画布 612，裁掉 332px = 内容的 35.2%。「基线抓取也是这么裁的」这一等同性自标未证实（从画布尺寸推的，无像素证据）。所以 0.97074 的限制不是「画布被拉伸」，而是「三分之一的画面被裁切，而裁切是否与基线一致未验证」。",
+    "score_annotation_superseded": "先前使用的「画布存在 -52.6% 纵向失真」已被实测推翻，不撤换限制而是换限制：base 自身 -52.6% 出自 1b433bc:822 的内容推导 h（公式尾部 +40），Phase 1 已把 base 的 mainH 改为常量 612，实测 fx==fy==1.5、失真 0.00%。",
+    "clipping": {
+      "status": "待验证",
+      "content_bottom": 944,
+      "canvas_height": 612,
+      "clipped_px": 332,
+      "clipped_fraction_of_content": "35.2%",
+      "note": "记为待验证，不猜、不在本轮动。裁切是否与基线一致尚无像素证据。"
+    },
+    "mainh_pointer": {
+      "base_here": "本树 RenderBase 的 mainH 已在 Phase 1 改为常量 1110x612（render.go:833），不喂任何坐标。",
+      "other_sites": "render.go 内另有 8 处内容推导式 mainH := ...（行 211/264/369/450/628/686/1049/1161），属画布尺寸那一类问题，由 lead-2 那条线统一处理，不要在本树动。"
+    },
+    "self_evidence_error": "我曾写「本树 render.go 内 mainH 只出现两处」。实测全文件 22 行、跨 9 个场景（其中 8 处是内容推导式）。结论对 base 仍成立，但成立的理由是 base 这处是 const 且不喂坐标，不是「全文件只有两处」。这是把局部成立写成全局成立，比反过来更危险——它会让下一个人以为全仓干净了。",
+    "lead_count_correction": "lead 先前口头说 19 行，机械数出是 22 行；lead 已确认我的数为准，并自述其 19 是看着输出数的、不是数出来的。"
   }
 }
