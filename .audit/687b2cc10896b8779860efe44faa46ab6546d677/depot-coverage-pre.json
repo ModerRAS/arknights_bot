@@ -1,0 +1,165 @@
+{
+  "schema": "depot-template-coverage/1",
+  "phase": "PRE-IMPLEMENTATION BASELINE (written before any code change)",
+  "worktree": "C:/WorkSpace/Golang/arknights_bot-gg-depot",
+  "branch": "feat/gg-render-depot",
+  "head": "1b433bc17b453523c7bb11ce23eb29a89f644064",
+  "template": {
+    "path": "template/Depot.tmpl",
+    "sha256": "c66c13d3d3ff3d7dbbfd03b2f71e4c921047bb5d05bc9ad67bea4809218e37db",
+    "lines": 40
+  },
+  "preconditions": {
+    "zero_coordinates_taken_from_baseline_image": true,
+    "fixture_data_modified": false,
+    "all_values_from": "css <style> block or template markup, plus manifest DOM bbox/scale"
+  },
+  "declared_elements": [
+    {
+      "id": "main-bg",
+      "origin_source": "css",
+      "declaration": "#main { background-color: #2e3031 }",
+      "planned_implementation": "fill 850x156 with RGB(46,48,49)",
+      "implemented": false
+    },
+    {
+      "id": "main-width",
+      "origin_source": "css",
+      "declaration": "#main { width: 850px }",
+      "planned_implementation": "design canvas width 850",
+      "implemented": false
+    },
+    {
+      "id": "item-display",
+      "origin_source": "css",
+      "declaration": ".item { display: inline-flex }",
+      "planned_implementation": "flow items horizontally, wrap when full",
+      "implemented": false
+    },
+    {
+      "id": "item-flexdir",
+      "origin_source": "css",
+      "declaration": ".item { flex-direction: column }",
+      "planned_implementation": "icon above badge in source order",
+      "implemented": false
+    },
+    {
+      "id": "item-align",
+      "origin_source": "css",
+      "declaration": ".item { align-items: center }",
+      "planned_implementation": "icon centred in the 80px box",
+      "implemented": false
+    },
+    {
+      "id": "item-width",
+      "origin_source": "css",
+      "declaration": ".item { width: 80px }",
+      "planned_implementation": "pitch 80px; 850/80 = 10 per row",
+      "implemented": false
+    },
+    {
+      "id": "icon-width",
+      "origin_source": "css",
+      "declaration": ".icon { width: 75px }",
+      "planned_implementation": "draw icon 75x75",
+      "implemented": false
+    },
+    {
+      "id": "icon-src",
+      "origin_source": "template-declared",
+      "declaration": "<img class=\"icon\" src=\"{{.Icon}}\">",
+      "planned_implementation": "per-item Icon field",
+      "implemented": false
+    },
+    {
+      "id": "count-pos",
+      "origin_source": "css",
+      "declaration": ".count { position: absolute }",
+      "planned_implementation": "badge out of flow -> does not set row height",
+      "implemented": false
+    },
+    {
+      "id": "count-color",
+      "origin_source": "css",
+      "declaration": ".count { color: white }",
+      "planned_implementation": "white text",
+      "implemented": false
+    },
+    {
+      "id": "count-bg",
+      "origin_source": "css",
+      "declaration": ".count { background-color: rgba(0,0,0,0.5) }",
+      "planned_implementation": "half-black plate behind text",
+      "implemented": false
+    },
+    {
+      "id": "count-size",
+      "origin_source": "css",
+      "declaration": ".count { font-size: 12px }",
+      "planned_implementation": "12px text",
+      "implemented": false
+    },
+    {
+      "id": "count-top",
+      "origin_source": "css",
+      "declaration": ".count { margin-top: 50px }",
+      "planned_implementation": "badge top = item top + 50",
+      "implemented": false
+    },
+    {
+      "id": "count-right",
+      "origin_source": "css",
+      "declaration": ".count { margin-right: -30px }",
+      "planned_implementation": "badge right edge overhangs item right edge by 30",
+      "implemented": false
+    },
+    {
+      "id": "count-text",
+      "origin_source": "template-declared",
+      "declaration": "<div class=\"count\">{{.Count}}</div>",
+      "planned_implementation": "per-item Count field",
+      "implemented": false
+    },
+    {
+      "id": "range",
+      "origin_source": "template-declared",
+      "declaration": "{{range .}} ... {{end}}",
+      "planned_implementation": "one .item per DepotItem, sorted by SortId",
+      "implemented": false
+    },
+    {
+      "id": "main-height",
+      "origin_source": "manifest-dom-bbox",
+      "declaration": "manifest bbox.height = 156 (NOT declared in CSS)",
+      "planned_implementation": "design canvas height 156",
+      "implemented": false
+    },
+    {
+      "id": "scale",
+      "origin_source": "manifest",
+      "declaration": "manifest scale 1.5 / pixel 1275x234",
+      "planned_implementation": "ScaleToManifest(dc, 1275, 234) - uniform 1.5x",
+      "implemented": false
+    },
+    {
+      "id": "row-pitch",
+      "origin_source": "derived-from-css",
+      "declaration": ".count is abs-pos, so item height = icon height",
+      "planned_implementation": "row pitch 75px",
+      "implemented": false
+    },
+    {
+      "id": "icon-inset-x",
+      "origin_source": "derived-from-css",
+      "declaration": "align-items:center, item 80 - icon 75",
+      "planned_implementation": "icon x offset +2.5 within item",
+      "implemented": false
+    }
+  ],
+  "completion": {
+    "total": 20,
+    "implemented": 0,
+    "ratio": 0.0
+  },
+  "blocked_on": "boss decision: icon fallback (甲 = captured sha256-pinned asset vs 乙 = silent amiya fallback)"
+}

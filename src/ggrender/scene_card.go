@@ -1,8 +1,10 @@
 package ggrender
 
 import (
+	"fmt"
 	"image"
 	"image/color"
+	"sort"
 	"time"
 
 	"github.com/fogleman/gg"
@@ -282,7 +284,17 @@ func RenderCard(data *CardInfo) (*gg.Context, error) {
 	return dc, nil
 }
 
-// ponytail: depot stub for 54baad9 baseline missing file; minimal 1275x234 to satisfy manifest size without touching other files
+// DepotData follows template/Depot.tmpl, whose only bindings are {{.Icon}} and
+// {{.Count}} inside a {{range .}} over the item list.
+//
+// Known data gap: the frozen baseline for this template shows 11 items, all
+// rendering Count "100000". The baseline was captured from the external
+// "isolated-template-minimal" fixture service, which is not in this repo, and
+// the real /depot handler (src/core/web/depot.go) would render any count >=10000
+// as "10万" -- so a literal "100000" cannot come from a real capture. This
+// fixture therefore carries 2 items and is NOT the baseline's data. The count
+// values were deliberately not back-filled by reading them off the baseline
+// image; doing so would fit the renderer to the frozen artifact.
 type DepotData struct{ Items []DepotItem }
 type DepotItem struct {
 	Name, Count, Icon string
@@ -292,14 +304,108 @@ type DepotItem struct {
 func SampleDepot() *DepotData {
 	return &DepotData{Items: []DepotItem{{Name: "龙门币", Count: "100000", SortId: 1}, {Name: "作战记录", Count: "200", SortId: 2}}}
 }
+
+// depotIconAsset loads assets/depot/lmd.png.
+//
+// PROVENANCE: that file is the capture resource recorded for this template in
+// src/ggrender/testdata/visual/baseline/resource-manifest.json -- the single
+// entry carrying targets:["Depot"]:
+//
+//	道具_带框_龙门币.png, 75x75, 15206 bytes
+//	sha256 18ab78256c635cf090f9d82893929067bf1f6f6f19be76cf2ee68622858935c6
+//	captured at cache/depot-lmd.png
+//
+// It is a CAPTURED THIRD-PARTY ASSET, not a rendered baseline screenshot; the
+// red line covers the latter. It is referenced from assets/ rather than read
+// out of testdata/visual/baseline/ at render time on purpose: pointing a
+// committed .go at the baseline directory is the exact shape of the 8cbffef
+// cheat ("use testdata/visual/baseline as an asset cache root"), and it reads
+// identically to cheating even when the file it reaches for is legitimate. The
+// next person copies the pattern, not the intent. Re-verify with:
+//
+//	sha256sum assets/depot/lmd.png
+//
+// It is loaded here rather than left to DepotItem.Icon because an empty Icon
+// handed to FetchImage silently substitutes assets/common/amiya.png -- a real,
+// visible, wrong image (219KB portrait), not a 1x1 transparent pixel, and no
+// error is raised. That failure is quieter than the Rarity_6 one because the
+// result still looks like artwork.
+func depotIconAsset() (image.Image, error) {
+	return LoadImage(AssetPath("depot/lmd.png"))
+}
+
+// RenderDepot implements template/Depot.tmpl. Every layout constant below is a
+// declaration from that template's own <style> block or markup; no coordinate is
+// taken from the frozen baseline image.
+//
+//	origin_source css           #main width/background, .item box, .icon width, .count box
+//	origin_source template-declared  {{range .}} item loop, {{.Icon}}, {{.Count}}
+//	origin_source manifest-dom  mainH (bbox.height -- the template declares no height)
+//	origin_source derived-css   cols, row pitch, icon inset
 func RenderDepot(data *DepotData) (*gg.Context, error) {
-	const mainW = 1275
-	const mainH = 234
+	if data == nil {
+		data = SampleDepot()
+	}
+	// The real handler orders by SortId before handing the slice to the template.
+	sort.Slice(data.Items, func(i, j int) bool { return data.Items[i].SortId < data.Items[j].SortId })
+
+	const (
+		mainW     = 850 // css: #main { width: 850px }
+		mainH     = 156 // manifest-dom: bbox.height; not declared in CSS
+		itemW     = 80  // css: .item { width: 80px }
+		iconW     = 75  // css: .icon { width: 75px }
+		countSize = 12  // css: .count { font-size: 12px }
+		countTop  = 50  // css: .count { margin-top: 50px }
+		countOver = 30  // css: .count { margin-right: -30px }
+		// derived-css: .item { display:inline-flex } wraps at the container edge.
+		cols = mainW / itemW
+		// derived-css: .count is position:absolute, so it is out of flow and the
+		// row box is exactly the icon.
+		rowPitch = iconW
+		// derived-css: .item { align-items:center } in an itemW-wide box.
+		iconInset = (itemW - iconW) / 2
+	)
+
+	icon, err := depotIconAsset()
+	if err != nil {
+		return nil, fmt.Errorf("depot pinned capture icon unavailable: %w", err)
+	}
+
 	dc := gg.NewContext(mainW, mainH)
-	FillBackground(dc, 46, 48, 49)
-	// overlay count to keep CardInfo usage
-	setFont(dc, 12)
-	dc.SetRGB255(255, 255, 255)
-	drawString(dc, itoa(len(data.Items)), 10, 20)
-	return dc, nil
+	FillBackground(dc, 0x2e, 0x30, 0x31) // css: #main { background-color: #2e3031 }
+
+	for i, it := range data.Items {
+		// template-declared: {{range .}} emits one .item per element.
+		x := (i % cols) * itemW
+		y := (i / cols) * rowPitch
+
+		// An empty Icon must never reach FetchImage; fall back to the pinned
+		// capture asset, never to the silent amiya substitution.
+		img := icon
+		if it.Icon != "" {
+			if remote, ferr := fetch(it.Icon); ferr == nil {
+				img = remote
+			}
+		}
+		dc.DrawImage(ScaleContain(img, iconW, iconW), x+iconInset, y)
+
+		// .count is absolutely positioned, so align-items:center gives it the
+		// item's horizontal centre as its static position; margin-right:-30px
+		// then pushes its right edge 30px past the item box, and margin-top:50px
+		// drops it 50px below the item top. The declaration carries no padding,
+		// so the plate is the text box itself.
+		setFont(dc, countSize)
+		tw, _ := dc.MeasureString(it.Count)
+		bgX := float64(x) + (float64(itemW)-tw)/2 + countOver
+		bgY := float64(y) + countTop
+		dc.SetRGBA255(0, 0, 0, 128) // css: .count { background-color: rgba(0,0,0,0.5) }
+		dc.DrawRectangle(bgX, bgY, tw, countSize)
+		dc.Fill()
+		dc.SetRGB255(255, 255, 255) // css: .count { color: white }
+		drawString(dc, it.Count, bgX, bgY+countSize*0.8)
+	}
+
+	// The other twelve scenes end here too: design-size canvas in, manifest
+	// pixel dims out. Uniform 1.5x, no per-scene fudge.
+	return ScaleToManifest(dc, 1275, 234), nil
 }

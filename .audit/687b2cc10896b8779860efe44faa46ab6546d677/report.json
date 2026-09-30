@@ -1,0 +1,275 @@
+{
+  "schema": "gg-pixel-parity-evidence/1",
+  "measured_commit": "687b2cc10896b8779860efe44faa46ab6546d677",
+  "parent_commit": "1b433bc17b453523c7bb11ce23eb29a89f644064",
+  "worktree": "C:/WorkSpace/Golang/arknights_bot-gg-depot",
+  "branch": "feat/gg-render-depot",
+  "command": "cd src && go test ./ggrender/ -run 'TestGGPixelParity$' -v -count=1 -timeout 90m",
+  "gate_threshold_source": "src/ggrender/pixel_test.go :: gatePassed() -> sim < 0.99 fails",
+  "gate_passed_count": "2/16",
+  "note_on_dir_name": "git cannot know a commit sha before the commit exists, so the evidence lands in the commit immediately AFTER the measured code commit rather than inside it. The measured tree is pinned by measured_commit plus the per-scene hashNew values below, which uniquely fingerprint the exact rendered output.",
+  "no_baseline_images_committed": true,
+  "honesty_guards": {
+    "TestGGPixelParity_Negative": "PASS (perturbed box 0.96251)",
+    "TestGGPixelParity_Negative_ThresholdGate": "PASS (0.98999 reject / 0.99 accept)",
+    "TestGGPixelParity_Negative_EmptyBBoxGate": "PASS (sim=1.0 bbox=[-1,-1,-1,-1] REJECTED)"
+  },
+  "scenes": [
+    {
+      "scene": "base",
+      "similarity": 0.9589964211295751,
+      "passed": false,
+      "bbox": [
+        0,
+        0,
+        1664,
+        917
+      ],
+      "hashOld": "3a82d70486f9da3a2c48261cc9f2bdd6c498ef31b3ba5260b519400c81495011",
+      "hashNew": "1aafad90d714904a2a2315af31038ba734e5cd7fe239dec1eaec4f9fc31d43b1",
+      "similarity_before": 0.9589964211295751,
+      "delta": 0.0,
+      "render_changed": false
+    },
+    {
+      "scene": "box",
+      "similarity": 0.8250372524631744,
+      "passed": false,
+      "bbox": [
+        0,
+        0,
+        1049,
+        535
+      ],
+      "hashOld": "cf10f5d37fe6c3738eb19b77e3761861a5cda8d4448cc50b333d25ace4c1c8d9",
+      "hashNew": "55d299b08d3a37fef33cd694e6f4aaf42860969dc4a081c36f6224558fd387d7",
+      "similarity_before": 0.8250372524631744,
+      "delta": 0.0,
+      "render_changed": false
+    },
+    {
+      "scene": "box-detail",
+      "similarity": 0.8784374903269025,
+      "passed": false,
+      "bbox": [
+        0,
+        0,
+        721,
+        278
+      ],
+      "hashOld": "047ad057ac193e97aed8ff3442ad29f8505b8cbdbf575837456e1fbd82e6e457",
+      "hashNew": "92d22b58aade41c20a167af85440fc50379671cb03db7316eacbd79eb333974c",
+      "similarity_before": 0.8784374903269025,
+      "delta": 0.0,
+      "render_changed": false
+    },
+    {
+      "scene": "box-summary",
+      "similarity": 0.8809750314141331,
+      "passed": false,
+      "bbox": [
+        0,
+        0,
+        1349,
+        722
+      ],
+      "hashOld": "6a4633e048410f14271b0b6728d14d4307c2b32af7411c5446a72cea8624f071",
+      "hashNew": "45e63a36e647d28ef9be3b5814da00383cd316f1b4240db4863d5645ec36d18c",
+      "similarity_before": 0.8809750314141331,
+      "delta": 0.0,
+      "render_changed": false
+    },
+    {
+      "scene": "calendar",
+      "similarity": 0.99432366536721,
+      "passed": true,
+      "bbox": [
+        0,
+        0,
+        2863,
+        1619
+      ],
+      "hashOld": "80f31c1cfb132ff3781a3d940120cfdd31acf26aa1baf0e96c5fa75e68c4b00b",
+      "hashNew": "e7939ca718d021173a642b8d7bf0553a80a1c2c14f10f5160a34c1c9ed54efbb",
+      "similarity_before": 0.99432366536721,
+      "delta": 0.0,
+      "render_changed": false
+    },
+    {
+      "scene": "card",
+      "similarity": 0.9601504863664215,
+      "passed": false,
+      "bbox": [
+        0,
+        0,
+        1279,
+        711
+      ],
+      "hashOld": "75fea0acb6d2e20f52107a9310bc66e2e6228fa01811dc66445917a32d8de2a2",
+      "hashNew": "96200ec144b5e25725c89aaabf5783c3e3f45f21bd182fcab8c7203732dd411d",
+      "similarity_before": 0.9601504863664215,
+      "delta": 0.0,
+      "render_changed": false
+    },
+    {
+      "scene": "depot",
+      "similarity": 0.9235233358635896,
+      "passed": false,
+      "bbox": [
+        0,
+        0,
+        1247,
+        233
+      ],
+      "hashOld": "d09c01dbd30062e6f876f0bc3af79d6458f0f4f698699d46250280a225cd98d7",
+      "hashNew": "38f0cef6e9d5cd2e582655993c8701bbcd9676117d206bb4414c4552f98a66d1",
+      "similarity_before": 0.9172816240959263,
+      "delta": 0.006242,
+      "render_changed": true
+    },
+    {
+      "scene": "enemy",
+      "similarity": 0.9195071737682478,
+      "passed": false,
+      "bbox": [
+        0,
+        0,
+        983,
+        476
+      ],
+      "hashOld": "7aae46ad6d8292139bf20d0032e2638bee920637e7de479d807fa5890fa6909b",
+      "hashNew": "bc7b5af135deba9d968c508a52894d08ab6d6956f97c6cf9b2b575474a78ace0",
+      "similarity_before": 0.9195071737682478,
+      "delta": 0.0,
+      "render_changed": false
+    },
+    {
+      "scene": "gacha",
+      "similarity": 0.9025141429411271,
+      "passed": false,
+      "bbox": [
+        0,
+        0,
+        1499,
+        1322
+      ],
+      "hashOld": "b037cf55e967c61db80507ebcba9b55416f4b4aab5876d546a803ce117a131dc",
+      "hashNew": "e43865641c03e4f66ce3cc554a3cdbf045529d495578b18638c6a0103e6ed6b7",
+      "similarity_before": 0.9025141429411271,
+      "delta": 0.0,
+      "render_changed": false
+    },
+    {
+      "scene": "headhunt",
+      "similarity": 0.9647555393039537,
+      "passed": false,
+      "bbox": [
+        0,
+        0,
+        1048,
+        575
+      ],
+      "hashOld": "879933afa3b94a80c08d37e0d8e053729639df59f01e47658944e48699434cf8",
+      "hashNew": "6d314d14384fef41976da04152d1ca6ab46b634445548dc243ef5c6b7cd3134a",
+      "similarity_before": 0.9647555393039537,
+      "delta": 0.0,
+      "render_changed": false
+    },
+    {
+      "scene": "help",
+      "similarity": 0.839432182957432,
+      "passed": false,
+      "bbox": [
+        0,
+        0,
+        989,
+        2048
+      ],
+      "hashOld": "43bcdee8554827959fb26b79196d57657f9ee4c85b04fa0354227bef49d9615b",
+      "hashNew": "e984bc7e9ffaab115d8c5c1d006e03dc61ef133f33654ae3f652e032a38bc159",
+      "similarity_before": 0.839432182957432,
+      "delta": 0.0,
+      "render_changed": false
+    },
+    {
+      "scene": "lottery",
+      "similarity": 0.9835808689865397,
+      "passed": false,
+      "bbox": [
+        0,
+        0,
+        1472,
+        1666
+      ],
+      "hashOld": "9f5588be88606af58fc86807bf734a45a51ecd205bdcd8bd72b0d295fba7f9c7",
+      "hashNew": "37a15ba596def48831e92a825e723d3f4729aa1d1d5a43eee8c033dbbc2c4b0e",
+      "similarity_before": 0.9835808689865397,
+      "delta": 0.0,
+      "render_changed": false
+    },
+    {
+      "scene": "missing",
+      "similarity": 0.8761380684114441,
+      "passed": false,
+      "bbox": [
+        0,
+        0,
+        1049,
+        535
+      ],
+      "hashOld": "cc58fea684f3c1a9fc879da163cf50e9438753b3ebcb7ecf3a5ef3b2f8a8ca47",
+      "hashNew": "01b88d9597b9e29a3efc1aefe66e0020b8d0b1a5e86e18677bce910d69ce95b7",
+      "similarity_before": 0.8761380684114441,
+      "delta": 0.0,
+      "render_changed": false
+    },
+    {
+      "scene": "operator",
+      "similarity": 0.8455385670842411,
+      "passed": false,
+      "bbox": [
+        0,
+        0,
+        1799,
+        1199
+      ],
+      "hashOld": "2c2834c7e048ca29ba4d2aa7e34487a6005408cb4c345c229cf3be690ce2b1e5",
+      "hashNew": "eb5d35e2e9ee7c202600339a647fd569ee052d43849dcc2ccbd366bc5e7692bf",
+      "similarity_before": 0.8455385670842411,
+      "delta": 0.0,
+      "render_changed": false
+    },
+    {
+      "scene": "recruit",
+      "similarity": 0.6135057512531993,
+      "passed": false,
+      "bbox": [
+        0,
+        0,
+        1349,
+        533
+      ],
+      "hashOld": "4a01136f4b12e9a17458998ec67d4285c73b1990fbaff7e11fef735c06fb5ffc",
+      "hashNew": "9ef36c3b08947b6e81cd33dd2364566018c05a9e959b817a89efbce0df7c6cd9",
+      "similarity_before": 0.6135057512531993,
+      "delta": 0.0,
+      "render_changed": false
+    },
+    {
+      "scene": "state",
+      "similarity": 0.9909337226595012,
+      "passed": true,
+      "bbox": [
+        32,
+        32,
+        1079,
+        507
+      ],
+      "hashOld": "2c3d37795bacf18c04d84b3ed72c2ef6532a4f2b9d25d629cb9555da0a721872",
+      "hashNew": "79f31688bbe009f9929b792b8204dd5bbe421e9798b8ae0385fb4c5f693095e4",
+      "similarity_before": 0.9909337226595012,
+      "delta": 0.0,
+      "render_changed": false
+    }
+  ]
+}
