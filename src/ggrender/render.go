@@ -3,6 +3,7 @@ package ggrender
 import (
 	"fmt"
 	"image"
+	"math"
 
 	"github.com/fogleman/gg"
 )
@@ -713,50 +714,58 @@ func RenderRecruit(data *RecruitList) (*gg.Context, error) {
 // ---------- remaining 9 scenes ----------
 
 // Base
+// BaseChar mirrors the web-layer type at src/core/web/base.go:86 so Avatar and AP
+// survive into the gg render path. Necessary but NOT sufficient: the parity harness
+// runs SampleBase(), whose Chars carry names only, so this alone flips no atom.
+type BaseChar struct {
+	Name   string
+	Avatar string
+	AP     int
+}
 type BaseInfo struct {
 	Name    string
 	Labor   struct{ Cur, Total int }
 	Control struct {
 		Level int
-		Chars []string
+		Chars []BaseChar
 	}
 	Tradings []struct {
 		Level      int
-		Chars      []string
+		Chars      []BaseChar
 		Cur, Total int
 		Strategy   string
 	}
 	Manufactures []struct {
 		Level       int
-		Chars       []string
+		Chars       []BaseChar
 		Cur, Total  int
 		Item, Speed string
 	}
 	Powers []struct {
 		Level int
-		Chars []string
+		Chars []BaseChar
 		Power int
 	}
 	Meeting struct {
 		Level   int
-		Chars   []string
+		Chars   []BaseChar
 		Board   []int
 		Sharing bool
 	}
 	Hire struct {
 		Level   int
-		Chars   []string
+		Chars   []BaseChar
 		Refresh int
 	}
 	Training struct {
 		Level  int
-		Chars  []string
+		Chars  []BaseChar
 		Skill  string
 		SLevel int
 	}
 	Dorms []struct {
 		Level   int
-		Chars   []string
+		Chars   []BaseChar
 		Comfort int
 	}
 }
@@ -766,51 +775,51 @@ func SampleBase() *BaseInfo {
 	b.Labor.Cur = 108
 	b.Labor.Total = 120
 	b.Control.Level = 5
-	b.Control.Chars = []string{"阿米娅", "凯尔希", "煌"}
+	b.Control.Chars = []BaseChar{{Name: "阿米娅"}, {Name: "凯尔希"}, {Name: "煌"}}
 	b.Tradings = []struct {
 		Level      int
-		Chars      []string
+		Chars      []BaseChar
 		Cur, Total int
 		Strategy   string
 	}{
-		{Level: 3, Chars: []string{"能天使", "德克萨斯"}, Cur: 3, Total: 5, Strategy: "贵金属订单"},
-		{Level: 3, Chars: []string{"拉普兰德"}, Cur: 2, Total: 5, Strategy: "源石订单"},
+		{Level: 3, Chars: []BaseChar{{Name: "能天使"}, {Name: "德克萨斯"}}, Cur: 3, Total: 5, Strategy: "贵金属订单"},
+		{Level: 3, Chars: []BaseChar{{Name: "拉普兰德"}}, Cur: 2, Total: 5, Strategy: "源石订单"},
 	}
 	b.Manufactures = []struct {
 		Level       int
-		Chars       []string
+		Chars       []BaseChar
 		Cur, Total  int
 		Item, Speed string
 	}{
-		{Level: 3, Chars: []string{"夜烟", "远山"}, Cur: 10, Total: 20, Item: "中级作战记录", Speed: "120%"},
-		{Level: 3, Chars: []string{"砾"}, Cur: 8, Total: 20, Item: "赤金", Speed: "100%"},
+		{Level: 3, Chars: []BaseChar{{Name: "夜烟"}, {Name: "远山"}}, Cur: 10, Total: 20, Item: "中级作战记录", Speed: "120%"},
+		{Level: 3, Chars: []BaseChar{{Name: "砾"}}, Cur: 8, Total: 20, Item: "赤金", Speed: "100%"},
 	}
 	b.Powers = []struct {
 		Level int
-		Chars []string
+		Chars []BaseChar
 		Power int
 	}{
-		{Level: 3, Chars: []string{"格雷伊"}, Power: 270},
-		{Level: 3, Chars: []string{"清流"}, Power: 270},
+		{Level: 3, Chars: []BaseChar{{Name: "格雷伊"}}, Power: 270},
+		{Level: 3, Chars: []BaseChar{{Name: "清流"}}, Power: 270},
 	}
 	b.Meeting.Level = 3
-	b.Meeting.Chars = []string{"诗怀雅"}
+	b.Meeting.Chars = []BaseChar{{Name: "诗怀雅"}}
 	b.Meeting.Board = []int{1, 2, 3}
 	b.Meeting.Sharing = true
 	b.Hire.Level = 3
-	b.Hire.Chars = []string{"陈"}
+	b.Hire.Chars = []BaseChar{{Name: "陈"}}
 	b.Hire.Refresh = 2
 	b.Training.Level = 3
-	b.Training.Chars = []string{"赫拉格", "华法琳"}
+	b.Training.Chars = []BaseChar{{Name: "赫拉格"}, {Name: "华法琳"}}
 	b.Training.Skill = "阿米娅-奇美拉"
 	b.Training.SLevel = 2
 	b.Dorms = []struct {
 		Level   int
-		Chars   []string
+		Chars   []BaseChar
 		Comfort int
 	}{
-		{Level: 5, Chars: []string{"星熊", "塞雷娅"}, Comfort: 5000},
-		{Level: 5, Chars: []string{"夜莺"}, Comfort: 4800},
+		{Level: 5, Chars: []BaseChar{{Name: "星熊"}, {Name: "塞雷娅"}}, Comfort: 5000},
+		{Level: 5, Chars: []BaseChar{{Name: "夜莺"}}, Comfort: 4800},
 	}
 	return b
 }
@@ -825,6 +834,39 @@ func SampleBase() *BaseInfo {
 // Base geometry is derived entirely from template/Base.tmpl declarations.
 // Nothing here is read off a baseline image. origin_source vocabulary: css / template-declared.
 // See .audit/base-layout-completeness/baseline.json for the per-atom accounting.
+// drawBaseGearIcon reproduces the 48x48 viewBox svg at Base.tmpl:71 inside an s x s box.
+// Geometry taken from the declared path data: four 270-degree arcs of radius 7.1 centred
+// on the four quadrant points, each with a 90-degree gap facing the icon centre (24,24),
+// four spokes from the quadrant points to the centre square, and the 10x10 centre square.
+// stroke #852cd3, stroke-width 4, round caps (template-declared, not measured).
+func drawBaseGearIcon(dc *gg.Context, x, y, s float64) {
+	k := s / 48.0
+	const r = 7.1
+	dc.SetRGB255(0x85, 0x2c, 0xd3)
+	dc.SetLineWidth(4 * k)
+	for _, q := range [][2]float64{{36, 12}, {36, 36}, {12, 36}, {12, 12}} {
+		cx, cy := q[0], q[1]
+		gap := math.Atan2(24-cy, 24-cx)
+		const seg = 48
+		pts := [seg + 1][2]float64{}
+		for i := 0; i <= seg; i++ {
+			a := gap + math.Pi/4 + 1.5*math.Pi*float64(i)/seg
+			pts[i] = [2]float64{cx + r*math.Cos(a), cy + r*math.Sin(a)}
+		}
+		for i := 0; i < seg; i++ {
+			dc.DrawLine(x+pts[i][0]*k, y+pts[i][1]*k, x+pts[i+1][0]*k, y+pts[i+1][1]*k)
+		}
+	}
+	dc.DrawLine(x+12*k, y+12*k, x+19*k, y+19*k)
+	dc.DrawLine(x+36*k, y+36*k, x+29*k, y+29*k)
+	dc.DrawLine(x+36*k, y+12*k, x+29*k, y+19*k)
+	dc.DrawLine(x+12*k, y+36*k, x+19*k, y+29*k)
+	dc.Stroke()
+	dc.SetRGB255(0x85, 0x2c, 0xd3)
+	dc.DrawRectangle(x+19*k, y+19*k, 10*k, 10*k)
+	dc.Fill()
+}
+
 func RenderBase(data *BaseInfo) (*gg.Context, error) {
 	// A02 css 9: width: 1110px. Height is the manifest viewport: ScaleToManifest target
 	// 918 / fixtures.json:28 scale 1.5 = 612. Not a css declaration (neither Base.tmpl nor
@@ -851,15 +893,19 @@ func RenderBase(data *BaseInfo) (*gg.Context, error) {
 	dc.SetRGB255(255, 255, 255)
 	drawString(dc, "基建信息", h3ML, 18)
 
-	// B02 declared 69: right-floated span with margin-right:30px -> right edge 1110-30.
-	// B05/B06/B07 css 37,38,39: #labor{width:100px;height:3px;border-radius:1px}
-	// E04 css 34: progress::-webkit-progress-value{background:white}
-	// declared 82: <progress id="labor" ...>
-	// B03/B04 stay open: the flex div at 70 also holds a 20x20 svg we do not reproduce.
+	// B03 declared 70: <div style="display: flex"> — the gear icon and the labor text sit
+	// side by side in one flex row, icon on the left.
+	// B04 declared 71: <svg width="20" height="20" viewBox="0 0 48 48">, stroke #852cd3.
+	// Row height / baseline inside the 20px flex row is browser-default (align-items:stretch
+	// on a text span); the two declared widths (20 and the text) are what fix the columns.
+	const gearS = 20.0
 	labR := 1080.0
 	setFont(dc, 15)
 	dc.SetRGB255(255, 255, 255)
-	drawStringAnchored(dc, fmt.Sprintf("%d/%d", data.Labor.Cur, data.Labor.Total), labR, 13, 1, 0)
+	labTxt := fmt.Sprintf("%d/%d", data.Labor.Cur, data.Labor.Total)
+	tw, _ := measure(dc, labTxt)
+	drawStringAnchored(dc, labTxt, labR, 13, 1, 0)
+	drawBaseGearIcon(dc, labR-tw-gearS, 2, gearS)
 	const barW, barH, barR = 100.0, 3.0, 1.0
 	if data.Labor.Total > 0 {
 		dc.SetRGB255(255, 255, 255)
@@ -887,6 +933,11 @@ func RenderBase(data *BaseInfo) (*gg.Context, error) {
 		color  [3]int // inline color declared on that span
 		boards []int  // declared 360: <div class="board">{{.}}</div>
 		skill  string // declared 463: <img class="skill" src=".../char_skill/{{.Training.Skill}}.png">
+		// F15 declared 346: <div style="position: absolute;margin-left: -200px;
+		// color: #eb9712;display: flex;align-items: center;">线索交流开启中</div>
+		// Only the declared container + text are drawn; the 20x20 svg child is not
+		// reproduced and is tracked as its own open item.
+		absText string
 	}
 
 	// D04/D05/D06 css 46,47,48: .title_icon{display:inline-flex;align-items:center;margin-right:20px}
@@ -901,6 +952,13 @@ func RenderBase(data *BaseInfo) (*gg.Context, error) {
 			// D11/D12 css 54,55: .board{display:inline-flex;justify-content:center}
 			tw, _ := measure(dc, ic.text)
 			bx := right - boardW*float64(len(ic.boards)) - tw
+			// F15 declared 346: position:absolute with margin-left:-200px. No ancestor in
+			// Base.tmpl is positioned, so the containing block is the initial containing
+			// block: the block sits at its static position (start of .title_icon) minus 200.
+			if ic.absText != "" {
+				dc.SetRGB255(0xeb, 0x97, 0x12) // declared color: #eb9712
+				drawString(dc, ic.absText, bx-200, py+28)
+			}
 			dc.SetRGB255(255, 255, 255)
 			drawString(dc, ic.text, bx, py+28)
 			for _, b := range ic.boards {
@@ -927,7 +985,7 @@ func RenderBase(data *BaseInfo) (*gg.Context, error) {
 	}
 
 	// C06 css 18: .base{flex-direction:column} — .title on top, .chars below it.
-	drawCard := func(w float64, title string, ic bIcon, names []string) {
+	drawCard := func(w float64, title string, ic bIcon, chars []BaseChar) {
 		px, py := place(w)
 		dc.SetRGB255(cardBg[0], cardBg[1], cardBg[2])
 		RoundRect(dc, px, py, w, cardH, cardR)
@@ -941,16 +999,18 @@ func RenderBase(data *BaseInfo) (*gg.Context, error) {
 			drawIcon(px, w, py, ic)
 		}
 		// D07 css 51: .chars{margin-left:10px}. The per-char span at 143/196/251/…
-		// is display:inline-grid holding a 40px portrait plus a progress.ap; the gg
-		// BaseInfo.Chars carries names only, so the portrait/AP regions are open.
-		for i, n := range names {
+		// is display:inline-grid holding a 40px portrait plus a progress.ap.
+		// D14/F09/F10/E01-E03/F12 are all \u2298: BaseChar now carries Avatar/AP, but
+		// SampleBase() feeds names only, so the harness still renders this row as the
+		// declared slot is not yet drawn. Do not read this as "portraits are done".
+		for i, c := range chars {
 			ax := px + charsML + 16 + float64(i)*70
 			dc.SetRGB255(90, 90, 100)
 			dc.DrawCircle(ax, py+72, 16)
 			dc.Fill()
 			setFont(dc, 10)
 			dc.SetRGB255(255, 255, 255)
-			drawStringAnchored(dc, n, ax, py+100, 0.5, 0.5)
+			drawStringAnchored(dc, c.Name, ax, py+100, 0.5, 0.5)
 		}
 	}
 
@@ -977,8 +1037,14 @@ func RenderBase(data *BaseInfo) (*gg.Context, error) {
 			bIcon{text: itoa(p.Power), color: [3]int{0xad, 0xfe, 0x2e}}, p.Chars)
 	}
 	// declared 343/358-363: 会客室 Lv.N + <span>线索 <div class="board">…</div></span>
+	// declared 343/358-363: 会客室 Lv.N + <span>线索 <div class="board">…</div></span>
+	// declared 345-346: the 线索交流开启中 block is inside {{if .Meeting.Sharing}}.
+	var meetAbs string
+	if data.Meeting.Sharing {
+		meetAbs = "线索交流开启中"
+	}
 	drawCard(cardW, fmt.Sprintf("会客室 Lv%d", data.Meeting.Level),
-		bIcon{text: "线索", color: [3]int{255, 255, 255}, boards: data.Meeting.Board}, data.Meeting.Chars)
+		bIcon{text: "线索", color: [3]int{255, 255, 255}, boards: data.Meeting.Board, absText: meetAbs}, data.Meeting.Chars)
 	// declared 408/415: 办公室 Lv.N + <span>刷新次数N</span>
 	drawCard(cardW, fmt.Sprintf("办公室 Lv%d", data.Hire.Level),
 		bIcon{text: fmt.Sprintf("刷新次数%d", data.Hire.Refresh), color: [3]int{255, 255, 255}}, data.Hire.Chars)

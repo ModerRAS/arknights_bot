@@ -58,12 +58,12 @@
   ],
   "counts": {
     "模板声明区域": 52,
-    "已实现区域": 41,
-    "ratio": "41/52 = 78.8%",
+    "已实现区域": 44,
+    "ratio": "44/52 = 84.6%",
     "counting_method": "一个原子声明 = Base.tmpl 中一条可复算的 css 声明或一处 template-declared 内联结构声明。当前 RenderBase 逐条核对，全部以 ✓/✔ 判定，判定依据记在 atoms[].honored_now。",
     "anti_fudge": "8 个 .base 块标题中只有「控制中枢 Lv.N」文案一致（记 1 项 ✓）；其余 7 块把 title_icon 的字段并进了标题、或拼了模板没有的字段，记 ✗。.board 线索值虽以文本打出，但未画成 .board 圆角块，不记 ✓。",
-    "数据不可得": 6,
-    "仍未实现": 5
+    "数据不可得": 8,
+    "仍未实现": 0
   },
   "atoms": [
     {
@@ -111,16 +111,16 @@
       "prop": "头部标签行 display",
       "decl": "70: <div style=\"display: flex\">",
       "origin_source": "template-declared",
-      "honored_now": "✗",
-      "impl_now": "无"
+      "honored_now": "✓",
+      "impl_now": "头部 flex 行：齿轮图标在左、无人机文本在右，同一行并排（render.go 头部绘制段）"
     },
     {
       "id": "B04",
       "prop": "头部 svg 尺寸",
       "decl": "71: <svg width=\"20\" height=\"20\" viewBox=\"0 0 48 48\">",
       "origin_source": "template-declared",
-      "honored_now": "✗",
-      "impl_now": "无"
+      "honored_now": "✓",
+      "impl_now": "drawBaseGearIcon()：4 段 270 度弧 r=7.1 圆心在 (36,12)(36,36)(12,36)(12,12)，90 度缺口朝向图标中心 (24,24)；4 条 spokes；中心 10x10 方块；stroke #852cd3 宽 4。弧起止点与模板 path 端点逐一核对吻合"
     },
     {
       "id": "B05",
@@ -327,8 +327,12 @@
       "prop": ".avatar width",
       "decl": "23: width: 40px;",
       "origin_source": "css",
-      "honored_now": "✗",
-      "impl_now": "render.go:845 DrawCircle(cx+22, cy, 22) 灰色实心圆；其余处 r=16"
+      "honored_now": "⊘",
+      "impl_now": "render.go:845 DrawCircle(cx+22, cy, 22) 灰色实心圆；其余处 r=16",
+      "classification": "blocked_by_downstream_blocked",
+      "layer1_geometry_reachable": "几何部分现在就能画对（.avatar 槽 40x40 已在 drawCard 循环位置预留），但本轮未画。",
+      "layer2_downstream": "下游 F09 属 ⊘。⊘ 有两类：本身依赖不可得数据（F09/F11/F12/E01-E03），以及下游是 ⊘（本项属此类）。不新造桶。",
+      "expectation": "下游解阻前本项不会翻成 ✓。读本行不得理解为头像已经画好了 —— 槽位几何与立绘内容是两件事。"
     },
     {
       "id": "E01",
@@ -455,8 +459,12 @@
       "prop": "角色容器 display",
       "decl": "91,144,197,252,305,371,422,471: <span style=\"display: inline-grid\">",
       "origin_source": "template-declared",
-      "honored_now": "✗",
-      "impl_now": "无"
+      "honored_now": "⊘",
+      "impl_now": "无",
+      "classification": "blocked_by_downstream_blocked",
+      "layer1_geometry_reachable": "几何部分现在就能画对（.avatar 槽 40x40 已在 drawCard 循环位置预留），但本轮未画。",
+      "layer2_downstream": "下游 E01/E02/E03/F12 属 ⊘。⊘ 有两类：本身依赖不可得数据（F09/F11/F12/E01-E03），以及下游是 ⊘（本项属此类）。不新造桶。",
+      "expectation": "下游解阻前本项不会翻成 ✓。读本行不得理解为头像已经画好了 —— 槽位几何与立绘内容是两件事。"
     },
     {
       "id": "F11",
@@ -503,8 +511,9 @@
       "prop": "会客室线索交流块",
       "decl": "346: <div style=\"position: absolute;margin-left: -200px;color: #eb9712;display: flex;align-items: center;\"> 线索交流开启中",
       "origin_source": "template-declared",
-      "honored_now": "✗",
-      "impl_now": "未画"
+      "honored_now": "✓",
+      "impl_now": "drawIcon boards 分支内：线索交流开启中 绘于 title_icon 静态位置 -200，颜色 #eb9712，仅当 Meeting.Sharing 为真。注：其 20x20 svg 子元素未复现，作为 F15 自身的 note 记录，不新造原子（总数须仍为 52）",
+      "icon_child_not_reproduced": "F15 的 20x20 svg 子元素（three-people icon，stroke #ee810a）未复现。容器声明（position/margin/color）与静态文本已按声明实现；图标本身仍缺。读本行不得理解为该块已完全画好。"
     }
   ],
   "baseline_verdict": {
@@ -702,5 +711,57 @@
     },
     "self_evidence_error": "我曾写「本树 render.go 内 mainH 只出现两处」。实测全文件 22 行、跨 9 个场景（其中 8 处是内容推导式）。结论对 base 仍成立，但成立的理由是 base 这处是 const 且不喂坐标，不是「全文件只有两处」。这是把局部成立写成全局成立，比反过来更危险——它会让下一个人以为全仓干净了。",
     "lead_count_correction": "lead 先前口头说 19 行，机械数出是 22 行；lead 已确认我的数为准，并自述其 19 是看着输出数的、不是数出来的。"
+  },
+  "phase4_result": {
+    "bucket_before": {
+      "OK": 41,
+      "open_x": 5,
+      "blocked": 6,
+      "total": 52
+    },
+    "bucket_after": {
+      "OK": 44,
+      "open_x": 0,
+      "blocked": 8,
+      "total": 52
+    },
+    "sum_check": "44+0+8=52 通过",
+    "this_round_x_to_ok": [
+      "B03",
+      "B04",
+      "F15"
+    ],
+    "this_round_x_to_blocked": [
+      "D14",
+      "F10"
+    ],
+    "bucket_moves_are_not_progress": "桶之间的移动不是进展，完成度上升才是。本轮 OK 由 41 升到 44，是真正的上升；D14/F10 从 open 移入 blocked 不是。",
+    "boss_arithmetic_correction": "Boss 口头说「✗ 由 5 变 2」且「另 2 个是移入 ⊘」，这两句不能同时成立：5 个 ✗ 里 3 个翻 ✓、2 个移入 ⊘，五个全都离开了 ✗ 桶。实测 ✗ 为 0、⊘ 为 8；若按 ✗2/⊘8 则 44+2+8=54，超出总数 52。按实测写，不为对上口头数字去凑。",
+    "score_after": 0.97073,
+    "score_note": "与 Phase 2 的 0.97074 实质持平。符合预期：类型修复不改变输出（SampleBase 的 Chars 无 Avatar/AP 值），齿轮图标 20x20 与 F15 文本块占比极小。分数仍受裁切限制，不作成败判据。",
+    "type_fix": "本轮随 Phase 4 一并落地（layer1）。新增 BaseChar{Name,Avatar,AP}，BaseInfo 的 9 处 Chars 改为 []BaseChar，SampleBase 字面量同步。必要非充分：只是让渲染路径具备画立绘/AP 的能力，harness 走 SampleBase() 仍喂不出值，6 个 ⊘ 一个都没动。",
+    "rework_surface_mainh": "无。本树 RenderBase 的 mainH 是 Phase 1 钉成的常量 1110x612（render.go），只出现在 NewContext，不喂任何坐标。render.go 内另有 8 处内容推导式 mainH := ... 属画布尺寸那一类，由 lead-2 统一处理，本树不动。",
+    "rework_surface_font_and_ua": [
+      {
+        "item": "headerH = 24",
+        "kind": "browser-default",
+        "basis": "Base.tmpl 与 assets/css/common.css 均未声明头部高度，取 h3 默认行盒。两侧都查过。"
+      },
+      {
+        "item": "齿轮与无人机文本在同一 20px flex 行内的基线",
+        "kind": "browser-default",
+        "basis": "70 行只声明 display:flex，未声明 align-items；默认 stretch 作用于含文本的 span，基线由此确定。列位置由声明的 20px 宽与文本宽固定。"
+      },
+      {
+        "item": ".board 高度取 20（与声明的 20px 宽同值）",
+        "kind": "browser-default",
+        "basis": "54-58 行只声明 width:20px，未声明 height，高度应由行盒决定。"
+      },
+      {
+        "item": "title_icon 右对齐依赖 measure() 的字体度量",
+        "kind": "font-metric",
+        "basis": "D02/D03 space-between 的落点由本渲染器的字体度量算出，与浏览器字体度量可能有差异，非模板可推。"
+      }
+    ]
   }
 }
