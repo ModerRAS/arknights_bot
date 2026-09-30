@@ -43,6 +43,16 @@
     "C:/WorkSpace/Golang/_lead2/missing-skinid-provenance-audit.md and missing-decomp-report.md are the prose companions of these numbers; they stayed in _lead2/ and are NOT archived here."
   ],
   "not_archived": "C:/WorkSpace/Golang/_lead2/report-section8.md - an orphaned fragment, deliberately left out (see content-mask-overlap report.md section 8.6).",
-  "precision": "Precision convention, stated because two archives now carry the same measurement at different precision and that is NOT a contradiction. THIS file (missing-decomp-*) is the AUTHORITATIVE precision: inkOv_pct 50.84, rowCorr 0.6102, colCorr 0.4423, flatBg 37.06. The content-mask-overlap archive rounds the same numbers to one decimal for display (50.8 / +0.610 / +0.442 / 37.1) because its own table is a 16-row human-readable summary; that archive is authoritative for the 16-scene comparison and the verdict rule, this one for the digits. Rounding: inkOv 1 decimal, corr 3 decimals, flatBg 1 decimal. No value differs between the two beyond rounding.",
-  "authoritative_for": "the per-digit values of the missing-scene decomposition"
+  "precision": "Two archives carry overlapping measurements of `missing`. They overlap on some quantities and DIVERGE on one that shares a name. Derived by recomputation on the same two images (1050x536 = 562800 px). SAME QUANTITY, rounding only: inkOv 50.84 here vs 50.8 in the ink archive (1 decimal); rowCorr 0.6100 vs 0.610 (3 decimals); colCorr 0.4423 vs 0.442 (3 decimals). DIFFERENT QUANTITY, SAME NAME: this file flat_bg_pct_of_canvas = 34.92 = 100*(pixels outside the ink-union mask)/(H*W) = 196546/562800, quote it as \"ink-complement share\"; the ink archive flatBgPct = 37.13 = 100*max(modal-colour pixel count over the two images)/(H*W) = 208980/562800, quote it as \"modal-colour coverage\". Gap 2.21pp; they coincide only when the modal colour happens to equal the ink complement, which is not the case here. Both are correct for their own definition. AUTHORITY: this directory is authoritative for the per-digit decomposition; the content-mask-overlap archive is authoritative for the 16-scene comparison and the verdict rule. No value was changed to make the two agree. See precision_correction for what an earlier version of this field wrongly claimed.",
+  "authoritative_for": "the per-digit values of the missing-scene decomposition",
+  "precision_correction": {
+    "was": "THIS file is the AUTHORITATIVE precision ... inkOv 50.84, rowCorr 0.6102, colCorr 0.4423, flatBg 37.06 ... No value differs between the two beyond rounding.",
+    "errors": [
+      "rowCorr quoted as 0.6102; this file records 0.6100 (typo, two extra digits)",
+      "flatBg quoted as 37.06; this file records 34.92 (wrong value AND wrong framing)",
+      "framing claimed ONE measurement at two precisions; it is TWO different measurements that happen to share the field name flatBg"
+    ],
+    "severity": "the framing error is the serious one: this field exists so a reader does not have to re-derive anything, so a wrong self-description propagates to everyone who trusts it, while a wrong number only misstates one value.",
+    "fixed_by": "recomputation of both definitions on the same two images; see precision for the formulas and the arithmetic."
+  }
 }
