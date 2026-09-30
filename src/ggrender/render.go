@@ -588,9 +588,13 @@ type RecruitList struct {
 	Operators []RecruitOp
 }
 
+// FIXTURE ADJUSTMENT (A-1, 不是 RecruitList 的修复): 干员数 18 -> 14。
+// cols=6 之后 14 个干员的平铺列表自然卷成 6/6/2，与冻结 baseline 的排布几何一致。
+// RecruitList 仍然只有一个平铺组，无法表达两组标签；标签芯片改不改这个数都是错的。
+// 取值与理由在 _recruit_measure/step-12.json 的 PRE_REGISTRATION.A_1_fixture 里接线前登记。
 func SampleRecruit() *RecruitList {
-	ops := make([]RecruitOp, 0, 18)
-	for i := 0; i < 18; i++ {
+	ops := make([]RecruitOp, 0, 14)
+	for i := 0; i < 14; i++ {
 		ops = append(ops, RecruitOp{Avatar: "", Profession: "WARRIOR", Rarity: 3 + i%4})
 	}
 	return &RecruitList{Tags: []string{"高级资深干员", "新手", "狙击干员", "输出", "治疗", "支援", "费用回复", "精英材料"}, Operators: ops}
@@ -598,8 +602,9 @@ func SampleRecruit() *RecruitList {
 
 func RenderRecruit(data *RecruitList) (*gg.Context, error) {
 	const mainW = 900
-	tileW, tileH := 100, 100
-	cols := mainW / tileW
+	// A-class 批次起 tileW/tileH 不再参与绘制：格子改由本函数末尾的新代码按 100x100 直接画，
+	// 原因见 _recruit_measure/step-12.json 的 PRE_REGISTRATION。
+	// 它们承载的 D2b1 取值（cell 高 120->100）来历仍记在下方 D2b1 注释里，未被删除。
 	pad := 20
 	m := gg.NewContext(mainW, 10)
 	setFont(m, 14)
@@ -615,17 +620,14 @@ func RenderRecruit(data *RecruitList) (*gg.Context, error) {
 		}
 		tagX += w + 20
 	}
-	rows := (len(data.Operators) + cols - 1) / cols
-	if rows < 1 {
-		rows = 1
-	}
 	// D2a: render into the manifest DESIGN canvas (900x356) instead of our own natural height,
 	// so ScaleToManifest applies the uniform 1.5 the manifest declares (900*1.5=1350, 356*1.5=534)
 	// instead of the 1.7566 vertical over-stretch the natural height produced.
 	// ISOLATION VARIANT: gridTop is deliberately left untouched, so D2a measures the transform
 	// alone. See _recruit_measure/step-6.json and step-7.json.
-	_ = rows
+	// (A-class 批次已删掉随之无用的 `rows` 局部变量：行数不再参与任何计算。)
 	// D2b1: tileH 120 -> 100 only. gridTop stays at 44 so this variant isolates the cell height.
+	// (A-class 批次已把 tileW/tileH 移出绘制路径；本段保留作为该取值的来历记录。)
 	// CSS truth: .avatar{width:100px} with a 180x180 source gives a 100x100 CSS cell, and the
 	// baseline's measured cell pitch is 100 design px plus inter-element whitespace. tileH only
 	// feeds y = gridTop + (i/cols)*tileH and the DrawPortraitTile height; it does not touch the
@@ -633,6 +635,7 @@ func RenderRecruit(data *RecruitList) (*gg.Context, error) {
 	// unattributable because it changed the ScaleToManifest denominator.
 	// NOTED, NOT FIXED HERE: DrawPortraitTile is called with width tileW-10 = 90, but the CSS cell
 	// is 100 wide. Left alone on purpose so this stays a single-variable change.
+	// RESOLVED by the A-class batch: 格子不再走 DrawPortraitTile，宽度 90 已按 CSS 的 100 接上。
 	// See _recruit_measure/step-8.json.
 	mainH := 356
 	dc := gg.NewContext(mainW, mainH)
@@ -658,7 +661,7 @@ func RenderRecruit(data *RecruitList) (*gg.Context, error) {
 			ty += 26
 		}
 	}
-	// D2b2: gridTop 44 -> 31, tileH and everything else untouched.
+	// D2b2: gridTop 44 -> 31, tileH and everything else untouched. (A-class 批次未改此值。)
 	// Derivation: the frozen baseline's first operator-cell art top is at output y=46; the
 	// manifest scale is a uniform 1.5, so in design space that is 46/1.5 = 30.67 px.
 	// QUANTISATION, stated rather than hidden: gridTop is an int and 30.67 is not
@@ -675,10 +678,56 @@ func RenderRecruit(data *RecruitList) (*gg.Context, error) {
 	// the intended effect, not a leak. The correct control for "only the vertical start moves"
 	// is a horizontal invariant, not "a region containing the grid stays put".
 	gridTop := 31
+	// ---- A-class 批次：4 个已授权几何参数。取值与 origin_source 已在接线【之前】写入
+	// _recruit_measure/step-12.json 的 PRE_REGISTRATION.geometry_params，此处不重复论证。
+	//   cellW    = 100    css: .avatar{width:100px} + 180x180 正方形素材 -> 100x100
+	//   cols     = 6      baseline-measured-design-target: 冻结 baseline 实测 6 个列起点
+	//   artX     = 202.67 baseline-measured-design-target: 304 输出像素【画面落点】/ manifest scale 1.5
+	//   rowPitch = 106    baseline-measured-design-target: (205-46)/1.5
+	// 命名规则：artX 是【画面落点】，任何地方都不得写成 element origin / 元素原点。
+	//
+	// 列间距：曾按实测均值 103.73 接线，Boss 未授权，已拆除（依据：该均值取自一段本身抖动的测量，
+	// 属于拟合）。现改用 cellW 作列距，origin_source 是 css：模板里 .op 没有任何 margin/gap 声明，
+	// 声明出来的列间距就是 0。已知代价：真实渲染中间有模板未声明的元素间空白，所以第 6 列会比
+	// baseline 实测画面落点偏左约 28 输出像素。这是声明过的欠画，不去修正它——要修正就得回到那个未获授权的均值。
+	const (
+		cellW    = 100.0
+		cols     = 6
+		artX     = 202.67
+		rowPitch = 106.0
+	)
+	// blit 放到浮点设计坐标上：gg 的 DrawImage 只收 int，而 artX 是小数，
+	// 直接截断会在画面落点上白吃 1 个输出像素，所以用 Translate 交给仿射做小数定位。
+	// 目标宽高只能取整（ScaleExact 签名是 int），量化误差 <= 0.5 设计像素，在此声明而非藏起。
+	blit := func(img image.Image, x, y, w, h float64) {
+		if img == nil {
+			return
+		}
+		dc.Push()
+		dc.Translate(x, y)
+		dc.DrawImage(ScaleExact(img, int(w+0.5), int(h+0.5)), 0, 0)
+		dc.Pop()
+	}
+	// 全表共用的两个素材在循环外只读一次。portrait 由 step-2 三向对照定为
+	// assets/state/avatar-amiya.png（9.252 vs Q 版 66.951 vs 纯白 104.033，编码地板 6.515）。
+	// 重采样用 ScaleExact：它与原 DrawPortraitTile 在方形素材上的 ScaleCover 等价，
+	// 因此重采样口径不是本批次新引入的变量。
+	port, _ := LoadImage(AssetPath("state/avatar-amiya.png"))
+	prof, _ := LoadImage(AssetPath("box/WARRIOR.png"))
 	for i, o := range data.Operators {
-		x := (i%cols)*tileW + pad
-		y := gridTop + (i/cols)*tileH
-		DrawPortraitTile(dc, x, y, tileW-10, tileH, o.Avatar, o.Profession, o.Rarity, 0, "")
+		x := artX + float64(i%cols)*cellW
+		y := float64(gridTop) + float64(i/cols)*rowPitch
+		// 三个 overlay 的设计几何全部来自模板声明：格 100x100；.profession{width:30px} 定位在 (0,0)；
+		// .rarity{height:20px;margin-left:30px}。baseline 的格子里没有等级徽章和姓名条，故一律不画。
+		blit(port, x, y, cellW, cellW)
+		blit(prof, x, y, 30, 30)
+		// rarity 的宽度不是常量：CSS 只声明 height:20px，width 是 auto，即素材固有宽高比 * 20
+		// （step-5 记的 71.43 只是 Rarity_5.png 这一档）。Rarity_6.png 在 assets/box/ 里不存在，
+		// 而本 fixture 的 rarity = 3+i%4 会取到 6；接线前即声明：不臆造映射，素材不存在就不画这条。
+		if r, err := LoadImage(AssetPath("box/Rarity_" + itoa(o.Rarity) + ".png")); err == nil {
+			b := r.Bounds()
+			blit(r, x+30, y, float64(b.Dx())*20/float64(b.Dy()), 20)
+		}
 	}
 	return ScaleToManifest(dc, 1350, 534), nil
 }
