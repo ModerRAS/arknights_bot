@@ -207,6 +207,16 @@
       "src/ggrender/scene_lottery.go"
     ]
   },
+  "line_number_validity": {
+    "rule": "表内行号仅对下列实现侧 commit 成立，换工作树必须重新定位",
+    "impl_side": "C:/WorkSpace/Golang/arknights_bot-gg-card-revival / feat/gg-render-card @ fcf0795",
+    "template_side": "C:/WorkSpace/Golang/arknights_bot / feat/gg-render @ 1be2b34",
+    "worked_example": {
+      "render_base_on_card_line": {"worktree": "arknights_bot-gg-card-revival", "branch": "feat/gg-render-card", "commit": "fcf0795", "line": 609, "render_go_bytes": 34906, "scene_enemy_go": "存在"},
+      "render_base_on_base_line": {"worktree": "arknights_bot-gg-base-layout", "branch": "feat/gg-render-base-layout", "commit": "1b433bc", "line": 818, "render_go_bytes": 46592, "scene_enemy_go": "不存在"},
+      "conclusion": "同一函数 RenderBase 在两棵树上行号相差 209，同名文件内容完全不同；report.json 中所有 impl_line 均为 card 线的值，在 1b433bc 那棵上一律作废"
+    }
+  },
   "item_naming_convention": {
     "rule": "本表同一属性跨场景同名同写法，取名自属性本身；背景色与背景图分清 color 与 image",
     "background_color_criterion": "值为颜色（background-color: #xxx）则命名为「背景色」",

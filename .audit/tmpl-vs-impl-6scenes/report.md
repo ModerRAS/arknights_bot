@@ -1,10 +1,12 @@
 # 六场景 `*.tmpl` 骨架 vs ggrender 实现 · 声明事实对照表
 
-取证时间：2026-09-30。纯只读，未改任何代码、未 commit、未 push。
+> **范围声明**：本表模板侧读自 `C:/WorkSpace/Golang/arknights_bot` / `feat/gg-render` @ `1be2b34`，实现侧读自 `C:/WorkSpace/Golang/arknights_bot-gg-card-revival` / `feat/gg-render-card` @ `fcf0795`；**表内行号仅对该实现侧 commit 成立，换工作树必须重新定位** —— 例：base 场景的 `RenderBase` 在本表是 `render.go:609`，而在 `feat/gg-render-base-layout` @ `1b433bc` 那棵上是 `render.go:818`（该树 `render.go` 46592 字节且无 `scene_enemy.go`，本树 34906 字节且有）。
 
-- 模板侧：`C:\WorkSpace\Golang\arknights_bot\template\`
-- 共享样式表：`C:\WorkSpace\Golang\arknights_bot\assets\css\common.css`
-- 实现侧：`C:\WorkSpace\Golang\arknights_bot-gg-card-revival\src\ggrender\`
+取证时间：2026-09-30。纯只读，未改任何代码。
+
+- 模板侧：`C:/WorkSpace/Golang/arknights_bot` / `feat/gg-render` @ `1be2b34` 的 `template/`
+- 共享样式表：同树 `assets/css/common.css`
+- 实现侧：`C:/WorkSpace/Golang/arknights_bot-gg-card-revival` / `feat/gg-render-card` @ `fcf0795` 的 `src/ggrender/`
 
 ## 项名命名约定
 
