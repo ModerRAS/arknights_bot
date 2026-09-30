@@ -550,10 +550,22 @@ const (
 	hhBackTop      = 130       // .bg margin-top:130px (Headhunt.tmpl:20)
 	hhBackH        = 370       // .bg box = padding-top:100 + height:270 (margin-top is outside the box)
 	hhFirstX       = 25.0      // #main padding-left:25px (Headhunt.tmpl:10)
-	// FITTED VALUE, NOT A DECLARATION DERIVATION.
-	// Mean of adjacent differences between the baseline's 10 card left edges
-	// (888/9), not derived from Headhunt.tmpl.
-	// OPEN -- to be replaced once it can be derived from Headhunt.tmpl declarations.
+	// FITTED VALUE, NOT A DECLARATION DERIVATION. Still OPEN.
+	// Origin of the value: mean of the adjacent differences between the baseline's
+	// 10 card left edges (888/9), not derived from Headhunt.tmpl.
+	// The declaration-derived half is available: .bg has no width/margin, so the box
+	// is shrink-to-fit and equals .lh width 95px (Headhunt.tmpl:25); .profession and
+	// .rarity are position:absolute and do not contribute.
+	// The other half is the collapsed whitespace between </div> and <div class="bg">,
+	// i.e. one space at the inherited size (no font-size is declared on #main or on
+	// body, so 16px by browser default). Measured from the font file, two ways:
+	//   raw font units, fontTools 4.63.0: U+0020 advance 224/1000 em -> 3.584000px
+	//   the stack this renderer actually uses, gg LoadFontFace at 16.0 (FreeType
+	//   HintingFull, which rounds advances): -> 3.000000px
+	// Neither reproduces 3.6667px, which is what 98.6667-95 implies. So the
+	// "95 + space" derivation does NOT reproduce the fitted value, and the source of
+	// 98.6667 stays unexplained. The two measurements were not tuned toward 3.6667.
+	// OPEN -- to be replaced once the pitch can be derived from Headhunt.tmpl.
 	hhPitch = 98.6667
 	// Corrected back to the declaration, NOT a bugfix: the previous value was a
 	// baseline-fitted number that happened to land 1px off the declared padding.
