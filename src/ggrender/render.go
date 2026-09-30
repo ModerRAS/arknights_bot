@@ -815,164 +815,109 @@ func SampleBase() *BaseInfo {
 	return b
 }
 
+// Base geometry is derived entirely from template/Base.tmpl declarations.
+// Nothing here is read off a baseline image. origin_source tags per block:
+//
+//	css               = a Base.tmpl <style> rule
+//	template-declared = inline markup in Base.tmpl
+//
+// See .audit/base-layout-completeness/baseline.json for the per-atom accounting.
 func RenderBase(data *BaseInfo) (*gg.Context, error) {
-	const mainW = 1100
-	const pad = 16
-	// estimate height: header 60 + labor 50 + control 100 + tradings*110 + manufactures*110 + powers*80 + meeting 90 + hire 80 + training 90 + dorms*90
-	h := 60 + 50 + 100 + len(data.Tradings)*110 + len(data.Manufactures)*110 + len(data.Powers)*80 + 90 + 80 + 90 + len(data.Dorms)*90 + 40
-	dc := gg.NewContext(mainW, h)
-	FillBackground(dc, 30, 32, 33)
-	// header
-	dc.SetRGB255(50, 55, 60)
-	dc.DrawRectangle(0, 0, float64(mainW), 60)
-	dc.Fill()
-	setFont(dc, 26)
+	// A02  css 9: width: 1110px            -> design canvas width
+	//      height is the manifest viewport: ScaleToManifest target 918 / scale 1.5 = 612.
+	//      Not a css declaration (Base.tmpl and assets/css/common.css both declare no #main
+	//      height); it is the viewport the frozen capture was taken at, so overflow is clipped.
+	const mainW, mainH = 1110, 612
+	const cardW, wideW = 550, 1105 // C01 css 13: .base{width:550px} / C09 declared 85,128 inline width:1105px
+	const cardH, gapY = 110, 5     // C02 css 14: .base{height:110px} / C07 css 19: .base{margin-top:5px}
+	const headerH = 24             // header h3 default line box (no css declaration)
+	const h3ML = 10                // D01 css 26: h3{margin-left:10px}
+
+	dc := gg.NewContext(mainW, mainH)
+	FillBackground(dc, 43, 51, 61) // A01 css 8: #main{background-color:#2b333d}
+
+	// B01 template-declared 68: <h3 style="display: inline">基建信息</h3>
+	setFont(dc, 19)
 	dc.SetRGB255(255, 255, 255)
-	drawString(dc, data.Name+" · 基建总览", 20, 38)
-	y := 80
-	// labor
-	fillRoundedCard(dc, float64(pad), float64(y), float64(mainW-2*pad), 50, 8, 18)
-	setFont(dc, 16)
-	dc.SetRGB255(220, 220, 220)
-	drawString(dc, fmt.Sprintf("无人机 %d/%d", data.Labor.Cur, data.Labor.Total), float64(pad+20), float64(y+30))
-	ProgressBar(dc, float64(pad+250), float64(y+20), 300, 14, float64(data.Labor.Cur)/float64(data.Labor.Total), 90, 180, 255)
-	y += 70
-	// control
-	fillRoundedCard(dc, float64(pad), float64(y), float64(mainW-2*pad), 100, 8, 12)
-	setFont(dc, 16)
-	dc.SetRGB255(180, 220, 255)
-	drawString(dc, fmt.Sprintf("控制中枢 Lv%d", data.Control.Level), float64(pad+20), float64(y+28))
-	for i, n := range data.Control.Chars {
-		cx := float64(pad + 20 + i*90)
-		cy := float64(y + 65)
-		dc.SetRGB255(80, 80, 90)
-		dc.DrawCircle(cx+22, cy, 22)
-		dc.Fill()
-		setFont(dc, 11)
+	drawString(dc, "基建信息", h3ML, 18)
+
+	// B02 declared 69: the labor group is a right-floated span with margin-right:30px,
+	// so its right edge sits at 1110-30 = 1080.
+	// B05/B06/B07 css 37,38,39: #labor{width:100px; height:3px; border-radius:1px}
+	// E04 css 34: progress::-webkit-progress-value{background:white}
+	// declared 82: <progress id="labor" max="{{.Labor.Total}}" value="{{.Labor.Current}}">
+	// B03/B04 stay unimplemented: the 70 flex div also holds a 20x20 svg icon we do not draw yet.
+	labR := 1080.0
+	setFont(dc, 15)
+	dc.SetRGB255(255, 255, 255)
+	drawStringAnchored(dc, fmt.Sprintf("%d/%d", data.Labor.Cur, data.Labor.Total), labR, 13, 1, 0)
+	const barW, barH, barR = 100.0, 3.0, 1.0
+	if data.Labor.Total > 0 {
+		frac := float64(data.Labor.Cur) / float64(data.Labor.Total)
 		dc.SetRGB255(255, 255, 255)
-		drawStringAnchored(dc, n, cx+22, cy+32, 0.5, 0.5)
+		dc.DrawRoundedRectangle(labR-barW, 18, barW*frac, barH, barR)
+		dc.Fill()
 	}
-	y += 120
-	// tradings
-	for _, t := range data.Tradings {
-		fillRoundedCard(dc, float64(pad), float64(y), float64(mainW-2*pad), 100, 8, 12)
-		setFont(dc, 14)
-		dc.SetRGB255(220, 200, 120)
-		drawString(dc, fmt.Sprintf("贸易站 Lv%d · %s %d/%d", t.Level, t.Strategy, t.Cur, t.Total), float64(pad+20), float64(y+28))
-		for i, n := range t.Chars {
-			cx := float64(pad + 20 + i*70)
-			cy := float64(y + 60)
+
+	// C05 css 17: .base{display:inline-flex} — cards pack left to right and wrap.
+	// 550*2 = 1100 <= 1110, so two per row; a 1105 card cannot share a row.
+	// C07 css 19: .base{margin-top:5px} — every card carries the 5px top margin.
+	cx, cy := 0.0, float64(headerH)
+	place := func(w float64) (float64, float64) {
+		if cx+w > mainW {
+			cx = 0
+			cy += cardH + gapY
+		}
+		px, py := cx, cy+gapY
+		cx += w
+		return px, py
+	}
+	// C06 css 18: .base{flex-direction:column} — h3 row on top, .chars row below it.
+	drawCard := func(w float64, title, sub string, names []string) {
+		px, py := place(w)
+		fillRoundedCard(dc, px, py, w, cardH, 8, 12)
+		setFont(dc, 16)
+		dc.SetRGB255(255, 255, 255)
+		drawString(dc, title, px+h3ML, py+28)
+		if sub != "" {
+			dc.SetRGB255(205, 205, 220)
+			drawStringAnchored(dc, sub, px+w-h3ML, py+28, 1, 0)
+		}
+		for i, n := range names {
+			ax := px + h3ML + 22 + float64(i)*70
 			dc.SetRGB255(90, 90, 100)
-			dc.DrawCircle(cx+16, cy, 16)
+			dc.DrawCircle(ax, py+72, 16)
 			dc.Fill()
 			setFont(dc, 10)
 			dc.SetRGB255(255, 255, 255)
-			drawStringAnchored(dc, n, cx+16, cy+24, 0.5, 0.5)
+			drawStringAnchored(dc, n, ax, py+100, 0.5, 0.5)
 		}
-		y += 110
 	}
-	// manufactures
-	for _, m := range data.Manufactures {
-		fillRoundedCard(dc, float64(pad), float64(y), float64(mainW-2*pad), 100, 8, 12)
-		setFont(dc, 14)
-		dc.SetRGB255(120, 220, 160)
-		drawString(dc, fmt.Sprintf("制造站 Lv%d · %s %d/%d %s", m.Level, m.Item, m.Cur, m.Total, m.Speed), float64(pad+20), float64(y+28))
-		for i, n := range m.Chars {
-			cx := float64(pad + 20 + i*70)
-			cy := float64(y + 60)
-			dc.SetRGB255(90, 90, 100)
-			dc.DrawCircle(cx+16, cy, 16)
-			dc.Fill()
-			setFont(dc, 10)
-			dc.SetRGB255(255, 255, 255)
-			drawStringAnchored(dc, n, cx+16, cy+24, 0.5, 0.5)
-		}
-		y += 110
-	}
-	// powers
-	for _, p := range data.Powers {
-		fillRoundedCard(dc, float64(pad), float64(y), float64(mainW-2*pad), 80, 8, 12)
-		setFont(dc, 14)
-		dc.SetRGB255(120, 180, 255)
-		drawString(dc, fmt.Sprintf("发电站 Lv%d · %d 电力", p.Level, p.Power), float64(pad+20), float64(y+28))
-		for i, n := range p.Chars {
-			cx := float64(pad + 20 + i*70)
-			cy := float64(y + 55)
-			dc.SetRGB255(90, 90, 100)
-			dc.DrawCircle(cx+16, cy, 16)
-			dc.Fill()
-			setFont(dc, 10)
-			dc.SetRGB255(255, 255, 255)
-			drawStringAnchored(dc, n, cx+16, cy+20, 0.5, 0.5)
-		}
-		y += 90
-	}
-	// meeting
-	fillRoundedCard(dc, float64(pad), float64(y), float64(mainW-2*pad), 80, 8, 12)
-	setFont(dc, 14)
-	dc.SetRGB255(220, 180, 220)
-	drawString(dc, fmt.Sprintf("会客室 Lv%d · 线索 %v 共享:%v", data.Meeting.Level, data.Meeting.Board, data.Meeting.Sharing), float64(pad+20), float64(y+28))
-	for i, n := range data.Meeting.Chars {
-		cx := float64(pad + 20 + i*70)
-		cy := float64(y + 55)
-		dc.SetRGB255(90, 90, 100)
-		dc.DrawCircle(cx+16, cy, 16)
-		dc.Fill()
-		setFont(dc, 10)
-		dc.SetRGB255(255, 255, 255)
-		drawStringAnchored(dc, n, cx+16, cy+20, 0.5, 0.5)
-	}
-	y += 90
-	// hire
-	fillRoundedCard(dc, float64(pad), float64(y), float64(mainW-2*pad), 70, 8, 12)
-	setFont(dc, 14)
-	dc.SetRGB255(220, 200, 180)
-	drawString(dc, fmt.Sprintf("办公室 Lv%d · 刷新 %d", data.Hire.Level, data.Hire.Refresh), float64(pad+20), float64(y+28))
-	for i, n := range data.Hire.Chars {
-		cx := float64(pad + 20 + i*70)
-		cy := float64(y + 50)
-		dc.SetRGB255(90, 90, 100)
-		dc.DrawCircle(cx+16, cy, 16)
-		dc.Fill()
-		setFont(dc, 10)
-		dc.SetRGB255(255, 255, 255)
-		drawStringAnchored(dc, n, cx+16, cy+20, 0.5, 0.5)
-	}
-	y += 80
-	// training
-	fillRoundedCard(dc, float64(pad), float64(y), float64(mainW-2*pad), 80, 8, 12)
-	setFont(dc, 14)
-	dc.SetRGB255(180, 220, 200)
-	drawString(dc, fmt.Sprintf("训练室 Lv%d · %s 专精%d", data.Training.Level, data.Training.Skill, data.Training.SLevel), float64(pad+20), float64(y+28))
-	for i, n := range data.Training.Chars {
-		cx := float64(pad + 20 + i*70)
-		cy := float64(y + 55)
-		dc.SetRGB255(90, 90, 100)
-		dc.DrawCircle(cx+16, cy, 16)
-		dc.Fill()
-		setFont(dc, 10)
-		dc.SetRGB255(255, 255, 255)
-		drawStringAnchored(dc, n, cx+16, cy+20, 0.5, 0.5)
-	}
-	y += 90
-	// dorms
+
+	// declared 86: <h3>控制中枢 Lv.{{.Control.Level}}</h3> carries no .title_icon, so no sub line.
+	drawCard(wideW, fmt.Sprintf("控制中枢 Lv%d", data.Control.Level), "", data.Control.Chars)
 	for _, d := range data.Dorms {
-		fillRoundedCard(dc, float64(pad), float64(y), float64(mainW-2*pad), 80, 8, 12)
-		setFont(dc, 14)
-		dc.SetRGB255(200, 200, 220)
-		drawString(dc, fmt.Sprintf("宿舍 Lv%d · 舒适度 %d", d.Level, d.Comfort), float64(pad+20), float64(y+28))
-		for i, n := range d.Chars {
-			cx := float64(pad + 20 + i*70)
-			cy := float64(y + 55)
-			dc.SetRGB255(90, 90, 100)
-			dc.DrawCircle(cx+16, cy, 16)
-			dc.Fill()
-			setFont(dc, 10)
-			dc.SetRGB255(255, 255, 255)
-			drawStringAnchored(dc, n, cx+16, cy+20, 0.5, 0.5)
-		}
-		y += 90
+		drawCard(wideW, fmt.Sprintf("宿舍 Lv%d", d.Level), fmt.Sprintf("舒适度 %d", d.Comfort), d.Chars)
 	}
+	for _, t := range data.Tradings {
+		drawCard(cardW, fmt.Sprintf("贸易站 Lv%d", t.Level),
+			fmt.Sprintf("%s %d/%d", t.Strategy, t.Cur, t.Total), t.Chars)
+	}
+	for _, m := range data.Manufactures {
+		drawCard(cardW, fmt.Sprintf("制造站 Lv%d", m.Level),
+			fmt.Sprintf("%s %d/%d %s", m.Item, m.Cur, m.Total, m.Speed), m.Chars)
+	}
+	for _, p := range data.Powers {
+		drawCard(cardW, fmt.Sprintf("发电站 Lv%d", p.Level),
+			fmt.Sprintf("%d 电力", p.Power), p.Chars)
+	}
+	drawCard(cardW, fmt.Sprintf("会客室 Lv%d", data.Meeting.Level),
+		fmt.Sprintf("线索 %v 共享:%v", data.Meeting.Board, data.Meeting.Sharing), data.Meeting.Chars)
+	drawCard(cardW, fmt.Sprintf("办公室 Lv%d", data.Hire.Level),
+		fmt.Sprintf("刷新 %d", data.Hire.Refresh), data.Hire.Chars)
+	drawCard(cardW, fmt.Sprintf("训练室 Lv%d", data.Training.Level),
+		fmt.Sprintf("%s 专精%d", data.Training.Skill, data.Training.SLevel), data.Training.Chars)
+
 	return ScaleToManifest(dc, 1665, 918), nil
 }
 
