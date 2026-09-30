@@ -58,10 +58,12 @@
   ],
   "counts": {
     "模板声明区域": 52,
-    "已实现区域": 17,
-    "ratio": "17/52 = 32.7%",
+    "已实现区域": 41,
+    "ratio": "41/52 = 78.8%",
     "counting_method": "一个原子声明 = Base.tmpl 中一条可复算的 css 声明或一处 template-declared 内联结构声明。当前 RenderBase 逐条核对，全部以 ✓/✔ 判定，判定依据记在 atoms[].honored_now。",
-    "anti_fudge": "8 个 .base 块标题中只有「控制中枢 Lv.N」文案一致（记 1 项 ✓）；其余 7 块把 title_icon 的字段并进了标题、或拼了模板没有的字段，记 ✗。.board 线索值虽以文本打出，但未画成 .board 圆角块，不记 ✓。"
+    "anti_fudge": "8 个 .base 块标题中只有「控制中枢 Lv.N」文案一致（记 1 项 ✓）；其余 7 块把 title_icon 的字段并进了标题、或拼了模板没有的字段，记 ✗。.board 线索值虽以文本打出，但未画成 .board 圆角块，不记 ✓。",
+    "数据不可得": 6,
+    "仍未实现": 5
   },
   "atoms": [
     {
@@ -165,16 +167,16 @@
       "prop": ".base border-radius",
       "decl": "15: border-radius: 15px;",
       "origin_source": "css",
-      "honored_now": "✗",
-      "impl_now": "圆角 8"
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
     },
     {
       "id": "C04",
       "prop": ".base border",
       "decl": "16: border: 1px solid #21262f;",
       "origin_source": "css",
-      "honored_now": "✗",
-      "impl_now": "无描边"
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
     },
     {
       "id": "C05",
@@ -205,8 +207,8 @@
       "prop": ".base background-color",
       "decl": "20: background-color: #21262f;",
       "origin_source": "css",
-      "honored_now": "✗",
-      "impl_now": "fillRoundedCard alpha 12/18 半透明，非 #21262f"
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
     },
     {
       "id": "C09",
@@ -229,96 +231,96 @@
       "prop": ".title display",
       "decl": "42: display: flex;",
       "origin_source": "css",
-      "honored_now": "✗",
-      "impl_now": "无"
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
     },
     {
       "id": "D03",
       "prop": ".title justify-content",
       "decl": "43: justify-content: space-between;",
       "origin_source": "css",
-      "honored_now": "✗",
-      "impl_now": "无"
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
     },
     {
       "id": "D04",
       "prop": ".title_icon display",
       "decl": "46: display: inline-flex;",
       "origin_source": "css",
-      "honored_now": "✗",
-      "impl_now": "无"
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
     },
     {
       "id": "D05",
       "prop": ".title_icon align-items",
       "decl": "47: align-items: center;",
       "origin_source": "css",
-      "honored_now": "✗",
-      "impl_now": "无"
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
     },
     {
       "id": "D06",
       "prop": ".title_icon margin-right",
       "decl": "48: margin-right: 20px;",
       "origin_source": "css",
-      "honored_now": "✗",
-      "impl_now": "无"
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
     },
     {
       "id": "D07",
       "prop": ".chars margin-left",
       "decl": "51: margin-left: 10px;",
       "origin_source": "css",
-      "honored_now": "✗",
-      "impl_now": "无"
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
     },
     {
       "id": "D08",
       "prop": ".skill width",
       "decl": "61: width: 30px;",
       "origin_source": "css",
-      "honored_now": "✗",
-      "impl_now": "未画"
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
     },
     {
       "id": "D09",
       "prop": ".board width",
       "decl": "56: width: 20px;",
       "origin_source": "css",
-      "honored_now": "✗",
-      "impl_now": "未画"
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
     },
     {
       "id": "D10",
       "prop": ".board border-radius",
       "decl": "58: border-radius: 5px;",
       "origin_source": "css",
-      "honored_now": "✗",
-      "impl_now": "未画"
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
     },
     {
       "id": "D11",
       "prop": ".board display",
       "decl": "54: display: inline-flex;",
       "origin_source": "css",
-      "honored_now": "✗",
-      "impl_now": "未画"
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
     },
     {
       "id": "D12",
       "prop": ".board justify-content",
       "decl": "55: justify-content: center;",
       "origin_source": "css",
-      "honored_now": "✗",
-      "impl_now": "未画"
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
     },
     {
       "id": "D13",
       "prop": ".board border",
       "decl": "57: border: solid 1px;",
       "origin_source": "css",
-      "honored_now": "✗",
-      "impl_now": "未画"
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
     },
     {
       "id": "D14",
@@ -333,24 +335,27 @@
       "prop": "progress.ap width",
       "decl": "29: width: 150px;",
       "origin_source": "css",
-      "honored_now": "✗",
-      "impl_now": "未画 ap 条"
+      "honored_now": "⊘",
+      "impl_now": "未实现",
+      "blocked_reason": "数据不可得：progress.ap 宽度 150 虽已声明，但 value 依赖 AP，AP 不可得"
     },
     {
       "id": "E02",
       "prop": "progress.ap height",
       "decl": "30: height: 3px;",
       "origin_source": "css",
-      "honored_now": "✗",
-      "impl_now": "未画"
+      "honored_now": "⊘",
+      "impl_now": "未实现",
+      "blocked_reason": "数据不可得：同上"
     },
     {
       "id": "E03",
       "prop": "progress.ap border-radius",
       "decl": "31: border-radius: 1px;",
       "origin_source": "css",
-      "honored_now": "✗",
-      "impl_now": "未画"
+      "honored_now": "⊘",
+      "impl_now": "未实现",
+      "blocked_reason": "数据不可得：同上"
     },
     {
       "id": "E04",
@@ -373,64 +378,65 @@
       "prop": "块2 宿舍标题",
       "decl": "129: <h3 class=\"title\">宿舍 Lv.{{.Level}}",
       "origin_source": "template-declared",
-      "honored_now": "✗",
-      "impl_now": "render.go:963 宿舍 Lv%d · 舒适度 %d（多拼了模板没有的字段）"
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
     },
     {
       "id": "F03",
       "prop": "块3 贸易站标题",
       "decl": "183: <h3 class=\"title\">贸易站 Lv.{{.Level}}",
       "origin_source": "template-declared",
-      "honored_now": "✗",
-      "impl_now": "render.go:854 贸易站 Lv%d · %s %d/%d（把 title_icon 的 span 内容并进了标题）"
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
     },
     {
       "id": "F04",
       "prop": "块4 制造站标题",
       "decl": "236: <h3 class=\"title\">制造站 Lv.{{.Level}}",
       "origin_source": "template-declared",
-      "honored_now": "✗",
-      "impl_now": "render.go:871 制造站 Lv%d · %s %d/%d %s"
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
     },
     {
       "id": "F05",
       "prop": "块5 发电站标题",
       "decl": "291: <h3 class=\"title\">发电站 Lv.{{.Level}}",
       "origin_source": "template-declared",
-      "honored_now": "✗",
-      "impl_now": "render.go:888 发电站 Lv%d · %d 电力"
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
     },
     {
       "id": "F06",
       "prop": "块6 会客室标题",
       "decl": "343: <h3 class=\"title\">会客室 Lv.{{.Meeting.Level}}",
       "origin_source": "template-declared",
-      "honored_now": "✗",
-      "impl_now": "render.go:905 会客室 Lv%d · 线索 %v 共享:%v"
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
     },
     {
       "id": "F07",
       "prop": "块7 办公室标题",
       "decl": "408: <h3 class=\"title\">办公室 Lv.{{.Hire.Level}}",
       "origin_source": "template-declared",
-      "honored_now": "✗",
-      "impl_now": "render.go:920 办公室 Lv%d · 刷新 %d"
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
     },
     {
       "id": "F08",
       "prop": "块8 训练室标题",
       "decl": "459: <h3 class=\"title\">训练室 Lv.{{.Training.Level}}",
       "origin_source": "template-declared",
-      "honored_now": "✗",
-      "impl_now": "render.go:934 训练室 Lv%d · %s 专精%d"
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
     },
     {
       "id": "F09",
       "prop": "角色头像真实立绘",
       "decl": "92,145,198,253,306,372,423,472: <img class=\"avatar\" src=\".../char_skin/avatar/{{urlquery .Avatar}}.png\">",
       "origin_source": "template-declared",
-      "honored_now": "✗",
-      "impl_now": "灰色实心圆，未取真实立绘"
+      "honored_now": "⊘",
+      "impl_now": "未实现",
+      "blocked_reason": "数据不可得：web 层 BaseChar 有 Avatar 字段，但 gg 侧 BaseInfo.Chars 为 []string，且仓内无 base fixture 数据文件；唯一能确定角色立绘来源的剩余途径是冻结基线图本身，属红线，不取"
     },
     {
       "id": "F10",
@@ -445,32 +451,34 @@
       "prop": "AP 图标尺寸与三态配色",
       "decl": "93,146,199,254,307,373,424,473: <svg width=\"20\" height=\"20\">，stroke #e42e20 (le .AP 0) / #f0ab22 (lt .AP 100) / #3cd627",
       "origin_source": "template-declared",
-      "honored_now": "✗",
-      "impl_now": "未画"
+      "honored_now": "⊘",
+      "impl_now": "未实现",
+      "blocked_reason": "数据不可得：同上，AP 值不可得，三态图标无法确定"
     },
     {
       "id": "F12",
       "prop": "角色 AP 进度条",
       "decl": "119,172,225,280,333,399,450,499: <progress class=\"ap\" max=\"100\" value=\"{{.AP}}\">",
       "origin_source": "template-declared",
-      "honored_now": "✗",
-      "impl_now": "未画"
+      "honored_now": "⊘",
+      "impl_now": "未实现",
+      "blocked_reason": "数据不可得：同上"
     },
     {
       "id": "F13",
       "prop": "会客室线索块",
       "decl": "360: <div class=\"board\">{{.}}</div>",
       "origin_source": "template-declared",
-      "honored_now": "✗",
-      "impl_now": "render.go:905 以 %v 文本打出，未画成 20px 圆角块"
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
     },
     {
       "id": "F14",
       "prop": "训练室技能图标",
       "decl": "463: <img class=\"skill\" src=\".../char_skill/{{.Training.Skill}}.png\">",
       "origin_source": "template-declared",
-      "honored_now": "✗",
-      "impl_now": "未画"
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
     },
     {
       "id": "F15",
@@ -602,5 +610,60 @@
     "pulled_forward": "B02/B05/B06/B07/E04 原属 Phase 5，因上述补回被拉进 Phase 1",
     "not_claimed": "B03/B04（头部 20x20 svg 未画）、C03/C04/C08（圆角 15、1px solid #21262f 描边、#21262f 底色仍为旧样式）、D02~D07/D09~D14、F02~F15 均未实现",
     "geometry_provenance": "全部坐标取自 Base.tmpl 声明或由其算术推导；无一个坐标来自基线图"
+  },
+  "phase2_result": {
+    "score_after_phase1": 0.92297,
+    "score_after": 0.97074,
+    "score_delta_vs_phase1": 0.04777,
+    "score_vs_original_1b433bc": {
+      "original": 0.959,
+      "now": 0.97074,
+      "delta": 0.01174
+    },
+    "completeness_before": "17/52 = 32.7%",
+    "completeness_after": "41/52 = 78.8%",
+    "atoms_flipped": [
+      "C03",
+      "C04",
+      "C08",
+      "D02",
+      "D03",
+      "D04",
+      "D05",
+      "D06",
+      "D07",
+      "D08",
+      "D09",
+      "D10",
+      "D11",
+      "D12",
+      "D13",
+      "F02",
+      "F03",
+      "F04",
+      "F05",
+      "F06",
+      "F07",
+      "F08",
+      "F13",
+      "F14"
+    ],
+    "atoms_data_unavailable": [
+      "E01",
+      "E02",
+      "E03",
+      "F09",
+      "F11",
+      "F12"
+    ],
+    "score_rose_and_completeness_rose": true,
+    "icon_open": {
+      "B03": "头部 flex div 未实现（同 B04 的 20x20 svg 未复现）",
+      "B04": "头部 20x20 svg 未复现",
+      "D14": ".avatar width 40px 未实现：依赖 F09 立绘",
+      "F10": "角色 span display:inline-grid 未实现：其第二行是 progress.ap，依赖 AP 数据",
+      "F15": "会客室线索交流开启中块未实现：含 20x20 svg，且需绝对定位 -200px 基准"
+    },
+    "label_corrections": "Phase 1 把 title_icon 的字段并进标题，Phase 2 已按模板行号归位；其中两处 Phase 1 画错了标签：发电站模板 298 行只有裸数字 {{.Power}}，Phase 1 画成了「N 电力」；办公室模板 415 行是「刷新次数N」，Phase 1 画成了「刷新 N」。两处均已改正。"
   }
 }

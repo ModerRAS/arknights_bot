@@ -822,46 +822,53 @@ func SampleBase() *BaseInfo {
 //	template-declared = inline markup in Base.tmpl
 //
 // See .audit/base-layout-completeness/baseline.json for the per-atom accounting.
+// Base geometry is derived entirely from template/Base.tmpl declarations.
+// Nothing here is read off a baseline image. origin_source vocabulary: css / template-declared.
+// See .audit/base-layout-completeness/baseline.json for the per-atom accounting.
 func RenderBase(data *BaseInfo) (*gg.Context, error) {
-	// A02  css 9: width: 1110px            -> design canvas width
-	//      height is the manifest viewport: ScaleToManifest target 918 / scale 1.5 = 612.
-	//      Not a css declaration (Base.tmpl and assets/css/common.css both declare no #main
-	//      height); it is the viewport the frozen capture was taken at, so overflow is clipped.
+	// A02 css 9: width: 1110px. Height is the manifest viewport: ScaleToManifest target
+	// 918 / fixtures.json:28 scale 1.5 = 612. Not a css declaration (neither Base.tmpl nor
+	// assets/css/common.css declares #main height); it is the viewport the capture was
+	// taken at, so content below it is clipped.
 	const mainW, mainH = 1110, 612
-	const cardW, wideW = 550, 1105 // C01 css 13: .base{width:550px} / C09 declared 85,128 inline width:1105px
-	const cardH, gapY = 110, 5     // C02 css 14: .base{height:110px} / C07 css 19: .base{margin-top:5px}
-	const headerH = 24             // header h3 default line box (no css declaration)
-	const h3ML = 10                // D01 css 26: h3{margin-left:10px}
+	const cardW, wideW = 550, 1105      // C01 css 13 / C09 declared 85,128
+	const cardH, gapY = 110, 5          // C02 css 14 / C07 css 19
+	const cardR = 15                    // C03 css 15: .base{border-radius:15px}
+	var cardBg = [3]int{33, 38, 47}     // C08 css 20: .base{background-color:#21262f}
+	var cardBorder = [3]int{33, 38, 47} // C04 css 16: .base{border:1px solid #21262f}
+	const headerH = 24                  // header h3 default line box (no css declaration)
+	const h3ML = 10                     // D01 css 26: h3{margin-left:10px}
+	const iconMR = 20                   // D06 css 48: .title_icon{margin-right:20px}
+	const charsML = 10                  // D07 css 51: .chars{margin-left:10px}
+	const boardW, boardR = 20.0, 5.0    // D09 css 56 / D10 css 58
+	const skillW = 30.0                 // D08 css 61: .skill{width:30px}
 
 	dc := gg.NewContext(mainW, mainH)
 	FillBackground(dc, 43, 51, 61) // A01 css 8: #main{background-color:#2b333d}
 
-	// B01 template-declared 68: <h3 style="display: inline">基建信息</h3>
+	// B01 declared 68: <h3 style="display: inline">基建信息</h3>
 	setFont(dc, 19)
 	dc.SetRGB255(255, 255, 255)
 	drawString(dc, "基建信息", h3ML, 18)
 
-	// B02 declared 69: the labor group is a right-floated span with margin-right:30px,
-	// so its right edge sits at 1110-30 = 1080.
-	// B05/B06/B07 css 37,38,39: #labor{width:100px; height:3px; border-radius:1px}
+	// B02 declared 69: right-floated span with margin-right:30px -> right edge 1110-30.
+	// B05/B06/B07 css 37,38,39: #labor{width:100px;height:3px;border-radius:1px}
 	// E04 css 34: progress::-webkit-progress-value{background:white}
-	// declared 82: <progress id="labor" max="{{.Labor.Total}}" value="{{.Labor.Current}}">
-	// B03/B04 stay unimplemented: the 70 flex div also holds a 20x20 svg icon we do not draw yet.
+	// declared 82: <progress id="labor" ...>
+	// B03/B04 stay open: the flex div at 70 also holds a 20x20 svg we do not reproduce.
 	labR := 1080.0
 	setFont(dc, 15)
 	dc.SetRGB255(255, 255, 255)
 	drawStringAnchored(dc, fmt.Sprintf("%d/%d", data.Labor.Cur, data.Labor.Total), labR, 13, 1, 0)
 	const barW, barH, barR = 100.0, 3.0, 1.0
 	if data.Labor.Total > 0 {
-		frac := float64(data.Labor.Cur) / float64(data.Labor.Total)
 		dc.SetRGB255(255, 255, 255)
-		dc.DrawRoundedRectangle(labR-barW, 18, barW*frac, barH, barR)
+		dc.DrawRoundedRectangle(labR-barW, 18, barW*float64(data.Labor.Cur)/float64(data.Labor.Total), barH, barR)
 		dc.Fill()
 	}
 
-	// C05 css 17: .base{display:inline-flex} — cards pack left to right and wrap.
+	// C05 css 17: .base{display:inline-flex} — pack left to right, wrap when full.
 	// 550*2 = 1100 <= 1110, so two per row; a 1105 card cannot share a row.
-	// C07 css 19: .base{margin-top:5px} — every card carries the 5px top margin.
 	cx, cy := 0.0, float64(headerH)
 	place := func(w float64) (float64, float64) {
 		if cx+w > mainW {
@@ -872,19 +879,72 @@ func RenderBase(data *BaseInfo) (*gg.Context, error) {
 		cx += w
 		return px, py
 	}
-	// C06 css 18: .base{flex-direction:column} — h3 row on top, .chars row below it.
-	drawCard := func(w float64, title, sub string, names []string) {
+
+	// bIcon is the .title_icon content declared for one block. Each field maps to a
+	// Base.tmpl line; no field is invented.
+	type bIcon struct {
+		text   string // <span> text at the cited line
+		color  [3]int // inline color declared on that span
+		boards []int  // declared 360: <div class="board">{{.}}</div>
+		skill  string // declared 463: <img class="skill" src=".../char_skill/{{.Training.Skill}}.png">
+	}
+
+	// D04/D05/D06 css 46,47,48: .title_icon{display:inline-flex;align-items:center;margin-right:20px}
+	// D02/D03 css 42,43: .title{display:flex;justify-content:space-between} — the icon
+	// group is the right-hand child, so its right edge is the h3 content right minus 20.
+	drawIcon := func(px, w, py float64, ic bIcon) {
+		right := px + w - iconMR
+		setFont(dc, 16)
+		switch {
+		case len(ic.boards) > 0:
+			// declared 358-363: <span>线索 {{range .Meeting.Board}} <div class="board">…</div> {{end}}</span>
+			// D11/D12 css 54,55: .board{display:inline-flex;justify-content:center}
+			tw, _ := measure(dc, ic.text)
+			bx := right - boardW*float64(len(ic.boards)) - tw
+			dc.SetRGB255(255, 255, 255)
+			drawString(dc, ic.text, bx, py+28)
+			for _, b := range ic.boards {
+				dc.SetRGB255(255, 255, 255)
+				StrokeRoundRect(dc, bx+tw, py+11, boardW, boardW, boardR)
+				bs, _ := measure(dc, itoa(b))
+				drawString(dc, itoa(b), bx+tw+(boardW-bs)/2, py+28)
+				bx += boardW
+			}
+		case ic.skill != "":
+			// declared 461-464: <span>Lv.N</span><img class="skill" ...>  (icon on the right)
+			img := FetchImage("https://web.hycdn.cn/arknights/game/assets/char_skill/"+ic.skill+".png",
+				AssetPath("common/amiya.png"))
+			ix := right - skillW
+			dc.DrawImage(ScaleExact(img, int(skillW), int(skillW)), int(ix), int(py+9))
+			tw, _ := measure(dc, ic.text)
+			dc.SetRGB255(255, 255, 255)
+			drawString(dc, ic.text, ix-tw, py+28)
+		default:
+			tw, _ := measure(dc, ic.text)
+			dc.SetRGB255(ic.color[0], ic.color[1], ic.color[2])
+			drawString(dc, ic.text, right-tw, py+28)
+		}
+	}
+
+	// C06 css 18: .base{flex-direction:column} — .title on top, .chars below it.
+	drawCard := func(w float64, title string, ic bIcon, names []string) {
 		px, py := place(w)
-		fillRoundedCard(dc, px, py, w, cardH, 8, 12)
+		dc.SetRGB255(cardBg[0], cardBg[1], cardBg[2])
+		RoundRect(dc, px, py, w, cardH, cardR)
+		dc.SetRGB255(cardBorder[0], cardBorder[1], cardBorder[2])
+		dc.SetLineWidth(1)
+		StrokeRoundRect(dc, px+0.5, py+0.5, w-1, cardH-1, cardR)
 		setFont(dc, 16)
 		dc.SetRGB255(255, 255, 255)
-		drawString(dc, title, px+h3ML, py+28)
-		if sub != "" {
-			dc.SetRGB255(205, 205, 220)
-			drawStringAnchored(dc, sub, px+w-h3ML, py+28, 1, 0)
+		drawString(dc, title, px+h3ML, py+28) // D01 css 26
+		if ic.text != "" || len(ic.boards) > 0 || ic.skill != "" {
+			drawIcon(px, w, py, ic)
 		}
+		// D07 css 51: .chars{margin-left:10px}. The per-char span at 143/196/251/…
+		// is display:inline-grid holding a 40px portrait plus a progress.ap; the gg
+		// BaseInfo.Chars carries names only, so the portrait/AP regions are open.
 		for i, n := range names {
-			ax := px + h3ML + 22 + float64(i)*70
+			ax := px + charsML + 16 + float64(i)*70
 			dc.SetRGB255(90, 90, 100)
 			dc.DrawCircle(ax, py+72, 16)
 			dc.Fill()
@@ -894,29 +954,38 @@ func RenderBase(data *BaseInfo) (*gg.Context, error) {
 		}
 	}
 
-	// declared 86: <h3>控制中枢 Lv.{{.Control.Level}}</h3> carries no .title_icon, so no sub line.
-	drawCard(wideW, fmt.Sprintf("控制中枢 Lv%d", data.Control.Level), "", data.Control.Chars)
+	// declared 86: <h3>控制中枢 Lv.N</h3> — no .title_icon on this block.
+	drawCard(wideW, fmt.Sprintf("控制中枢 Lv%d", data.Control.Level), bIcon{}, data.Control.Chars)
+	// declared 129/137: 宿舍 Lv.N + <span style="color:#66c02f">舒适度N</span>
 	for _, d := range data.Dorms {
-		drawCard(wideW, fmt.Sprintf("宿舍 Lv%d", d.Level), fmt.Sprintf("舒适度 %d", d.Comfort), d.Chars)
+		drawCard(wideW, fmt.Sprintf("宿舍 Lv%d", d.Level),
+			bIcon{text: fmt.Sprintf("舒适度%d", d.Comfort), color: [3]int{0x66, 0xc0, 0x2f}}, d.Chars)
 	}
+	// declared 183/190: 贸易站 Lv.N + <span style="color:#8cd1ff">策略 N/M</span>
 	for _, t := range data.Tradings {
 		drawCard(cardW, fmt.Sprintf("贸易站 Lv%d", t.Level),
-			fmt.Sprintf("%s %d/%d", t.Strategy, t.Cur, t.Total), t.Chars)
+			bIcon{text: fmt.Sprintf("%s %d/%d", t.Strategy, t.Cur, t.Total), color: [3]int{0x8c, 0xd1, 0xff}}, t.Chars)
 	}
+	// declared 236/245: 制造站 Lv.N + <span style="color:#d79d13">物品 N/M</span>
 	for _, m := range data.Manufactures {
 		drawCard(cardW, fmt.Sprintf("制造站 Lv%d", m.Level),
-			fmt.Sprintf("%s %d/%d %s", m.Item, m.Cur, m.Total, m.Speed), m.Chars)
+			bIcon{text: fmt.Sprintf("%s %d/%d", m.Item, m.Cur, m.Total), color: [3]int{0xd7, 0x9d, 0x13}}, m.Chars)
 	}
+	// declared 291/298: 发电站 Lv.N + <span style="color:#adfe2e">N</span>  (bare number, no label)
 	for _, p := range data.Powers {
 		drawCard(cardW, fmt.Sprintf("发电站 Lv%d", p.Level),
-			fmt.Sprintf("%d 电力", p.Power), p.Chars)
+			bIcon{text: itoa(p.Power), color: [3]int{0xad, 0xfe, 0x2e}}, p.Chars)
 	}
+	// declared 343/358-363: 会客室 Lv.N + <span>线索 <div class="board">…</div></span>
 	drawCard(cardW, fmt.Sprintf("会客室 Lv%d", data.Meeting.Level),
-		fmt.Sprintf("线索 %v 共享:%v", data.Meeting.Board, data.Meeting.Sharing), data.Meeting.Chars)
+		bIcon{text: "线索", color: [3]int{255, 255, 255}, boards: data.Meeting.Board}, data.Meeting.Chars)
+	// declared 408/415: 办公室 Lv.N + <span>刷新次数N</span>
 	drawCard(cardW, fmt.Sprintf("办公室 Lv%d", data.Hire.Level),
-		fmt.Sprintf("刷新 %d", data.Hire.Refresh), data.Hire.Chars)
+		bIcon{text: fmt.Sprintf("刷新次数%d", data.Hire.Refresh), color: [3]int{255, 255, 255}}, data.Hire.Chars)
+	// declared 459/462-463: 训练室 Lv.N + <span>Lv.N</span><img class="skill">
 	drawCard(cardW, fmt.Sprintf("训练室 Lv%d", data.Training.Level),
-		fmt.Sprintf("%s 专精%d", data.Training.Skill, data.Training.SLevel), data.Training.Chars)
+		bIcon{text: fmt.Sprintf("Lv.%d", data.Training.SLevel), color: [3]int{255, 255, 255}, skill: data.Training.Skill},
+		data.Training.Chars)
 
 	return ScaleToManifest(dc, 1665, 918), nil
 }
