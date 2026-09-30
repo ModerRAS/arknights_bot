@@ -533,5 +533,442 @@
       "content_mask_overlap": null,
       "content_mask_overlap_reason": "harness does not compute it; src/ggrender/pixel_test.go contains no mask/overlap metric (only similarityNormalized, TestGGPixelParity, TestGGPixelParity_Negative; grep -niE 'overlap|mask|iou|structur' exits 1 with empty output)"
     }
-  ]
+  ],
+  "per_scene_reproduction_matrix": {
+    "purpose": "Per-scene reproduction matrix covering ALL 16 scenes. The earlier three_state_comparison sampled only card and lottery; no scene may be implicitly assumed stable.",
+    "states_rerun": [
+      "00447f3",
+      "ec440bf",
+      "0674ab4"
+    ],
+    "report_sha256_by_state": {
+      "00447f3": "329e6cf7facf4a6a7835fa18a5d0bb7ae07ac9ea56fbfb3a7020ce8cea6ba190",
+      "ec440bf": "329e6cf7facf4a6a7835fa18a5d0bb7ae07ac9ea56fbfb3a7020ce8cea6ba190",
+      "0674ab4": "dc983be2a6fc68b5aa6e3b1cb4e01f3fbcd136106b696f9e6d632ff23dd1370d"
+    },
+    "columns": [
+      "scene",
+      "reproduces_identically_at",
+      "diverges_at"
+    ],
+    "comparison_baseline": "hashNew at 00447f3",
+    "method": "Each state was checked out in its own clean detached worktree and the harness was run there; per-scene hashNew was read from the report that run produced. A scene is 'diverges_at' a state when that state's hashNew differs from the 00447f3 value.",
+    "detector_self_check": "The same detector DID fire on lottery, so it is capable of firing. The other 15 rows are therefore positive results, not a null result. Independently, 00447f3 and ec440bf produced byte-identical whole reports (equal sha256), confirming the whole-file hash comparison is content-sensitive.",
+    "result_kind": "NEGATIVE RESULT. No scene other than lottery was found to shift with the code state. A negative result is a finding, not a failed investigation.",
+    "scenes_total": 16,
+    "scenes_reproducible_in_all_states": 15,
+    "scenes_diverging": 1,
+    "all_16_scenes_rendered_in_every_state": true,
+    "null_or_skipped_scenes": [],
+    "skipped_scenes_note": "No scene was skipped, no value left blank, no value estimated. All 16 scenes rendered in all 3 states, including the two that pass the gate (calendar, state), recorded on the same footing as the failing ones.",
+    "consistent_with_existing_conclusions": {
+      "boundary": "Unchanged: the lottery divergence appears only at 0674ab4; 00447f3 and ec440bf are indistinguishable in the report.",
+      "card_invariance": "Unchanged: card is identical in all three states, so the card row CANNOT distinguish these trees and must not be used to date a report."
+    },
+    "unexpected_findings": [],
+    "unexpected_findings_note": "No scene outside lottery was found to shift. Had one been found it would be listed here separately.",
+    "rows": [
+      {
+        "scene": "base",
+        "reproduces_identically_at": [
+          "00447f3",
+          "ec440bf",
+          "0674ab4"
+        ],
+        "diverges_at": [],
+        "hashNew_by_state": {
+          "00447f3": "1aafad90d714904a2a2315af31038ba734e5cd7fe239dec1eaec4f9fc31d43b1",
+          "ec440bf": "1aafad90d714904a2a2315af31038ba734e5cd7fe239dec1eaec4f9fc31d43b1",
+          "0674ab4": "1aafad90d714904a2a2315af31038ba734e5cd7fe239dec1eaec4f9fc31d43b1"
+        },
+        "score_by_state": {
+          "00447f3": 0.9589964211295751,
+          "ec440bf": 0.9589964211295751,
+          "0674ab4": 0.9589964211295751
+        },
+        "score_delta_max": 0.0,
+        "passed_by_state": {
+          "00447f3": false,
+          "ec440bf": false,
+          "0674ab4": false
+        }
+      },
+      {
+        "scene": "box",
+        "reproduces_identically_at": [
+          "00447f3",
+          "ec440bf",
+          "0674ab4"
+        ],
+        "diverges_at": [],
+        "hashNew_by_state": {
+          "00447f3": "55d299b08d3a37fef33cd694e6f4aaf42860969dc4a081c36f6224558fd387d7",
+          "ec440bf": "55d299b08d3a37fef33cd694e6f4aaf42860969dc4a081c36f6224558fd387d7",
+          "0674ab4": "55d299b08d3a37fef33cd694e6f4aaf42860969dc4a081c36f6224558fd387d7"
+        },
+        "score_by_state": {
+          "00447f3": 0.8250372524631744,
+          "ec440bf": 0.8250372524631744,
+          "0674ab4": 0.8250372524631744
+        },
+        "score_delta_max": 0.0,
+        "passed_by_state": {
+          "00447f3": false,
+          "ec440bf": false,
+          "0674ab4": false
+        }
+      },
+      {
+        "scene": "box-detail",
+        "reproduces_identically_at": [
+          "00447f3",
+          "ec440bf",
+          "0674ab4"
+        ],
+        "diverges_at": [],
+        "hashNew_by_state": {
+          "00447f3": "92d22b58aade41c20a167af85440fc50379671cb03db7316eacbd79eb333974c",
+          "ec440bf": "92d22b58aade41c20a167af85440fc50379671cb03db7316eacbd79eb333974c",
+          "0674ab4": "92d22b58aade41c20a167af85440fc50379671cb03db7316eacbd79eb333974c"
+        },
+        "score_by_state": {
+          "00447f3": 0.8784374903269025,
+          "ec440bf": 0.8784374903269025,
+          "0674ab4": 0.8784374903269025
+        },
+        "score_delta_max": 0.0,
+        "passed_by_state": {
+          "00447f3": false,
+          "ec440bf": false,
+          "0674ab4": false
+        }
+      },
+      {
+        "scene": "box-summary",
+        "reproduces_identically_at": [
+          "00447f3",
+          "ec440bf",
+          "0674ab4"
+        ],
+        "diverges_at": [],
+        "hashNew_by_state": {
+          "00447f3": "45e63a36e647d28ef9be3b5814da00383cd316f1b4240db4863d5645ec36d18c",
+          "ec440bf": "45e63a36e647d28ef9be3b5814da00383cd316f1b4240db4863d5645ec36d18c",
+          "0674ab4": "45e63a36e647d28ef9be3b5814da00383cd316f1b4240db4863d5645ec36d18c"
+        },
+        "score_by_state": {
+          "00447f3": 0.8809750314141331,
+          "ec440bf": 0.8809750314141331,
+          "0674ab4": 0.8809750314141331
+        },
+        "score_delta_max": 0.0,
+        "passed_by_state": {
+          "00447f3": false,
+          "ec440bf": false,
+          "0674ab4": false
+        }
+      },
+      {
+        "scene": "calendar",
+        "reproduces_identically_at": [
+          "00447f3",
+          "ec440bf",
+          "0674ab4"
+        ],
+        "diverges_at": [],
+        "hashNew_by_state": {
+          "00447f3": "e7939ca718d021173a642b8d7bf0553a80a1c2c14f10f5160a34c1c9ed54efbb",
+          "ec440bf": "e7939ca718d021173a642b8d7bf0553a80a1c2c14f10f5160a34c1c9ed54efbb",
+          "0674ab4": "e7939ca718d021173a642b8d7bf0553a80a1c2c14f10f5160a34c1c9ed54efbb"
+        },
+        "score_by_state": {
+          "00447f3": 0.99432366536721,
+          "ec440bf": 0.99432366536721,
+          "0674ab4": 0.99432366536721
+        },
+        "score_delta_max": 0.0,
+        "passed_by_state": {
+          "00447f3": true,
+          "ec440bf": true,
+          "0674ab4": true
+        }
+      },
+      {
+        "scene": "card",
+        "reproduces_identically_at": [
+          "00447f3",
+          "ec440bf",
+          "0674ab4"
+        ],
+        "diverges_at": [],
+        "hashNew_by_state": {
+          "00447f3": "26fd5664a1c291015462ca5bf7dea9d0f28c213e314882857b7097917876f131",
+          "ec440bf": "26fd5664a1c291015462ca5bf7dea9d0f28c213e314882857b7097917876f131",
+          "0674ab4": "26fd5664a1c291015462ca5bf7dea9d0f28c213e314882857b7097917876f131"
+        },
+        "score_by_state": {
+          "00447f3": 0.9601980124080882,
+          "ec440bf": 0.9601980124080882,
+          "0674ab4": 0.9601980124080882
+        },
+        "score_delta_max": 0.0,
+        "passed_by_state": {
+          "00447f3": false,
+          "ec440bf": false,
+          "0674ab4": false
+        }
+      },
+      {
+        "scene": "depot",
+        "reproduces_identically_at": [
+          "00447f3",
+          "ec440bf",
+          "0674ab4"
+        ],
+        "diverges_at": [],
+        "hashNew_by_state": {
+          "00447f3": "5de23d50dc14c082667f381e4c5dee1b503ecf95923a22ff78f742090be7ab4e",
+          "ec440bf": "5de23d50dc14c082667f381e4c5dee1b503ecf95923a22ff78f742090be7ab4e",
+          "0674ab4": "5de23d50dc14c082667f381e4c5dee1b503ecf95923a22ff78f742090be7ab4e"
+        },
+        "score_by_state": {
+          "00447f3": 0.9172816240959263,
+          "ec440bf": 0.9172816240959263,
+          "0674ab4": 0.9172816240959263
+        },
+        "score_delta_max": 0.0,
+        "passed_by_state": {
+          "00447f3": false,
+          "ec440bf": false,
+          "0674ab4": false
+        }
+      },
+      {
+        "scene": "enemy",
+        "reproduces_identically_at": [
+          "00447f3",
+          "ec440bf",
+          "0674ab4"
+        ],
+        "diverges_at": [],
+        "hashNew_by_state": {
+          "00447f3": "bc7b5af135deba9d968c508a52894d08ab6d6956f97c6cf9b2b575474a78ace0",
+          "ec440bf": "bc7b5af135deba9d968c508a52894d08ab6d6956f97c6cf9b2b575474a78ace0",
+          "0674ab4": "bc7b5af135deba9d968c508a52894d08ab6d6956f97c6cf9b2b575474a78ace0"
+        },
+        "score_by_state": {
+          "00447f3": 0.9195071737682478,
+          "ec440bf": 0.9195071737682478,
+          "0674ab4": 0.9195071737682478
+        },
+        "score_delta_max": 0.0,
+        "passed_by_state": {
+          "00447f3": false,
+          "ec440bf": false,
+          "0674ab4": false
+        }
+      },
+      {
+        "scene": "gacha",
+        "reproduces_identically_at": [
+          "00447f3",
+          "ec440bf",
+          "0674ab4"
+        ],
+        "diverges_at": [],
+        "hashNew_by_state": {
+          "00447f3": "e43865641c03e4f66ce3cc554a3cdbf045529d495578b18638c6a0103e6ed6b7",
+          "ec440bf": "e43865641c03e4f66ce3cc554a3cdbf045529d495578b18638c6a0103e6ed6b7",
+          "0674ab4": "e43865641c03e4f66ce3cc554a3cdbf045529d495578b18638c6a0103e6ed6b7"
+        },
+        "score_by_state": {
+          "00447f3": 0.9025141429411271,
+          "ec440bf": 0.9025141429411271,
+          "0674ab4": 0.9025141429411271
+        },
+        "score_delta_max": 0.0,
+        "passed_by_state": {
+          "00447f3": false,
+          "ec440bf": false,
+          "0674ab4": false
+        }
+      },
+      {
+        "scene": "headhunt",
+        "reproduces_identically_at": [
+          "00447f3",
+          "ec440bf",
+          "0674ab4"
+        ],
+        "diverges_at": [],
+        "hashNew_by_state": {
+          "00447f3": "b109c04ed67764f2df96be7a0eddce16dc433a8299fc236a1960aa2f2645ff57",
+          "ec440bf": "b109c04ed67764f2df96be7a0eddce16dc433a8299fc236a1960aa2f2645ff57",
+          "0674ab4": "b109c04ed67764f2df96be7a0eddce16dc433a8299fc236a1960aa2f2645ff57"
+        },
+        "score_by_state": {
+          "00447f3": 0.7998304534119018,
+          "ec440bf": 0.7998304534119018,
+          "0674ab4": 0.7998304534119018
+        },
+        "score_delta_max": 0.0,
+        "passed_by_state": {
+          "00447f3": false,
+          "ec440bf": false,
+          "0674ab4": false
+        }
+      },
+      {
+        "scene": "help",
+        "reproduces_identically_at": [
+          "00447f3",
+          "ec440bf",
+          "0674ab4"
+        ],
+        "diverges_at": [],
+        "hashNew_by_state": {
+          "00447f3": "e984bc7e9ffaab115d8c5c1d006e03dc61ef133f33654ae3f652e032a38bc159",
+          "ec440bf": "e984bc7e9ffaab115d8c5c1d006e03dc61ef133f33654ae3f652e032a38bc159",
+          "0674ab4": "e984bc7e9ffaab115d8c5c1d006e03dc61ef133f33654ae3f652e032a38bc159"
+        },
+        "score_by_state": {
+          "00447f3": 0.839432182957432,
+          "ec440bf": 0.839432182957432,
+          "0674ab4": 0.839432182957432
+        },
+        "score_delta_max": 0.0,
+        "passed_by_state": {
+          "00447f3": false,
+          "ec440bf": false,
+          "0674ab4": false
+        }
+      },
+      {
+        "scene": "lottery",
+        "reproduces_identically_at": [
+          "00447f3",
+          "ec440bf"
+        ],
+        "diverges_at": [
+          "0674ab4"
+        ],
+        "hashNew_by_state": {
+          "00447f3": "37a15ba596def48831e92a825e723d3f4729aa1d1d5a43eee8c033dbbc2c4b0e",
+          "ec440bf": "37a15ba596def48831e92a825e723d3f4729aa1d1d5a43eee8c033dbbc2c4b0e",
+          "0674ab4": "3375f3edff2ffe0f2d97e91957a485afe9cf056d6b3e5a5fd491d51ac9822e50"
+        },
+        "score_by_state": {
+          "00447f3": 0.9835808689865397,
+          "ec440bf": 0.9835808689865397,
+          "0674ab4": 0.9839251621741464
+        },
+        "score_delta_max": 0.00034429318760664795,
+        "passed_by_state": {
+          "00447f3": false,
+          "ec440bf": false,
+          "0674ab4": false
+        }
+      },
+      {
+        "scene": "missing",
+        "reproduces_identically_at": [
+          "00447f3",
+          "ec440bf",
+          "0674ab4"
+        ],
+        "diverges_at": [],
+        "hashNew_by_state": {
+          "00447f3": "01b88d9597b9e29a3efc1aefe66e0020b8d0b1a5e86e18677bce910d69ce95b7",
+          "ec440bf": "01b88d9597b9e29a3efc1aefe66e0020b8d0b1a5e86e18677bce910d69ce95b7",
+          "0674ab4": "01b88d9597b9e29a3efc1aefe66e0020b8d0b1a5e86e18677bce910d69ce95b7"
+        },
+        "score_by_state": {
+          "00447f3": 0.8761380684114441,
+          "ec440bf": 0.8761380684114441,
+          "0674ab4": 0.8761380684114441
+        },
+        "score_delta_max": 0.0,
+        "passed_by_state": {
+          "00447f3": false,
+          "ec440bf": false,
+          "0674ab4": false
+        }
+      },
+      {
+        "scene": "operator",
+        "reproduces_identically_at": [
+          "00447f3",
+          "ec440bf",
+          "0674ab4"
+        ],
+        "diverges_at": [],
+        "hashNew_by_state": {
+          "00447f3": "b50d020fb104a37f8fa1ad6740140e6b7f1cd6de6499bed9a6295e8be34f31ff",
+          "ec440bf": "b50d020fb104a37f8fa1ad6740140e6b7f1cd6de6499bed9a6295e8be34f31ff",
+          "0674ab4": "b50d020fb104a37f8fa1ad6740140e6b7f1cd6de6499bed9a6295e8be34f31ff"
+        },
+        "score_by_state": {
+          "00447f3": 0.6906304752178649,
+          "ec440bf": 0.6906304752178649,
+          "0674ab4": 0.6906304752178649
+        },
+        "score_delta_max": 0.0,
+        "passed_by_state": {
+          "00447f3": false,
+          "ec440bf": false,
+          "0674ab4": false
+        }
+      },
+      {
+        "scene": "recruit",
+        "reproduces_identically_at": [
+          "00447f3",
+          "ec440bf",
+          "0674ab4"
+        ],
+        "diverges_at": [],
+        "hashNew_by_state": {
+          "00447f3": "9ef36c3b08947b6e81cd33dd2364566018c05a9e959b817a89efbce0df7c6cd9",
+          "ec440bf": "9ef36c3b08947b6e81cd33dd2364566018c05a9e959b817a89efbce0df7c6cd9",
+          "0674ab4": "9ef36c3b08947b6e81cd33dd2364566018c05a9e959b817a89efbce0df7c6cd9"
+        },
+        "score_by_state": {
+          "00447f3": 0.6135057512531993,
+          "ec440bf": 0.6135057512531993,
+          "0674ab4": 0.6135057512531993
+        },
+        "score_delta_max": 0.0,
+        "passed_by_state": {
+          "00447f3": false,
+          "ec440bf": false,
+          "0674ab4": false
+        }
+      },
+      {
+        "scene": "state",
+        "reproduces_identically_at": [
+          "00447f3",
+          "ec440bf",
+          "0674ab4"
+        ],
+        "diverges_at": [],
+        "hashNew_by_state": {
+          "00447f3": "79f31688bbe009f9929b792b8204dd5bbe421e9798b8ae0385fb4c5f693095e4",
+          "ec440bf": "79f31688bbe009f9929b792b8204dd5bbe421e9798b8ae0385fb4c5f693095e4",
+          "0674ab4": "79f31688bbe009f9929b792b8204dd5bbe421e9798b8ae0385fb4c5f693095e4"
+        },
+        "score_by_state": {
+          "00447f3": 0.9909337226595012,
+          "ec440bf": 0.9909337226595012,
+          "0674ab4": 0.9909337226595012
+        },
+        "score_delta_max": 0.0,
+        "passed_by_state": {
+          "00447f3": true,
+          "ec440bf": true,
+          "0674ab4": true
+        }
+      }
+    ]
+  }
 }
