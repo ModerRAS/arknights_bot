@@ -1,0 +1,974 @@
+{
+  "provenance": "retroactive-migration",
+  "original_path": "tmp/pixel-compare/report.json (untracked)",
+  "archive_object": {
+    "what": "The harness report REGENERATED at commit 00447f3 in a clean detached worktree.",
+    "why_not_the_preexisting_file": "A file already existed at original_path before this archive was made. It is NOT what is archived here. It was left untouched and un-migrated by decision. It differs from this archive in exactly one scene (lottery) and matches it bit-for-bit in the other 15. See legacy_tmp_report_section."
+  },
+  "warning": "RETROACTIVE ARCHIVE -- created AFTER the fact, not contemporaneous evidence. The harness output path tmp/ is untracked by git in every commit (a .gitignore rule excludes it), so nothing at that path could ever be independently reviewed in history. This file is a transcription of a reproduction run performed during this audit; the archival act itself proves nothing about any earlier run.",
+  "attribution": {
+    "producing_commit": "00447f336083815486db3610957e63c41b3c28fa",
+    "subject": "feat(gg): honest card rebuild similarity=0.96020",
+    "committed_at": "2026-09-02T16:36:39+08:00",
+    "basis": "Produced by checking out 00447f3 in a fresh detached worktree and running the harness. The report contains no commit sha field and no timestamp field of its own, so attribution rests entirely on this reproduction, not on any field inside the file."
+  },
+  "source_sha256": {
+    "regenerated_at_00447f3": "329e6cf7facf4a6a7835fa18a5d0bb7ae07ac9ea56fbfb3a7020ce8cea6ba190",
+    "regenerated_at_00447f3_second_run": "329e6cf7facf4a6a7835fa18a5d0bb7ae07ac9ea56fbfb3a7020ce8cea6ba190",
+    "determinism": "Two independent harness runs at 00447f3 produced byte-identical reports, so this score is reproducible on this machine.",
+    "pre_existing_tmp_report": "dc983be2a6fc68b5aa6e3b1cb4e01f3fbcd136106b696f9e6d632ff23dd1370d"
+  },
+  "three_state_comparison": {
+    "purpose": "Establishes which commit the numbers belong to, by reproduction.",
+    "states": [
+      {
+        "commit": "00447f3",
+        "parent": "871515b",
+        "card_hashNew": "26fd5664a1c291015462ca5bf7dea9d0f28c213e314882857b7097917876f131",
+        "card_score": 0.9601980124080882,
+        "lottery_hashNew": "37a15ba596def48831e92a825e723d3f4729aa1d1d5a43eee8c033dbbc2c4b0e",
+        "lottery_score": 0.9835808689865397,
+        "report_sha256": "329e6cf7facf4a6a7835fa18a5d0bb7ae07ac9ea56fbfb3a7020ce8cea6ba190"
+      },
+      {
+        "commit": "ec440bf",
+        "parent": "00447f3",
+        "card_hashNew": "26fd5664a1c291015462ca5bf7dea9d0f28c213e314882857b7097917876f131",
+        "card_score": 0.9601980124080882,
+        "lottery_hashNew": "37a15ba596def48831e92a825e723d3f4729aa1d1d5a43eee8c033dbbc2c4b0e",
+        "lottery_score": 0.9835808689865397,
+        "report_sha256": "329e6cf7facf4a6a7835fa18a5d0bb7ae07ac9ea56fbfb3a7020ce8cea6ba190",
+        "note": "Byte-identical to the 00447f3 report. ec440bf changed only src/ggrender/pixel_test.go (gate logic), no renderer or asset, so the rendered output is unchanged."
+      },
+      {
+        "commit": "0674ab4",
+        "parent": "ec440bf",
+        "card_hashNew": "26fd5664a1c291015462ca5bf7dea9d0f28c213e314882857b7097917876f131",
+        "card_score": 0.9601980124080882,
+        "lottery_hashNew": "3375f3edff2ffe0f2d97e91957a485afe9cf056d6b3e5a5fd491d51ac9822e50",
+        "lottery_score": 0.9839251621741464,
+        "report_sha256": "dc983be2a6fc68b5aa6e3b1cb4e01f3fbcd136106b696f9e6d632ff23dd1370d",
+        "note": "Byte-identical to the pre-existing tmp/ report."
+      }
+    ],
+    "boundary": "The lottery divergence appears ONLY at 0674ab4. 00447f3 and ec440bf are indistinguishable in the report. The boundary therefore sits at 0674ab4, whose only substantive change against its parent is func RenderLottery.",
+    "card_invariance": "card is identical in all three states (hashNew=26fd5664a1c2..., score=0.9601980124080882). Measured, not assumed. Consequence: the card row alone CANNOT distinguish these trees and must not be used to date a report."
+  },
+  "legacy_tmp_report_section": {
+    "file": "tmp/pixel-compare/report.json (untracked, pre-existing, NOT migrated here)",
+    "relation_to_this_archive": "Matches this archive in 15 of 16 scenes bit-for-bit; differs in 1 (lottery).",
+    "scenes_identical": [
+      "base",
+      "box",
+      "box-detail",
+      "box-summary",
+      "calendar",
+      "card",
+      "depot",
+      "enemy",
+      "gacha",
+      "headhunt",
+      "help",
+      "missing",
+      "operator",
+      "recruit",
+      "state"
+    ],
+    "scenes_differing": [
+      "lottery"
+    ],
+    "lottery_delta": {
+      "pre_existing_score": 0.9839251621741464,
+      "at_00447f3_score": 0.9835808689865397,
+      "absolute_difference": 0.00034429318760664795,
+      "both_passed": [
+        false,
+        false
+      ]
+    },
+    "explanation": "The pre-existing report is byte-for-byte equal to what 0674ab4 produces, and differs from what 00447f3 produces, so it was produced by a tree state at or after 0674ab4 rather than at 00447f3. 0674ab4's only substantive change against its parent is func RenderLottery, which switches the lottery renderer to the newly added assets/font/msyh-regular.ttf (setFontP in place of setFont) and moves the title. Hence the lottery row differs while the card row matches.",
+    "unverified_hypothesis_font": "UNVERIFIED, stated as hypothesis only: font resolution is a contributing factor. In this reproduction the font stack fell back to the system face under C:/Windows/Fonts/ rather than the not-yet-tracked msyh asset. The divergence itself is fully explained by the code difference above, and it reproduces deterministically in a clean worktree at each commit, so it is NOT environmental flakiness. Whether font fallback additionally contributed to the pre-existing report was NOT tested and must not be written up as a conclusion."
+  },
+  "cross_machine_reproducibility_gap": {
+    "status": "KNOWN GAP, not a scene defect, not a gate input",
+    "statement": "Font-dependent scenes are not reproducible across machines. In this reproduction the font stack resolved to the system face under C:/Windows/Fonts/, not to any bundled msyh asset, so a machine with a different system font set would produce different pixels for every font-dependent scene. The numbers in this file are valid for this machine only.",
+    "evidence": "src/ggrender/helpers.go lists C:/Windows/Fonts/msyh.ttc and C:/Windows/Fonts/msyh.ttf as font sources."
+  },
+  "mask_overlap_metric": {
+    "computed_by_harness": false,
+    "reason": "harness does not compute it; src/ggrender/pixel_test.go contains no mask/overlap metric (only similarityNormalized, TestGGPixelParity, TestGGPixelParity_Negative; grep -niE 'overlap|mask|iou|structur' exits 1 with empty output)",
+    "consequence": "MANDATORY FIELD, CURRENTLY UNKNOWABLE. content_mask_overlap is null for every scene because the harness does not compute it. It was NOT filled in, estimated, or omitted. Its absence is load-bearing: a known counter-example in this UI family shows two structurally unrelated pages scoring ~0.959 while their content-mask overlap is only ~28%, because ~70% of the canvas is similar dark background. The rule of thumb is: content-mask overlap < 50% means structurally unrelated. THEREFORE the similarity scores in this file, taken alone, do NOT establish that any render corresponds structurally to the frozen Playwright baseline. card=0.9601980124080882 is exactly such a score. Its DETERMINISM is verified by the reproduction recorded here; its VALIDITY is NOT tested. Nothing in this archive may be cited as evidence that card matches the baseline. Adding this metric would require modifying scoring code and is out of scope."
+  },
+  "regeneration": {
+    "command_at_00447f3": [
+      "git worktree add --detach C:/WorkSpace/Golang/_audit-repro-00447f3 00447f3",
+      "cd C:/WorkSpace/Golang/_audit-repro-00447f3/src",
+      "go test ./ggrender/ -run TestGGPixelParity -v"
+    ],
+    "command_at_ec440bf": [
+      "git worktree add --detach C:/WorkSpace/Golang/_audit-repro-ec440bf ec440bf",
+      "cd C:/WorkSpace/Golang/_audit-repro-ec440bf/src",
+      "go test ./ggrender/ -run TestGGPixelParity -v"
+    ],
+    "command_at_0674ab4": [
+      "git worktree add --detach C:/WorkSpace/Golang/_audit-repro-0674ab4 0674ab4",
+      "cd C:/WorkSpace/Golang/_audit-repro-0674ab4/src",
+      "go test ./ggrender/ -run TestGGPixelParity -v"
+    ],
+    "cleanup_commands": [
+      "git worktree remove C:/WorkSpace/Golang/_audit-repro-00447f3",
+      "git worktree remove C:/WorkSpace/Golang/_audit-repro-ec440bf",
+      "git worktree remove C:/WorkSpace/Golang/_audit-repro-0674ab4"
+    ],
+    "go_version": "go1.26.6 windows/amd64",
+    "test_exit_code": 1,
+    "exit_code_meaning": "FAIL is the expected honest-red result: 14 of 16 scenes are below the 0.99 gate. It is not a harness error.",
+    "scenes_total": 16,
+    "scenes_passed": 2,
+    "scenes_failed": 14,
+    "passed_scenes": [
+      "calendar",
+      "state"
+    ]
+  },
+  "gate": {
+    "source_file": "src/ggrender/pixel_test.go",
+    "function": "gatePassed(sim float64, bbox [4]int) (bool, string)",
+    "refer_by": "function name -- line numbers drift on every edit and are not a stable reference",
+    "responsibilities": [
+      "zero-area bbox guard: rejects a bbox whose width or height is <= 0 BEFORE the score is considered, so a comparison that examined no differing pixel cannot pass vacuously (introduced by ec440bf)",
+      "threshold: sim < 0.99 fails"
+    ],
+    "does_not_compute": "content-mask overlap / structural correspondence"
+  },
+  "scenes_summary": {
+    "total": 16,
+    "passed": 2,
+    "failed": 14,
+    "content_mask_overlap_known": 0,
+    "content_mask_overlap_null": 16
+  },
+  "scenes": [
+    {
+      "scene": "base",
+      "width": 1665,
+      "height": 918,
+      "format": "jpeg",
+      "scale": 1.5,
+      "hashOld": "3a82d70486f9da3a2c48261cc9f2bdd6c498ef31b3ba5260b519400c81495011",
+      "hashNew": "1aafad90d714904a2a2315af31038ba734e5cd7fe239dec1eaec4f9fc31d43b1",
+      "hash": "1aafad90d714904a2a2315af31038ba734e5cd7fe239dec1eaec4f9fc31d43b1",
+      "score": 0.9589964211295751,
+      "similarity": 0.9589964211295751,
+      "bbox": [
+        0,
+        0,
+        1664,
+        917
+      ],
+      "passed": false,
+      "oldPath": "../../tmp/pixel-compare/base/old.png",
+      "newPath": "../../tmp/pixel-compare/base/new.png",
+      "diffPath": "../../tmp/pixel-compare/base/diff.png",
+      "content_mask_overlap": null,
+      "content_mask_overlap_reason": "harness does not compute it; src/ggrender/pixel_test.go contains no mask/overlap metric (only similarityNormalized, TestGGPixelParity, TestGGPixelParity_Negative; grep -niE 'overlap|mask|iou|structur' exits 1 with empty output)"
+    },
+    {
+      "scene": "box",
+      "width": 1050,
+      "height": 536,
+      "format": "jpeg",
+      "scale": 1.5,
+      "hashOld": "cf10f5d37fe6c3738eb19b77e3761861a5cda8d4448cc50b333d25ace4c1c8d9",
+      "hashNew": "55d299b08d3a37fef33cd694e6f4aaf42860969dc4a081c36f6224558fd387d7",
+      "hash": "55d299b08d3a37fef33cd694e6f4aaf42860969dc4a081c36f6224558fd387d7",
+      "score": 0.8250372524631744,
+      "similarity": 0.8250372524631744,
+      "bbox": [
+        0,
+        0,
+        1049,
+        535
+      ],
+      "passed": false,
+      "oldPath": "../../tmp/pixel-compare/box/old.png",
+      "newPath": "../../tmp/pixel-compare/box/new.png",
+      "diffPath": "../../tmp/pixel-compare/box/diff.png",
+      "content_mask_overlap": null,
+      "content_mask_overlap_reason": "harness does not compute it; src/ggrender/pixel_test.go contains no mask/overlap metric (only similarityNormalized, TestGGPixelParity, TestGGPixelParity_Negative; grep -niE 'overlap|mask|iou|structur' exits 1 with empty output)"
+    },
+    {
+      "scene": "box-detail",
+      "width": 722,
+      "height": 279,
+      "format": "jpeg",
+      "scale": 1.5,
+      "hashOld": "047ad057ac193e97aed8ff3442ad29f8505b8cbdbf575837456e1fbd82e6e457",
+      "hashNew": "92d22b58aade41c20a167af85440fc50379671cb03db7316eacbd79eb333974c",
+      "hash": "92d22b58aade41c20a167af85440fc50379671cb03db7316eacbd79eb333974c",
+      "score": 0.8784374903269025,
+      "similarity": 0.8784374903269025,
+      "bbox": [
+        0,
+        0,
+        721,
+        278
+      ],
+      "passed": false,
+      "oldPath": "../../tmp/pixel-compare/box-detail/old.png",
+      "newPath": "../../tmp/pixel-compare/box-detail/new.png",
+      "diffPath": "../../tmp/pixel-compare/box-detail/diff.png",
+      "content_mask_overlap": null,
+      "content_mask_overlap_reason": "harness does not compute it; src/ggrender/pixel_test.go contains no mask/overlap metric (only similarityNormalized, TestGGPixelParity, TestGGPixelParity_Negative; grep -niE 'overlap|mask|iou|structur' exits 1 with empty output)"
+    },
+    {
+      "scene": "box-summary",
+      "width": 1350,
+      "height": 723,
+      "format": "jpeg",
+      "scale": 1.5,
+      "hashOld": "6a4633e048410f14271b0b6728d14d4307c2b32af7411c5446a72cea8624f071",
+      "hashNew": "45e63a36e647d28ef9be3b5814da00383cd316f1b4240db4863d5645ec36d18c",
+      "hash": "45e63a36e647d28ef9be3b5814da00383cd316f1b4240db4863d5645ec36d18c",
+      "score": 0.8809750314141331,
+      "similarity": 0.8809750314141331,
+      "bbox": [
+        0,
+        0,
+        1349,
+        722
+      ],
+      "passed": false,
+      "oldPath": "../../tmp/pixel-compare/box-summary/old.png",
+      "newPath": "../../tmp/pixel-compare/box-summary/new.png",
+      "diffPath": "../../tmp/pixel-compare/box-summary/diff.png",
+      "content_mask_overlap": null,
+      "content_mask_overlap_reason": "harness does not compute it; src/ggrender/pixel_test.go contains no mask/overlap metric (only similarityNormalized, TestGGPixelParity, TestGGPixelParity_Negative; grep -niE 'overlap|mask|iou|structur' exits 1 with empty output)"
+    },
+    {
+      "scene": "calendar",
+      "width": 2880,
+      "height": 1620,
+      "format": "jpeg",
+      "scale": 1.5,
+      "hashOld": "80f31c1cfb132ff3781a3d940120cfdd31acf26aa1baf0e96c5fa75e68c4b00b",
+      "hashNew": "e7939ca718d021173a642b8d7bf0553a80a1c2c14f10f5160a34c1c9ed54efbb",
+      "hash": "e7939ca718d021173a642b8d7bf0553a80a1c2c14f10f5160a34c1c9ed54efbb",
+      "score": 0.99432366536721,
+      "similarity": 0.99432366536721,
+      "bbox": [
+        0,
+        0,
+        2863,
+        1619
+      ],
+      "passed": true,
+      "oldPath": "../../tmp/pixel-compare/calendar/old.png",
+      "newPath": "../../tmp/pixel-compare/calendar/new.png",
+      "diffPath": "../../tmp/pixel-compare/calendar/diff.png",
+      "content_mask_overlap": null,
+      "content_mask_overlap_reason": "harness does not compute it; src/ggrender/pixel_test.go contains no mask/overlap metric (only similarityNormalized, TestGGPixelParity, TestGGPixelParity_Negative; grep -niE 'overlap|mask|iou|structur' exits 1 with empty output)"
+    },
+    {
+      "scene": "card",
+      "width": 1280,
+      "height": 720,
+      "format": "jpeg",
+      "scale": 1,
+      "hashOld": "75fea0acb6d2e20f52107a9310bc66e2e6228fa01811dc66445917a32d8de2a2",
+      "hashNew": "26fd5664a1c291015462ca5bf7dea9d0f28c213e314882857b7097917876f131",
+      "hash": "26fd5664a1c291015462ca5bf7dea9d0f28c213e314882857b7097917876f131",
+      "score": 0.9601980124080882,
+      "similarity": 0.9601980124080882,
+      "bbox": [
+        0,
+        0,
+        1279,
+        711
+      ],
+      "passed": false,
+      "oldPath": "../../tmp/pixel-compare/card/old.png",
+      "newPath": "../../tmp/pixel-compare/card/new.png",
+      "diffPath": "../../tmp/pixel-compare/card/diff.png",
+      "content_mask_overlap": null,
+      "content_mask_overlap_reason": "harness does not compute it; src/ggrender/pixel_test.go contains no mask/overlap metric (only similarityNormalized, TestGGPixelParity, TestGGPixelParity_Negative; grep -niE 'overlap|mask|iou|structur' exits 1 with empty output)"
+    },
+    {
+      "scene": "depot",
+      "width": 1275,
+      "height": 234,
+      "format": "jpeg",
+      "scale": 1.5,
+      "hashOld": "d09c01dbd30062e6f876f0bc3af79d6458f0f4f698699d46250280a225cd98d7",
+      "hashNew": "5de23d50dc14c082667f381e4c5dee1b503ecf95923a22ff78f742090be7ab4e",
+      "hash": "5de23d50dc14c082667f381e4c5dee1b503ecf95923a22ff78f742090be7ab4e",
+      "score": 0.9172816240959263,
+      "similarity": 0.9172816240959263,
+      "bbox": [
+        0,
+        0,
+        1247,
+        233
+      ],
+      "passed": false,
+      "oldPath": "../../tmp/pixel-compare/depot/old.png",
+      "newPath": "../../tmp/pixel-compare/depot/new.png",
+      "diffPath": "../../tmp/pixel-compare/depot/diff.png",
+      "content_mask_overlap": null,
+      "content_mask_overlap_reason": "harness does not compute it; src/ggrender/pixel_test.go contains no mask/overlap metric (only similarityNormalized, TestGGPixelParity, TestGGPixelParity_Negative; grep -niE 'overlap|mask|iou|structur' exits 1 with empty output)"
+    },
+    {
+      "scene": "enemy",
+      "width": 984,
+      "height": 477,
+      "format": "jpeg",
+      "scale": 1.5,
+      "hashOld": "7aae46ad6d8292139bf20d0032e2638bee920637e7de479d807fa5890fa6909b",
+      "hashNew": "bc7b5af135deba9d968c508a52894d08ab6d6956f97c6cf9b2b575474a78ace0",
+      "hash": "bc7b5af135deba9d968c508a52894d08ab6d6956f97c6cf9b2b575474a78ace0",
+      "score": 0.9195071737682478,
+      "similarity": 0.9195071737682478,
+      "bbox": [
+        0,
+        0,
+        983,
+        476
+      ],
+      "passed": false,
+      "oldPath": "../../tmp/pixel-compare/enemy/old.png",
+      "newPath": "../../tmp/pixel-compare/enemy/new.png",
+      "diffPath": "../../tmp/pixel-compare/enemy/diff.png",
+      "content_mask_overlap": null,
+      "content_mask_overlap_reason": "harness does not compute it; src/ggrender/pixel_test.go contains no mask/overlap metric (only similarityNormalized, TestGGPixelParity, TestGGPixelParity_Negative; grep -niE 'overlap|mask|iou|structur' exits 1 with empty output)"
+    },
+    {
+      "scene": "gacha",
+      "width": 1500,
+      "height": 1323,
+      "format": "jpeg",
+      "scale": 1.5,
+      "hashOld": "b037cf55e967c61db80507ebcba9b55416f4b4aab5876d546a803ce117a131dc",
+      "hashNew": "e43865641c03e4f66ce3cc554a3cdbf045529d495578b18638c6a0103e6ed6b7",
+      "hash": "e43865641c03e4f66ce3cc554a3cdbf045529d495578b18638c6a0103e6ed6b7",
+      "score": 0.9025141429411271,
+      "similarity": 0.9025141429411271,
+      "bbox": [
+        0,
+        0,
+        1499,
+        1322
+      ],
+      "passed": false,
+      "oldPath": "../../tmp/pixel-compare/gacha/old.png",
+      "newPath": "../../tmp/pixel-compare/gacha/new.png",
+      "diffPath": "../../tmp/pixel-compare/gacha/diff.png",
+      "content_mask_overlap": null,
+      "content_mask_overlap_reason": "harness does not compute it; src/ggrender/pixel_test.go contains no mask/overlap metric (only similarityNormalized, TestGGPixelParity, TestGGPixelParity_Negative; grep -niE 'overlap|mask|iou|structur' exits 1 with empty output)"
+    },
+    {
+      "scene": "headhunt",
+      "width": 1049,
+      "height": 576,
+      "format": "jpeg",
+      "scale": 1,
+      "hashOld": "879933afa3b94a80c08d37e0d8e053729639df59f01e47658944e48699434cf8",
+      "hashNew": "b109c04ed67764f2df96be7a0eddce16dc433a8299fc236a1960aa2f2645ff57",
+      "hash": "b109c04ed67764f2df96be7a0eddce16dc433a8299fc236a1960aa2f2645ff57",
+      "score": 0.7998304534119018,
+      "similarity": 0.7998304534119018,
+      "bbox": [
+        0,
+        0,
+        1048,
+        575
+      ],
+      "passed": false,
+      "oldPath": "../../tmp/pixel-compare/headhunt/old.png",
+      "newPath": "../../tmp/pixel-compare/headhunt/new.png",
+      "diffPath": "../../tmp/pixel-compare/headhunt/diff.png",
+      "content_mask_overlap": null,
+      "content_mask_overlap_reason": "harness does not compute it; src/ggrender/pixel_test.go contains no mask/overlap metric (only similarityNormalized, TestGGPixelParity, TestGGPixelParity_Negative; grep -niE 'overlap|mask|iou|structur' exits 1 with empty output)"
+    },
+    {
+      "scene": "help",
+      "width": 990,
+      "height": 2049,
+      "format": "jpeg",
+      "scale": 1.5,
+      "hashOld": "43bcdee8554827959fb26b79196d57657f9ee4c85b04fa0354227bef49d9615b",
+      "hashNew": "e984bc7e9ffaab115d8c5c1d006e03dc61ef133f33654ae3f652e032a38bc159",
+      "hash": "e984bc7e9ffaab115d8c5c1d006e03dc61ef133f33654ae3f652e032a38bc159",
+      "score": 0.839432182957432,
+      "similarity": 0.839432182957432,
+      "bbox": [
+        0,
+        0,
+        989,
+        2048
+      ],
+      "passed": false,
+      "oldPath": "../../tmp/pixel-compare/help/old.png",
+      "newPath": "../../tmp/pixel-compare/help/new.png",
+      "diffPath": "../../tmp/pixel-compare/help/diff.png",
+      "content_mask_overlap": null,
+      "content_mask_overlap_reason": "harness does not compute it; src/ggrender/pixel_test.go contains no mask/overlap metric (only similarityNormalized, TestGGPixelParity, TestGGPixelParity_Negative; grep -niE 'overlap|mask|iou|structur' exits 1 with empty output)"
+    },
+    {
+      "scene": "lottery",
+      "width": 1473,
+      "height": 1667,
+      "format": "jpeg",
+      "scale": 1.5,
+      "hashOld": "9f5588be88606af58fc86807bf734a45a51ecd205bdcd8bd72b0d295fba7f9c7",
+      "hashNew": "37a15ba596def48831e92a825e723d3f4729aa1d1d5a43eee8c033dbbc2c4b0e",
+      "hash": "37a15ba596def48831e92a825e723d3f4729aa1d1d5a43eee8c033dbbc2c4b0e",
+      "score": 0.9835808689865397,
+      "similarity": 0.9835808689865397,
+      "bbox": [
+        0,
+        0,
+        1472,
+        1666
+      ],
+      "passed": false,
+      "oldPath": "../../tmp/pixel-compare/lottery/old.png",
+      "newPath": "../../tmp/pixel-compare/lottery/new.png",
+      "diffPath": "../../tmp/pixel-compare/lottery/diff.png",
+      "content_mask_overlap": null,
+      "content_mask_overlap_reason": "harness does not compute it; src/ggrender/pixel_test.go contains no mask/overlap metric (only similarityNormalized, TestGGPixelParity, TestGGPixelParity_Negative; grep -niE 'overlap|mask|iou|structur' exits 1 with empty output)"
+    },
+    {
+      "scene": "missing",
+      "width": 1050,
+      "height": 536,
+      "format": "jpeg",
+      "scale": 1.5,
+      "hashOld": "cc58fea684f3c1a9fc879da163cf50e9438753b3ebcb7ecf3a5ef3b2f8a8ca47",
+      "hashNew": "01b88d9597b9e29a3efc1aefe66e0020b8d0b1a5e86e18677bce910d69ce95b7",
+      "hash": "01b88d9597b9e29a3efc1aefe66e0020b8d0b1a5e86e18677bce910d69ce95b7",
+      "score": 0.8761380684114441,
+      "similarity": 0.8761380684114441,
+      "bbox": [
+        0,
+        0,
+        1049,
+        535
+      ],
+      "passed": false,
+      "oldPath": "../../tmp/pixel-compare/missing/old.png",
+      "newPath": "../../tmp/pixel-compare/missing/new.png",
+      "diffPath": "../../tmp/pixel-compare/missing/diff.png",
+      "content_mask_overlap": null,
+      "content_mask_overlap_reason": "harness does not compute it; src/ggrender/pixel_test.go contains no mask/overlap metric (only similarityNormalized, TestGGPixelParity, TestGGPixelParity_Negative; grep -niE 'overlap|mask|iou|structur' exits 1 with empty output)"
+    },
+    {
+      "scene": "operator",
+      "width": 1800,
+      "height": 1200,
+      "format": "jpeg",
+      "scale": 1.5,
+      "hashOld": "2c2834c7e048ca29ba4d2aa7e34487a6005408cb4c345c229cf3be690ce2b1e5",
+      "hashNew": "b50d020fb104a37f8fa1ad6740140e6b7f1cd6de6499bed9a6295e8be34f31ff",
+      "hash": "b50d020fb104a37f8fa1ad6740140e6b7f1cd6de6499bed9a6295e8be34f31ff",
+      "score": 0.6906304752178649,
+      "similarity": 0.6906304752178649,
+      "bbox": [
+        0,
+        0,
+        1799,
+        1199
+      ],
+      "passed": false,
+      "oldPath": "../../tmp/pixel-compare/operator/old.png",
+      "newPath": "../../tmp/pixel-compare/operator/new.png",
+      "diffPath": "../../tmp/pixel-compare/operator/diff.png",
+      "content_mask_overlap": null,
+      "content_mask_overlap_reason": "harness does not compute it; src/ggrender/pixel_test.go contains no mask/overlap metric (only similarityNormalized, TestGGPixelParity, TestGGPixelParity_Negative; grep -niE 'overlap|mask|iou|structur' exits 1 with empty output)"
+    },
+    {
+      "scene": "recruit",
+      "width": 1350,
+      "height": 534,
+      "format": "jpeg",
+      "scale": 1.5,
+      "hashOld": "4a01136f4b12e9a17458998ec67d4285c73b1990fbaff7e11fef735c06fb5ffc",
+      "hashNew": "9ef36c3b08947b6e81cd33dd2364566018c05a9e959b817a89efbce0df7c6cd9",
+      "hash": "9ef36c3b08947b6e81cd33dd2364566018c05a9e959b817a89efbce0df7c6cd9",
+      "score": 0.6135057512531993,
+      "similarity": 0.6135057512531993,
+      "bbox": [
+        0,
+        0,
+        1349,
+        533
+      ],
+      "passed": false,
+      "oldPath": "../../tmp/pixel-compare/recruit/old.png",
+      "newPath": "../../tmp/pixel-compare/recruit/new.png",
+      "diffPath": "../../tmp/pixel-compare/recruit/diff.png",
+      "content_mask_overlap": null,
+      "content_mask_overlap_reason": "harness does not compute it; src/ggrender/pixel_test.go contains no mask/overlap metric (only similarityNormalized, TestGGPixelParity, TestGGPixelParity_Negative; grep -niE 'overlap|mask|iou|structur' exits 1 with empty output)"
+    },
+    {
+      "scene": "state",
+      "width": 1092,
+      "height": 510,
+      "format": "jpeg",
+      "scale": 1,
+      "hashOld": "2c3d37795bacf18c04d84b3ed72c2ef6532a4f2b9d25d629cb9555da0a721872",
+      "hashNew": "79f31688bbe009f9929b792b8204dd5bbe421e9798b8ae0385fb4c5f693095e4",
+      "hash": "79f31688bbe009f9929b792b8204dd5bbe421e9798b8ae0385fb4c5f693095e4",
+      "score": 0.9909337226595012,
+      "similarity": 0.9909337226595012,
+      "bbox": [
+        32,
+        32,
+        1079,
+        507
+      ],
+      "passed": true,
+      "oldPath": "../../tmp/pixel-compare/state/old.png",
+      "newPath": "../../tmp/pixel-compare/state/new.png",
+      "diffPath": "../../tmp/pixel-compare/state/diff.png",
+      "content_mask_overlap": null,
+      "content_mask_overlap_reason": "harness does not compute it; src/ggrender/pixel_test.go contains no mask/overlap metric (only similarityNormalized, TestGGPixelParity, TestGGPixelParity_Negative; grep -niE 'overlap|mask|iou|structur' exits 1 with empty output)"
+    }
+  ],
+  "per_scene_reproduction_matrix": {
+    "purpose": "Per-scene reproduction matrix covering ALL 16 scenes. The earlier three_state_comparison sampled only card and lottery; no scene may be implicitly assumed stable.",
+    "states_rerun": [
+      "00447f3",
+      "ec440bf",
+      "0674ab4"
+    ],
+    "report_sha256_by_state": {
+      "00447f3": "329e6cf7facf4a6a7835fa18a5d0bb7ae07ac9ea56fbfb3a7020ce8cea6ba190",
+      "ec440bf": "329e6cf7facf4a6a7835fa18a5d0bb7ae07ac9ea56fbfb3a7020ce8cea6ba190",
+      "0674ab4": "dc983be2a6fc68b5aa6e3b1cb4e01f3fbcd136106b696f9e6d632ff23dd1370d"
+    },
+    "columns": [
+      "scene",
+      "reproduces_identically_at",
+      "diverges_at"
+    ],
+    "comparison_baseline": "hashNew at 00447f3",
+    "method": "Each state was checked out in its own clean detached worktree and the harness was run there; per-scene hashNew was read from the report that run produced. A scene is 'diverges_at' a state when that state's hashNew differs from the 00447f3 value.",
+    "detector_self_check": "The same detector DID fire on lottery, so it is capable of firing. The other 15 rows are therefore positive results, not a null result. Independently, 00447f3 and ec440bf produced byte-identical whole reports (equal sha256), confirming the whole-file hash comparison is content-sensitive.",
+    "result_kind": "NEGATIVE RESULT. No scene other than lottery was found to shift with the code state. A negative result is a finding, not a failed investigation.",
+    "scenes_total": 16,
+    "scenes_reproducible_in_all_states": 15,
+    "scenes_diverging": 1,
+    "all_16_scenes_rendered_in_every_state": true,
+    "null_or_skipped_scenes": [],
+    "skipped_scenes_note": "No scene was skipped, no value left blank, no value estimated. All 16 scenes rendered in all 3 states, including the two that pass the gate (calendar, state), recorded on the same footing as the failing ones.",
+    "consistent_with_existing_conclusions": {
+      "boundary": "Unchanged: the lottery divergence appears only at 0674ab4; 00447f3 and ec440bf are indistinguishable in the report.",
+      "card_invariance": "Unchanged: card is identical in all three states, so the card row CANNOT distinguish these trees and must not be used to date a report."
+    },
+    "unexpected_findings": [],
+    "unexpected_findings_note": "No scene outside lottery was found to shift. Had one been found it would be listed here separately.",
+    "rows": [
+      {
+        "scene": "base",
+        "reproduces_identically_at": [
+          "00447f3",
+          "ec440bf",
+          "0674ab4"
+        ],
+        "diverges_at": [],
+        "hashNew_by_state": {
+          "00447f3": "1aafad90d714904a2a2315af31038ba734e5cd7fe239dec1eaec4f9fc31d43b1",
+          "ec440bf": "1aafad90d714904a2a2315af31038ba734e5cd7fe239dec1eaec4f9fc31d43b1",
+          "0674ab4": "1aafad90d714904a2a2315af31038ba734e5cd7fe239dec1eaec4f9fc31d43b1"
+        },
+        "score_by_state": {
+          "00447f3": 0.9589964211295751,
+          "ec440bf": 0.9589964211295751,
+          "0674ab4": 0.9589964211295751
+        },
+        "score_delta_max": 0.0,
+        "passed_by_state": {
+          "00447f3": false,
+          "ec440bf": false,
+          "0674ab4": false
+        }
+      },
+      {
+        "scene": "box",
+        "reproduces_identically_at": [
+          "00447f3",
+          "ec440bf",
+          "0674ab4"
+        ],
+        "diverges_at": [],
+        "hashNew_by_state": {
+          "00447f3": "55d299b08d3a37fef33cd694e6f4aaf42860969dc4a081c36f6224558fd387d7",
+          "ec440bf": "55d299b08d3a37fef33cd694e6f4aaf42860969dc4a081c36f6224558fd387d7",
+          "0674ab4": "55d299b08d3a37fef33cd694e6f4aaf42860969dc4a081c36f6224558fd387d7"
+        },
+        "score_by_state": {
+          "00447f3": 0.8250372524631744,
+          "ec440bf": 0.8250372524631744,
+          "0674ab4": 0.8250372524631744
+        },
+        "score_delta_max": 0.0,
+        "passed_by_state": {
+          "00447f3": false,
+          "ec440bf": false,
+          "0674ab4": false
+        }
+      },
+      {
+        "scene": "box-detail",
+        "reproduces_identically_at": [
+          "00447f3",
+          "ec440bf",
+          "0674ab4"
+        ],
+        "diverges_at": [],
+        "hashNew_by_state": {
+          "00447f3": "92d22b58aade41c20a167af85440fc50379671cb03db7316eacbd79eb333974c",
+          "ec440bf": "92d22b58aade41c20a167af85440fc50379671cb03db7316eacbd79eb333974c",
+          "0674ab4": "92d22b58aade41c20a167af85440fc50379671cb03db7316eacbd79eb333974c"
+        },
+        "score_by_state": {
+          "00447f3": 0.8784374903269025,
+          "ec440bf": 0.8784374903269025,
+          "0674ab4": 0.8784374903269025
+        },
+        "score_delta_max": 0.0,
+        "passed_by_state": {
+          "00447f3": false,
+          "ec440bf": false,
+          "0674ab4": false
+        }
+      },
+      {
+        "scene": "box-summary",
+        "reproduces_identically_at": [
+          "00447f3",
+          "ec440bf",
+          "0674ab4"
+        ],
+        "diverges_at": [],
+        "hashNew_by_state": {
+          "00447f3": "45e63a36e647d28ef9be3b5814da00383cd316f1b4240db4863d5645ec36d18c",
+          "ec440bf": "45e63a36e647d28ef9be3b5814da00383cd316f1b4240db4863d5645ec36d18c",
+          "0674ab4": "45e63a36e647d28ef9be3b5814da00383cd316f1b4240db4863d5645ec36d18c"
+        },
+        "score_by_state": {
+          "00447f3": 0.8809750314141331,
+          "ec440bf": 0.8809750314141331,
+          "0674ab4": 0.8809750314141331
+        },
+        "score_delta_max": 0.0,
+        "passed_by_state": {
+          "00447f3": false,
+          "ec440bf": false,
+          "0674ab4": false
+        }
+      },
+      {
+        "scene": "calendar",
+        "reproduces_identically_at": [
+          "00447f3",
+          "ec440bf",
+          "0674ab4"
+        ],
+        "diverges_at": [],
+        "hashNew_by_state": {
+          "00447f3": "e7939ca718d021173a642b8d7bf0553a80a1c2c14f10f5160a34c1c9ed54efbb",
+          "ec440bf": "e7939ca718d021173a642b8d7bf0553a80a1c2c14f10f5160a34c1c9ed54efbb",
+          "0674ab4": "e7939ca718d021173a642b8d7bf0553a80a1c2c14f10f5160a34c1c9ed54efbb"
+        },
+        "score_by_state": {
+          "00447f3": 0.99432366536721,
+          "ec440bf": 0.99432366536721,
+          "0674ab4": 0.99432366536721
+        },
+        "score_delta_max": 0.0,
+        "passed_by_state": {
+          "00447f3": true,
+          "ec440bf": true,
+          "0674ab4": true
+        }
+      },
+      {
+        "scene": "card",
+        "reproduces_identically_at": [
+          "00447f3",
+          "ec440bf",
+          "0674ab4"
+        ],
+        "diverges_at": [],
+        "hashNew_by_state": {
+          "00447f3": "26fd5664a1c291015462ca5bf7dea9d0f28c213e314882857b7097917876f131",
+          "ec440bf": "26fd5664a1c291015462ca5bf7dea9d0f28c213e314882857b7097917876f131",
+          "0674ab4": "26fd5664a1c291015462ca5bf7dea9d0f28c213e314882857b7097917876f131"
+        },
+        "score_by_state": {
+          "00447f3": 0.9601980124080882,
+          "ec440bf": 0.9601980124080882,
+          "0674ab4": 0.9601980124080882
+        },
+        "score_delta_max": 0.0,
+        "passed_by_state": {
+          "00447f3": false,
+          "ec440bf": false,
+          "0674ab4": false
+        }
+      },
+      {
+        "scene": "depot",
+        "reproduces_identically_at": [
+          "00447f3",
+          "ec440bf",
+          "0674ab4"
+        ],
+        "diverges_at": [],
+        "hashNew_by_state": {
+          "00447f3": "5de23d50dc14c082667f381e4c5dee1b503ecf95923a22ff78f742090be7ab4e",
+          "ec440bf": "5de23d50dc14c082667f381e4c5dee1b503ecf95923a22ff78f742090be7ab4e",
+          "0674ab4": "5de23d50dc14c082667f381e4c5dee1b503ecf95923a22ff78f742090be7ab4e"
+        },
+        "score_by_state": {
+          "00447f3": 0.9172816240959263,
+          "ec440bf": 0.9172816240959263,
+          "0674ab4": 0.9172816240959263
+        },
+        "score_delta_max": 0.0,
+        "passed_by_state": {
+          "00447f3": false,
+          "ec440bf": false,
+          "0674ab4": false
+        }
+      },
+      {
+        "scene": "enemy",
+        "reproduces_identically_at": [
+          "00447f3",
+          "ec440bf",
+          "0674ab4"
+        ],
+        "diverges_at": [],
+        "hashNew_by_state": {
+          "00447f3": "bc7b5af135deba9d968c508a52894d08ab6d6956f97c6cf9b2b575474a78ace0",
+          "ec440bf": "bc7b5af135deba9d968c508a52894d08ab6d6956f97c6cf9b2b575474a78ace0",
+          "0674ab4": "bc7b5af135deba9d968c508a52894d08ab6d6956f97c6cf9b2b575474a78ace0"
+        },
+        "score_by_state": {
+          "00447f3": 0.9195071737682478,
+          "ec440bf": 0.9195071737682478,
+          "0674ab4": 0.9195071737682478
+        },
+        "score_delta_max": 0.0,
+        "passed_by_state": {
+          "00447f3": false,
+          "ec440bf": false,
+          "0674ab4": false
+        }
+      },
+      {
+        "scene": "gacha",
+        "reproduces_identically_at": [
+          "00447f3",
+          "ec440bf",
+          "0674ab4"
+        ],
+        "diverges_at": [],
+        "hashNew_by_state": {
+          "00447f3": "e43865641c03e4f66ce3cc554a3cdbf045529d495578b18638c6a0103e6ed6b7",
+          "ec440bf": "e43865641c03e4f66ce3cc554a3cdbf045529d495578b18638c6a0103e6ed6b7",
+          "0674ab4": "e43865641c03e4f66ce3cc554a3cdbf045529d495578b18638c6a0103e6ed6b7"
+        },
+        "score_by_state": {
+          "00447f3": 0.9025141429411271,
+          "ec440bf": 0.9025141429411271,
+          "0674ab4": 0.9025141429411271
+        },
+        "score_delta_max": 0.0,
+        "passed_by_state": {
+          "00447f3": false,
+          "ec440bf": false,
+          "0674ab4": false
+        }
+      },
+      {
+        "scene": "headhunt",
+        "reproduces_identically_at": [
+          "00447f3",
+          "ec440bf",
+          "0674ab4"
+        ],
+        "diverges_at": [],
+        "hashNew_by_state": {
+          "00447f3": "b109c04ed67764f2df96be7a0eddce16dc433a8299fc236a1960aa2f2645ff57",
+          "ec440bf": "b109c04ed67764f2df96be7a0eddce16dc433a8299fc236a1960aa2f2645ff57",
+          "0674ab4": "b109c04ed67764f2df96be7a0eddce16dc433a8299fc236a1960aa2f2645ff57"
+        },
+        "score_by_state": {
+          "00447f3": 0.7998304534119018,
+          "ec440bf": 0.7998304534119018,
+          "0674ab4": 0.7998304534119018
+        },
+        "score_delta_max": 0.0,
+        "passed_by_state": {
+          "00447f3": false,
+          "ec440bf": false,
+          "0674ab4": false
+        }
+      },
+      {
+        "scene": "help",
+        "reproduces_identically_at": [
+          "00447f3",
+          "ec440bf",
+          "0674ab4"
+        ],
+        "diverges_at": [],
+        "hashNew_by_state": {
+          "00447f3": "e984bc7e9ffaab115d8c5c1d006e03dc61ef133f33654ae3f652e032a38bc159",
+          "ec440bf": "e984bc7e9ffaab115d8c5c1d006e03dc61ef133f33654ae3f652e032a38bc159",
+          "0674ab4": "e984bc7e9ffaab115d8c5c1d006e03dc61ef133f33654ae3f652e032a38bc159"
+        },
+        "score_by_state": {
+          "00447f3": 0.839432182957432,
+          "ec440bf": 0.839432182957432,
+          "0674ab4": 0.839432182957432
+        },
+        "score_delta_max": 0.0,
+        "passed_by_state": {
+          "00447f3": false,
+          "ec440bf": false,
+          "0674ab4": false
+        }
+      },
+      {
+        "scene": "lottery",
+        "reproduces_identically_at": [
+          "00447f3",
+          "ec440bf"
+        ],
+        "diverges_at": [
+          "0674ab4"
+        ],
+        "hashNew_by_state": {
+          "00447f3": "37a15ba596def48831e92a825e723d3f4729aa1d1d5a43eee8c033dbbc2c4b0e",
+          "ec440bf": "37a15ba596def48831e92a825e723d3f4729aa1d1d5a43eee8c033dbbc2c4b0e",
+          "0674ab4": "3375f3edff2ffe0f2d97e91957a485afe9cf056d6b3e5a5fd491d51ac9822e50"
+        },
+        "score_by_state": {
+          "00447f3": 0.9835808689865397,
+          "ec440bf": 0.9835808689865397,
+          "0674ab4": 0.9839251621741464
+        },
+        "score_delta_max": 0.00034429318760664795,
+        "passed_by_state": {
+          "00447f3": false,
+          "ec440bf": false,
+          "0674ab4": false
+        }
+      },
+      {
+        "scene": "missing",
+        "reproduces_identically_at": [
+          "00447f3",
+          "ec440bf",
+          "0674ab4"
+        ],
+        "diverges_at": [],
+        "hashNew_by_state": {
+          "00447f3": "01b88d9597b9e29a3efc1aefe66e0020b8d0b1a5e86e18677bce910d69ce95b7",
+          "ec440bf": "01b88d9597b9e29a3efc1aefe66e0020b8d0b1a5e86e18677bce910d69ce95b7",
+          "0674ab4": "01b88d9597b9e29a3efc1aefe66e0020b8d0b1a5e86e18677bce910d69ce95b7"
+        },
+        "score_by_state": {
+          "00447f3": 0.8761380684114441,
+          "ec440bf": 0.8761380684114441,
+          "0674ab4": 0.8761380684114441
+        },
+        "score_delta_max": 0.0,
+        "passed_by_state": {
+          "00447f3": false,
+          "ec440bf": false,
+          "0674ab4": false
+        }
+      },
+      {
+        "scene": "operator",
+        "reproduces_identically_at": [
+          "00447f3",
+          "ec440bf",
+          "0674ab4"
+        ],
+        "diverges_at": [],
+        "hashNew_by_state": {
+          "00447f3": "b50d020fb104a37f8fa1ad6740140e6b7f1cd6de6499bed9a6295e8be34f31ff",
+          "ec440bf": "b50d020fb104a37f8fa1ad6740140e6b7f1cd6de6499bed9a6295e8be34f31ff",
+          "0674ab4": "b50d020fb104a37f8fa1ad6740140e6b7f1cd6de6499bed9a6295e8be34f31ff"
+        },
+        "score_by_state": {
+          "00447f3": 0.6906304752178649,
+          "ec440bf": 0.6906304752178649,
+          "0674ab4": 0.6906304752178649
+        },
+        "score_delta_max": 0.0,
+        "passed_by_state": {
+          "00447f3": false,
+          "ec440bf": false,
+          "0674ab4": false
+        }
+      },
+      {
+        "scene": "recruit",
+        "reproduces_identically_at": [
+          "00447f3",
+          "ec440bf",
+          "0674ab4"
+        ],
+        "diverges_at": [],
+        "hashNew_by_state": {
+          "00447f3": "9ef36c3b08947b6e81cd33dd2364566018c05a9e959b817a89efbce0df7c6cd9",
+          "ec440bf": "9ef36c3b08947b6e81cd33dd2364566018c05a9e959b817a89efbce0df7c6cd9",
+          "0674ab4": "9ef36c3b08947b6e81cd33dd2364566018c05a9e959b817a89efbce0df7c6cd9"
+        },
+        "score_by_state": {
+          "00447f3": 0.6135057512531993,
+          "ec440bf": 0.6135057512531993,
+          "0674ab4": 0.6135057512531993
+        },
+        "score_delta_max": 0.0,
+        "passed_by_state": {
+          "00447f3": false,
+          "ec440bf": false,
+          "0674ab4": false
+        }
+      },
+      {
+        "scene": "state",
+        "reproduces_identically_at": [
+          "00447f3",
+          "ec440bf",
+          "0674ab4"
+        ],
+        "diverges_at": [],
+        "hashNew_by_state": {
+          "00447f3": "79f31688bbe009f9929b792b8204dd5bbe421e9798b8ae0385fb4c5f693095e4",
+          "ec440bf": "79f31688bbe009f9929b792b8204dd5bbe421e9798b8ae0385fb4c5f693095e4",
+          "0674ab4": "79f31688bbe009f9929b792b8204dd5bbe421e9798b8ae0385fb4c5f693095e4"
+        },
+        "score_by_state": {
+          "00447f3": 0.9909337226595012,
+          "ec440bf": 0.9909337226595012,
+          "0674ab4": 0.9909337226595012
+        },
+        "score_delta_max": 0.0,
+        "passed_by_state": {
+          "00447f3": true,
+          "ec440bf": true,
+          "0674ab4": true
+        }
+      }
+    ]
+  }
+}

@@ -1356,8 +1356,8 @@ func SampleOperator() *OperatorInfo {
 }
 
 func RenderOperator(data *OperatorInfo) (*gg.Context, error) {
-	const mainW = 800
-	const mainH = 700
+	const mainW = 1200
+	const mainH = 800
 	dc := gg.NewContext(mainW, mainH)
 	FillBackground(dc, 27, 29, 30)
 	if bg, err := LoadImage(AssetPath("operator/bg.png")); err == nil {
