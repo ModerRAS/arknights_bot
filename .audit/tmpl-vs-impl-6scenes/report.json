@@ -1,0 +1,215 @@
+{
+  "audit": "tmpl-vs-impl-6scenes",
+  "date": "2026-09-30",
+  "kind": "template-vs-implementation declaration facts",
+  "not_a_pixel_measurement": true,
+  "note": "本产物不为任何 commit 的像素测量作证，因此叶子目录使用描述名而非 sha。",
+  "branches": {
+    "repo": "arknights_bot",
+    "template_source_worktree": "C:/WorkSpace/Golang/arknights_bot",
+    "template_source_branch": "feat/gg-render",
+    "template_source_head": "1be2b34",
+    "implementation_source_worktree": "C:/WorkSpace/Golang/arknights_bot-gg-card-revival",
+    "implementation_source_branch": "feat/gg-render-card",
+    "implementation_source_head": "fcf0795"
+  },
+  "scenes": [
+    {
+      "scene": "base",
+      "template": "template/Base.tmpl",
+      "template_lines": 509,
+      "impl_function": "RenderBase",
+      "impl_file": "src/ggrender/render.go",
+      "impl_line": 609,
+      "implemented": true,
+      "scene_stub_file": "src/ggrender/scene_base.go"
+    },
+    {
+      "scene": "gacha",
+      "template": "template/Gacha.tmpl",
+      "template_lines": 370,
+      "impl_function": "RenderGacha",
+      "impl_file": "src/ggrender/render.go",
+      "impl_line": 792,
+      "implemented": true,
+      "scene_stub_file": "src/ggrender/scene_gacha.go"
+    },
+    {
+      "scene": "enemy",
+      "template": "template/Enemy.tmpl",
+      "template_lines": 175,
+      "impl_function": "RenderEnemy",
+      "impl_file": "src/ggrender/scene_enemy.go",
+      "impl_line": 36,
+      "implemented": true,
+      "scene_stub_file": null
+    },
+    {
+      "scene": "box-detail",
+      "template": "template/BoxDetail.tmpl",
+      "template_lines": 61,
+      "impl_function": "RenderBoxDetail",
+      "impl_file": "src/ggrender/render.go",
+      "impl_line": 256,
+      "implemented": true,
+      "scene_stub_file": null,
+      "reuse_checked": true,
+      "reuse_found": false
+    },
+    {
+      "scene": "help",
+      "template": "template/Help.tmpl",
+      "template_lines": 149,
+      "impl_function": "RenderHelp",
+      "impl_file": "src/ggrender/render.go",
+      "impl_line": 892,
+      "implemented": true,
+      "scene_stub_file": "src/ggrender/scene_help.go"
+    },
+    {
+      "scene": "depot",
+      "template": "template/Depot.tmpl",
+      "template_lines": 40,
+      "impl_function": "RenderDepot",
+      "impl_file": "src/ggrender/scene_depot.go",
+      "impl_line": 36,
+      "implemented": true,
+      "implementation_tier": "minimal",
+      "scene_stub_file": null,
+      "self_declared_ceiling": "ponytail: honest minimal depot renderer (pure GG, no baseline images). Ceiling: crude layout pending a real parity pass"
+    }
+  ],
+  "files_examined": {
+    "templates": [
+      "template/Base.tmpl",
+      "template/Gacha.tmpl",
+      "template/Enemy.tmpl",
+      "template/BoxDetail.tmpl",
+      "template/Help.tmpl",
+      "template/Depot.tmpl"
+    ],
+    "shared_stylesheet": "assets/css/common.css",
+    "shared_stylesheet_lines": 16,
+    "implementations": [
+      "src/ggrender/render.go",
+      "src/ggrender/scene_base.go",
+      "src/ggrender/scene_gacha.go",
+      "src/ggrender/scene_enemy.go",
+      "src/ggrender/scene_help.go",
+      "src/ggrender/scene_depot.go",
+      "src/ggrender/scene_calendar.go",
+      "src/ggrender/scene_card.go",
+      "src/ggrender/scene_lottery.go",
+      "src/ggrender/scene_operator.go",
+      "src/ggrender/scene_state.go",
+      "src/ggrender/helpers.go"
+    ],
+    "template_routing": [
+      "src/core/web/box.go",
+      "src/core/web/box_detail.go"
+    ],
+    "read_only": [
+      "src/ggrender/pixel_test.go"
+    ]
+  },
+  "negative_evidence": [
+    {
+      "id": "boxdetail-no-include-directive",
+      "claim": "BoxDetail.tmpl 不含任何 include/片段引用指令",
+      "command": "grep -nE '\\{\\{ *(template|include|block|define)' template/BoxDetail.tmpl",
+      "cwd": "C:/WorkSpace/Golang/arknights_bot",
+      "exit_code": 1,
+      "output": "",
+      "conclusion": "查询真跑过，无命中，输出为空"
+    },
+    {
+      "id": "engine-no-include-mechanism",
+      "claim": "模板引擎不存在 include 机制",
+      "command": "grep -rnE 'include|ParseFiles|ParseGlob|template\\.New|Funcs\\(' src/utils/media/ --include=*.go",
+      "cwd": "C:/WorkSpace/Golang/arknights_bot",
+      "exit_code": 1,
+      "output": "",
+      "conclusion": "查询真跑过，无命中，输出为空"
+    },
+    {
+      "id": "renderboxdetail-does-not-call-renderbox",
+      "claim": "RenderBoxDetail 体内不调用 RenderBox，即两者非复用关系",
+      "method": "逐行读 src/ggrender/render.go:256-306 函数体，枚举其调用的符号",
+      "calls_found": [
+        "fillRoundedCard",
+        "DrawRoundedRectangle",
+        "tryLocal",
+        "ScaleExact",
+        "DrawImage",
+        "setFont",
+        "drawString",
+        "drawStringAnchored",
+        "itoa",
+        "FillBackground"
+      ],
+      "renderbox_called": false,
+      "conclusion": "仅调用通用基础设施，非场景级复用"
+    }
+  ],
+  "reuse_structural_evidence": {
+    "gin_loader": "LoadHTMLFiles",
+    "box_detail_route": "src/core/web/box_detail.go -> r.LoadHTMLFiles(\"./template/BoxDetail.tmpl\"); c.HTML(..., \"BoxDetail.tmpl\", ...)",
+    "box_route": "src/core/web/box.go:34 -> r.LoadHTMLFiles(\"./template/Box.tmpl\"); c.HTML(..., \"Box.tmpl\", ...)",
+    "single_file_load": true,
+    "note": "gin 单文件加载使模板上下文中不存在其它模板，{{template}} 无从解析，结构上排除片段复用",
+    "class_vocabulary": {
+      "Box.tmpl": ["#main", "#label", "#title", ".operator", ".operator_bg", ".profession", ".rarity", ".evolve", ".level", ".potential", ".name"],
+      "BoxDetail.tmpl": ["#main", "table", "tr", "img", "td"],
+      "overlap_beyond_per_template_id": []
+    }
+  },
+  "undeclared_verdict_protocol": {
+    "rule": "判「模板未声明」必须 *.tmpl 与 assets/css/common.css 两侧都查过",
+    "shared_stylesheet_full_declarations": [
+      "@font-face { font-family: 'NotoSansHans'; src: url('/assets/font/NotoSansHans-Regular.ttf'); }",
+      "body { margin: 0; font-family: 'NotoSansHans', serif; }",
+      "img.rarity[data=\"4\"] { width: 34px; }",
+      "img.rarity[data=\"3\"] { width: 30px; }",
+      "img.rarity[data=\"2\"] { width: 25px; }",
+      "img.rarity[data=\"1\"] { width: 20px; }",
+      "img.rarity[data=\"0\"] { width: 15px; }"
+    ],
+    "common_css_declares": {
+      "color": false,
+      "font_size": false,
+      "line_height": false
+    },
+    "scenes_where_font_size_and_line_height_undeclared_both_sides": [
+      "base",
+      "box-detail"
+    ],
+    "evidence": [
+      "grep -nE 'font-size|line-height' template/Base.tmpl -> exit 1, 空输出",
+      "grep -nE 'font-size|line-height' template/BoxDetail.tmpl -> exit 1, 空输出",
+      "assets/css/common.css 全文 16 行已完整读过，不含 color / font-size / line-height"
+    ],
+    "all_six_templates_line_height": "6 个模板全部未声明 line-height"
+  },
+  "scene_stub_files": {
+    "note": "以下文件各约 242-246 字节，内容为 ponytail 注释 + 空 init() + var _ = SceneSet，不是实现文件",
+    "files": [
+      "src/ggrender/scene_base.go",
+      "src/ggrender/scene_gacha.go",
+      "src/ggrender/scene_help.go",
+      "src/ggrender/scene_operator.go",
+      "src/ggrender/scene_state.go"
+    ],
+    "real_scene_files": [
+      "src/ggrender/scene_enemy.go",
+      "src/ggrender/scene_depot.go",
+      "src/ggrender/scene_calendar.go",
+      "src/ggrender/scene_card.go",
+      "src/ggrender/scene_lottery.go"
+    ]
+  },
+  "process_notes": [
+    "本轮自查出一处取证缺陷：排查 box-detail 复用时两条 grep 误接 | head，其后的 $? 取的是 head 的退出码而非 grep 的，会把查询失败与结果为空压成同一信号。已改为 out=$(grep ...); rc=$? 不接管道重做，本文件所载均为重做后的真实退出码。"
+  ],
+  "images": 0,
+  "scoring_code_modified": false
+}
