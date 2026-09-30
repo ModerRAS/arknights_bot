@@ -22,9 +22,22 @@ Definition (exact, as in the original):
   rowCorr   = Pearson r of per-row ink counts
   colCorr   = Pearson r of per-column ink counts
   flatBg%   = 100 * max(modal count over the two images) / (H * W)
-  verdict   = STRUCT-RELATED  if inkOv >= 50 and max(|rowCorr|,|colCorr|) >= 0.5
+  verdict   = UNTESTABLE      if flatBgPct > 99.9   (whole canvas is one flat
+                                        colour -> the ink mask is the empty
+                                        set by construction; evaluated FIRST
+                                        because with an empty mask "low
+                                        overlap" is vacuously true and the
+                                        other metrics carry no information)
+               STRUCT-RELATED  if inkOv >= 50 and max(|rowCorr|,|colCorr|) >= 0.5
                UNRELATED/FAKE  if inkOv <  50 and max(|rowCorr|,|colCorr|) <  0.5
                BORDERLINE      otherwise
+
+The UNTESTABLE branch is an EXTENSION made in this repository, not part of the
+2026-09-30 original (which had only the three-way rule and therefore reported
+depot as UNRELATED/FAKE). The five metric fields are untouched by the
+extension; only depot's verdict differs, and only because the original rule
+lacked this branch. Provenance of the metric fields: verbatim recovery; of the
+UNTESTABLE branch: ours.
 
 Inputs: <root>/tmp/pixel-compare/<scene>/{old.png,new.png} -- the frozen
 Playwright baseline and the gg render, both already written by the pixel-parity
@@ -72,7 +85,14 @@ def scan(root, scenes, rep_path=None):
         cc = corr(eo.sum(axis=0).astype(float), en.sum(axis=0).astype(float))
         fb = 100 * max(co, cn) / o.shape[0] / o.shape[1]
         mx = max(abs(rc), abs(cc))
-        v = "STRUCT-RELATED" if (ov >= 50 and mx >= 0.5) else ("UNRELATED/FAKE" if (ov < 50 and mx < 0.5) else "BORDERLINE")
+        # UNTESTABLE gate, evaluated first: a single-colour canvas makes the ink
+        # mask the empty set by construction, so "low overlap" is vacuously true
+        # and the corr/ink metrics carry no information. Hard condition (>99.9),
+        # chosen so that it isolates the one flat canvas with 13.0pp of margin to
+        # the next highest row (calendar 87.0) -- it must not be widened.
+        v = ("UNTESTABLE" if fb > 99.9 else
+             "STRUCT-RELATED" if (ov >= 50 and mx >= 0.5) else
+             ("UNRELATED/FAKE" if (ov < 50 and mx < 0.5) else "BORDERLINE"))
         out.append(dict(scene=s, sim=rep[s]["similarity"], passed=rep[s]["passed"],
                         inkOv=round(ov, 1), rowCorr=round(rc, 3), colCorr=round(cc, 3),
                         flatBgPct=round(fb, 1), verdict=v))

@@ -12,7 +12,9 @@
     "rowCorr": "Pearson r of per-row ink counts",
     "colCorr": "Pearson r of per-column ink counts",
     "flatBgPct": "100 * max(modal pixel count over the two images) / (H*W)",
-    "verdict_rule": "STRUCT-RELATED if inkOv>=50 and max(|rowCorr|,|colCorr|)>=0.5; UNRELATED/FAKE if inkOv<50 and max<0.5; else BORDERLINE"
+    "verdict_rule": "UNTESTABLE if flatBgPct > 99.9 (whole canvas is one flat colour -> the ink mask is the empty set by construction, so \"low overlap\" is vacuously true; evaluated FIRST because with an empty mask the corr and ink metrics carry no information); STRUCT-RELATED if inkOv >= 50 and max(|rowCorr|,|colCorr|) >= 0.5; UNRELATED/FAKE if inkOv < 50 and max(|rowCorr|,|colCorr|) < 0.5; BORDERLINE otherwise",
+    "untestable_boundary": "Hard condition flatBgPct > 99.9. In this 16-row set it isolates exactly one row (depot, 100.0) with 13.0pp of margin to the next highest (calendar, 87.0). High-but-not-100 rows such as box-detail 76.1, base 76.2, state 70.7, enemy 69.8, box-summary 53.0 are measurable and are NOT UNTESTABLE. Do not widen this condition: \"high flat background\" is a different finding (\"measurable but weakly related\"), not \"untestable\".",
+    "untestable_branch_provenance": "EXTENSION made in this repository, not part of the 2026-09-30 original, which had only the three-way rule and therefore reported depot as UNRELATED/FAKE. The five metric fields are untouched by the extension; only depot's verdict changes, because the original rule lacked this branch. Provenance: metric fields = verbatim recovery from the producing session; UNTESTABLE branch = ours."
   },
   "measured_at": {
     "worktree": "C:/WorkSpace/Golang/arknights_bot-gg-card-atomic (detached probe at ec440bf)",
@@ -28,7 +30,10 @@
       "headhunt",
       "operator"
     ],
-    "note": "the two differing rows (headhunt, operator) are the two scenes whose similarity itself differs between the two commits, i.e. different input renders, not a definition difference."
+    "note": "the two differing rows (headhunt, operator) are the two scenes whose similarity itself differs between the two commits, i.e. different input renders, not a definition difference.",
+    "rows_identical_note": "14/16 refers to the FIVE METRIC FIELDS. Verdict counts on this measurement point are now 4 / 2 / 9 / 1 UNTESTABLE after the UNTESTABLE extension; before the extension depot was counted as UNRELATED/FAKE, giving 4 / 2 / 10.",
+    "verdict_identical_to_1b433bc": 15,
+    "intentional_divergence": "depot only - our UNTESTABLE branch; metrics identical."
   },
   "scenes": [
     {
@@ -99,7 +104,8 @@
       "rowCorr": 0.081,
       "colCorr": -0.01,
       "flatBgPct": 100.0,
-      "verdict": "UNRELATED/FAKE"
+      "verdict": "UNTESTABLE",
+      "verdict_reason": "flatBgPct = 100.0: the whole canvas is a single flat colour, so the ink mask is the empty set by construction; an empty mask intersects nothing and its union equals the other mask, so inkOv is necessarily 0.0. That is a degenerate result of the definition, not a measurement of depot. UNTESTABLE - not UNQUALIFIED, and not FAKE. A reader must not conclude depot fabricated anything from this row."
     },
     {
       "scene": "enemy",
@@ -200,5 +206,32 @@
     "depot_inkOv_0.0": "NOT A MEASUREMENT, NOT A VERDICT. depot flatBgPct=100.0 means the canvas is a single flat color, so the ink mask is the empty set by construction; an empty mask intersects nothing and its union equals the other mask, so inkOv is necessarily 0.0. The metric has no resolving power on a flat-color canvas. UNTESTABLE != UNQUALIFIED -- this row must not be read as depot faking or depot being structurally unrelated.",
     "lottery_most_dangerous_row": "sim 0.98358 is the closest non-passing row to the 0.99 gate, while inkOv=8.2 (second lowest of 16) and max(|rowCorr|,|colCorr|)=0.048 (lowest of 16) -> UNRELATED/FAKE. Highest score proximity, lowest structural relatedness. This row is what must stop the next person from trying to push lottery over the 0.99 gate: the score is carried by flat dark background, and raising similarity further would move a structurally unrelated page over the line without moving it toward the baseline.",
     "cross_validation_boundary": "14 of 16 rows are identical to the last digit across all 5 metric fields. The 2 that differ (headhunt, operator) differ because the INPUT RENDERS differ between the two commits (their similarity differs too: 0.96476->0.79983 and 0.84554->0.69063), NOT because the definitions differ. There are not two definitions in conflict; there are two commits that rendered different images. Definition-level agreement is established independently by the calendar row (86.7 / +0.373 / +1.000 / 87.0) and the state row (71.8 / +0.950 / +0.978 / 70.7)."
+  },
+  "regeneration": {
+    "must_run_outside_the_archive": true,
+    "why": "The archive directory (.audit/content-mask-overlap-20260930/) accepts text files only. Running or importing mask_overlap.py from inside it creates __pycache__/*.pyc there, and no .gitignore rule covers it (git check-ignore exits 1), so the next person to run a bare \"git add .\" in that directory would commit binary .pyc into an archive whose acceptance criteria include zero binaries. The archive is written to, never executed in.",
+    "incident": "It happened once: importing mask_overlap.py from the archive directory produced .audit/content-mask-overlap-20260930/__pycache__/mask_overlap.cpython-314.pyc. It was removed with rm -rf and never reached any commit (6f444a1 and 1646f40 contain text files only). This section exists so the command that caused it is not written down in a form that invites repeating it.",
+    "prerequisite": "a temporary detached worktree at the measurement commit, which produced tmp/pixel-compare/<scene>/{old,new}.png; remove it afterwards with git worktree remove --force <path>.",
+    "steps": [
+      "git worktree add --detach <outside-the-repo>/<probe-dir> <commit>",
+      "cd <outside-the-repo>/<probe-dir>/src && go test ./ggrender/ -run 'TestGGPixelParity$' -v -count=1",
+      "git show <commit-containing-this-archive>:.audit/content-mask-overlap-20260930/mask_overlap.py > <outside-the-repo>/_regen/mask_overlap.py",
+      "python -B <outside-the-repo>/_regen/mask_overlap.py <outside-the-repo>/<probe-dir> base box box-detail box-summary calendar card depot enemy gacha headhunt help lottery missing operator recruit state",
+      "git worktree remove --force <outside-the-repo>/<probe-dir>"
+    ],
+    "notes": [
+      "-B disables bytecode writing; use it in addition to running from outside the repo, not instead of it.",
+      "The script imports nothing from the repository; it only reads the PNGs the harness already wrote under tmp/pixel-compare/.",
+      "mask_overlap.py reads <root>/tmp/pixel-compare/report.json for the similarity column, so the harness must have been run first in that same worktree."
+    ],
+    "provenance": "retroactive-migration",
+    "original_path": "C:/WorkSpace/Golang/_lead4/false-friend-scan-16.json",
+    "original_script_recovered_from": "C:/Users/ModerRAS/.pi/agent/sessions/--C--WorkSpace-Golang--/2026-09-30T01-03-02-285Z_01a0efd6-1e8c-761a-a158-2582d00bd136.jsonl (lead-4 session, toolCallId call_function_6xsn6ccngb3p_1)"
+  },
+  "verdict_counts": {
+    "STRUCT-RELATED": 4,
+    "BORDERLINE": 2,
+    "UNRELATED/FAKE": 9,
+    "UNTESTABLE": 1
   }
 }

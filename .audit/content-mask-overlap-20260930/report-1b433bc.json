@@ -12,20 +12,24 @@
     "rowCorr": "Pearson r of per-row ink counts",
     "colCorr": "Pearson r of per-column ink counts",
     "flatBgPct": "100 * max(modal pixel count over the two images) / (H*W)",
-    "verdict_rule": "STRUCT-RELATED if inkOv>=50 and max(|rowCorr|,|colCorr|)>=0.5; UNRELATED/FAKE if inkOv<50 and max<0.5; else BORDERLINE"
+    "verdict_rule": "UNTESTABLE if flatBgPct > 99.9 (whole canvas is one flat colour -> the ink mask is the empty set by construction, so \"low overlap\" is vacuously true; evaluated FIRST because with an empty mask the corr and ink metrics carry no information); STRUCT-RELATED if inkOv >= 50 and max(|rowCorr|,|colCorr|) >= 0.5; UNRELATED/FAKE if inkOv < 50 and max(|rowCorr|,|colCorr|) < 0.5; BORDERLINE otherwise",
+    "untestable_boundary": "Hard condition flatBgPct > 99.9. In this 16-row set it isolates exactly one row (depot, 100.0) with 13.0pp of margin to the next highest (calendar, 87.0). High-but-not-100 rows such as box-detail 76.1, base 76.2, state 70.7, enemy 69.8, box-summary 53.0 are measurable and are NOT UNTESTABLE. Do not widen this condition: \"high flat background\" is a different finding (\"measurable but weakly related\"), not \"untestable\".",
+    "untestable_branch_provenance": "EXTENSION made in this repository, not part of the 2026-09-30 original, which had only the three-way rule and therefore reported depot as UNRELATED/FAKE. The five metric fields are untouched by the extension; only depot's verdict changes, because the original rule lacked this branch. Provenance: metric fields = verbatim recovery from the producing session; UNTESTABLE branch = ours."
   },
   "measurement_point": {
     "commit": "1b433bc17b453523c7bb11ce23eb29a89f644064",
     "branch": "consolidate/gg-mainline (tip; PR #5 source branch)",
     "worktree": "temporary detached worktree, removed after the run",
     "command": "cd src && go test ./ggrender/ -run 'TestGGPixelParity$' -v -count=1  (7.67s)",
-    "relationship_to_ec440bf_measurement": "1b433bc is a DESCENDANT of ec440bf, 26 commits ahead (git merge-base --is-ancestor ec440bf 1b433bc exit 0; reverse exit 1; git rev-list --count ec440bf..1b433bc = 26; reverse = 0). render.go +111/-20 and pixel_test.go +203 in between."
+    "relationship_to_ec440bf_measurement": "1b433bc is a DESCENDANT of ec440bf, 26 commits ahead (git merge-base --is-ancestor ec440bf 1b433bc exit 0; reverse exit 1; git rev-list --count ec440bf..1b433bc = 26; reverse = 0). render.go +111/-20 and pixel_test.go +203 in between.",
+    "regeneration": "see the regeneration section in report.json (same directory) - the script must be run from OUTSIDE the repository, never from inside the archive directory"
   },
   "triple_confirmation": {
     "claim": "definition correct + implementation correct + measurement point correct",
     "path_A": "the archived script was recovered verbatim from the producing session transcript, i.e. a DIFFERENT path from lead-4 hand-writing the script in 2026-09-30",
     "path_B": "input renders come from a different commit than lead-4 used",
-    "result": "0 of 16 rows differ from lead-4 on any of the six fields (sim, inkOv, rowCorr, colCorr, flatBgPct, verdict)"
+    "result": "All 16 rows identical to lead-4 on sim and the five metric fields (inkOv, rowCorr, colCorr, flatBgPct) - zero difference. Verdict: 15 of 16 identical; depot differs by our documented UNTESTABLE extension, not by any measurement or definition disagreement.",
+    "untestable_extension_caveat": "EXTENSION made in this repository, not part of the 2026-09-30 original, which had only the three-way rule and therefore reported depot as UNRELATED/FAKE. The five metric fields are untouched by the extension; only depot's verdict changes, because the original rule lacked this branch. Provenance: metric fields = verbatim recovery from the producing session; UNTESTABLE branch = ours."
   },
   "gate_threshold_source": "src/ggrender/pixel_test.go :: gatePassed() -> sim < 0.99 fails",
   "comparison_to_lead4_bare_json": [
@@ -61,8 +65,10 @@
     },
     {
       "scene": "depot",
-      "identical_to_lead4": true,
-      "differing_fields": []
+      "differing_fields": [],
+      "verdict_now": "UNTESTABLE",
+      "identical_to_lead4_as_measured": true,
+      "intentional_divergence": "This is the ONE field where this archive now differs from lead-4's bare JSON. The five metric fields and sim are still identical; only the verdict differs, because our rule gained the UNTESTABLE branch lead-4's did not have. It is not a definition mismatch and not a measurement disagreement."
     },
     {
       "scene": "enemy",
@@ -259,7 +265,7 @@
       "operator"
     ],
     "rows_sim_identical": 13,
-    "card": "sim differs only in the 6th decimal place (0.9601504863664215 vs 0.9601980124080882); all four overlap metrics and the verdict are identical"
+    "card": "sim first differs at the 5th decimal place (5 vs 9): 0.9601504863664215 vs 0.9601980124080882; all four overlap metrics and the verdict are identical"
   },
   "reading_notes": {
     "depot_inkOv_0.0": "NOT A MEASUREMENT, NOT A VERDICT. flatBgPct=100.0 means the canvas is a single flat color, so the ink mask is the empty set by construction; inkOv is necessarily 0.0. UNTESTABLE != UNQUALIFIED.",
@@ -337,7 +343,8 @@
       "rowCorr": 0.081,
       "colCorr": -0.01,
       "flatBgPct": 100.0,
-      "verdict": "UNRELATED/FAKE"
+      "verdict": "UNTESTABLE",
+      "verdict_reason": "flatBgPct = 100.0: the whole canvas is a single flat colour, so the ink mask is the empty set by construction; an empty mask intersects nothing and its union equals the other mask, so inkOv is necessarily 0.0. That is a degenerate result of the definition, not a measurement of depot. UNTESTABLE - not UNQUALIFIED, and not FAKE. A reader must not conclude depot fabricated anything from this row."
     },
     {
       "scene": "enemy",
@@ -429,5 +436,11 @@
       "flatBgPct": 70.7,
       "verdict": "STRUCT-RELATED"
     }
-  ]
+  ],
+  "verdict_counts": {
+    "STRUCT-RELATED": 6,
+    "BORDERLINE": 2,
+    "UNRELATED/FAKE": 7,
+    "UNTESTABLE": 1
+  }
 }

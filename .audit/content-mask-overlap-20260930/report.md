@@ -29,10 +29,20 @@
 - **重叠率**：`inkOv = 100 * |A ∩ B| / |A ∪ B|` —— **Jaccard**，分母是并集。
 - **rowCorr / colCorr**：逐行 / 逐列 ink 计数的 Pearson 相关系数。
 - **flatBgPct**：`100 * max(两图众数像素计数) / (H * W)`。
-- **判定三档**：
+- **判定规则（先判 `UNTESTABLE`，再判三档）**：
+  - `UNTESTABLE`：**`flatBgPct > 99.9`**（整张画布单一纯色 → ink 掩膜按定义是空集）——
+    **优先于**下面三档，因为掩膜为空时「重叠低」是空洞为真，corr 与 ink 指标不携带信息
   - `STRUCT-RELATED`：`inkOv >= 50` **且** `max(|rowCorr|, |colCorr|) >= 0.5`
   - `UNRELATED/FAKE`：`inkOv < 50` **且** `max(|rowCorr|, |colCorr|) < 0.5`
   - `BORDERLINE`：其余
+
+  **`UNTESTABLE` 这一支是本仓的扩展，不属于 2026-09-30 的原版**（原版只有三档，
+  因此把 depot 报成 `UNRELATED/FAKE`）。五个度量字段不受该扩展影响。
+
+  **硬边界：`flatBgPct > 99.9`，不得放宽。** 在这 16 行里它只命中 depot（100.0），
+  与次高者 calendar（87.0）相距 **13.0pp**。`box-detail 76.1`、`base 76.2`、`state 70.7`、
+  `enemy 69.8`、`box-summary 53.0` 这些「高但不到 100」的行是**可测的**，
+  判为「可测但弱相关」，**不是** `UNTESTABLE`。
 
 ## 4. 互证结果
 
@@ -73,13 +83,13 @@
 | gacha | 0.90251 | 否 | 9.1 | +0.097 | +0.230 | 53.2 | UNRELATED/FAKE |
 | box-detail | 0.87844 | 否 | 9.9 | +0.025 | +0.075 | 76.1 | UNRELATED/FAKE |
 | lottery | 0.98358 | 否 | 8.2 | +0.048 | -0.021 | 45.3 | UNRELATED/FAKE |
-| depot | 0.91728 | 否 | 0.0 | +0.081 | -0.010 | 100.0 | UNRELATED/FAKE |
+| depot | 0.91728 | 否 | 0.0 | +0.081 | -0.010 | 100.0 | **UNTESTABLE**（见 5.1） |
 | headhunt | 0.79983 | 否 | 29.4 | +0.206 | -0.034 | 68.8 | UNRELATED/FAKE |
 | operator | 0.69063 | 否 | 25.0 | +0.076 | -0.296 | 53.5 | UNRELATED/FAKE |
 
-计数：`STRUCT-RELATED` 4 / `BORDERLINE` 2 / `UNRELATED-FAKE` 10。
+计数：`STRUCT-RELATED` 4 / `BORDERLINE` 2 / `UNRELATED-FAKE` 9 / **`UNTESTABLE` 1**。
 
-### 5.1 `depot` 的 `inkOv = 0.0` 表示**不可测**，不表示「测出 0」
+### 5.1 `depot` 的 `inkOv = 0.0` 表示**不可测**，verdict 记为 `UNTESTABLE`
 
 `depot` 的 `flatBgPct = 100.0`：整张画布是**单一纯色**，众数像素覆盖 100% 画布。
 在这种输入下 ink 掩膜按定义必为空集，而空集与任何掩膜的交集恒为空、并集恒等于对方，
@@ -87,6 +97,11 @@
 
 **不可测 ≠ 不合格。** 这一行不得被读成「depot 造假」或「depot 结构无关」：
 它只能读成「本指标在纯色画布上没有分辨力」。要判 depot 必须换一个能产生 ink 的测量口径。
+
+**归档口径已统一：** 判定规则新增 `UNTESTABLE` 支（见第 3 节，硬条件 `flatBgPct > 99.9`），
+`depot` 的 `verdict` 字段在 `report.json` 与 `report-1b433bc.json` 中均为 **`UNTESTABLE`**，
+并带 `verdict_reason` 字段。**同一份归档里不再存在「机器字段说 FAKE、人读正文说不可测」的两个说法。**
+（历史记录：`2026-09-30` 原版只有三档，因此当时报的是 `UNRELATED/FAKE`。）
 
 ### 5.2 `lottery` 是全表最危险的一行
 
@@ -146,8 +161,9 @@
 |---|---|
 | `measurement_point.commit` | `1b433bc17b453523c7bb11ce23eb29a89f644064`（`consolidate/gg-mainline` tip，PR #5 源分支） |
 | 跑法 | 临时 detached worktree，跑完 `git worktree remove`；未切 card-atomic |
-| 命令 | `cd src && go test ./ggrender/ -run 'TestGGPixelParity$' -v -count=1`（7.67s），再用本目录的 `mask_overlap.py` |
-| 产物 | `report-1b433bc.json`（与本文件同目录） |
+| 命令（**必须从仓库外执行**，见下方说明**） | 1) `cd <临时 detached worktree>/src && go test ./ggrender/ -run 'TestGGPixelParity$' -v -count=1`（7.67s）<br>2) `git show 1646f40:.audit/content-mask-overlap-20260930/mask_overlap.py > /c/WorkSpace/Golang/_regen/mask_overlap.py`<br>3) `python -B /c/WorkSpace/Golang/_regen/mask_overlap.py <worktree-root> base box box-detail box-summary calendar card depot enemy gacha headhunt help lottery missing operator recruit state` |
+| 脚本位置 | **不得在本目录（归档目录）内运行或 `import`**。归档目录只写入、不执行。详见 `report.json` 的 `regeneration` 节。 |
+| 产物 | `report-1b433bc.json`（与本文件同目录，已随 `1646f40` 入库） |
 | 图像 | 零 |
 
 **三次确认（这是本次重跑的全部意义）：**
@@ -178,9 +194,9 @@
 | gacha | 0.90251 | 否 | 9.1 | +0.097 | +0.230 | 53.2 | UNRELATED/FAKE |
 | box-detail | 0.87844 | 否 | 9.9 | +0.025 | +0.075 | 76.1 | UNRELATED/FAKE |
 | lottery | 0.98358 | 否 | 8.2 | +0.048 | -0.021 | 45.3 | UNRELATED/FAKE |
-| depot | 0.91728 | 否 | 0.0 | +0.081 | -0.010 | 100.0 | UNRELATED/FAKE（不可测，见 5.1） |
+| depot | 0.91728 | 否 | 0.0 | +0.081 | -0.010 | 100.0 | **UNTESTABLE**（见 5.1） |
 
-计数：**STRUCT-RELATED 6 / BORDERLINE 2 / UNRELATED-FAKE 8**（门禁仍 2/16 通过）。
+计数：**STRUCT-RELATED 6 / BORDERLINE 2 / UNRELATED-FAKE 7 / `UNTESTABLE` 1**（门禁仍 2/16 通过）。
 
 ### 8.3 与第 4/5 节（`ec440bf`）的差异归因
 
@@ -192,7 +208,7 @@
 |---|---|---|---|
 | `headhunt` | 五个全变（98.3→29.4、+0.965→+0.206、+0.887→-0.034、4.6→68.8、STRUCT-RELATED→UNRELATED/FAKE） | 0.96476 vs 0.79983 | 输入渲染图不同 |
 | `operator` | 五个全变（76.8→25.0、+0.882→+0.076、+0.602→-0.296、28.0→53.5、STRUCT-RELATED→UNRELATED/FAKE） | 0.84554 vs 0.69063 | 输入渲染图不同 |
-| `card` | **全同**（77.6 / +0.909 / +0.929 / 23.0 / STRUCT-RELATED） | 0.9601504863664215 vs 0.9601980124080882（差在第 6 位） | 渲染几乎相同，仅有亚阈值色差 |
+| `card` | **全同**（77.6 / +0.909 / +0.929 / 23.0 / STRUCT-RELATED） | 0.9601504863664215 vs 0.9601980124080882（首个差异在**小数点后第 5 位**：第 5 位为 `5` vs `9`） | 渲染几乎相同，仅有亚阈值色差 |
 | 其余 13 行 | 全同 | 全同 | — |
 
 **两处 verdict 翻转的原因是输入代码不同，不是定义分歧。** 本指标在两个测量点上都是同一把尺子。
@@ -204,7 +220,10 @@
 | `ec440bf`（本文件第 4/5 节、`report.json`） | 4 | 2 | 10 | 2/16 |
 | `1b433bc`（本节、`report-1b433bc.json`） | **6** | 2 | **8** | 2/16 |
 
-PR #5 的源分支是 `consolidate/gg-mainline`，因此**对外应引用 `1b433bc` 这一组，即 8/16**。
+PR #5 的源分支是 `consolidate/gg-mainline`，因此**对外应引用 `1b433bc` 这一组，
+即 STRUCT-RELATED 6 / BORDERLINE 2 / UNRELATED-FAKE 7 / UNTESTABLE 1**。
+（Boss 在 PR #5 表格里数出的 6/2/7/1 与此一致；此前写的「8/16」未把 `depot`
+从 FAKE 里拆出来。）
 
 ### 8.5 在 `1b433bc` 上追加的三条限定
 
