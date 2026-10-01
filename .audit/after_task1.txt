@@ -1,0 +1,42 @@
+=== RUN   TestGGPixelParity
+    pixel_test.go:373: scene base         1665x918 scale=1.5 similarity=0.95900 bbox=[0 0 1664 917] hashOld=3a82d70486f9 hashNew=1aafad90d714 passed=false
+    pixel_test.go:373: scene box          1050x536 scale=1.5 similarity=0.82504 bbox=[0 0 1049 535] hashOld=cf10f5d37fe6 hashNew=55d299b08d3a passed=false
+    pixel_test.go:373: scene box-detail   722x279 scale=1.5 similarity=0.87844 bbox=[0 0 721 278] hashOld=047ad057ac19 hashNew=92d22b58aade passed=false
+    pixel_test.go:373: scene box-summary  1350x723 scale=1.5 similarity=0.88098 bbox=[0 0 1349 722] hashOld=6a4633e04841 hashNew=45e63a36e647 passed=false
+    pixel_test.go:373: scene calendar     2880x1620 scale=1.5 similarity=0.99432 bbox=[0 0 2863 1619] hashOld=80f31c1cfb13 hashNew=e7939ca718d0 passed=true
+    pixel_test.go:373: scene card         1280x720 scale=1.0 similarity=0.96020 bbox=[0 0 1279 711] hashOld=75fea0acb6d2 hashNew=26fd5664a1c2 passed=false
+    pixel_test.go:373: scene depot        1275x234 scale=1.5 similarity=0.91728 bbox=[0 0 1247 233] hashOld=d09c01dbd300 hashNew=5de23d50dc14 passed=false
+    pixel_test.go:373: scene enemy        984x477 scale=1.5 similarity=0.91951 bbox=[0 0 983 476] hashOld=7aae46ad6d82 hashNew=bc7b5af135de passed=false
+    pixel_test.go:373: scene gacha        1500x1323 scale=1.5 similarity=0.90251 bbox=[0 0 1499 1322] hashOld=b037cf55e967 hashNew=e43865641c03 passed=false
+    pixel_test.go:373: scene headhunt     1049x576 scale=1.0 similarity=0.79983 bbox=[0 0 1048 575] hashOld=879933afa3b9 hashNew=b109c04ed677 passed=false
+    pixel_test.go:373: scene help         990x2049 scale=1.5 similarity=0.83943 bbox=[0 0 989 2048] hashOld=43bcdee85548 hashNew=e984bc7e9ffa passed=false
+    pixel_test.go:373: scene lottery      1473x1667 scale=1.5 similarity=0.98358 bbox=[0 0 1472 1666] hashOld=9f5588be8860 hashNew=37a15ba596de passed=false
+    pixel_test.go:373: scene missing      1050x536 scale=1.5 similarity=0.87614 bbox=[0 0 1049 535] hashOld=cc58fea684f3 hashNew=01b88d9597b9 passed=false
+    pixel_test.go:373: scene operator     1800x1200 scale=1.5 similarity=0.69063 bbox=[0 0 1799 1199] hashOld=2c2834c7e048 hashNew=b50d020fb104 passed=false
+    pixel_test.go:373: scene recruit      1350x534 scale=1.5 similarity=0.61351 bbox=[0 0 1349 533] hashOld=4a01136f4b12 hashNew=9ef36c3b0894 passed=false
+    pixel_test.go:373: scene state        1092x510 scale=1.0 similarity=0.99093 bbox=[32 32 1079 507] hashOld=2c3d37795bac hashNew=79f31688bbe0 passed=true
+    pixel_test.go:402: FAIL base 0.95900 <0.99 bbox=[0 0 1664 917]
+    pixel_test.go:402: FAIL box 0.82504 <0.99 bbox=[0 0 1049 535]
+    pixel_test.go:402: FAIL box-detail 0.87844 <0.99 bbox=[0 0 721 278]
+    pixel_test.go:402: FAIL box-summary 0.88098 <0.99 bbox=[0 0 1349 722]
+    pixel_test.go:402: FAIL card 0.96020 <0.99 bbox=[0 0 1279 711]
+    pixel_test.go:402: FAIL depot 0.91728 <0.99 bbox=[0 0 1247 233]
+    pixel_test.go:402: FAIL enemy 0.91951 <0.99 bbox=[0 0 983 476]
+    pixel_test.go:402: FAIL gacha 0.90251 <0.99 bbox=[0 0 1499 1322]
+    pixel_test.go:402: FAIL headhunt 0.79983 <0.99 bbox=[0 0 1048 575]
+    pixel_test.go:402: FAIL help 0.83943 <0.99 bbox=[0 0 989 2048]
+    pixel_test.go:402: FAIL lottery 0.98358 <0.99 bbox=[0 0 1472 1666]
+    pixel_test.go:402: FAIL missing 0.87614 <0.99 bbox=[0 0 1049 535]
+    pixel_test.go:402: FAIL operator 0.69063 <0.99 bbox=[0 0 1799 1199]
+    pixel_test.go:402: FAIL recruit 0.61351 <0.99 bbox=[0 0 1349 533]
+    pixel_test.go:405: 像素相似度未达标 (honest red): 14/16 失败: [base 0.95900 <0.99 bbox=[0 0 1664 917] box 0.82504 <0.99 bbox=[0 0 1049 535] box-detail 0.87844 <0.99 bbox=[0 0 721 278] box-summary 0.88098 <0.99 bbox=[0 0 1349 722] card 0.96020 <0.99 bbox=[0 0 1279 711] depot 0.91728 <0.99 bbox=[0 0 1247 233] enemy 0.91951 <0.99 bbox=[0 0 983 476] gacha 0.90251 <0.99 bbox=[0 0 1499 1322] headhunt 0.79983 <0.99 bbox=[0 0 1048 575] help 0.83943 <0.99 bbox=[0 0 989 2048] lottery 0.98358 <0.99 bbox=[0 0 1472 1666] missing 0.87614 <0.99 bbox=[0 0 1049 535] operator 0.69063 <0.99 bbox=[0 0 1799 1199] recruit 0.61351 <0.99 bbox=[0 0 1349 533]]
+--- FAIL: TestGGPixelParity (6.85s)
+=== RUN   TestGGPixelParity_Negative
+    pixel_test.go:441: negative test passed: perturbed box similarity=0.96251 <0.99 (honest harness)
+--- PASS: TestGGPixelParity_Negative (0.22s)
+=== RUN   TestGGPixelParity_Negative_EmptyBBoxGate
+    pixel_test.go:474: empty-bbox guard rejected vacuous pass: sim=1.00000 bbox=[0 0 0 0] reason=empty bbox=[0 0 0 0] (zero-area diff region: no pixel actually compared)
+--- PASS: TestGGPixelParity_Negative_EmptyBBoxGate (0.00s)
+FAIL
+FAIL	arknights_bot/ggrender	7.731s
+FAIL

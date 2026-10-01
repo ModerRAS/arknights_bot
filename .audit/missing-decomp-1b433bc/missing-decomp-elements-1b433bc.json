@@ -1,0 +1,69 @@
+{
+  "scene": "missing",
+  "measurement_point": "1b433bc",
+  "total_err": 71103685,
+  "elements": [
+    {
+      "element": "profession icon 15x15 @+3,+3",
+      "px": 2700,
+      "canvas_pct": 0.48,
+      "err": 655303,
+      "err_share_pct": 0.922,
+      "mean_abs_l1": 242.7
+    },
+    {
+      "element": "rarity dots (circles) top-right",
+      "px": 6000,
+      "canvas_pct": 1.066,
+      "err": 2620388,
+      "err_share_pct": 3.685,
+      "mean_abs_l1": 436.73
+    },
+    {
+      "element": "level badge circle (undeclared)",
+      "px": 4800,
+      "canvas_pct": 0.853,
+      "err": 874636,
+      "err_share_pct": 1.23,
+      "mean_abs_l1": 182.22
+    },
+    {
+      "element": "name bar 13px (declared)",
+      "px": 16380,
+      "canvas_pct": 2.91,
+      "err": 2926642,
+      "err_share_pct": 4.116,
+      "mean_abs_l1": 178.67
+    }
+  ],
+  "portrait_area": {
+    "px": 234720,
+    "err_share_pct": 69.415,
+    "mean_abs_l1": 210.28
+  },
+  "label_band": {
+    "px": 110250,
+    "err_share_pct": 16.756,
+    "mean_abs_l1": 108.07
+  },
+  "provenance": "retroactive-migration",
+  "original_path": "C:/WorkSpace/Golang/_lead2/<same filename>",
+  "why_retroactive": "The decomposition was produced outside the repository, on 2026-09-30, before the decision to archive it was taken; it was written to C:/WorkSpace/Golang/_lead2/ and the results stayed there while the definition (mask_overlap.py) went into the repository. Archiving the results without the generator would have created a second instance of \"the numbers are here, the instrument is not\".",
+  "external_chain": [
+    "C:/WorkSpace/Golang/_lead2/missing-decomp.py imports mask_overlap from C:/WorkSpace/Golang/arknights_bot-gg-card-atomic/.audit/content-mask-overlap-20260930/mask_overlap.py (archived at 6f444a1, extended at 1fd7f31) and uses its modal-RGB background and L1>30 ink mask verbatim. It reimplements nothing.",
+    "C:/WorkSpace/Golang/_lead2/missing-skinid-provenance-audit.md and missing-decomp-report.md are the prose companions of these numbers; they stayed in _lead2/ and are NOT archived here."
+  ],
+  "not_archived": "C:/WorkSpace/Golang/_lead2/report-section8.md - an orphaned fragment, deliberately left out (see content-mask-overlap report.md section 8.6).",
+  "precision": "Two archives carry overlapping measurements of `missing`. They overlap on some quantities and DIVERGE on one that shares a name. Derived by recomputation on the same two images (1050x536 = 562800 px). SAME QUANTITY, rounding only: inkOv 50.84 here vs 50.8 in the ink archive (1 decimal); rowCorr 0.6100 vs 0.610 (3 decimals); colCorr 0.4423 vs 0.442 (3 decimals). DIFFERENT QUANTITY, SAME NAME: this file flat_bg_pct_of_canvas = 34.92 = 100*(pixels outside the ink-union mask)/(H*W) = 196546/562800, quote it as \"ink-complement share\"; the ink archive flatBgPct = 37.13 = 100*max(modal-colour pixel count over the two images)/(H*W) = 208980/562800, quote it as \"modal-colour coverage\". Gap 2.21pp; they coincide only when the modal colour happens to equal the ink complement, which is not the case here. Both are correct for their own definition. AUTHORITY: this directory is authoritative for the per-digit decomposition; the content-mask-overlap archive is authoritative for the 16-scene comparison and the verdict rule. No value was changed to make the two agree. See precision_correction for what an earlier version of this field wrongly claimed.",
+  "authoritative_for": "the per-digit values of the missing-scene decomposition",
+  "precision_correction": {
+    "was": "THIS file is the AUTHORITATIVE precision ... inkOv 50.84, rowCorr 0.6102, colCorr 0.4423, flatBg 37.06 ... No value differs between the two beyond rounding.",
+    "errors": [
+      "rowCorr quoted as 0.6102; this file records 0.6100 (typo, two extra digits)",
+      "flatBg quoted as 37.06; this file records 34.92 (wrong value AND wrong framing)",
+      "framing claimed ONE measurement at two precisions; it is TWO different measurements that happen to share the field name flatBg"
+    ],
+    "severity": "the framing error is the serious one: this field exists so a reader does not have to re-derive anything, so a wrong self-description propagates to everyone who trusts it, while a wrong number only misstates one value.",
+    "fixed_by": "recomputation of both definitions on the same two images; see precision for the formulas and the arithmetic."
+  }
+}
