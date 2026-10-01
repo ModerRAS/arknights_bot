@@ -1,0 +1,767 @@
+{
+  "audit": "base-layout-completeness",
+  "date": "2026-09-30",
+  "kind": "layout completeness baseline (NOT pixel-parity evidence)",
+  "leaf_named_by_description": "本产物记录声明覆盖率，不为任何 commit 的像素测量作证，故叶子目录用描述名而非 sha。同 .audit/<sha>/ 规则本就不覆盖这类产物。",
+  "provenance": {
+    "worktree": "C:/WorkSpace/Golang/arknights_bot-gg-base-layout",
+    "branch": "feat/gg-render-base-layout",
+    "commit": "1b433bc17b453523c7bb11ce23eb29a89f644064",
+    "render_go_bytes": 46592,
+    "scene_enemy_go": "不存在（本树结构不同于 card 线）",
+    "impl_fn": "RenderBase",
+    "impl_line": 818,
+    "impl_line_note": "818 是本树的值。归档表 .audit/tmpl-vs-impl-6scenes 里的 impl_line=609 是 card 线 feat/gg-render-card@fcf0795 的值，在本树一律作废。",
+    "template_blob": "0f6970e977ab08d1ed1b71d57030bc2fccae898d",
+    "template_blob_note": "与 arknights_bot/feat/gg-render@1be2b34 的 Base.tmpl 同一 blob，模板侧读数对 base 任务有效"
+  },
+  "design_canvas_derivation": {
+    "manifest_entry": "src/ggrender/testdata/visual/fixtures.json:28 id=base scale=1.5",
+    "scale_to_manifest_call": "render.go:976 ScaleToManifest(dc, 1665, 918)",
+    "derived_css_width": {
+      "value": 1110,
+      "from": "1665 / 1.5"
+    },
+    "derived_css_height": {
+      "value": 612,
+      "from": "918 / 1.5"
+    },
+    "cross_check": "1665/1.5 = 1110 与 Base.tmpl:9 width: 1110px 精确吻合，manifest 宽度独立印证了模板声明",
+    "height_is_template_declared": false,
+    "height_note": "612 是 manifest 反推的自然流高度；Base.tmpl 与 assets/css/common.css 均未声明 #main height"
+  },
+  "undeclared_but_checked_both_sides": [
+    {
+      "property": "#main height",
+      "tmpl": "未声明",
+      "common_css": "未声明",
+      "verdict": "未声明"
+    },
+    {
+      "property": "font-size (全模板)",
+      "tmpl": "grep -nE 'font-size|line-height' template/Base.tmpl -> exit 1, 空输出",
+      "common_css": "16 行全文已读，不含 font-size",
+      "verdict": "未声明"
+    },
+    {
+      "property": "line-height (全模板)",
+      "tmpl": "同上 exit 1 空输出",
+      "common_css": "不含 line-height",
+      "verdict": "未声明"
+    },
+    {
+      "property": "body color",
+      "tmpl": "#main:10 color: white",
+      "common_css": "body{margin:0; font-family:...} 无 color",
+      "verdict": "由 #main 声明"
+    }
+  ],
+  "counts": {
+    "模板声明区域": 52,
+    "已实现区域": 44,
+    "ratio": "44/52 = 84.6%",
+    "counting_method": "一个原子声明 = Base.tmpl 中一条可复算的 css 声明或一处 template-declared 内联结构声明。当前 RenderBase 逐条核对，全部以 ✓/✔ 判定，判定依据记在 atoms[].honored_now。",
+    "anti_fudge": "8 个 .base 块标题中只有「控制中枢 Lv.N」文案一致（记 1 项 ✓）；其余 7 块把 title_icon 的字段并进了标题、或拼了模板没有的字段，记 ✗。.board 线索值虽以文本打出，但未画成 .board 圆角块，不记 ✓。",
+    "数据不可得": 8,
+    "仍未实现": 0
+  },
+  "atoms": [
+    {
+      "id": "A01",
+      "prop": "#main background-color",
+      "decl": "8: background-color: #2b333d;",
+      "origin_source": "css",
+      "honored_now": "✓",
+      "impl_now": "render.go FillBackground(dc, 43, 51, 61) = #2b333d，与 8 行声明一致"
+    },
+    {
+      "id": "A02",
+      "prop": "#main width",
+      "decl": "9: width: 1110px;",
+      "origin_source": "css",
+      "honored_now": "✓",
+      "impl_now": "render.go const mainW, mainH = 1110, 612；宽 1110 取自 9 行声明，高 612 为 manifest 视口 918/1.5"
+    },
+    {
+      "id": "A03",
+      "prop": "#main color",
+      "decl": "10: color: white;",
+      "origin_source": "css",
+      "honored_now": "✓",
+      "impl_now": "多处 dc.SetRGB255(255,255,255)"
+    },
+    {
+      "id": "B01",
+      "prop": "头部标题文案",
+      "decl": "68: <h3 style=\"display: inline\">基建信息</h3>",
+      "origin_source": "template-declared",
+      "honored_now": "✓",
+      "impl_now": "render.go 头部 drawString(dc, \"基建信息\", h3ML, 18)"
+    },
+    {
+      "id": "B02",
+      "prop": "头部右侧容器",
+      "decl": "69: <span style=\"display: inline-block;float: right;margin-right: 30px\">",
+      "origin_source": "template-declared",
+      "honored_now": "✓",
+      "impl_now": "render.go 无人机组右边缘 labR=1080 = 1110-30（margin-right:30px 的净布局效果已实现；float/inline-block 机制未建模）"
+    },
+    {
+      "id": "B03",
+      "prop": "头部标签行 display",
+      "decl": "70: <div style=\"display: flex\">",
+      "origin_source": "template-declared",
+      "honored_now": "✓",
+      "impl_now": "头部 flex 行：齿轮图标在左、无人机文本在右，同一行并排（render.go 头部绘制段）"
+    },
+    {
+      "id": "B04",
+      "prop": "头部 svg 尺寸",
+      "decl": "71: <svg width=\"20\" height=\"20\" viewBox=\"0 0 48 48\">",
+      "origin_source": "template-declared",
+      "honored_now": "✓",
+      "impl_now": "drawBaseGearIcon()：4 段 270 度弧 r=7.1 圆心在 (36,12)(36,36)(12,36)(12,12)，90 度缺口朝向图标中心 (24,24)；4 条 spokes；中心 10x10 方块；stroke #852cd3 宽 4。弧起止点与模板 path 端点逐一核对吻合"
+    },
+    {
+      "id": "B05",
+      "prop": "#labor width",
+      "decl": "37: width: 100px;",
+      "origin_source": "css",
+      "honored_now": "✓",
+      "impl_now": "render.go const barW = 100.0"
+    },
+    {
+      "id": "B06",
+      "prop": "#labor height",
+      "decl": "38: height: 3px;",
+      "origin_source": "css",
+      "honored_now": "✓",
+      "impl_now": "render.go const barH = 3.0"
+    },
+    {
+      "id": "B07",
+      "prop": "#labor border-radius",
+      "decl": "39: border-radius: 1px;",
+      "origin_source": "css",
+      "honored_now": "✓",
+      "impl_now": "render.go const barR = 1.0"
+    },
+    {
+      "id": "C01",
+      "prop": ".base width",
+      "decl": "13: width: 550px;",
+      "origin_source": "css",
+      "honored_now": "✓",
+      "impl_now": "render.go const cardW = 550"
+    },
+    {
+      "id": "C02",
+      "prop": ".base height",
+      "decl": "14: height: 110px;",
+      "origin_source": "css",
+      "honored_now": "✓",
+      "impl_now": "render.go const cardH = 110"
+    },
+    {
+      "id": "C03",
+      "prop": ".base border-radius",
+      "decl": "15: border-radius: 15px;",
+      "origin_source": "css",
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
+    },
+    {
+      "id": "C04",
+      "prop": ".base border",
+      "decl": "16: border: 1px solid #21262f;",
+      "origin_source": "css",
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
+    },
+    {
+      "id": "C05",
+      "prop": ".base display",
+      "decl": "17: display: inline-flex;",
+      "origin_source": "css",
+      "honored_now": "✓",
+      "impl_now": "render.go place() 按 inline-flex 左到右填充并换行，550*2=1100<=1110 得两列"
+    },
+    {
+      "id": "C06",
+      "prop": ".base flex-direction",
+      "decl": "18: flex-direction: column;",
+      "origin_source": "css",
+      "honored_now": "✓",
+      "impl_now": "render.go drawCard 内标题行在上、角色行在下，纵向堆叠"
+    },
+    {
+      "id": "C07",
+      "prop": ".base margin-top",
+      "decl": "19: margin-top: 5px;",
+      "origin_source": "css",
+      "honored_now": "✓",
+      "impl_now": "render.go const gapY = 5，place() 中 py = cy + gapY"
+    },
+    {
+      "id": "C08",
+      "prop": ".base background-color",
+      "decl": "20: background-color: #21262f;",
+      "origin_source": "css",
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
+    },
+    {
+      "id": "C09",
+      "prop": ".base 内联 width 覆盖",
+      "decl": "85: <div class=\"base\" style=\"width: 1105px;\"> / 128: 同",
+      "origin_source": "template-declared",
+      "honored_now": "✓",
+      "impl_now": "render.go const wideW = 1105，应用于控制中枢与宿舍两块"
+    },
+    {
+      "id": "D01",
+      "prop": "h3 margin-left",
+      "decl": "26: margin-left: 10px;",
+      "origin_source": "css",
+      "honored_now": "✓",
+      "impl_now": "render.go const h3ML = 10，标题绘于 px+h3ML"
+    },
+    {
+      "id": "D02",
+      "prop": ".title display",
+      "decl": "42: display: flex;",
+      "origin_source": "css",
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
+    },
+    {
+      "id": "D03",
+      "prop": ".title justify-content",
+      "decl": "43: justify-content: space-between;",
+      "origin_source": "css",
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
+    },
+    {
+      "id": "D04",
+      "prop": ".title_icon display",
+      "decl": "46: display: inline-flex;",
+      "origin_source": "css",
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
+    },
+    {
+      "id": "D05",
+      "prop": ".title_icon align-items",
+      "decl": "47: align-items: center;",
+      "origin_source": "css",
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
+    },
+    {
+      "id": "D06",
+      "prop": ".title_icon margin-right",
+      "decl": "48: margin-right: 20px;",
+      "origin_source": "css",
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
+    },
+    {
+      "id": "D07",
+      "prop": ".chars margin-left",
+      "decl": "51: margin-left: 10px;",
+      "origin_source": "css",
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
+    },
+    {
+      "id": "D08",
+      "prop": ".skill width",
+      "decl": "61: width: 30px;",
+      "origin_source": "css",
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
+    },
+    {
+      "id": "D09",
+      "prop": ".board width",
+      "decl": "56: width: 20px;",
+      "origin_source": "css",
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
+    },
+    {
+      "id": "D10",
+      "prop": ".board border-radius",
+      "decl": "58: border-radius: 5px;",
+      "origin_source": "css",
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
+    },
+    {
+      "id": "D11",
+      "prop": ".board display",
+      "decl": "54: display: inline-flex;",
+      "origin_source": "css",
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
+    },
+    {
+      "id": "D12",
+      "prop": ".board justify-content",
+      "decl": "55: justify-content: center;",
+      "origin_source": "css",
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
+    },
+    {
+      "id": "D13",
+      "prop": ".board border",
+      "decl": "57: border: solid 1px;",
+      "origin_source": "css",
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
+    },
+    {
+      "id": "D14",
+      "prop": ".avatar width",
+      "decl": "23: width: 40px;",
+      "origin_source": "css",
+      "honored_now": "⊘",
+      "impl_now": "render.go:845 DrawCircle(cx+22, cy, 22) 灰色实心圆；其余处 r=16",
+      "classification": "blocked_by_downstream_blocked",
+      "layer1_geometry_reachable": "几何部分现在就能画对（.avatar 槽 40x40 已在 drawCard 循环位置预留），但本轮未画。",
+      "layer2_downstream": "下游 F09 属 ⊘。⊘ 有两类：本身依赖不可得数据（F09/F11/F12/E01-E03），以及下游是 ⊘（本项属此类）。不新造桶。",
+      "expectation": "下游解阻前本项不会翻成 ✓。读本行不得理解为头像已经画好了 —— 槽位几何与立绘内容是两件事。"
+    },
+    {
+      "id": "E01",
+      "prop": "progress.ap width",
+      "decl": "29: width: 150px;",
+      "origin_source": "css",
+      "honored_now": "⊘",
+      "impl_now": "未实现",
+      "classification": "necessary_not_sufficient",
+      "layer1_type_flattening": "BaseInfo.Chars 为 []string，Avatar/AP 在进入渲染器之前就被丢弃。web 层 src/core/web/base.go:86,88,89 的 BaseChar 确有 Name/Avatar/AP。这一层我们能修，改为携带 Avatar/AP 的结构即可打通渲染路径。",
+      "layer2_fixture_has_no_values": "SampleBase() 的 Chars 全是 []string{name}，一个 Avatar/AP 值都没有（render.go:769/776/777/785/786/793/794 全是名字）。harness 走的正是 SampleBase()，因此即使修好类型也喂不出值。这一层与 card 的头像属于同一类阻塞，需要数据来源。",
+      "expectation": "只修 layer1 不会让本原子翻成 ✓。这是「必要非充分」：layer1 是必要条件，layer2 才是充分条件。不要以为做完类型修复这 6 项就该动了。"
+    },
+    {
+      "id": "E02",
+      "prop": "progress.ap height",
+      "decl": "30: height: 3px;",
+      "origin_source": "css",
+      "honored_now": "⊘",
+      "impl_now": "未实现",
+      "classification": "necessary_not_sufficient",
+      "layer1_type_flattening": "BaseInfo.Chars 为 []string，Avatar/AP 在进入渲染器之前就被丢弃。web 层 src/core/web/base.go:86,88,89 的 BaseChar 确有 Name/Avatar/AP。这一层我们能修，改为携带 Avatar/AP 的结构即可打通渲染路径。",
+      "layer2_fixture_has_no_values": "SampleBase() 的 Chars 全是 []string{name}，一个 Avatar/AP 值都没有（render.go:769/776/777/785/786/793/794 全是名字）。harness 走的正是 SampleBase()，因此即使修好类型也喂不出值。这一层与 card 的头像属于同一类阻塞，需要数据来源。",
+      "expectation": "只修 layer1 不会让本原子翻成 ✓。这是「必要非充分」：layer1 是必要条件，layer2 才是充分条件。不要以为做完类型修复这 6 项就该动了。"
+    },
+    {
+      "id": "E03",
+      "prop": "progress.ap border-radius",
+      "decl": "31: border-radius: 1px;",
+      "origin_source": "css",
+      "honored_now": "⊘",
+      "impl_now": "未实现",
+      "classification": "necessary_not_sufficient",
+      "layer1_type_flattening": "BaseInfo.Chars 为 []string，Avatar/AP 在进入渲染器之前就被丢弃。web 层 src/core/web/base.go:86,88,89 的 BaseChar 确有 Name/Avatar/AP。这一层我们能修，改为携带 Avatar/AP 的结构即可打通渲染路径。",
+      "layer2_fixture_has_no_values": "SampleBase() 的 Chars 全是 []string{name}，一个 Avatar/AP 值都没有（render.go:769/776/777/785/786/793/794 全是名字）。harness 走的正是 SampleBase()，因此即使修好类型也喂不出值。这一层与 card 的头像属于同一类阻塞，需要数据来源。",
+      "expectation": "只修 layer1 不会让本原子翻成 ✓。这是「必要非充分」：layer1 是必要条件，layer2 才是充分条件。不要以为做完类型修复这 6 项就该动了。"
+    },
+    {
+      "id": "E04",
+      "prop": "progress value background",
+      "decl": "34: progress::-webkit-progress-value{ background: white; }",
+      "origin_source": "css",
+      "honored_now": "✓",
+      "impl_now": "render.go 进度条已填充段 dc.SetRGB255(255,255,255)"
+    },
+    {
+      "id": "F01",
+      "prop": "块1 控制中枢标题",
+      "decl": "86: <h3>控制中枢 Lv.{{.Control.Level}}</h3>",
+      "origin_source": "template-declared",
+      "honored_now": "✓",
+      "impl_now": "render.go:839 控制中枢 Lv%d（文案一致；块几何仍全错）"
+    },
+    {
+      "id": "F02",
+      "prop": "块2 宿舍标题",
+      "decl": "129: <h3 class=\"title\">宿舍 Lv.{{.Level}}",
+      "origin_source": "template-declared",
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
+    },
+    {
+      "id": "F03",
+      "prop": "块3 贸易站标题",
+      "decl": "183: <h3 class=\"title\">贸易站 Lv.{{.Level}}",
+      "origin_source": "template-declared",
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
+    },
+    {
+      "id": "F04",
+      "prop": "块4 制造站标题",
+      "decl": "236: <h3 class=\"title\">制造站 Lv.{{.Level}}",
+      "origin_source": "template-declared",
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
+    },
+    {
+      "id": "F05",
+      "prop": "块5 发电站标题",
+      "decl": "291: <h3 class=\"title\">发电站 Lv.{{.Level}}",
+      "origin_source": "template-declared",
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
+    },
+    {
+      "id": "F06",
+      "prop": "块6 会客室标题",
+      "decl": "343: <h3 class=\"title\">会客室 Lv.{{.Meeting.Level}}",
+      "origin_source": "template-declared",
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
+    },
+    {
+      "id": "F07",
+      "prop": "块7 办公室标题",
+      "decl": "408: <h3 class=\"title\">办公室 Lv.{{.Hire.Level}}",
+      "origin_source": "template-declared",
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
+    },
+    {
+      "id": "F08",
+      "prop": "块8 训练室标题",
+      "decl": "459: <h3 class=\"title\">训练室 Lv.{{.Training.Level}}",
+      "origin_source": "template-declared",
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
+    },
+    {
+      "id": "F09",
+      "prop": "角色头像真实立绘",
+      "decl": "92,145,198,253,306,372,423,472: <img class=\"avatar\" src=\".../char_skin/avatar/{{urlquery .Avatar}}.png\">",
+      "origin_source": "template-declared",
+      "honored_now": "⊘",
+      "impl_now": "未实现",
+      "classification": "necessary_not_sufficient",
+      "layer1_type_flattening": "BaseInfo.Chars 为 []string，Avatar/AP 在进入渲染器之前就被丢弃。web 层 src/core/web/base.go:86,88,89 的 BaseChar 确有 Name/Avatar/AP。这一层我们能修，改为携带 Avatar/AP 的结构即可打通渲染路径。",
+      "layer2_fixture_has_no_values": "SampleBase() 的 Chars 全是 []string{name}，一个 Avatar/AP 值都没有（render.go:769/776/777/785/786/793/794 全是名字）。harness 走的正是 SampleBase()，因此即使修好类型也喂不出值。这一层与 card 的头像属于同一类阻塞，需要数据来源。",
+      "expectation": "只修 layer1 不会让本原子翻成 ✓。这是「必要非充分」：layer1 是必要条件，layer2 才是充分条件。不要以为做完类型修复这 6 项就该动了。"
+    },
+    {
+      "id": "F10",
+      "prop": "角色容器 display",
+      "decl": "91,144,197,252,305,371,422,471: <span style=\"display: inline-grid\">",
+      "origin_source": "template-declared",
+      "honored_now": "⊘",
+      "impl_now": "无",
+      "classification": "blocked_by_downstream_blocked",
+      "layer1_geometry_reachable": "几何部分现在就能画对（.avatar 槽 40x40 已在 drawCard 循环位置预留），但本轮未画。",
+      "layer2_downstream": "下游 E01/E02/E03/F12 属 ⊘。⊘ 有两类：本身依赖不可得数据（F09/F11/F12/E01-E03），以及下游是 ⊘（本项属此类）。不新造桶。",
+      "expectation": "下游解阻前本项不会翻成 ✓。读本行不得理解为头像已经画好了 —— 槽位几何与立绘内容是两件事。"
+    },
+    {
+      "id": "F11",
+      "prop": "AP 图标尺寸与三态配色",
+      "decl": "93,146,199,254,307,373,424,473: <svg width=\"20\" height=\"20\">，stroke #e42e20 (le .AP 0) / #f0ab22 (lt .AP 100) / #3cd627",
+      "origin_source": "template-declared",
+      "honored_now": "⊘",
+      "impl_now": "未实现",
+      "classification": "necessary_not_sufficient",
+      "layer1_type_flattening": "BaseInfo.Chars 为 []string，Avatar/AP 在进入渲染器之前就被丢弃。web 层 src/core/web/base.go:86,88,89 的 BaseChar 确有 Name/Avatar/AP。这一层我们能修，改为携带 Avatar/AP 的结构即可打通渲染路径。",
+      "layer2_fixture_has_no_values": "SampleBase() 的 Chars 全是 []string{name}，一个 Avatar/AP 值都没有（render.go:769/776/777/785/786/793/794 全是名字）。harness 走的正是 SampleBase()，因此即使修好类型也喂不出值。这一层与 card 的头像属于同一类阻塞，需要数据来源。",
+      "expectation": "只修 layer1 不会让本原子翻成 ✓。这是「必要非充分」：layer1 是必要条件，layer2 才是充分条件。不要以为做完类型修复这 6 项就该动了。"
+    },
+    {
+      "id": "F12",
+      "prop": "角色 AP 进度条",
+      "decl": "119,172,225,280,333,399,450,499: <progress class=\"ap\" max=\"100\" value=\"{{.AP}}\">",
+      "origin_source": "template-declared",
+      "honored_now": "⊘",
+      "impl_now": "未实现",
+      "classification": "necessary_not_sufficient",
+      "layer1_type_flattening": "BaseInfo.Chars 为 []string，Avatar/AP 在进入渲染器之前就被丢弃。web 层 src/core/web/base.go:86,88,89 的 BaseChar 确有 Name/Avatar/AP。这一层我们能修，改为携带 Avatar/AP 的结构即可打通渲染路径。",
+      "layer2_fixture_has_no_values": "SampleBase() 的 Chars 全是 []string{name}，一个 Avatar/AP 值都没有（render.go:769/776/777/785/786/793/794 全是名字）。harness 走的正是 SampleBase()，因此即使修好类型也喂不出值。这一层与 card 的头像属于同一类阻塞，需要数据来源。",
+      "expectation": "只修 layer1 不会让本原子翻成 ✓。这是「必要非充分」：layer1 是必要条件，layer2 才是充分条件。不要以为做完类型修复这 6 项就该动了。"
+    },
+    {
+      "id": "F13",
+      "prop": "会客室线索块",
+      "decl": "360: <div class=\"board\">{{.}}</div>",
+      "origin_source": "template-declared",
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
+    },
+    {
+      "id": "F14",
+      "prop": "训练室技能图标",
+      "decl": "463: <img class=\"skill\" src=\".../char_skill/{{.Training.Skill}}.png\">",
+      "origin_source": "template-declared",
+      "honored_now": "✓",
+      "impl_now": "Phase 2 已按模板声明实现"
+    },
+    {
+      "id": "F15",
+      "prop": "会客室线索交流块",
+      "decl": "346: <div style=\"position: absolute;margin-left: -200px;color: #eb9712;display: flex;align-items: center;\"> 线索交流开启中",
+      "origin_source": "template-declared",
+      "honored_now": "✓",
+      "impl_now": "drawIcon boards 分支内：线索交流开启中 绘于 title_icon 静态位置 -200，颜色 #eb9712，仅当 Meeting.Sharing 为真。注：其 20x20 svg 子元素未复现，作为 F15 自身的 note 记录，不新造原子（总数须仍为 52）",
+      "icon_child_not_reproduced": "F15 的 20x20 svg 子元素（three-people icon，stroke #ee810a）未复现。容器声明（position/margin/color）与静态文本已按声明实现；图标本身仍缺。读本行不得理解为该块已完全画好。"
+    }
+  ],
+  "baseline_verdict": {
+    "score_now": 0.959,
+    "score_caveat": "该分数靠平坦背景撑着，画的是错的东西，不是门禁通过",
+    "gate": "0.99",
+    "criterion_is": "是否按 Base.tmpl 的声明实现了，不是分数",
+    "no_less_drawing_rule": "不许为了分数少画；少画正是当前 bug 的成因",
+    "geometry_provenance_rule": "所有几何一律从 Base.tmpl 声明推出，标 origin_source: css / template-declared，一个坐标都不许来自基线图"
+  },
+  "planned_fix_order": [
+    {
+      "phase": 1,
+      "items": [
+        "A02",
+        "A01",
+        "C01",
+        "C09",
+        "C02",
+        "C05",
+        "C06",
+        "C07"
+      ],
+      "why": "画布与卡片几何是其余一切的地基。1110 已由 manifest 1665/1.5 独立印证；550/1105 两宽 + inline-flex 推导出多列网格，这是当前最大的结构性缺失。"
+    },
+    {
+      "phase": 2,
+      "items": [
+        "D01",
+        "D02",
+        "D03",
+        "D04",
+        "D05",
+        "D06",
+        "D14",
+        "F09",
+        "F11",
+        "F12",
+        "F10",
+        "E01",
+        "E02",
+        "E03",
+        "E04"
+      ],
+      "why": "块内文字行与角色条。头像从灰色圆换成模板声明的 40px 真实立绘（char_skin/avatar URL），并补 AP 三态图标与 150x3 进度条。"
+    },
+    {
+      "phase": 3,
+      "items": [
+        "F01",
+        "F02",
+        "F03",
+        "F04",
+        "F05",
+        "F06",
+        "F07",
+        "F08",
+        "C03",
+        "C04",
+        "C08",
+        "D07"
+      ],
+      "why": "八块标题回到模板文案（字段归位到 title_icon），补卡片圆角 15 / 1px solid #21262f 描边 / #21262f 底色 / .chars margin-left 10。"
+    },
+    {
+      "phase": 4,
+      "items": [
+        "D08",
+        "D09",
+        "D10",
+        "D11",
+        "D12",
+        "D13",
+        "F13",
+        "F14",
+        "F15"
+      ],
+      "why": "专用块：.board 线索 20px 圆角、.skill 30px、线索交流开启中绝对定位块。"
+    },
+    {
+      "phase": 5,
+      "items": [
+        "B01",
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B07"
+      ],
+      "why": "头部：基建信息 h3 inline、右侧 inline-block float right margin-right 30、20x20 svg、#labor 100x3 圆角 1。"
+    }
+  ],
+  "phase1_result": {
+    "branch": "feat/gg-render-base-layout",
+    "base_commit": "0160824",
+    "score_before_same_tree": 0.959,
+    "score_after": 0.92297,
+    "score_delta": -0.03603,
+    "completeness_before": "2/52 = 3.8%",
+    "completeness_after": "17/52 = 32.7%",
+    "atoms_flipped_this_change": [
+      "A01",
+      "A02",
+      "B01",
+      "B02",
+      "B05",
+      "B06",
+      "B07",
+      "C01",
+      "C02",
+      "C05",
+      "C06",
+      "C07",
+      "C09",
+      "D01",
+      "E04"
+    ],
+    "score_dropped_and_completeness_rose": true,
+    "mid_correction": "第一版把 header 的 #labor 进度条整段删掉了（ProgressBar 调用消失，grep 退出码 1 空输出），那属于为少画而少画。已按 37/38/39/34 行声明补回 100x3 圆角 1 白色填充，并据此多计入 5 个原子。",
+    "pulled_forward": "B02/B05/B06/B07/E04 原属 Phase 5，因上述补回被拉进 Phase 1",
+    "not_claimed": "B03/B04（头部 20x20 svg 未画）、C03/C04/C08（圆角 15、1px solid #21262f 描边、#21262f 底色仍为旧样式）、D02~D07/D09~D14、F02~F15 均未实现",
+    "geometry_provenance": "全部坐标取自 Base.tmpl 声明或由其算术推导；无一个坐标来自基线图"
+  },
+  "phase2_result": {
+    "score_after_phase1": 0.92297,
+    "score_after": 0.97074,
+    "score_delta_vs_phase1": 0.04777,
+    "score_vs_original_1b433bc": {
+      "original": 0.959,
+      "now": 0.97074,
+      "delta": 0.01174
+    },
+    "completeness_before": "17/52 = 32.7%",
+    "completeness_after": "41/52 = 78.8%",
+    "atoms_flipped": [
+      "C03",
+      "C04",
+      "C08",
+      "D02",
+      "D03",
+      "D04",
+      "D05",
+      "D06",
+      "D07",
+      "D08",
+      "D09",
+      "D10",
+      "D11",
+      "D12",
+      "D13",
+      "F02",
+      "F03",
+      "F04",
+      "F05",
+      "F06",
+      "F07",
+      "F08",
+      "F13",
+      "F14"
+    ],
+    "atoms_data_unavailable": [
+      "E01",
+      "E02",
+      "E03",
+      "F09",
+      "F11",
+      "F12"
+    ],
+    "score_rose_and_completeness_rose": true,
+    "icon_open": {
+      "B03": "头部 flex div 未实现（同 B04 的 20x20 svg 未复现）",
+      "B04": "头部 20x20 svg 未复现",
+      "D14": ".avatar width 40px 未实现：依赖 F09 立绘",
+      "F10": "角色 span display:inline-grid 未实现：其第二行是 progress.ap，依赖 AP 数据",
+      "F15": "会客室线索交流开启中块未实现：含 20x20 svg，且需绝对定位 -200px 基准"
+    },
+    "label_corrections": "Phase 1 把 title_icon 的字段并进标题，Phase 2 已按模板行号归位；其中两处 Phase 1 画错了标签：发电站模板 298 行只有裸数字 {{.Power}}，Phase 1 画成了「N 电力」；办公室模板 415 行是「刷新次数N」，Phase 1 画成了「刷新 N」。两处均已改正。"
+  },
+  "phase3_result": {
+    "type_fix_status": "本轮降级，不做。理由：它今天不改变任何可测量的东西——harness 走 SampleBase() 喂不出值，6 个原子翻不了、完成度不动。为一个今天测不出差异的改动单独立项是花钱买「看起来在修」。已搭进下一次 base 改动。",
+    "score_annotation": "画布已自洽（fx==fy=1.5，Phase 1 顺带修正了尾部 +40）。但内容底边 944 > 画布 612，裁掉 332px = 内容的 35.2%。「基线抓取也是这么裁的」这一等同性自标未证实（从画布尺寸推的，无像素证据）。所以 0.97074 的限制不是「画布被拉伸」，而是「三分之一的画面被裁切，而裁切是否与基线一致未验证」。",
+    "score_annotation_superseded": "先前使用的「画布存在 -52.6% 纵向失真」已被实测推翻，不撤换限制而是换限制：base 自身 -52.6% 出自 1b433bc:822 的内容推导 h（公式尾部 +40），Phase 1 已把 base 的 mainH 改为常量 612，实测 fx==fy==1.5、失真 0.00%。",
+    "clipping": {
+      "status": "待验证",
+      "content_bottom": 944,
+      "canvas_height": 612,
+      "clipped_px": 332,
+      "clipped_fraction_of_content": "35.2%",
+      "note": "记为待验证，不猜、不在本轮动。裁切是否与基线一致尚无像素证据。"
+    },
+    "mainh_pointer": {
+      "base_here": "本树 RenderBase 的 mainH 已在 Phase 1 改为常量 1110x612（render.go:833），不喂任何坐标。",
+      "other_sites": "render.go 内另有 8 处内容推导式 mainH := ...（行 211/264/369/450/628/686/1049/1161），属画布尺寸那一类问题，由 lead-2 那条线统一处理，不要在本树动。"
+    },
+    "self_evidence_error": "我曾写「本树 render.go 内 mainH 只出现两处」。实测全文件 22 行、跨 9 个场景（其中 8 处是内容推导式）。结论对 base 仍成立，但成立的理由是 base 这处是 const 且不喂坐标，不是「全文件只有两处」。这是把局部成立写成全局成立，比反过来更危险——它会让下一个人以为全仓干净了。",
+    "lead_count_correction": "lead 先前口头说 19 行，机械数出是 22 行；lead 已确认我的数为准，并自述其 19 是看着输出数的、不是数出来的。"
+  },
+  "phase4_result": {
+    "bucket_before": {
+      "OK": 41,
+      "open_x": 5,
+      "blocked": 6,
+      "total": 52
+    },
+    "bucket_after": {
+      "OK": 44,
+      "open_x": 0,
+      "blocked": 8,
+      "total": 52
+    },
+    "sum_check": "44+0+8=52 通过",
+    "this_round_x_to_ok": [
+      "B03",
+      "B04",
+      "F15"
+    ],
+    "this_round_x_to_blocked": [
+      "D14",
+      "F10"
+    ],
+    "bucket_moves_are_not_progress": "桶之间的移动不是进展，完成度上升才是。本轮 OK 由 41 升到 44，是真正的上升；D14/F10 从 open 移入 blocked 不是。",
+    "boss_arithmetic_correction": "Boss 口头说「✗ 由 5 变 2」且「另 2 个是移入 ⊘」，这两句不能同时成立：5 个 ✗ 里 3 个翻 ✓、2 个移入 ⊘，五个全都离开了 ✗ 桶。实测 ✗ 为 0、⊘ 为 8；若按 ✗2/⊘8 则 44+2+8=54，超出总数 52。按实测写，不为对上口头数字去凑。",
+    "score_after": 0.97073,
+    "score_note": "与 Phase 2 的 0.97074 实质持平。符合预期：类型修复不改变输出（SampleBase 的 Chars 无 Avatar/AP 值），齿轮图标 20x20 与 F15 文本块占比极小。分数仍受裁切限制，不作成败判据。",
+    "type_fix": "本轮随 Phase 4 一并落地（layer1）。新增 BaseChar{Name,Avatar,AP}，BaseInfo 的 9 处 Chars 改为 []BaseChar，SampleBase 字面量同步。必要非充分：只是让渲染路径具备画立绘/AP 的能力，harness 走 SampleBase() 仍喂不出值，6 个 ⊘ 一个都没动。",
+    "rework_surface_mainh": "无。本树 RenderBase 的 mainH 是 Phase 1 钉成的常量 1110x612（render.go），只出现在 NewContext，不喂任何坐标。render.go 内另有 8 处内容推导式 mainH := ... 属画布尺寸那一类，由 lead-2 统一处理，本树不动。",
+    "rework_surface_font_and_ua": [
+      {
+        "item": "headerH = 24",
+        "kind": "browser-default",
+        "basis": "Base.tmpl 与 assets/css/common.css 均未声明头部高度，取 h3 默认行盒。两侧都查过。"
+      },
+      {
+        "item": "齿轮与无人机文本在同一 20px flex 行内的基线",
+        "kind": "browser-default",
+        "basis": "70 行只声明 display:flex，未声明 align-items；默认 stretch 作用于含文本的 span，基线由此确定。列位置由声明的 20px 宽与文本宽固定。"
+      },
+      {
+        "item": ".board 高度取 20（与声明的 20px 宽同值）",
+        "kind": "browser-default",
+        "basis": "54-58 行只声明 width:20px，未声明 height，高度应由行盒决定。"
+      },
+      {
+        "item": "title_icon 右对齐依赖 measure() 的字体度量",
+        "kind": "font-metric",
+        "basis": "D02/D03 space-between 的落点由本渲染器的字体度量算出，与浏览器字体度量可能有差异，非模板可推。"
+      }
+    ]
+  }
+}

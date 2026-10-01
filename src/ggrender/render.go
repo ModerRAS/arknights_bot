@@ -3,6 +3,7 @@ package ggrender
 import (
 	"fmt"
 	"image"
+	"math"
 
 	"github.com/fogleman/gg"
 )
@@ -843,50 +844,58 @@ func RenderRecruit(data *RecruitList) (*gg.Context, error) {
 // ---------- remaining 9 scenes ----------
 
 // Base
+// BaseChar mirrors the web-layer type at src/core/web/base.go:86 so Avatar and AP
+// survive into the gg render path. Necessary but NOT sufficient: the parity harness
+// runs SampleBase(), whose Chars carry names only, so this alone flips no atom.
+type BaseChar struct {
+	Name   string
+	Avatar string
+	AP     int
+}
 type BaseInfo struct {
 	Name    string
 	Labor   struct{ Cur, Total int }
 	Control struct {
 		Level int
-		Chars []string
+		Chars []BaseChar
 	}
 	Tradings []struct {
 		Level      int
-		Chars      []string
+		Chars      []BaseChar
 		Cur, Total int
 		Strategy   string
 	}
 	Manufactures []struct {
 		Level       int
-		Chars       []string
+		Chars       []BaseChar
 		Cur, Total  int
 		Item, Speed string
 	}
 	Powers []struct {
 		Level int
-		Chars []string
+		Chars []BaseChar
 		Power int
 	}
 	Meeting struct {
 		Level   int
-		Chars   []string
+		Chars   []BaseChar
 		Board   []int
 		Sharing bool
 	}
 	Hire struct {
 		Level   int
-		Chars   []string
+		Chars   []BaseChar
 		Refresh int
 	}
 	Training struct {
 		Level  int
-		Chars  []string
+		Chars  []BaseChar
 		Skill  string
 		SLevel int
 	}
 	Dorms []struct {
 		Level   int
-		Chars   []string
+		Chars   []BaseChar
 		Comfort int
 	}
 }
@@ -896,213 +905,284 @@ func SampleBase() *BaseInfo {
 	b.Labor.Cur = 108
 	b.Labor.Total = 120
 	b.Control.Level = 5
-	b.Control.Chars = []string{"阿米娅", "凯尔希", "煌"}
+	b.Control.Chars = []BaseChar{{Name: "阿米娅"}, {Name: "凯尔希"}, {Name: "煌"}}
 	b.Tradings = []struct {
 		Level      int
-		Chars      []string
+		Chars      []BaseChar
 		Cur, Total int
 		Strategy   string
 	}{
-		{Level: 3, Chars: []string{"能天使", "德克萨斯"}, Cur: 3, Total: 5, Strategy: "贵金属订单"},
-		{Level: 3, Chars: []string{"拉普兰德"}, Cur: 2, Total: 5, Strategy: "源石订单"},
+		{Level: 3, Chars: []BaseChar{{Name: "能天使"}, {Name: "德克萨斯"}}, Cur: 3, Total: 5, Strategy: "贵金属订单"},
+		{Level: 3, Chars: []BaseChar{{Name: "拉普兰德"}}, Cur: 2, Total: 5, Strategy: "源石订单"},
 	}
 	b.Manufactures = []struct {
 		Level       int
-		Chars       []string
+		Chars       []BaseChar
 		Cur, Total  int
 		Item, Speed string
 	}{
-		{Level: 3, Chars: []string{"夜烟", "远山"}, Cur: 10, Total: 20, Item: "中级作战记录", Speed: "120%"},
-		{Level: 3, Chars: []string{"砾"}, Cur: 8, Total: 20, Item: "赤金", Speed: "100%"},
+		{Level: 3, Chars: []BaseChar{{Name: "夜烟"}, {Name: "远山"}}, Cur: 10, Total: 20, Item: "中级作战记录", Speed: "120%"},
+		{Level: 3, Chars: []BaseChar{{Name: "砾"}}, Cur: 8, Total: 20, Item: "赤金", Speed: "100%"},
 	}
 	b.Powers = []struct {
 		Level int
-		Chars []string
+		Chars []BaseChar
 		Power int
 	}{
-		{Level: 3, Chars: []string{"格雷伊"}, Power: 270},
-		{Level: 3, Chars: []string{"清流"}, Power: 270},
+		{Level: 3, Chars: []BaseChar{{Name: "格雷伊"}}, Power: 270},
+		{Level: 3, Chars: []BaseChar{{Name: "清流"}}, Power: 270},
 	}
 	b.Meeting.Level = 3
-	b.Meeting.Chars = []string{"诗怀雅"}
+	b.Meeting.Chars = []BaseChar{{Name: "诗怀雅"}}
 	b.Meeting.Board = []int{1, 2, 3}
 	b.Meeting.Sharing = true
 	b.Hire.Level = 3
-	b.Hire.Chars = []string{"陈"}
+	b.Hire.Chars = []BaseChar{{Name: "陈"}}
 	b.Hire.Refresh = 2
 	b.Training.Level = 3
-	b.Training.Chars = []string{"赫拉格", "华法琳"}
+	b.Training.Chars = []BaseChar{{Name: "赫拉格"}, {Name: "华法琳"}}
 	b.Training.Skill = "阿米娅-奇美拉"
 	b.Training.SLevel = 2
 	b.Dorms = []struct {
 		Level   int
-		Chars   []string
+		Chars   []BaseChar
 		Comfort int
 	}{
-		{Level: 5, Chars: []string{"星熊", "塞雷娅"}, Comfort: 5000},
-		{Level: 5, Chars: []string{"夜莺"}, Comfort: 4800},
+		{Level: 5, Chars: []BaseChar{{Name: "星熊"}, {Name: "塞雷娅"}}, Comfort: 5000},
+		{Level: 5, Chars: []BaseChar{{Name: "夜莺"}}, Comfort: 4800},
 	}
 	return b
 }
 
-func RenderBase(data *BaseInfo) (*gg.Context, error) {
-	const mainW = 1100
-	const pad = 16
-	// estimate height: header 60 + labor 50 + control 100 + tradings*110 + manufactures*110 + powers*80 + meeting 90 + hire 80 + training 90 + dorms*90
-	h := 60 + 50 + 100 + len(data.Tradings)*110 + len(data.Manufactures)*110 + len(data.Powers)*80 + 90 + 80 + 90 + len(data.Dorms)*90 + 40
-	dc := gg.NewContext(mainW, h)
-	FillBackground(dc, 30, 32, 33)
-	// header
-	dc.SetRGB255(50, 55, 60)
-	dc.DrawRectangle(0, 0, float64(mainW), 60)
+// Base geometry is derived entirely from template/Base.tmpl declarations.
+// Nothing here is read off a baseline image. origin_source tags per block:
+//
+//	css               = a Base.tmpl <style> rule
+//	template-declared = inline markup in Base.tmpl
+//
+// See .audit/base-layout-completeness/baseline.json for the per-atom accounting.
+// Base geometry is derived entirely from template/Base.tmpl declarations.
+// Nothing here is read off a baseline image. origin_source vocabulary: css / template-declared.
+// See .audit/base-layout-completeness/baseline.json for the per-atom accounting.
+// drawBaseGearIcon reproduces the 48x48 viewBox svg at Base.tmpl:71 inside an s x s box.
+// Geometry taken from the declared path data: four 270-degree arcs of radius 7.1 centred
+// on the four quadrant points, each with a 90-degree gap facing the icon centre (24,24),
+// four spokes from the quadrant points to the centre square, and the 10x10 centre square.
+// stroke #852cd3, stroke-width 4, round caps (template-declared, not measured).
+func drawBaseGearIcon(dc *gg.Context, x, y, s float64) {
+	k := s / 48.0
+	const r = 7.1
+	dc.SetRGB255(0x85, 0x2c, 0xd3)
+	dc.SetLineWidth(4 * k)
+	for _, q := range [][2]float64{{36, 12}, {36, 36}, {12, 36}, {12, 12}} {
+		cx, cy := q[0], q[1]
+		gap := math.Atan2(24-cy, 24-cx)
+		const seg = 48
+		pts := [seg + 1][2]float64{}
+		for i := 0; i <= seg; i++ {
+			a := gap + math.Pi/4 + 1.5*math.Pi*float64(i)/seg
+			pts[i] = [2]float64{cx + r*math.Cos(a), cy + r*math.Sin(a)}
+		}
+		for i := 0; i < seg; i++ {
+			dc.DrawLine(x+pts[i][0]*k, y+pts[i][1]*k, x+pts[i+1][0]*k, y+pts[i+1][1]*k)
+		}
+	}
+	dc.DrawLine(x+12*k, y+12*k, x+19*k, y+19*k)
+	dc.DrawLine(x+36*k, y+36*k, x+29*k, y+29*k)
+	dc.DrawLine(x+36*k, y+12*k, x+29*k, y+19*k)
+	dc.DrawLine(x+12*k, y+36*k, x+19*k, y+29*k)
+	dc.Stroke()
+	dc.SetRGB255(0x85, 0x2c, 0xd3)
+	dc.DrawRectangle(x+19*k, y+19*k, 10*k, 10*k)
 	dc.Fill()
-	setFont(dc, 26)
+}
+
+func RenderBase(data *BaseInfo) (*gg.Context, error) {
+	// A02 css 9: width: 1110px. Height is the manifest viewport: ScaleToManifest target
+	// 918 / fixtures.json:28 scale 1.5 = 612. Not a css declaration (neither Base.tmpl nor
+	// assets/css/common.css declares #main height); it is the viewport the capture was
+	// taken at, so content below it is clipped.
+	const mainW, mainH = 1110, 612
+	const cardW, wideW = 550, 1105      // C01 css 13 / C09 declared 85,128
+	const cardH, gapY = 110, 5          // C02 css 14 / C07 css 19
+	const cardR = 15                    // C03 css 15: .base{border-radius:15px}
+	var cardBg = [3]int{33, 38, 47}     // C08 css 20: .base{background-color:#21262f}
+	var cardBorder = [3]int{33, 38, 47} // C04 css 16: .base{border:1px solid #21262f}
+	const headerH = 24                  // header h3 default line box (no css declaration)
+	const h3ML = 10                     // D01 css 26: h3{margin-left:10px}
+	const iconMR = 20                   // D06 css 48: .title_icon{margin-right:20px}
+	const charsML = 10                  // D07 css 51: .chars{margin-left:10px}
+	const boardW, boardR = 20.0, 5.0    // D09 css 56 / D10 css 58
+	const skillW = 30.0                 // D08 css 61: .skill{width:30px}
+
+	dc := gg.NewContext(mainW, mainH)
+	FillBackground(dc, 43, 51, 61) // A01 css 8: #main{background-color:#2b333d}
+
+	// B01 declared 68: <h3 style="display: inline">基建信息</h3>
+	setFont(dc, 19)
 	dc.SetRGB255(255, 255, 255)
-	drawString(dc, data.Name+" · 基建总览", 20, 38)
-	y := 80
-	// labor
-	fillRoundedCard(dc, float64(pad), float64(y), float64(mainW-2*pad), 50, 8, 18)
-	setFont(dc, 16)
-	dc.SetRGB255(220, 220, 220)
-	drawString(dc, fmt.Sprintf("无人机 %d/%d", data.Labor.Cur, data.Labor.Total), float64(pad+20), float64(y+30))
-	ProgressBar(dc, float64(pad+250), float64(y+20), 300, 14, float64(data.Labor.Cur)/float64(data.Labor.Total), 90, 180, 255)
-	y += 70
-	// control
-	fillRoundedCard(dc, float64(pad), float64(y), float64(mainW-2*pad), 100, 8, 12)
-	setFont(dc, 16)
-	dc.SetRGB255(180, 220, 255)
-	drawString(dc, fmt.Sprintf("控制中枢 Lv%d", data.Control.Level), float64(pad+20), float64(y+28))
-	for i, n := range data.Control.Chars {
-		cx := float64(pad + 20 + i*90)
-		cy := float64(y + 65)
-		dc.SetRGB255(80, 80, 90)
-		dc.DrawCircle(cx+22, cy, 22)
-		dc.Fill()
-		setFont(dc, 11)
+	drawString(dc, "基建信息", h3ML, 18)
+
+	// B03 declared 70: <div style="display: flex"> — the gear icon and the labor text sit
+	// side by side in one flex row, icon on the left.
+	// B04 declared 71: <svg width="20" height="20" viewBox="0 0 48 48">, stroke #852cd3.
+	// Row height / baseline inside the 20px flex row is browser-default (align-items:stretch
+	// on a text span); the two declared widths (20 and the text) are what fix the columns.
+	const gearS = 20.0
+	labR := 1080.0
+	setFont(dc, 15)
+	dc.SetRGB255(255, 255, 255)
+	labTxt := fmt.Sprintf("%d/%d", data.Labor.Cur, data.Labor.Total)
+	tw, _ := measure(dc, labTxt)
+	drawStringAnchored(dc, labTxt, labR, 13, 1, 0)
+	drawBaseGearIcon(dc, labR-tw-gearS, 2, gearS)
+	const barW, barH, barR = 100.0, 3.0, 1.0
+	if data.Labor.Total > 0 {
 		dc.SetRGB255(255, 255, 255)
-		drawStringAnchored(dc, n, cx+22, cy+32, 0.5, 0.5)
+		dc.DrawRoundedRectangle(labR-barW, 18, barW*float64(data.Labor.Cur)/float64(data.Labor.Total), barH, barR)
+		dc.Fill()
 	}
-	y += 120
-	// tradings
-	for _, t := range data.Tradings {
-		fillRoundedCard(dc, float64(pad), float64(y), float64(mainW-2*pad), 100, 8, 12)
-		setFont(dc, 14)
-		dc.SetRGB255(220, 200, 120)
-		drawString(dc, fmt.Sprintf("贸易站 Lv%d · %s %d/%d", t.Level, t.Strategy, t.Cur, t.Total), float64(pad+20), float64(y+28))
-		for i, n := range t.Chars {
-			cx := float64(pad + 20 + i*70)
-			cy := float64(y + 60)
+
+	// C05 css 17: .base{display:inline-flex} — pack left to right, wrap when full.
+	// 550*2 = 1100 <= 1110, so two per row; a 1105 card cannot share a row.
+	cx, cy := 0.0, float64(headerH)
+	place := func(w float64) (float64, float64) {
+		if cx+w > mainW {
+			cx = 0
+			cy += cardH + gapY
+		}
+		px, py := cx, cy+gapY
+		cx += w
+		return px, py
+	}
+
+	// bIcon is the .title_icon content declared for one block. Each field maps to a
+	// Base.tmpl line; no field is invented.
+	type bIcon struct {
+		text   string // <span> text at the cited line
+		color  [3]int // inline color declared on that span
+		boards []int  // declared 360: <div class="board">{{.}}</div>
+		skill  string // declared 463: <img class="skill" src=".../char_skill/{{.Training.Skill}}.png">
+		// F15 declared 346: <div style="position: absolute;margin-left: -200px;
+		// color: #eb9712;display: flex;align-items: center;">线索交流开启中</div>
+		// Only the declared container + text are drawn; the 20x20 svg child is not
+		// reproduced and is tracked as its own open item.
+		absText string
+	}
+
+	// D04/D05/D06 css 46,47,48: .title_icon{display:inline-flex;align-items:center;margin-right:20px}
+	// D02/D03 css 42,43: .title{display:flex;justify-content:space-between} — the icon
+	// group is the right-hand child, so its right edge is the h3 content right minus 20.
+	drawIcon := func(px, w, py float64, ic bIcon) {
+		right := px + w - iconMR
+		setFont(dc, 16)
+		switch {
+		case len(ic.boards) > 0:
+			// declared 358-363: <span>线索 {{range .Meeting.Board}} <div class="board">…</div> {{end}}</span>
+			// D11/D12 css 54,55: .board{display:inline-flex;justify-content:center}
+			tw, _ := measure(dc, ic.text)
+			bx := right - boardW*float64(len(ic.boards)) - tw
+			// F15 declared 346: position:absolute with margin-left:-200px. No ancestor in
+			// Base.tmpl is positioned, so the containing block is the initial containing
+			// block: the block sits at its static position (start of .title_icon) minus 200.
+			if ic.absText != "" {
+				dc.SetRGB255(0xeb, 0x97, 0x12) // declared color: #eb9712
+				drawString(dc, ic.absText, bx-200, py+28)
+			}
+			dc.SetRGB255(255, 255, 255)
+			drawString(dc, ic.text, bx, py+28)
+			for _, b := range ic.boards {
+				dc.SetRGB255(255, 255, 255)
+				StrokeRoundRect(dc, bx+tw, py+11, boardW, boardW, boardR)
+				bs, _ := measure(dc, itoa(b))
+				drawString(dc, itoa(b), bx+tw+(boardW-bs)/2, py+28)
+				bx += boardW
+			}
+		case ic.skill != "":
+			// declared 461-464: <span>Lv.N</span><img class="skill" ...>  (icon on the right)
+			img := FetchImage("https://web.hycdn.cn/arknights/game/assets/char_skill/"+ic.skill+".png",
+				AssetPath("common/amiya.png"))
+			ix := right - skillW
+			dc.DrawImage(ScaleExact(img, int(skillW), int(skillW)), int(ix), int(py+9))
+			tw, _ := measure(dc, ic.text)
+			dc.SetRGB255(255, 255, 255)
+			drawString(dc, ic.text, ix-tw, py+28)
+		default:
+			tw, _ := measure(dc, ic.text)
+			dc.SetRGB255(ic.color[0], ic.color[1], ic.color[2])
+			drawString(dc, ic.text, right-tw, py+28)
+		}
+	}
+
+	// C06 css 18: .base{flex-direction:column} — .title on top, .chars below it.
+	drawCard := func(w float64, title string, ic bIcon, chars []BaseChar) {
+		px, py := place(w)
+		dc.SetRGB255(cardBg[0], cardBg[1], cardBg[2])
+		RoundRect(dc, px, py, w, cardH, cardR)
+		dc.SetRGB255(cardBorder[0], cardBorder[1], cardBorder[2])
+		dc.SetLineWidth(1)
+		StrokeRoundRect(dc, px+0.5, py+0.5, w-1, cardH-1, cardR)
+		setFont(dc, 16)
+		dc.SetRGB255(255, 255, 255)
+		drawString(dc, title, px+h3ML, py+28) // D01 css 26
+		if ic.text != "" || len(ic.boards) > 0 || ic.skill != "" {
+			drawIcon(px, w, py, ic)
+		}
+		// D07 css 51: .chars{margin-left:10px}. The per-char span at 143/196/251/…
+		// is display:inline-grid holding a 40px portrait plus a progress.ap.
+		// D14/F09/F10/E01-E03/F12 are all \u2298: BaseChar now carries Avatar/AP, but
+		// SampleBase() feeds names only, so the harness still renders this row as the
+		// declared slot is not yet drawn. Do not read this as "portraits are done".
+		for i, c := range chars {
+			ax := px + charsML + 16 + float64(i)*70
 			dc.SetRGB255(90, 90, 100)
-			dc.DrawCircle(cx+16, cy, 16)
+			dc.DrawCircle(ax, py+72, 16)
 			dc.Fill()
 			setFont(dc, 10)
 			dc.SetRGB255(255, 255, 255)
-			drawStringAnchored(dc, n, cx+16, cy+24, 0.5, 0.5)
+			drawStringAnchored(dc, c.Name, ax, py+100, 0.5, 0.5)
 		}
-		y += 110
 	}
-	// manufactures
-	for _, m := range data.Manufactures {
-		fillRoundedCard(dc, float64(pad), float64(y), float64(mainW-2*pad), 100, 8, 12)
-		setFont(dc, 14)
-		dc.SetRGB255(120, 220, 160)
-		drawString(dc, fmt.Sprintf("制造站 Lv%d · %s %d/%d %s", m.Level, m.Item, m.Cur, m.Total, m.Speed), float64(pad+20), float64(y+28))
-		for i, n := range m.Chars {
-			cx := float64(pad + 20 + i*70)
-			cy := float64(y + 60)
-			dc.SetRGB255(90, 90, 100)
-			dc.DrawCircle(cx+16, cy, 16)
-			dc.Fill()
-			setFont(dc, 10)
-			dc.SetRGB255(255, 255, 255)
-			drawStringAnchored(dc, n, cx+16, cy+24, 0.5, 0.5)
-		}
-		y += 110
-	}
-	// powers
-	for _, p := range data.Powers {
-		fillRoundedCard(dc, float64(pad), float64(y), float64(mainW-2*pad), 80, 8, 12)
-		setFont(dc, 14)
-		dc.SetRGB255(120, 180, 255)
-		drawString(dc, fmt.Sprintf("发电站 Lv%d · %d 电力", p.Level, p.Power), float64(pad+20), float64(y+28))
-		for i, n := range p.Chars {
-			cx := float64(pad + 20 + i*70)
-			cy := float64(y + 55)
-			dc.SetRGB255(90, 90, 100)
-			dc.DrawCircle(cx+16, cy, 16)
-			dc.Fill()
-			setFont(dc, 10)
-			dc.SetRGB255(255, 255, 255)
-			drawStringAnchored(dc, n, cx+16, cy+20, 0.5, 0.5)
-		}
-		y += 90
-	}
-	// meeting
-	fillRoundedCard(dc, float64(pad), float64(y), float64(mainW-2*pad), 80, 8, 12)
-	setFont(dc, 14)
-	dc.SetRGB255(220, 180, 220)
-	drawString(dc, fmt.Sprintf("会客室 Lv%d · 线索 %v 共享:%v", data.Meeting.Level, data.Meeting.Board, data.Meeting.Sharing), float64(pad+20), float64(y+28))
-	for i, n := range data.Meeting.Chars {
-		cx := float64(pad + 20 + i*70)
-		cy := float64(y + 55)
-		dc.SetRGB255(90, 90, 100)
-		dc.DrawCircle(cx+16, cy, 16)
-		dc.Fill()
-		setFont(dc, 10)
-		dc.SetRGB255(255, 255, 255)
-		drawStringAnchored(dc, n, cx+16, cy+20, 0.5, 0.5)
-	}
-	y += 90
-	// hire
-	fillRoundedCard(dc, float64(pad), float64(y), float64(mainW-2*pad), 70, 8, 12)
-	setFont(dc, 14)
-	dc.SetRGB255(220, 200, 180)
-	drawString(dc, fmt.Sprintf("办公室 Lv%d · 刷新 %d", data.Hire.Level, data.Hire.Refresh), float64(pad+20), float64(y+28))
-	for i, n := range data.Hire.Chars {
-		cx := float64(pad + 20 + i*70)
-		cy := float64(y + 50)
-		dc.SetRGB255(90, 90, 100)
-		dc.DrawCircle(cx+16, cy, 16)
-		dc.Fill()
-		setFont(dc, 10)
-		dc.SetRGB255(255, 255, 255)
-		drawStringAnchored(dc, n, cx+16, cy+20, 0.5, 0.5)
-	}
-	y += 80
-	// training
-	fillRoundedCard(dc, float64(pad), float64(y), float64(mainW-2*pad), 80, 8, 12)
-	setFont(dc, 14)
-	dc.SetRGB255(180, 220, 200)
-	drawString(dc, fmt.Sprintf("训练室 Lv%d · %s 专精%d", data.Training.Level, data.Training.Skill, data.Training.SLevel), float64(pad+20), float64(y+28))
-	for i, n := range data.Training.Chars {
-		cx := float64(pad + 20 + i*70)
-		cy := float64(y + 55)
-		dc.SetRGB255(90, 90, 100)
-		dc.DrawCircle(cx+16, cy, 16)
-		dc.Fill()
-		setFont(dc, 10)
-		dc.SetRGB255(255, 255, 255)
-		drawStringAnchored(dc, n, cx+16, cy+20, 0.5, 0.5)
-	}
-	y += 90
-	// dorms
+
+	// declared 86: <h3>控制中枢 Lv.N</h3> — no .title_icon on this block.
+	drawCard(wideW, fmt.Sprintf("控制中枢 Lv%d", data.Control.Level), bIcon{}, data.Control.Chars)
+	// declared 129/137: 宿舍 Lv.N + <span style="color:#66c02f">舒适度N</span>
 	for _, d := range data.Dorms {
-		fillRoundedCard(dc, float64(pad), float64(y), float64(mainW-2*pad), 80, 8, 12)
-		setFont(dc, 14)
-		dc.SetRGB255(200, 200, 220)
-		drawString(dc, fmt.Sprintf("宿舍 Lv%d · 舒适度 %d", d.Level, d.Comfort), float64(pad+20), float64(y+28))
-		for i, n := range d.Chars {
-			cx := float64(pad + 20 + i*70)
-			cy := float64(y + 55)
-			dc.SetRGB255(90, 90, 100)
-			dc.DrawCircle(cx+16, cy, 16)
-			dc.Fill()
-			setFont(dc, 10)
-			dc.SetRGB255(255, 255, 255)
-			drawStringAnchored(dc, n, cx+16, cy+20, 0.5, 0.5)
-		}
-		y += 90
+		drawCard(wideW, fmt.Sprintf("宿舍 Lv%d", d.Level),
+			bIcon{text: fmt.Sprintf("舒适度%d", d.Comfort), color: [3]int{0x66, 0xc0, 0x2f}}, d.Chars)
 	}
+	// declared 183/190: 贸易站 Lv.N + <span style="color:#8cd1ff">策略 N/M</span>
+	for _, t := range data.Tradings {
+		drawCard(cardW, fmt.Sprintf("贸易站 Lv%d", t.Level),
+			bIcon{text: fmt.Sprintf("%s %d/%d", t.Strategy, t.Cur, t.Total), color: [3]int{0x8c, 0xd1, 0xff}}, t.Chars)
+	}
+	// declared 236/245: 制造站 Lv.N + <span style="color:#d79d13">物品 N/M</span>
+	for _, m := range data.Manufactures {
+		drawCard(cardW, fmt.Sprintf("制造站 Lv%d", m.Level),
+			bIcon{text: fmt.Sprintf("%s %d/%d", m.Item, m.Cur, m.Total), color: [3]int{0xd7, 0x9d, 0x13}}, m.Chars)
+	}
+	// declared 291/298: 发电站 Lv.N + <span style="color:#adfe2e">N</span>  (bare number, no label)
+	for _, p := range data.Powers {
+		drawCard(cardW, fmt.Sprintf("发电站 Lv%d", p.Level),
+			bIcon{text: itoa(p.Power), color: [3]int{0xad, 0xfe, 0x2e}}, p.Chars)
+	}
+	// declared 343/358-363: 会客室 Lv.N + <span>线索 <div class="board">…</div></span>
+	// declared 343/358-363: 会客室 Lv.N + <span>线索 <div class="board">…</div></span>
+	// declared 345-346: the 线索交流开启中 block is inside {{if .Meeting.Sharing}}.
+	var meetAbs string
+	if data.Meeting.Sharing {
+		meetAbs = "线索交流开启中"
+	}
+	drawCard(cardW, fmt.Sprintf("会客室 Lv%d", data.Meeting.Level),
+		bIcon{text: "线索", color: [3]int{255, 255, 255}, boards: data.Meeting.Board, absText: meetAbs}, data.Meeting.Chars)
+	// declared 408/415: 办公室 Lv.N + <span>刷新次数N</span>
+	drawCard(cardW, fmt.Sprintf("办公室 Lv%d", data.Hire.Level),
+		bIcon{text: fmt.Sprintf("刷新次数%d", data.Hire.Refresh), color: [3]int{255, 255, 255}}, data.Hire.Chars)
+	// declared 459/462-463: 训练室 Lv.N + <span>Lv.N</span><img class="skill">
+	drawCard(cardW, fmt.Sprintf("训练室 Lv%d", data.Training.Level),
+		bIcon{text: fmt.Sprintf("Lv.%d", data.Training.SLevel), color: [3]int{255, 255, 255}, skill: data.Training.Skill},
+		data.Training.Chars)
+
 	return ScaleToManifest(dc, 1665, 918), nil
 }
 
