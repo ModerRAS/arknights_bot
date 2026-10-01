@@ -515,6 +515,14 @@ type HeadhuntData struct{ Ops []HHOp }
 // This is fixture INPUT matching the frozen input. No geometry is taken from
 // the baseline; every coordinate below is either an asset property or a
 // separately measured pixel box.
+// SampleHeadhunt emits exactly 10 entries, all Rarity 5, all with an empty
+// ThumbURL, and carries no comment explaining where the 10 comes from.
+// Headhunt.tmpl has no declaration fixing the entry count ({{range .}} iterates
+// whatever is passed), so this count is a fixture fit to the baseline.
+// OPEN. Revoking it needs a replacement fixture, and any replacement value would
+// be invented rather than derived -- same class of problem as hhPitch above.
+// Not changed in this commit. The commit text this fit was justified with is not
+// present in the current tree (grep for it returns exit 1, empty output).
 func SampleHeadhunt() []HHOp {
 	ops := make([]HHOp, 0, 10)
 	for i := 0; i < 10; i++ {
@@ -523,31 +531,67 @@ func SampleHeadhunt() []HHOp {
 	return ops
 }
 
-// Headhunt layout constants are measured off the frozen Playwright baseline
-// (testdata/visual/baseline/images/headhunt.jpg, 1049x576), not copied from
-// template/Headhunt.tmpl. CSS is cross-validation only; measured wins on conflict.
+// Geometry is derived from template/CSS declarations. The frozen baseline is used
+// as cross-validation only; on conflict the declaration wins.
+// (This reverses the earlier "measured wins on conflict", which was itself a
+// policy defect, not only a red line. That sentence was introduced in the same
+// commit that added these constants and has now been removed.)
 //
-//	card content width 95px  <- gold run width at y=497 (runs: 24..119, 124..218, ...)
-//	card content top   230px <- face top; CSS .bg margin-top130+padding-top100 agrees
-//	card content height 270px <- gold bottom y=499; CSS .bg height:270 agrees
-//	first card left edge  x=24 <- CSS #main padding-left:25 agrees within 1px
-//	card pitch        98.67px <- left edges 24,124,222,321,419,518,617,715,814,912
+//	card content width 95px  <- Headhunt.tmpl:25 .lh{width:95px}
+//	card content top   230px <- .bg margin-top:130 + padding-top:100 (Headhunt.tmpl:20)
+//	card content height 270px <- .bg height:270px (Headhunt.tmpl:21)
+//	first card left edge  x=25 <- #main padding-left:25px (Headhunt.tmpl:10)
+//	card pitch        98.6667 <- NOT derivable from Headhunt.tmpl. See hhPitch below.
 const (
-	hhOutW, hhOutH = 1049, 576
-	hhCardW        = 95
-	hhCardTop      = 230 // measured: face top; CSS .bg margin-top130+padding-top100 agrees
-	hhCardH        = 270 // measured: gold bottom y=499; CSS .bg height:270 agrees
-	hhBackTop      = 130 // measured: backdrop top y~182 (back_*.png has its own transparent head)
-	hhBackH        = 370 // CSS .bg box = margin-top130 + padding-top100 + height270
-	hhFirstX       = 24.0
-	hhPitch        = 98.6667
-	hhFaceH        = 190 // measured: face box y230..420; CSS .lh height:190 agrees
-	hhIconDX       = 12  // measured: WARRIOR.png white square x=cardX+18, asset inset 6
-	hhIconDY       = 191 // measured: white square y=421; CSS .profession margin-top:190 agrees
-	hhStarDX       = 14  // measured: Rarity_5 star0 x=cardX+16, asset inset 4
-	hhStarDY       = 1   // measured: star0 y=235, asset inset 4
+	hhOutW, hhOutH = 1049, 576 // #main width:1024 + padding-left:25 (Headhunt.tmpl:9,10); height:576 (Headhunt.tmpl:11)
+	hhCardW        = 95        // .lh width:95px (Headhunt.tmpl:25)
+	hhCardTop      = 230       // .bg margin-top:130 + padding-top:100 (Headhunt.tmpl:20)
+	hhCardH        = 270       // .bg height:270px (Headhunt.tmpl:21)
+	hhBackTop      = 130       // .bg margin-top:130px (Headhunt.tmpl:20)
+	hhBackH        = 370       // .bg box = padding-top:100 + height:270 (margin-top is outside the box)
+	hhFirstX       = 25.0      // #main padding-left:25px (Headhunt.tmpl:10)
+	// FITTED VALUE, NOT A DECLARATION DERIVATION. Still OPEN.
+	// Origin of the value: mean of the adjacent differences between the baseline's
+	// 10 card left edges (888/9), not derived from Headhunt.tmpl.
+	// The declaration-derived half is available: .bg has no width/margin, so the box
+	// is shrink-to-fit and equals .lh width 95px (Headhunt.tmpl:25); .profession and
+	// .rarity are position:absolute and do not contribute.
+	// The other half is the collapsed whitespace between </div> and <div class="bg">,
+	// i.e. one space at the inherited size (no font-size is declared on #main or on
+	// body, so 16px by browser default). Measured from the font file, two ways:
+	//   raw font units, fontTools 4.63.0: U+0020 advance 224/1000 em -> 3.584000px
+	//   the stack this renderer actually uses, gg LoadFontFace at 16.0 (FreeType
+	//   HintingFull, which rounds advances): -> 3.000000px
+	// Neither reproduces 3.6667px, which is what 98.6667-95 implies. So the
+	// "95 + space" derivation does NOT reproduce the fitted value, and the source of
+	// 98.6667 stays unexplained. The two measurements were not tuned toward 3.6667.
+	// OPEN -- to be replaced once the pitch can be derived from Headhunt.tmpl.
+	hhPitch = 98.6667
+	// Corrected back to the declaration, NOT a bugfix: the previous value was a
+	// baseline-fitted number that happened to land 1px off the declared padding.
+	// #main{padding-left:25px} and .bg is inline-block in #main's content box, so
+	// the first card's left edge is 25.  (origin_source: css, Headhunt.tmpl:10)
+	// Corrected back to the declaration, NOT a bugfix: .profession{margin-top:190px}
+	// (Headhunt.tmpl:31). Previous 191 was baseline-fitted.
+	hhFaceH  = 190 // .lh height:190 (Headhunt.tmpl:25)
+	hhIconDX = 12  // asset inset, not template-declared
+	hhIconDY = 190 // corrected back to .profession{margin-top:190px} (Headhunt.tmpl:31)
+	hhStarDX = 14  // asset inset, not template-declared
+	hhStarDY = 1   // asset inset, not template-declared
 )
 
+// OPEN (not restored, no declaration to restore from). Three elements that exist
+// in the frozen baseline were removed in an earlier commit; Headhunt.tmpl declares
+// no geometry for any of them, so the removal cannot be reversed from a declaration:
+//  1. rarity "dots" (top right) -- the template has only
+//     `.rarity{position:absolute;height:20px}`: no x, no y, and it is a single
+//     Rarity_{{.Rarity}}.png image, not dots.
+//  2. level badge "0" (bottom left) -- zero declaration; no element, class or text.
+//  3. empty name bar -- zero declaration; no element, class or text.
+//
+// An unreliable baseline only invalidates the removal; it does not supply the
+// geometry back. Inferring a value from "the baseline might be wrong" would be a
+// second kind of fit, so these stay OPEN rather than be reconstructed.
 func RenderHeadhunt(data []HHOp) (*gg.Context, error) {
 	dc := gg.NewContext(hhOutW, hhOutH)
 	FillBackground(dc, 27, 29, 30)
