@@ -141,3 +141,20 @@ strata/ strata2/ strata3/ ← task8 / task10 / task11 分层（均「未测」�
 `mapping/measure_stdout.log`、`discriminator/measure_stderr.log` 等的空文件，
 就是「**闸门在对照未过时没有偷偷产出任何输出**」这句话的物证。
 **若按「空文件没用」的直觉跳过，归档就失去了这个判据的存在性证明。**
+
+---
+
+## 浏览器工作目录：**按声明排除**（2026-10-02 追加）
+
+本归档**不包含**浏览器 profile 类文件：
+- `tmp/t15/chrome-profile/`、`tmp/t15/chrome-profile2/`（本轮 56 个文件）
+- `tmp/resolved/chrome-profile/`（早前已从量测树清理的 228 个同类）
+
+**理由**：它们是浏览器运行残留（`ActorSafetyLists` / `CertificateRevocation` / `Crashpad` / `Default` / `component_crx_cache` …），**不是测量产物**，且会污染「这棵树干净吗」的判断。
+
+⚠️ **排除写在明处，而不是把 P39 公式改窄。** 下一个人重跑
+`{ 源侧文本文件 ∧ sha256 不在归档 ∧ git 未跟踪 }` 时**仍会选出这 56 项** ——
+**那是预期的**，排除条款就在这里，不是公式里少了一个条件。
+
+**这一条本身也是纪律现场**：它与早前那 228 个同类，两次都是「先清掉、再把排除写进文档」，
+而不是「让下一次自动不再命中」——**因为让扫描自动不命中，恰好就是那种「看起来更干净、实际更脆弱」的修法。**
