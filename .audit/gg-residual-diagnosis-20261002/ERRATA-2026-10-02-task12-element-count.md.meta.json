@@ -1,0 +1,7 @@
+{
+  "provenance": "retroactive-migration",
+  "original_path": "C:/WorkSpace/Golang/.lead2-reports/task12-residual-by-declared-element.md (erratum authored in archive; supersedes that report's element count)",
+  "measured_at": "erratum authored after 55e0d6b; supersedes the element-count in task12. NOT a new measurement.",
+  "single_base": "4584759",
+  "note": "This file is a correction, not a measurement. The 1 is produced by the same class of artifact as the retracted 13 (parser + one regex fix), so it must not be read as independently measured."
+}
