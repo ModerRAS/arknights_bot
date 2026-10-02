@@ -1,0 +1,9 @@
+{
+  "provenance": "retroactive-migration",
+  "original_path": "C:/WorkSpace/Golang/arknights_bot-measure-align/tmp/resolved/boxdetail.html",
+  "measured_at": "arknights_bot-measure-align@measure/align-ceiling 4584759",
+  "single_base": "4584759",
+  "archived_relative_path": "resolved/boxdetail.html",
+  "bytes": 3664,
+  "note": "ORIGIN, not a derivative: this is the live legacy page HTML emitted by the fixture service. rects.json (task14 T1 raw data) is MEASURED FROM THIS FILE. Losing a derivative loses only recomputation; losing this loses the ability to re-measure at all. Boss authorised item 53 of 53: the formula outputs 53 and the formula governs; the earlier '52' was a stale snapshot of the formula's output."
+}
