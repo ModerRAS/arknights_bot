@@ -1,0 +1,8 @@
+[33288:32400:1003/001904.826:ERROR:sandbox\policy\win\sandbox_win.cc:789] Sandbox cannot access executable C:\Users\ModerRAS\AppData\Local\ms-playwright\chromium-1223\chrome-win64\chrome.exe. Check filesystem permissions are valid. See https://bit.ly/31yqMJR.: 拒绝访问。 (0x5)
+
+DevTools listening on ws://127.0.0.1:9223/devtools/browser/cd45aecd-f44a-480d-9e1a-2e2ad06f55d1
+[33288:20736:1003/001904.873:ERROR:content\browser\network_service_instance_impl.cc:703] Network service crashed or was terminated, restarting service.
+[33288:13956:1003/001923.265:ERROR:components\media_router\common\providers\cast\certificate\cast_crl.cc:446] CRL - Verification failed.
+[33288:13956:1003/001923.842:ERROR:components\media_router\common\providers\cast\certificate\cast_crl.cc:446] CRL - Verification failed.
+[33288:13956:1003/001934.263:ERROR:components\media_router\common\providers\cast\certificate\cast_crl.cc:446] CRL - Verification failed.
+[33288:13956:1003/001949.672:ERROR:components\media_router\common\providers\cast\certificate\cast_crl.cc:446] CRL - Verification failed.

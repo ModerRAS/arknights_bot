@@ -1,0 +1,4 @@
+PRE-AGG n_qualities=7
+PRE-AGG n_diff_noise_chromium=17331634
+PRE-AGG n_diff_noise_go=17331848
+controls_pass=True

@@ -1,0 +1,100 @@
+{
+ "base": {
+  "A_chromium": 0.999038,
+  "B_go": 0.993836,
+  "encoder_diff": 0.0052,
+  "gap": 0.01927,
+  "ratio": 0.2698
+ },
+ "box": {
+  "A_chromium": 0.998953,
+  "B_go": 0.996519,
+  "encoder_diff": 0.00243,
+  "gap": 0.16496,
+  "ratio": 0.0147
+ },
+ "box-detail": {
+  "A_chromium": 0.999511,
+  "B_go": 0.998823,
+  "encoder_diff": 0.00069,
+  "gap": 0.11156,
+  "ratio": 0.0062
+ },
+ "box-summary": {
+  "A_chromium": 0.998469,
+  "B_go": 0.994201,
+  "encoder_diff": 0.00427,
+  "gap": 0.10902,
+  "ratio": 0.0392
+ },
+ "calendar": {
+  "A_chromium": 0.999709,
+  "B_go": 0.996457,
+  "encoder_diff": 0.00325,
+  "gap": -0.00432,
+  "ratio": -0.7523
+ },
+ "card": {
+  "A_chromium": 0.999733,
+  "B_go": 0.997657,
+  "encoder_diff": 0.00208,
+  "gap": 0.02985,
+  "ratio": 0.0697
+ },
+ "depot": {
+  "A_chromium": 0.999357,
+  "B_go": 0.997792,
+  "encoder_diff": 0.00157,
+  "gap": 0.06648,
+  "ratio": 0.0236
+ },
+ "enemy": {
+  "A_chromium": 0.998819,
+  "B_go": 0.996923,
+  "encoder_diff": 0.0019,
+  "gap": 0.07049,
+  "ratio": 0.027
+ },
+ "gacha": {
+  "A_chromium": 0.999243,
+  "B_go": 0.989507,
+  "encoder_diff": 0.00974,
+  "gap": 0.08749,
+  "ratio": 0.1113
+ },
+ "headhunt": {
+  "A_chromium": 0.999235,
+  "B_go": 0.991286,
+  "encoder_diff": 0.00795,
+  "gap": 0.01979,
+  "ratio": 0.4017
+ },
+ "help": {
+  "A_chromium": 0.999182,
+  "B_go": 0.986279,
+  "encoder_diff": 0.0129,
+  "gap": 0.15057,
+  "ratio": 0.0857
+ },
+ "missing": {
+  "A_chromium": 0.998935,
+  "B_go": 0.99664,
+  "encoder_diff": 0.0023,
+  "gap": 0.11386,
+  "ratio": 0.0202
+ },
+ "recruit": {
+  "A_chromium": 0.999555,
+  "B_go": 0.996213,
+  "encoder_diff": 0.00334,
+  "gap": 0.10397,
+  "ratio": 0.0321
+ },
+ "state": {
+  "A_chromium": 0.998383,
+  "B_go": 0.99653,
+  "encoder_diff": 0.00185,
+  "gap": -0.00093,
+  "ratio": -1.9892
+ }
+}

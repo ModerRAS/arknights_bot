@@ -1,0 +1,16 @@
+{
+  "instrument_provenance": "pre-registered (task15 part1: encoder difference)",
+  "controls": [
+    {
+      "control": "POS_codec_sensitivity",
+      "expect": "> 0.05 (both routes)",
+      "observed": {
+        "chromium": 0.8584,
+        "go": 0.8584
+      },
+      "passed": true,
+      "note": "白噪声过两条编码器；量级由 4:2:0 色度子采样主导"
+    }
+  ],
+  "controls_pass": true
+}

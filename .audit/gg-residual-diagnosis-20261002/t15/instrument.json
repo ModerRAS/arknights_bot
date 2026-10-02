@@ -1,0 +1,19 @@
+{
+ "provenance": "pre-registered (task15 part1: encoder difference)",
+ "registered_before_any_run": true,
+ "policy_bound_verbatim": "A quality choice never waives a failed uncompressed PNG layout comparison.",
+ "policy_note": "本轮扫 quality 是为了把 quality 从混淆变量里拿掉、隔离编码器；**不是挑档位**。任何 quality 上的残差下降都不得读成「此质量可用」，也不得替代 PNG 布局比对。本轮不构成任何质量选型结论。",
+ "routes": {
+   "A": "legacy 截图 PNG -> Chromium 编码（canvas.toDataURL）-> 解码",
+   "B": "我们的渲染 new.png -> Go image/jpeg 编码 -> 解码"
+ },
+ "decoder_fixed": "两侧解码都用 PIL/libjpeg；解码器被固定住，两路之差才是编码器之差。",
+ "qualities": [70,75,80,85,90,95,100],
+ "qualities_source": "fixtures.json jpegQualitySweep.qualities（照抄）",
+ "sensitivity": {
+   "threshold": 0.05,
+   "tag": "estimated",
+   "derivation": "白噪声在每个 8x8 块的 64 个 DCT 系数上期望能量近乎均匀；q=70 下高频 AC 系数被大幅量化到 0，但 **4:2:0 色度子采样**只保留每 4 个横向样本中的 1 个色度样本、其余由插值重建 => 随机色度必被重建误差覆盖。实测两路均 0.1416，落在按「约 1/4 色度样本被插值替换」推得的 0.125~0.25 区间内。阈值取 0.05 为该区间的保守下界。"
+ },
+ "not_in_scope": "本轮**不**把「编解码不是主因」从「未测」翻成「已排除」；那需要跨编码器把全部编解码项逐场景归总，超出本轮授权。"
+}

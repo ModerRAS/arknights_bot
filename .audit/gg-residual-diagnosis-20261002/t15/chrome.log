@@ -1,0 +1,10 @@
+[46716:52548:1003/000040.489:ERROR:sandbox\policy\win\sandbox_win.cc:789] Sandbox cannot access executable C:\Users\ModerRAS\AppData\Local\ms-playwright\chromium-1223\chrome-win64\chrome.exe. Check filesystem permissions are valid. See https://bit.ly/31yqMJR.: 拒绝访问。 (0x5)
+
+DevTools listening on ws://127.0.0.1:9223/devtools/browser/da6fc778-d8b5-49bc-8d9a-e75ab4cbfc54
+[46716:50428:1003/000040.535:ERROR:content\browser\network_service_instance_impl.cc:703] Network service crashed or was terminated, restarting service.
+[46716:48092:1003/000049.385:ERROR:components\media_router\common\providers\cast\certificate\cast_crl.cc:446] CRL - Verification failed.
+[46716:48092:1003/000049.986:ERROR:components\media_router\common\providers\cast\certificate\cast_crl.cc:446] CRL - Verification failed.
+[46716:48092:1003/000105.322:ERROR:components\media_router\common\providers\cast\certificate\cast_crl.cc:446] CRL - Verification failed.
+[46716:48092:1003/000113.378:ERROR:components\media_router\common\providers\cast\certificate\cast_crl.cc:446] CRL - Verification failed.
+[46716:52548:1003/000340.500:ERROR:sandbox\policy\win\sandbox_win.cc:789] Sandbox cannot access executable C:\Users\ModerRAS\AppData\Local\ms-playwright\chromium-1223\chrome-win64\chrome.exe. Check filesystem permissions are valid. See https://bit.ly/31yqMJR.: 拒绝访问。 (0x5)
+[46716:50428:1003/000340.500:ERROR:services\on_device_model\public\cpp\service_client.cc:37] Unexpected on_device_model service disconnect; reason: 0, description: 
