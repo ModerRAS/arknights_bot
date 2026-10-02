@@ -117,3 +117,29 @@ strata/ strata2/ strata3/ ← task8 / task10 / task11 分层（均「未测」�
 | `tmp/residual/<sub>/…`（早前已归档） | `<sub>/…` |
 
 ⚠️ **`align/align_ceiling.py` 是 `SYNTHESIS.md:827` 那条 `field_semantics_boundary_vs_probe_boundary` 定义的权威原件**（对应引用 `align_ceiling.py:327-328`）。此前该脚本**只被引用、从未归档**，共 11 处引用 / 4 个文件悬空；本次补入后闭合。
+
+---
+
+## 路径映射表 · 补（2026-10-02，52 项批次）
+
+本批按**公式**产生（非手工枚举）：
+`{ 源侧 tmp/** 与 .audit/** 的文本文件 ∧ 内容 sha256 不在归档 ∧ 该路径在 git 中未被跟踪 }`
+
+| 引用中的原始路径 | 归档内相对路径 |
+|---|---|
+| `tmp/resolved/{rects,rects_t2}.json` | `resolved/*.json` ← **task14 的 T1/T2 原始数据** |
+| `tmp/resolved/t2/overlay.json` | `resolved/t2/overlay.json` |
+| `tmp/residual/report.json` | `residual/report.json` ← **task5 分层主产物** |
+| `tmp/residual/residual_probe.py` | `residual/residual_probe.py` |
+| `tmp/residual/byelem/derivable_boxes.json` | `byelem/derivable_boxes.json` |
+| `tmp/pixel-compare/report.{json,md}` | `pixel-compare/report.*` ← **go harness 主产物** |
+| `tmp/<其余子目录>/*.log` | `<子目录>/*.log` |
+| `.audit/<name>`（本轮新归档部分） | `audit-src/<name>` |
+
+⚠️ **0 字节文件是本轮最重要的证据之一，已全部归档并配边车。**
+`mapping/measure_stdout.log`、`discriminator/measure_stderr.log` 等的空文件，
+就是「**闸门在对照未过时没有偷偷产出任何输出**」这句话的物证。
+**若按「空文件没用」的直觉跳过，归档就失去了这个判据的存在性证明。**
+
+⚠️ **一项已识别但未归档，等待裁定**：`tmp/resolved/boxdetail.html`（3664 B）——
+本批公式选中 53 项，其中此项**未包含在授权的 52 项内**，故暂扣。

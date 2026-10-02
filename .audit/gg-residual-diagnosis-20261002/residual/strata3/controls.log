@@ -1,0 +1,13 @@
+PC0 substrate validation passed=True
+PRE-AGG n_diff=60000
+PRE-AGG n_diff=900
+PRE-AGG n_diff=800
+PRE-AGG n_diff=8031
+PRE-AGG n_diff=50538
+controls_pass=False
+  PC0_substrate_validation_PRECONDITION      passed=True  expect=新基质能区分 实心块 / 细线（在任何分层阈值之前）
+  PC5_flat_bias_REGRESSION                   passed=True  expect=flat_bg share == 1.0 (task10: 1.0)
+  PC2_separator_REGRESSION                   passed=True  expect=sep_decor share >= 0.80 (task10: 1.0)
+  PC4_solid_vs_thin                          passed=True  expect=SW(solid)>SW(thin) and FILL(solid)>=0.95
+  PC1_text                                   passed=False expect=glyph_edge share >= 0.60 and stroke SW <= T_sw
+  PC3_image                                  passed=True  expect=image_asset share >= 0.60 and CC >= C_img

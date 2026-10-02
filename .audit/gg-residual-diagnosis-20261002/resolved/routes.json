@@ -1,0 +1,16 @@
+{
+ "base": "/base",
+ "box": "/box",
+ "box-detail": "/boxDetail",
+ "box-summary": "/boxSummary",
+ "calendar": "/calendar",
+ "card": "/card",
+ "depot": "/depot",
+ "enemy": "/enemy",
+ "gacha": "/gacha",
+ "headhunt": "/headhunt",
+ "help": "/help",
+ "missing": "/missing",
+ "recruit": "/recruit",
+ "state": "/state"
+}

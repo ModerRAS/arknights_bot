@@ -1,0 +1,31 @@
+{
+  "per_template": {
+    "Base.tmpl": 0,
+    "Box.tmpl": 0,
+    "BoxDetail.tmpl": 0,
+    "BoxSummary.tmpl": 0,
+    "Calendar.tmpl": 0,
+    "Card.tmpl": 1,
+    "Depot.tmpl": 0,
+    "Enemy.tmpl": 0,
+    "Gacha.tmpl": 0,
+    "Headhunt.tmpl": 0,
+    "Help.tmpl": 0,
+    "Lottery.tmpl": 0,
+    "Missing.tmpl": 0,
+    "Operator.tmpl": 0,
+    "Recruit.tmpl": 0,
+    "State.tmpl": 0
+  },
+  "elements": [
+    {
+      "template": "Card.tmpl",
+      "selector": ".level",
+      "line": 106,
+      "props": {
+        "width": 25.0,
+        "left": 15.0
+      }
+    }
+  ]
+}

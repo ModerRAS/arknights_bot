@@ -1,0 +1,376 @@
+{
+ "state": {
+  "route": "/state",
+  "rects": [
+   {
+    "tag": "div",
+    "id": "main",
+    "cls": "",
+    "x": 0,
+    "y": 0,
+    "w": 1092,
+    "h": 510
+   },
+   {
+    "tag": "img",
+    "id": "avatar",
+    "cls": "",
+    "x": 34,
+    "y": 34,
+    "w": 54,
+    "h": 54
+   },
+   {
+    "tag": "span",
+    "id": "name",
+    "cls": "",
+    "x": 98,
+    "y": 45,
+    "w": 818.98,
+    "h": 45
+   },
+   {
+    "tag": "img",
+    "id": "ap_icon",
+    "cls": "",
+    "x": 36,
+    "y": 146,
+    "w": 75,
+    "h": 73
+   },
+   {
+    "tag": "p",
+    "id": "ap",
+    "cls": "",
+    "x": 146,
+    "y": 138,
+    "w": 946,
+    "h": 45
+   },
+   {
+    "tag": "p",
+    "id": "complete",
+    "cls": "",
+    "x": 145,
+    "y": 193,
+    "w": 154.55,
+    "h": 32
+   },
+   {
+    "tag": "p",
+    "id": "lower_item",
+    "cls": "",
+    "x": 460,
+    "y": 113,
+    "w": 632,
+    "h": 38
+   },
+   {
+    "tag": "svg",
+    "id": "",
+    "cls": "bi bi-clock",
+    "x": 615,
+    "y": 124,
+    "w": 16,
+    "h": 16
+   },
+   {
+    "tag": "span",
+    "id": "lower_item_term_time",
+    "cls": "",
+    "x": 641,
+    "y": 113,
+    "w": 75.31,
+    "h": 38
+   },
+   {
+    "tag": "span",
+    "id": "",
+    "cls": "reward",
+    "x": 846.31,
+    "y": 113,
+    "w": 37.56,
+    "h": 38
+   },
+   {
+    "tag": "progress",
+    "id": "lower_progress",
+    "cls": "",
+    "x": 460,
+    "y": 158,
+    "w": 410,
+    "h": 11
+   },
+   {
+    "tag": "p",
+    "id": "higher_item",
+    "cls": "",
+    "x": 460,
+    "y": 204,
+    "w": 632,
+    "h": 38
+   },
+   {
+    "tag": "svg",
+    "id": "",
+    "cls": "bi bi-clock",
+    "x": 615,
+    "y": 215,
+    "w": 16,
+    "h": 16
+   },
+   {
+    "tag": "span",
+    "id": "higher_item_term_time",
+    "cls": "",
+    "x": 641,
+    "y": 204,
+    "w": 75.31,
+    "h": 38
+   },
+   {
+    "tag": "span",
+    "id": "",
+    "cls": "reward",
+    "x": 846.31,
+    "y": 204,
+    "w": 37.56,
+    "h": 38
+   },
+   {
+    "tag": "progress",
+    "id": "higher_progress",
+    "cls": "",
+    "x": 460,
+    "y": 249,
+    "w": 410,
+    "h": 11
+   },
+   {
+    "tag": "span",
+    "id": "",
+    "cls": "checked_in",
+    "x": 945,
+    "y": 47,
+    "w": 75,
+    "h": 38
+   },
+   {
+    "tag": "img",
+    "id": "campaign_icon",
+    "cls": "",
+    "x": 931,
+    "y": 127,
+    "w": 105,
+    "h": 108
+   },
+   {
+    "tag": "span",
+    "id": "campaign",
+    "cls": "",
+    "x": 973.47,
+    "y": 242,
+    "w": 30.05,
+    "h": 30
+   },
+   {
+    "tag": "p",
+    "id": "campaign_recover_bg",
+    "cls": "",
+    "x": 926,
+    "y": 212,
+    "w": 110,
+    "h": 25
+   },
+   {
+    "tag": "p",
+    "id": "campaign_recover_time",
+    "cls": "",
+    "x": 946.39,
+    "y": 214,
+    "w": 64.2,
+    "h": 24
+   },
+   {
+    "tag": "svg",
+    "id": "",
+    "cls": "bi bi-clock",
+    "x": 946.39,
+    "y": 218,
+    "w": 16,
+    "h": 16
+   },
+   {
+    "tag": "span",
+    "id": "campaign_recover_time_item",
+    "cls": "",
+    "x": 962.39,
+    "y": 214,
+    "w": 48.2,
+    "h": 24
+   },
+   {
+    "tag": "img",
+    "id": "recruit_icon",
+    "cls": "",
+    "x": 49,
+    "y": 332,
+    "w": 42,
+    "h": 42
+   },
+   {
+    "tag": "span",
+    "id": "recruit_title",
+    "cls": "title",
+    "x": 120,
+    "y": 332.5,
+    "w": 100,
+    "h": 38
+   },
+   {
+    "tag": "span",
+    "id": "recruit",
+    "cls": "title",
+    "x": 330,
+    "y": 332.5,
+    "w": 37.56,
+    "h": 38
+   },
+   {
+    "tag": "img",
+    "id": "tired_chars_icon",
+    "cls": "",
+    "x": 49,
+    "y": 429,
+    "w": 42,
+    "h": 42
+   },
+   {
+    "tag": "span",
+    "id": "tired_chars_title",
+    "cls": "title",
+    "x": 115,
+    "y": 432.5,
+    "w": 100,
+    "h": 38
+   },
+   {
+    "tag": "span",
+    "id": "tired_chars",
+    "cls": "title",
+    "x": 325,
+    "y": 432.5,
+    "w": 13.88,
+    "h": 38
+   },
+   {
+    "tag": "img",
+    "id": "tradings_icon",
+    "cls": "",
+    "x": 460,
+    "y": 333,
+    "w": 42,
+    "h": 42
+   },
+   {
+    "tag": "span",
+    "id": "tradings_title",
+    "cls": "title",
+    "x": 520,
+    "y": 335,
+    "w": 100,
+    "h": 38
+   },
+   {
+    "tag": "span",
+    "id": "tradings",
+    "cls": "title",
+    "x": 780,
+    "y": 335,
+    "w": 51.44,
+    "h": 38
+   },
+   {
+    "tag": "img",
+    "id": "manufactures_icon",
+    "cls": "",
+    "x": 460,
+    "y": 429,
+    "w": 42,
+    "h": 42
+   },
+   {
+    "tag": "span",
+    "id": "manufactures_title",
+    "cls": "title",
+    "x": 520,
+    "y": 432.5,
+    "w": 100,
+    "h": 38
+   },
+   {
+    "tag": "span",
+    "id": "manufactures",
+    "cls": "title",
+    "x": 780,
+    "y": 432.5,
+    "w": 51.44,
+    "h": 38
+   },
+   {
+    "tag": "img",
+    "id": "trainee",
+    "cls": "",
+    "x": 922,
+    "y": 307,
+    "w": 130,
+    "h": 130
+   },
+   {
+    "tag": "p",
+    "id": "remain_secs_bg",
+    "cls": "",
+    "x": 923,
+    "y": 416,
+    "w": 133,
+    "h": 25
+   },
+   {
+    "tag": "p",
+    "id": "remain_secs",
+    "cls": "",
+    "x": 950,
+    "y": 418,
+    "w": 78.19,
+    "h": 24
+   },
+   {
+    "tag": "svg",
+    "id": "",
+    "cls": "bi bi-clock",
+    "x": 950,
+    "y": 422,
+    "w": 16,
+    "h": 16
+   },
+   {
+    "tag": "span",
+    "id": "remain_secs_item",
+    "cls": "",
+    "x": 966,
+    "y": 418,
+    "w": 62.19,
+    "h": 24
+   },
+   {
+    "tag": "p",
+    "id": "building_name",
+    "cls": "",
+    "x": 945,
+    "y": 448,
+    "w": 90,
+    "h": 45
+   }
+  ]
+ }
+}

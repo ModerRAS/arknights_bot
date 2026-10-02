@@ -1,0 +1,16 @@
+[24260:51964:1002/225651.599:ERROR:sandbox\policy\win\sandbox_win.cc:789] Sandbox cannot access executable C:\Users\ModerRAS\AppData\Local\ms-playwright\chromium-1223\chrome-win64\chrome.exe. Check filesystem permissions are valid. See https://bit.ly/31yqMJR.: 拒绝访问。 (0x5)
+
+DevTools listening on ws://127.0.0.1:9222/devtools/browser/c1000742-3740-469b-bda8-8e24337cc8d3
+[24260:31632:1002/225651.649:ERROR:content\browser\network_service_instance_impl.cc:703] Network service crashed or was terminated, restarting service.
+[24260:21188:1002/225703.926:ERROR:components\media_router\common\providers\cast\certificate\cast_crl.cc:446] CRL - Verification failed.
+[24260:21188:1002/225704.240:ERROR:components\media_router\common\providers\cast\certificate\cast_crl.cc:446] CRL - Verification failed.
+[24260:21188:1002/225715.796:ERROR:components\media_router\common\providers\cast\certificate\cast_crl.cc:446] CRL - Verification failed.
+[24260:33088:1002/225721.785:ERROR:google_apis\gcm\engine\registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+[24260:21188:1002/225731.089:ERROR:components\media_router\common\providers\cast\certificate\cast_crl.cc:446] CRL - Verification failed.
+[24260:33088:1002/225745.792:ERROR:google_apis\gcm\engine\registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+[24260:33088:1002/225840.882:ERROR:google_apis\gcm\engine\registration_request.cc:275] Registration URL fetching failed.
+[24260:51964:1002/225951.590:ERROR:sandbox\policy\win\sandbox_win.cc:789] Sandbox cannot access executable C:\Users\ModerRAS\AppData\Local\ms-playwright\chromium-1223\chrome-win64\chrome.exe. Check filesystem permissions are valid. See https://bit.ly/31yqMJR.: 拒绝访问。 (0x5)
+[24260:31632:1002/225951.590:ERROR:services\on_device_model\public\cpp\service_client.cc:37] Unexpected on_device_model service disconnect; reason: 0, description: 
+[24260:33088:1002/230003.909:ERROR:google_apis\gcm\engine\registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+[24260:33088:1002/230337.990:ERROR:google_apis\gcm\engine\registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
+[24260:33088:1002/231126.394:ERROR:google_apis\gcm\engine\registration_request.cc:275] Registration URL fetching failed.

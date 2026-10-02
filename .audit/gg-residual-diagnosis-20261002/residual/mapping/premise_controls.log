@@ -1,0 +1,3 @@
+controls_pass=True
+  POS_shared_flat_fraction_measurable            expect=True observed=True
+  POS_flat_on_both_sides_but_colours_differ      expect=True observed=True

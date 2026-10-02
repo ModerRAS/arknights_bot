@@ -1,0 +1,5 @@
+controls_pass=True
+  POS1_truly_blank_region_is_empty             expect=True observed=True
+  POS2_correctly_painted_flat_element_NOT_empty expect=False observed=False
+  POS3_real_content_region_NOT_empty           expect=False observed=False
+  POS_declared_colour_lookup                   expect=True observed=True

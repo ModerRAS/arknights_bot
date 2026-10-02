@@ -1,0 +1,7 @@
+PRE-AGG n_diff=14288
+PRE-AGG n_diff=36000
+PRE-AGG n_diff=23166
+controls_pass=False
+  POS_text_edge_residual       expect=glyph_edge>=0.90 observed=0.0 passed=False
+  NEG_flat_colour_bias         expect=flat_bg>=0.90 observed=1.0 passed=True
+  NEG_image_resampling         expect=dominant != glyph_edge observed=other passed=True

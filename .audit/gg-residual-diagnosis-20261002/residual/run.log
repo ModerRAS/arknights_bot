@@ -1,0 +1,36 @@
+gate from instrument = 0.99
+P1_systematic_must_fire      observed=True
+P1b_small_bias_must_fire     observed=True
+P1c_multi_scene_substrate    observed=True
+N1_non_systematic_must_not_fire observed=False (no-positive-input=True max|c*|=0.000)
+N2_clean_render_must_not_fire observed=False (n_holes=0)
+P3_missing_block_must_fire   observed=True (n_hits=1 exact=True)
+controls_pass=True
+base          A=False corr=0.97073/0.97073  B=True  holes=5   hits=4   -> B_missing_block
+box           A=False corr=0.83373/0.83842  B=False holes=0   hits=0   -> C_diffuse
+box-detail    A=False corr=0.89694/0.89696  B=True  holes=12  hits=4   -> B_missing_block
+box-summary   A=False corr=0.90345/0.90345  B=False holes=13  hits=0   -> C_diffuse
+card          A=False corr=0.96015/0.96022  B=False holes=1   hits=0   -> C_diffuse
+depot         A=False corr=0.92352/0.92812  B=False holes=0   hits=0   -> C_diffuse
+enemy         A=False corr=0.94231/0.94231  B=True  holes=3   hits=2   -> B_missing_block
+gacha         A=False corr=0.90832/0.90832  B=False holes=0   hits=0   -> C_diffuse
+headhunt      A=False corr=0.97021/0.97036  B=False holes=1   hits=0   -> C_diffuse
+help          A=False corr=0.88469/0.88479  B=False holes=0   hits=0   -> C_diffuse
+lottery       A=False corr=0.98358/0.98510  B=True  holes=2   hits=1   -> B_missing_block
+missing       A=False corr=0.87614/0.88355  B=False holes=0   hits=0   -> C_diffuse
+operator      A=False corr=0.77326/0.77670  B=True  holes=7   hits=1   -> B_missing_block
+recruit       A=False corr=0.88603/0.88627  B=False holes=0   hits=0   -> C_diffuse
+{
+  "manifest_entries": 16,
+  "align_report_rows": 16,
+  "passed": 2,
+  "unpassed": 14,
+  "checksum_unpassed_equals_passed_plus_unpassed": true,
+  "primary_counts": {
+    "B_missing_block": 5,
+    "A_systematic_color_bias": 0,
+    "C_diffuse": 9
+  },
+  "checksum_three_classes_sum_equals_unpassed": true,
+  "item3_applies": false
+}

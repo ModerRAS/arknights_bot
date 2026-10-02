@@ -1,0 +1,18 @@
+PRE-AGG n_qualities=7
+PRE-AGG n_scenes=16
+base          gap=0.01928 deficit_best=0.00048 @q=100 -> codec_not_main_cause (x_needed=39.9)
+box           gap=0.16496 deficit_best=0.00203 @q=100 -> codec_not_main_cause (x_needed=81.1)
+box-detail    gap=0.11156 deficit_best=0.00022 @q=100 -> codec_not_main_cause (x_needed=514.1)
+box-summary   gap=0.10902 deficit_best=0.00123 @q=100 -> codec_not_main_cause (x_needed=88.4)
+calendar      gap=-0.00432 deficit_best=0.00025 @q=100 -> already_passes_gate (x_needed=-17.2)
+card          gap=0.02985 deficit_best=0.00078 @q=100 -> codec_not_main_cause (x_needed=38.0)
+depot         gap=0.06648 deficit_best=0.00065 @q=100 -> codec_not_main_cause (x_needed=102.3)
+enemy         gap=0.07049 deficit_best=0.00044 @q=100 -> codec_not_main_cause (x_needed=160.2)
+gacha         gap=0.08749 deficit_best=0.00118 @q=100 -> codec_not_main_cause (x_needed=74.5)
+headhunt      gap=0.01979 deficit_best=0.00422 @q=100 -> codec_not_main_cause (x_needed=4.7)
+help          gap=0.15057 deficit_best=0.00059 @q=100 -> codec_not_main_cause (x_needed=253.5)
+lottery       gap=0.00642 deficit_best=0.00023 @q=100 -> codec_not_main_cause (x_needed=27.7)
+missing       gap=0.11386 deficit_best=0.00138 @q=100 -> codec_not_main_cause (x_needed=82.6)
+operator      gap=0.22134 deficit_best=0.00018 @q=100 -> codec_not_main_cause (x_needed=1222.9)
+recruit       gap=0.10397 deficit_best=0.00210 @q=100 -> codec_not_main_cause (x_needed=49.5)
+state         gap=-0.00093 deficit_best=0.00066 @q=100 -> already_passes_gate (x_needed=-1.4)

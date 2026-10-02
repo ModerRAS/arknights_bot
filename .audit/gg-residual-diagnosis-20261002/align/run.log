@@ -1,0 +1,63 @@
+C0 ruler self-check: pass=True max_delta=0.000e+00
+positive controls (R=24, inject_fault=none):
+  C1 base         known=(0,0) recovered=(0,0) exact=True sim=1.000000
+  C1 base         known=(11,-7) recovered=(-11,7) exact=True sim=0.994241
+  C1 base         known=(-11,7) recovered=(11,-7) exact=True sim=0.994765
+  C1 base         known=(2,22) recovered=(-2,-22) exact=True sim=0.990459
+  C1 base         known=(-23,-22) recovered=(23,22) exact=True sim=0.984645
+  C1 lottery      known=(0,0) recovered=(0,0) exact=True sim=1.000000
+  C1 lottery      known=(11,-7) recovered=(-11,7) exact=True sim=0.996281
+  C1 lottery      known=(-11,7) recovered=(11,-7) exact=True sim=0.996578
+  C1 lottery      known=(2,22) recovered=(-2,-22) exact=True sim=0.995672
+  C1 lottery      known=(-23,-22) recovered=(23,22) exact=True sim=0.991587
+  C1 enemy        known=(0,0) recovered=(0,0) exact=True sim=1.000000
+  C1 enemy        known=(11,-7) recovered=(-11,7) exact=True sim=0.991412
+  C1 enemy        known=(-11,7) recovered=(11,-7) exact=True sim=0.991412
+  C1 enemy        known=(2,22) recovered=(-2,-22) exact=True sim=0.983933
+  C1 enemy        known=(-23,-22) recovered=(23,22) exact=True sim=0.976872
+  C2 synthetic known=(11,11) recovered=(-11,-11) exact=True
+  C2 synthetic known=(-11,7) recovered=(11,-7) exact=True
+controls pass=True
+base          now=0.97073 best=0.97073 shift=(0,0) R=24 bnd=False nob=(8,24)/0.97467 agree=False d=0.00000 gap=0.01927 no-reach
+box           now=0.82504 best=0.82640 shift=(0,5) R=24 bnd=False nob=(-24,5)/0.83283 agree=False d=0.00136 gap=0.16360 no-reach
+box-detail    now=0.87844 best=0.87844 shift=(0,0) R=24 bnd=False nob=(-24,24)/0.88809 agree=False d=0.00000 gap=0.11156 no-reach
+box-summary   now=0.88098 best=0.88098 shift=(0,0) R=24 bnd=False nob=(24,24)/0.88370 agree=False d=0.00000 gap=0.10902 no-reach
+calendar      now=0.99432 best=0.99432 shift=(0,0) R=24 bnd=False nob=(0,0)/0.99432 agree=True d=0.00000 gap=-0.00432 REACH
+card          now=0.96015 best=0.96015 shift=(0,0) R=24 bnd=False nob=(0,0)/0.96015 agree=True d=0.00000 gap=0.02985 no-reach
+depot         now=0.92352 best=0.92472 shift=(2,0) R=24 bnd=False nob=(2,0)/0.92533 agree=True d=0.00119 gap=0.06528 no-reach
+enemy         now=0.91951 best=0.91951 shift=(0,0) R=24 bnd=False nob=(-24,-24)/0.92498 agree=False d=0.00000 gap=0.07049 no-reach
+gacha         now=0.90251 best=0.90251 shift=(0,0) R=24 bnd=False nob=(-24,-23)/0.90516 agree=False d=0.00000 gap=0.08749 no-reach
+headhunt      now=0.97021 best=0.97021 shift=(0,0) R=24 bnd=False nob=(0,0)/0.97021 agree=True d=0.00000 gap=0.01979 no-reach
+help          now=0.83943 best=0.83943 shift=(0,0) R=24 bnd=False nob=(24,-24)/0.84537 agree=False d=0.00000 gap=0.15057 no-reach
+lottery       now=0.98358 best=0.98358 shift=(0,0) R=24 bnd=False nob=(-2,-5)/0.98423 agree=False d=0.00000 gap=0.00642 no-reach
+missing       now=0.87614 best=0.87697 shift=(2,4) R=24 bnd=False nob=(4,6)/0.88213 agree=False d=0.00083 gap=0.11303 no-reach
+operator      now=0.76866 best=0.76866 shift=(0,0) R=24 bnd=False nob=(24,24)/0.78083 agree=False d=0.00000 gap=0.22134 no-reach
+recruit       now=0.88603 best=0.89293 shift=(-9,0) R=24 bnd=False nob=(-13,0)/0.90104 agree=False d=0.00689 gap=0.09707 no-reach
+state         now=0.99093 best=0.99093 shift=(0,0) R=24 bnd=False nob=(0,0)/0.99093 agree=True d=0.00000 gap=-0.00093 REACH
+{
+  "manifest_scene_count": 16,
+  "row_count": 16,
+  "id_sets_equal": true,
+  "passed_count": 2,
+  "failed_count": 14,
+  "checksum_passed_plus_failed_eq_manifest": true,
+  "unpassed_reaches_gate": [],
+  "unpassed_no_reach": [
+    "base",
+    "box",
+    "box-detail",
+    "box-summary",
+    "card",
+    "depot",
+    "enemy",
+    "gacha",
+    "headhunt",
+    "help",
+    "lottery",
+    "missing",
+    "operator",
+    "recruit"
+  ],
+  "unpassed_boundary": []
+}
+elapsed 1205.6s

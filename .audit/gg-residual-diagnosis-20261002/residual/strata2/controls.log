@@ -1,0 +1,16 @@
+PRE-AGG n_diff=13046
+PRE-AGG n_diff=1796
+PRE-AGG n_diff=23204
+C:\WorkSpace\Golang\arknights_bot-measure-align\tmp\residual\strata2\strata2.py:91: RuntimeWarning: Degrees of freedom <= 0 for slice
+  cov = np.cov(np.vstack([xs - xc, ys - yc]))
+C:\Users\ModerRAS\AppData\Roaming\Python\Python314\site-packages\numpy\lib\_function_base_impl.py:2901: RuntimeWarning: divide by zero encountered in divide
+  c *= np.true_divide(1, fact)
+C:\Users\ModerRAS\AppData\Roaming\Python\Python314\site-packages\numpy\lib\_function_base_impl.py:2901: RuntimeWarning: invalid value encountered in multiply
+  c *= np.true_divide(1, fact)
+PRE-AGG n_diff=60000
+controls_pass=False
+  PC1_glyph                        passed=False SW in [0.7,3.0] px AND glyph_edge share >= 0.80
+  PC2_separator                    passed=True  long comp SW in [0.7,1.6] and LIN>=0.95 AND sep_decor share >= 0.80
+  PC3_image                        passed=False large comp FILL>=0.60 AND image_asset share >= 0.60
+  PC4_monotonicity_stroke_width    passed=False SW(4px line) > SW(1px line)
+  PC5_flat_bias                    passed=True  flat_bg share == 1.0

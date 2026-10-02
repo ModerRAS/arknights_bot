@@ -1,0 +1,15 @@
+base -> 51 elems
+box -> 91 elems
+box-detail -> 1 elems
+box-summary -> 27 elems
+calendar -> 377 elems
+card -> 18 elems
+depot -> 34 elems
+enemy -> 3 elems
+gacha -> 32 elems
+headhunt -> 51 elems
+help -> 88 elems
+missing -> 58 elems
+recruit -> 61 elems
+state -> 41 elems
+written C:/WorkSpace/Golang/arknights_bot-measure-align/tmp/resolved/rects.json

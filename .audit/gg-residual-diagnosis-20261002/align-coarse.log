@@ -1,0 +1,46 @@
+C0 ruler self-check: pass=True max_delta=0.000e+00
+controls SKIPPED (supplementary wide sweep only; not a primary ceiling run)
+POSITIVE CONTROL FAILED -> ceiling numbers are void, do not report a table.
+base          now=0.97073 best=0.97073 shift=(0,0) R=96 bnd=False nob=(96,16)/0.97728 agree=False d=0.00000 gap=0.01927 no-reach
+box           now=0.82504 best=0.82623 shift=(0,4) R=96 bnd=False nob=(-96,96)/0.85097 agree=False d=0.00119 gap=0.16377 no-reach
+box-detail    now=0.87844 best=0.87844 shift=(0,0) R=96 bnd=False nob=(-96,-96)/0.94148 agree=False d=0.00000 gap=0.11156 no-reach
+box-summary   now=0.88098 best=0.88098 shift=(0,0) R=96 bnd=False nob=(-96,96)/0.90324 agree=False d=0.00000 gap=0.10902 no-reach
+calendar      now=0.99432 best=0.99432 shift=(0,0) R=96 bnd=False nob=(0,0)/0.99432 agree=True d=0.00000 gap=-0.00432 REACH
+card          now=0.96015 best=0.96015 shift=(0,0) R=96 bnd=False nob=(0,0)/0.96015 agree=True d=0.00000 gap=0.02985 no-reach
+depot         now=0.92352 best=0.92352 shift=(0,0) R=96 bnd=False nob=(-96,96)/0.98688 agree=False d=0.00000 gap=0.06648 no-reach
+enemy         now=0.91951 best=0.91951 shift=(0,0) R=96 bnd=False nob=(-96,-96)/0.94406 agree=False d=0.00000 gap=0.07049 no-reach
+gacha         now=0.90251 best=0.90251 shift=(0,0) R=96 bnd=False nob=(96,96)/0.91976 agree=False d=0.00000 gap=0.08749 no-reach
+headhunt      now=0.97021 best=0.97021 shift=(0,0) R=96 bnd=False nob=(0,0)/0.97021 agree=True d=0.00000 gap=0.01979 no-reach
+help          now=0.83943 best=0.83943 shift=(0,0) R=96 bnd=False nob=(96,-96)/0.86410 agree=False d=0.00000 gap=0.15057 no-reach
+lottery       now=0.98358 best=0.98358 shift=(0,0) R=96 bnd=False nob=(0,-4)/0.98401 agree=False d=0.00000 gap=0.00642 no-reach
+missing       now=0.87614 best=0.87673 shift=(0,4) R=96 bnd=False nob=(-96,4)/0.89506 agree=False d=0.00059 gap=0.11327 no-reach
+operator      now=0.76866 best=0.76866 shift=(0,0) R=96 bnd=False nob=(96,96)/0.82879 agree=False d=0.00000 gap=0.22134 no-reach
+recruit       now=0.88603 best=0.89256 shift=(-8,0) R=96 bnd=False nob=(-12,0)/0.90018 agree=False d=0.00653 gap=0.09744 no-reach
+state         now=0.99093 best=0.99093 shift=(0,0) R=96 bnd=False nob=(0,0)/0.99093 agree=True d=0.00000 gap=-0.00093 REACH
+{
+  "manifest_scene_count": 16,
+  "row_count": 16,
+  "id_sets_equal": true,
+  "passed_count": 2,
+  "failed_count": 14,
+  "checksum_passed_plus_failed_eq_manifest": true,
+  "unpassed_reaches_gate": [],
+  "unpassed_no_reach": [
+    "base",
+    "box",
+    "box-detail",
+    "box-summary",
+    "card",
+    "depot",
+    "enemy",
+    "gacha",
+    "headhunt",
+    "help",
+    "lottery",
+    "missing",
+    "operator",
+    "recruit"
+  ],
+  "unpassed_boundary": []
+}
+elapsed 862.1s

@@ -1,0 +1,16 @@
+PRE-AGG n_qualities=7
+controls_pass(blocking only)=False
+  POS_flat_no_detail           passed=True  blocking=True  observed=1
+  POS_trend                    passed=True  blocking=True  observed={'low3_min': 0.004083, 'high3_max': 0.001751}
+  POS_dynamic_range            passed=False blocking=False observed=0.009725
+  CALIBRATION_against_harness  passed=True  blocking=True  observed=0.0
+  POS_sensitivity_white_noise  passed=False blocking=True  observed=0.139233
+  POS_sensitivity_block_aligned passed=False blocking=True  observed=0.001471
+  POS_sensitivity_local        passed=False blocking=True  observed=0.000118
+  POS_flat_no_detail         passed=True observed=1
+  POS_trend                  passed=True observed={'low3_min': 0.004083, 'high3_max': 0.001751}
+  POS_dynamic_range          passed=False observed=0.009725
+  CALIBRATION_against_harness passed=True observed=0.0
+  POS_sensitivity_white_noise passed=False observed=0.139233
+  POS_sensitivity_block_aligned passed=False observed=0.001471
+  POS_sensitivity_local      passed=False observed=0.000118

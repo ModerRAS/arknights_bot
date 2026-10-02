@@ -1,0 +1,4 @@
+controls_pass=True
+  POS_both_sides_differ        expect=True observed=True
+  NEG_both_sides_identical     expect=False observed=False
+  NEG2_no_hole_at_all          expect=None observed=None
