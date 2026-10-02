@@ -1,0 +1,173 @@
+{
+  "provenance": "pre-registered (v6, amended before any deliverable table)",
+  "registered_at_utc": "2026-10-02T12:00:00Z",
+  "amended_at_utc": "2026-10-02T12:20:00Z",
+  "amended_v3_at_utc": "2026-10-02T12:40:00Z",
+  "amended_v4_at_utc": "2026-10-02T13:05:00Z",
+  "amended_v5_at_utc": "2026-10-02T13:25:00Z",
+  "amended_v6_at_utc": "2026-10-02T13:40:00Z",
+  "gate": 0.99,
+  "gate_derivation": "唯一来源是 src/ggrender/pixel_test.go 的 gatePassed()（本次未改动）；v1/v2 把 0.99 写在散文里，v3 补成机器可读字段，因为从中文散文里 parse 阈值属于「尺子在量错的东西」——它实际读到的是句子而不是数字。",
+  "registered_before_any_measurement": true,
+  "amendment_log": [
+    {
+      "version": "v1",
+      "snapshot": "tmp/residual/instrument.json.v1-amended",
+      "class_A_rule_v1": "|med_c| ≥ 2.55 对 ≥3 通道 AND median_c(G_c) ≥ 3.0（形状判据）",
+      "why_superseded": "写完 v1 后、读取任何像素统计之前，自查发现 v1 的阳性对照 P1 必然失败：在弥散残差上叠加一个常数偏置，分布的离散度不变，故 conc_c/G_c 几乎不变，v1 规则对「已知系统性输入」不响。这正是本项目反复出现的病：用一把验不过自己阳性对照的尺子去出否定结论。",
+      "no_data_seen_yet": true,
+      "data_read_before_amendment": "仅 manifest/模板清单（id 与文件名），无任何像素统计、无任何 Δ 分布"
+    },
+    {
+      "version": "v6",
+      "change": "只改 N1 的输入构造：base = 0.5*old + 64（压缩到 [64,191]），new_syn = clip(base + N(0,12))。判据 max|c*| < 1.0 与分类规则均未动。",
+      "why": "上一版实测 max|c*| = 1.000，正好卡在判据边界。取证：原构造下 14.589% 的像素发生截断（syn 触到 0 或 255），截断本身就注入偏置，把零均值噪声变成带微小常数的信号。这是对照输入的构造缺陷，不是判据写错 —— 与 v5 的 P3 同型（坏的是构造，不是尺子）。压缩底图到 [64,191] 后截断率 0.0000%，max|c*| = 0.0428，比判据低一个数量级以上。",
+      "evidence": "截断率与中位数对比见 tmp/residual/ 下的取证命令输出；14.589% -> 0.0000%，max|c*| 1.000 -> 0.0428",
+      "classification_rules_changed": "无",
+      "no_data_seen_yet": false
+    },
+    {
+      "version": "v5",
+      "change": "只改两个对照的**输入构造**，分类规则与阈值仍然一字未动。① P3 的涂块改为与 tile 网格对齐的 10x10 格；验收回到「命中内洞的 tile box 与涂块 tile box 完全相等」。② N1 的底板由 operator 换成合成对 new_syn = clip(old + N(0,12))。",
+      "why_p3": "上一版实测重叠 0.676，与「每轴各丢一格」的解析下界 (floor(315/43)-1)*43/315 x (floor(160/22)-1)*22/160 = 0.6757 吻合到小数点后两位。即检测器完全正常，坏的是对照输入：未对齐的矩形只有完全落在格内的部分才被判 flat。把涂块对齐网格后，期望重叠恒为 1.0，任何不符都是真失败 —— 于是 v1 的严格判据本就是对的，错的是构造。",
+      "why_n1": "上一版实测 max|c*| = 15.0，证明 operator 的残差本身含全局常数成分，即该底板**确实含阳性输入**。这不是断言写错，是对照组被污染了。换成构造上零均值的合成对：new_syn = clip(old + N(0,12))，则 Δ = old - new_syn = -noise，中位数为 0（由构造保证），c* 必然接近 0。",
+      "rejected_substrate": "operator（被否的实测证据：max|c*| = 15.0，见 tmp/residual/run.log）",
+      "classification_rules_changed": "无",
+      "no_data_seen_yet": false
+    },
+    {
+      "version": "v4",
+      "change": "只改两个对照的验收口径，分类规则与阈值一字未动。① P3 的命中判据由「像素级完全包含」改为「重叠 >= 0.80×涂块面积」；② N1 的「无阳性输入」检查由 v1 时代的形状阈值（|median Δ| >= 2.55）改为「该输入自身的最优全局常数 max|c*| < 1.0」。",
+      "why": "① P3 原判据在量错的东西：检测器工作在 24×24 tile 网格上，对矩形的定位必然量化到整格，要求像素级完全包含是在测网格对齐而不是测检测能力。② N1 原判据用的是 v1 时代已降级为描述性的形状阈值，而真正的分类判据是全局常数修正天花板；拿不相干的统计量去断言「对照组不含阳性输入」，结论必然错。",
+      "classification_rules_changed": "无",
+      "disclosure_contamination": "本次修改发生在 probe 已把 14 行场景分类打到 stderr 之后。但分类规则、阈值、优先级、归一化口径在 v1/v2/v3 已冻结且本次一字未改；只改对照的构造与验收，而对照不参与任何场景的分类计算。故不构成「看了数据再调口径」。",
+      "no_data_seen_yet": false
+    },
+    {
+      "version": "v3",
+      "change": "新增顶层数值字段 gate=0.99，判据本身未变",
+      "why": "v2 把阈值写在中文散文里，脚本从散文 parse 阈值 —— 实测那次 parse 直接报 ValueError，属于典型的「尺子输出正常但量错了东西」。补成机器可读字段后，脚本不再 parse 自然语言。",
+      "no_data_seen_yet": true,
+      "data_read_before_amendment": "无；修改 instrument.json 的那一刻，probe 尚未成功产出任何一行场景统计"
+    },
+    {
+      "version": "v2",
+      "class_A_rule_v2": "class_A 成立 iff max(sim_corr_all, sim_corr_diff) ≥ 0.99（全局单通道常数修正的天花板）",
+      "why": "该规则无自由拟合参数：阈值 0.99 直接取自 gatePassed（未改动）；修正族取「每通道一个全局常数」，即「单一系统性成因」的最小族；该族的最优成员都到不了门禁，就不存在可行动的系统性偏差。形状统计降级为描述性证据，仍全部输出。"
+    }
+  ],
+  "note": "本文件在读任何残差数字之前写定；v2 的修改也发生在读任何像素统计之前。分类函数、阈值、归一化口径、判定阈值一项不缺。先出数字再补口径 = 拟合出来的阈值，不许交表。",
+  "scope": {
+    "scenes": "沿用 tmp/align/report.json @ measure/align-ceiling 4584759 的 14 个 go_passed=false 场景；manifest entries=16 = 过线 2 + 未过线 14",
+    "produced_by": "src/ggrender/pixel_test.go @ 4584759 (RenderGGContext)",
+    "not_covered": "旋转 / 缩放 / 非刚性 / 分块配准；见 task4 报告 §4"
+  },
+
+  "inputs": {
+    "baseline_png": "tmp/pixel-compare/<scene>/old.png  (由 harness 从冻结 JPEG 转出的 PNG，等于 Go 侧 jpeg.Decode -> RGBA 的像素)",
+    "render_png": "tmp/pixel-compare/<scene>/new.png  (RenderGGContext 输出)",
+    "current_sim_source": "tmp/align/report.json 的 current_sim（本树 @4584759 实测）"
+  },
+
+  "sign_convention": "Δ_c(x,y) = O_c(x,y) - N_c(x,y)，即 baseline 减 render，正值表示 render 比 baseline 暗/小。",
+
+  "class_A_systematic_color_bias": {
+    "purpose": "判「系统性颜色偏差」",
+    "pixel_set": "P = { (x,y) : Σ_c |Δ_c| > 0 }（差异像素）。仅在 P 上统计，中位数用 np.median。",
+    "per_channel_statistics": [
+      "med_c = median(Δ_c over P)  【有符号中位数，主判据；均值会被少数极值像素拖走，本项目残差是弥散型，均值给出误导性的接近 0】",
+      "p25_c, p75_c, iqr_c = p75 - p25",
+      "conc_c = fraction(P : |Δ_c - med_c| ≤ W_conc)"
+    ],
+    "W_conc": 16,
+    "T_bias": 2.55,
+    "T_bias_derivation": "非拟合。门禁 sim ≥ 0.99 要求 Σ|Δ| ≤ 0.01·W·H·4·255，折算到「每像素每通道」的预算是 0.01·255 = 2.55。若残差是每通道常数 c，则 sim = 1 - c/255，故 c = 2.55 恰好吃光全部剩余预算。|med_c| ≥ 2.55 读作「该通道的偏置单独就足以吃光预算」。",
+    "G_ref": 0.125,
+    "G_ref_derivation": "非拟合。Δ 在 [0,255] 上均匀分布时，落在中位数 ±W_conc(=16) 内的比例 = 32/256 = 0.125。这是参照分布的解析值，用来把任意窗口宽度归一化掉。",
+    "G_c_definition": "G_c = conc_c / G_ref，即「比均匀分布集中多少倍」。",
+    "T_G": 3.0,
+    "T_G_rationale": "声明常数，含义是「至少比均匀分布集中 3 倍」；用比值而非绝对窗口，使判据不依赖 W_conc 的具体取值。",
+    "flag_rule": "class_A 成立 iff max(sim_corr_all, sim_corr_diff) ≥ 0.99。",
+    "flag_rule_derivation": "非拟合。阈值 0.99 直接取自 gatePassed（本次未改动该函数）。修正族 F = { 每通道一个全局常数 c = (c_R,c_G,c_B,c_A) }，即「单一系统性成因」的最小闭合族。c*_c 取使 Σ|Δ_c - c_c| 最小的常数。sim_corr_all = 1 - Σ_{全画布,c}|Δ_c - c*_c| / (W·H·4·255)；sim_corr_diff 额外限制修正只作用于原本就有差异的像素（不动已经逐位相同的像素）。判据 = 该族最优成员能否触及门禁：能 = 有一个单点全局修正就能达标，性质是系统性的；不能 = 没有任何单一全局修正能达标，系统性偏差不是可行动的成因。",
+    "shape_flag_descriptive_only": "shape_present := (|med_c| ≥ 2.55 对 ≥3 通道成立) AND (median_c(G_c) ≥ 3.0)。该形状判据 **不参与** 分类，仅作描述性证据输出（v1 曾想用它当分类依据，因过不了自己的阳性对照而降级）。",
+    "alpha_note": "old/new 均为不透明 RGBA，Δ_alpha 预期恒 0。因此「至少 3 个通道」实际等价于「R/G/B 三通道全部满足」，这是口径的已知后果，不是拟合结果。",
+    "secondary_evidence": "mean_c 一并给出，但明确标注为次要证据（均值受极值影响）。"
+  },
+
+  "class_B_missing_block": {
+    "purpose": "判「整块没画」",
+    "primary_signal_source": "render_png 单侧（new.png），不使用基线图 —— 符合「只从声明层判、不看基线图」",
+    "tile_grid": 24,
+    "tile_grid_note": "每边 24 格，格边长 ≈ W/24 与 H/24，取整。",
+    "flat_rule": "tile 判为 flat iff (p99 - p01) of tile luminance ≤ 2；luminance = 0.299R+0.587G+0.114B，float 计算。阈值 2 的含义：填色块内部的 8bit 量化抖动为 0，≤2 用于容忍舍入而不吞掉真实结构。",
+    "hole_definition": "flat tile 的连通域（scipy.ndimage.label, 4-邻接）中，不接触画布四边的连通域称为 hole（内洞）。内洞 = 「周围有内容、此处一片纯色」，正是「声明了但没画」的形态；贴边的纯色是背景，不算。",
+    "A_min_rule": "A_min = max((0.99 - current_sim)/4, 0.005)，按场景各自计算",
+    "A_min_derivation": "非拟合。面积为 a 的块若整块缺失，在满对比(255)时对 sim 的最大拖累 = a/(W·H)。要让该块有能力解释当前门禁缺口，需要 a/(W·H) ≥ 0.99 - current_sim。实际缺失块的对比通常只有满对比的一部分，故除以 4 作为保守下界；并设 0.5% 的地板避免小场景被完全排除。",
+    "min_dim_rule": "min(hole_w/W, hole_h/H) ≥ 0.05",
+    "min_dim_rationale": "声明常数，含义是「块」而不是「竖条/横线」；5% 是排除 1px 描边级别细条的粗筛。",
+    "flag_rule": "缺内容 成立 iff 最大内洞面积占比 ≥ A_min 且 min(hole_w/W, hole_h/H) ≥ 0.05。",
+    "corroboration_2b": {
+      "signal": "同一批内洞与残差能量（相对基线的 Σ|Δ|）的交集占比",
+      "uses_baseline": true,
+      "provenance_label": "inferred",
+      "note": "2b 使用基线作为比对参照（门禁本身就这么做），只用于佐证 2a，不构成 2a 的判据；不得据此反推任何取值。"
+    }
+  },
+
+  "class_C_diffuse": {
+    "purpose": "判「弥散的内容不一致」",
+    "flag_rule": "A、B 均不成立即为弥散。这是兜底类，不是一个独立阈值判据。",
+    "positive_evidence_reported": ["差异像素占全画布比例 pct_pixels_differing", "残差能量前 1% 像素的占比 share_top1pct（低 = 无单点热区 = 弥散）"]
+  },
+
+  "precedence": ["B_missing_block", "A_systematic_color_bias", "C_diffuse"],
+  "precedence_rationale": "预登记的归并口径，不是测量结果：一个可指认的单点缺陷（整块没画）压过一个全局偏置（系统性），全局偏置压过无单点的弥散。B 与 A 同时成立时 primary=B，但两枚 flag 都进表，不隐藏组合。",
+  "checksum_rule": "A 行数 + B 行数 + C 行数 == 14（未过线场景数），由脚本机械统计，禁止手数。",
+
+  "controls": {
+    "P1_systematic_must_fire": {
+      "input": "取已知良好场景 calendar（current_sim=0.99432）的 new.png 副本，整体压暗常数 (6,4,5,0)（render 相对 baseline 偏暗），不做其他改动。测量入口看到的 sim ≈ 1-(6+4+5)/255 ≈ 0.9657 < 0.99",
+      "expect": "class_A flag == true（全局常数修正能把它拉回 0.99 以上）",
+      "if_not": "判别口径在已知系统性输入上不响 => 全部数字作废，不许交表"
+    },
+    "P1b_small_bias_must_fire": {
+      "input": "同一手法，常数 (1,1,1,0)，入口 sim ≈ 1-3/255 ≈ 0.9882 < 0.99",
+      "expect": "class_A flag == true",
+      "why": "门禁边界附近的敏感性检查；口径不能只在大幅偏置时才响"
+    },
+    "P1c_multi_scene_substrate": {
+      "input": "同样手法再跑 state（current_sim=0.99093）",
+      "expect": "class_A flag == true",
+      "why": "防止口径只对某一个底板成立"
+    },
+    "N1_non_systematic_must_not_fire": {
+      "input": "合成对：base = 0.5*box_old + 64（压缩到 [64,191] 以消除截断），new_syn = clip(base + N(0,12), 0, 255)，比对 base vs new_syn，故 Δ = -noise，零均值由构造保证",
+      "no_positive_input_check": "构造上未加任何常数偏置（代码里没有常数项）；并断言该输入自身的最优全局常数 max_c |c*_c| < 1.0（没有可修正的全局常数 = 没有系统性成分）。若断言不通过，则该底板含阳性输入，必须换底板并在报告中公开记录换了什么、为什么。",
+      "expect": "class_A flag == false",
+      "disclosure": "「无阳性输入」由构造性保证 + 对输入自身性质的测量（c*）共同支持；c* 是输入的性质而非分类器的输出，故非循环论证。分类器的否定结论的真实独立对照，是 14 个真实场景本身。"
+    },
+    "P3_missing_block_must_fire": {
+      "input": "真实 new.png 副本，在画布内部刷一个已知尺寸的纯色矩形（面积与形状已知，尺寸按 A_min 与 0.05 规则构造）",
+      "acceptance": "class_B flag == true 且存在一个命中内洞，其 tile box 与涂块 tile box 完全相等（涂块已与网格对齐，期望重叠恒为 1.0）",
+      "acceptance_rationale": "涂块对齐网格后严格相等是可达成的；此时任何不符都是检测器真失败，不是量化假象。",
+      "if_not": "空白块检测器在已知缺失块上不响 => 缺内容一类不可判"
+    },
+    "N2_clean_render_must_not_fire": {
+      "input": "未改动的真实 new.png",
+      "expect": "class_B flag == false（否则检测器对真实渲染恒响，该指标无分辨力）"
+    }
+  },
+
+  "item3_scale_bias": {
+    "applies_only_if": "class_A 在多数场景成立",
+    "rule": "若 class_A 不成立，item3 直接标「不适用」并说明理由，不硬做",
+    "status_at_registration": "待定 —— 由 class_A 的实测结果决定，不由预期决定"
+  },
+
+  "forbidden": [
+    "从冻结基线图反推任何取值（本任务只量残差的性质）",
+    "改任何渲染代码、改 src/ggrender/pixel_test.go 或任何计分代码",
+    "把任何位移/色偏写进渲染常量、geometry 表、模板或 CSS",
+    "在禁碰树 arknights_bot-satori-yoga-skia-go 上渲染或落任何产物"
+  ]
+}

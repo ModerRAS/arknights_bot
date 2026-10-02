@@ -1,0 +1,89 @@
+{
+  "instrument": {
+    "provenance": "measured",
+    "script": ".audit\\align_ceiling.py",
+    "metric": "S(dx,dy)=1-sum(|O-Nshift|)/(W*H*4*255); 4-channel denominator, per-pixel abs diff, integer shifts",
+    "shift_convention": "Nshift[y,x,c]=N[y-dy,x-dx,c] inside [max(0,dy),min(H,H+dy))x[max(0,dx),min(W,W+dx)); outside = 0 (zero padding)",
+    "shift_reading": "(dx,dy) = how far new's content must move to line up with old",
+    "search": "brute force integer (dx,dy) in [-R,R]^2, step 1, full canvas, no downsampling",
+    "R_initial": 12,
+    "boundary_rule": "argmin on |dx|=R or |dy|=R -> rerun with R'=2R; boundary=true if still on edge",
+    "tie_break": "lexicographic min of (err, |dx|+|dy|, |dx|, |dy|, dx, dy)",
+    "gate_reused": "0.99 (Go gatePassed); this script does NOT modify gatePassed or similarityNormalized",
+    "positive_controls": "C1 real-data edge-shift of new.png; C2 synthetic noise; C0 S(0,0) must equal go report.json",
+    "scope": "diagnosis only: reported (dx,dy) are measurement results, NOT renderer constants"
+  },
+  "harness": {
+    "harness_path": "src/ggrender/pixel_test.go",
+    "repo_rel_source": "arknights_bot-measure-align (git worktree)",
+    "branch": "measure/align-ceiling",
+    "commit": "4584759e18fb9f4d17ba530b3d2cdf1bfb322c47",
+    "go_cmd": "cd src && go test ./ggrender/ -run TestGGPixelParity -count=1",
+    "go_log": "tmp/align-smoke\\gotest.log",
+    "produced_by": "gg harness only (RenderGGContext); yoga/skia 树未参与、未读取",
+    "inject_fault": "none"
+  },
+  "controls": {
+    "c0_pass": true,
+    "c1_c2_pass": true
+  },
+  "checks": {
+    "manifest_scene_count": 1,
+    "row_count": 1,
+    "id_sets_equal": true,
+    "passed_count": 0,
+    "failed_count": 1,
+    "checksum_passed_plus_failed_eq_manifest": true,
+    "unpassed_reaches_gate": [],
+    "unpassed_no_reach": [
+      "box-detail"
+    ],
+    "unpassed_boundary": []
+  },
+  "rows": [
+    {
+      "scene": "box-detail",
+      "width": 722,
+      "height": 279,
+      "current_sim": 0.8784374903269025,
+      "go_sim": 0.8784374903269025,
+      "go_passed": false,
+      "best_shift": [
+        0,
+        0
+      ],
+      "best_sim": 0.8784374903269025,
+      "delta_sim": 0.0,
+      "best_shift_noband": [
+        -12,
+        12
+      ],
+      "best_sim_noband": 0.8811753103032335,
+      "argmax_agrees_noband": false,
+      "gap_to_gate": 0.11156250967309744,
+      "reaches_gate": false,
+      "err0": 24977055,
+      "err_best": 24977055,
+      "err_explained_pct": 0.0,
+      "R_used": 12,
+      "boundary": false,
+      "residual": {
+        "err_total": 24977055,
+        "differing_pixels": 201326,
+        "total_pixels": 201438,
+        "pct_of_pixels_differing": 99.9444,
+        "diff_px_p50": 28,
+        "diff_px_p90": 532,
+        "diff_px_p99": 649,
+        "diff_px_max": 685,
+        "top1pct_pixels_share_of_error": 5.2919,
+        "pixels_diff_gt16": 192886
+      },
+      "new_png_sha256": "92d22b58aade41c20a167af85440fc50379671cb03db7316eacbd79eb333974c",
+      "old_png_sha256": "bf153f42ad9e6bb4cd0a6f8bfb63f870ba21f88cd4b08706d6676b79e2f41f9b",
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759e18fb9f4d17ba530b3d2cdf1bfb322c47",
+      "seconds": 2.3
+    }
+  ],
+  "elapsed_sec": 14.5
+}

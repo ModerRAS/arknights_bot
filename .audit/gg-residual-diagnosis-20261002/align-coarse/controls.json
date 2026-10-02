@@ -1,0 +1,113 @@
+{
+  "c0_ruler": [
+    {
+      "scene": "base",
+      "py_sim": 0.9707251279217189,
+      "go_sim": 0.9707251279217189,
+      "delta": 0.0
+    },
+    {
+      "scene": "box",
+      "py_sim": 0.8250372524631744,
+      "go_sim": 0.8250372524631744,
+      "delta": 0.0
+    },
+    {
+      "scene": "box-detail",
+      "py_sim": 0.8784374903269025,
+      "go_sim": 0.8784374903269025,
+      "delta": 0.0
+    },
+    {
+      "scene": "box-summary",
+      "py_sim": 0.8809750314141331,
+      "go_sim": 0.8809750314141331,
+      "delta": 0.0
+    },
+    {
+      "scene": "calendar",
+      "py_sim": 0.99432366536721,
+      "go_sim": 0.99432366536721,
+      "delta": 0.0
+    },
+    {
+      "scene": "card",
+      "py_sim": 0.9601504863664215,
+      "go_sim": 0.9601504863664215,
+      "delta": 0.0
+    },
+    {
+      "scene": "depot",
+      "py_sim": 0.9235233358635896,
+      "go_sim": 0.9235233358635896,
+      "delta": 0.0
+    },
+    {
+      "scene": "enemy",
+      "py_sim": 0.9195071737682478,
+      "go_sim": 0.9195071737682478,
+      "delta": 0.0
+    },
+    {
+      "scene": "gacha",
+      "py_sim": 0.9025141429411271,
+      "go_sim": 0.9025141429411271,
+      "delta": 0.0
+    },
+    {
+      "scene": "headhunt",
+      "py_sim": 0.9702100415687936,
+      "go_sim": 0.9702100415687936,
+      "delta": 0.0
+    },
+    {
+      "scene": "help",
+      "py_sim": 0.839432182957432,
+      "go_sim": 0.839432182957432,
+      "delta": 0.0
+    },
+    {
+      "scene": "lottery",
+      "py_sim": 0.9835808689865397,
+      "go_sim": 0.9835808689865397,
+      "delta": 0.0
+    },
+    {
+      "scene": "missing",
+      "py_sim": 0.8761380684114441,
+      "go_sim": 0.8761380684114441,
+      "delta": 0.0
+    },
+    {
+      "scene": "operator",
+      "py_sim": 0.7686553835330429,
+      "go_sim": 0.7686553835330429,
+      "delta": 0.0
+    },
+    {
+      "scene": "recruit",
+      "py_sim": 0.8860348978265186,
+      "go_sim": 0.8860348978265186,
+      "delta": 0.0
+    },
+    {
+      "scene": "state",
+      "py_sim": 0.9909337226595012,
+      "go_sim": 0.9909337226595012,
+      "delta": 0.0
+    }
+  ],
+  "c0_pass": null,
+  "c1_c2_pass": null,
+  "c1_c2": [],
+  "harness": {
+    "harness_path": "src/ggrender/pixel_test.go",
+    "repo_rel_source": "arknights_bot-measure-align (git worktree)",
+    "branch": "measure/align-ceiling",
+    "commit": "4584759e18fb9f4d17ba530b3d2cdf1bfb322c47",
+    "go_cmd": "cd src && go test ./ggrender/ -run TestGGPixelParity -count=1",
+    "go_log": "tmp/align-coarse\\gotest.log",
+    "produced_by": "gg harness only (RenderGGContext); yoga/skia 树未参与、未读取",
+    "inject_fault": "none"
+  }
+}

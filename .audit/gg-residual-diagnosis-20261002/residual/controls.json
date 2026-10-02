@@ -1,0 +1,112 @@
+{
+  "gate": 0.99,
+  "controls": [
+    {
+      "control": "P1_systematic_must_fire",
+      "substrate": "calendar",
+      "applied_const": [
+        6,
+        4,
+        5,
+        0
+      ],
+      "sim_at_measurement": 0.9805623461833293,
+      "sim_corr_all": 0.9943239988467952,
+      "sim_corr_diff": 0.9943241406859383,
+      "observed": true,
+      "expect": true
+    },
+    {
+      "control": "P1b_small_bias_must_fire",
+      "substrate": "calendar",
+      "applied_const": [
+        1,
+        1,
+        1,
+        0
+      ],
+      "sim_at_measurement": 0.9918019879333764,
+      "sim_corr_all": 0.9943237290372253,
+      "sim_corr_diff": 0.9943399907373787,
+      "observed": true,
+      "expect": true
+    },
+    {
+      "control": "P1c_multi_scene_substrate",
+      "substrate": "state",
+      "applied_const": [
+        6,
+        4,
+        5,
+        0
+      ],
+      "sim_at_measurement": 0.9785973854096691,
+      "sim_corr_all": 0.9909361555079548,
+      "sim_corr_diff": 0.9909368420570843,
+      "observed": true,
+      "expect": true
+    },
+    {
+      "control": "N1_non_systematic_must_not_fire",
+      "substrate": "synthetic(box old)",
+      "applied_const": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "construction": "base=0.5*old+64 (no clipping); new_syn=clip(base+N(0,12)); Δ=-noise, zero-mean by construction",
+      "saturated_pct": 0.0,
+      "rejected_substrate": "operator (measured max|c*|=15.0 -> contained positive input)",
+      "c_star_all": {
+        "R": 0.0,
+        "G": 0.0,
+        "B": 0.0,
+        "A": 0.0
+      },
+      "max_abs_c_star": 0.0,
+      "per_channel_signed_median": {
+        "R": 0.0,
+        "G": 0.0,
+        "B": 0.0,
+        "A": 0.0
+      },
+      "no_positive_input_check_passed": true,
+      "no_positive_input_criterion": "max_c |c*_c| < 1.0 (instrument v5)",
+      "sim_corr_all": 0.9624460070097691,
+      "sim_corr_diff": 0.9624460070097691,
+      "observed": false,
+      "expect": false
+    },
+    {
+      "control": "N2_clean_render_must_not_fire",
+      "substrate": "box",
+      "n_holes": 0,
+      "n_hits": 0,
+      "observed": false,
+      "expect": false
+    },
+    {
+      "control": "P3_missing_block_must_fire",
+      "substrate": "box",
+      "painted_rect_px": [
+        301,
+        154,
+        430,
+        220
+      ],
+      "painted_tile_box": [
+        7,
+        7,
+        16,
+        16
+      ],
+      "painted_area_frac": 0.16809,
+      "n_hits": 1,
+      "exact_tile_box_hit": true,
+      "observed": true,
+      "expect": true
+    }
+  ],
+  "controls_pass": true
+}

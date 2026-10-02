@@ -1,0 +1,72 @@
+{
+  "base": {
+    "ink_regions": 1,
+    "hole0_new": "(33, 38, 47, 255)",
+    "hole0_old": "(33, 38, 47, 255)"
+  },
+  "box": {
+    "ink_regions": 1,
+    "hole0_new": "-",
+    "hole0_old": "-"
+  },
+  "box-detail": {
+    "ink_regions": 1,
+    "hole0_new": "(37, 39, 40, 255)",
+    "hole0_old": "(209, 207, 206, 255)"
+  },
+  "box-summary": {
+    "ink_regions": 1,
+    "hole0_new": "(27, 29, 30, 255)",
+    "hole0_old": "(46, 48, 49, 255)"
+  },
+  "card": {
+    "ink_regions": 1,
+    "hole0_new": "(48, 48, 48, 255)",
+    "hole0_old": "(49, 49, 49, 255)"
+  },
+  "depot": {
+    "ink_regions": 1,
+    "hole0_new": "-",
+    "hole0_old": "-"
+  },
+  "enemy": {
+    "ink_regions": 1,
+    "hole0_new": "(40, 42, 43, 255)",
+    "hole0_old": "(51, 51, 51, 255)"
+  },
+  "gacha": {
+    "ink_regions": 1,
+    "hole0_new": "-",
+    "hole0_old": "-"
+  },
+  "headhunt": {
+    "ink_regions": 1,
+    "hole0_new": "(8, 8, 8, 255)",
+    "hole0_old": "(8, 8, 8, 255)"
+  },
+  "help": {
+    "ink_regions": 1,
+    "hole0_new": "-",
+    "hole0_old": "-"
+  },
+  "lottery": {
+    "ink_regions": 1,
+    "hole0_new": "(26, 26, 26, 255)",
+    "hole0_old": "(48, 39, 46, 255)"
+  },
+  "missing": {
+    "ink_regions": 1,
+    "hole0_new": "-",
+    "hole0_old": "-"
+  },
+  "operator": {
+    "ink_regions": 2,
+    "hole0_new": "(40, 40, 40, 255)",
+    "hole0_old": "(180, 180, 180, 255)"
+  },
+  "recruit": {
+    "ink_regions": 1,
+    "hole0_new": "-",
+    "hole0_old": "-"
+  }
+}

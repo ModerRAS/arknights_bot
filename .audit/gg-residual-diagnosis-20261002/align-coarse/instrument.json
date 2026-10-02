@@ -1,0 +1,14 @@
+{
+  "provenance": "measured",
+  "script": ".audit\\align_ceiling.py",
+  "metric": "S(dx,dy)=1-sum(|O-Nshift|)/(W*H*4*255); 4-channel denominator, per-pixel abs diff, integer shifts",
+  "shift_convention": "Nshift[y,x,c]=N[y-dy,x-dx,c] inside [max(0,dy),min(H,H+dy))x[max(0,dx),min(W,W+dx)); outside = 0 (zero padding)",
+  "shift_reading": "(dx,dy) = how far new's content must move to line up with old",
+  "search": "brute force integer (dx,dy) in [-R,R]^2, step 4, full canvas, no downsampling",
+  "R_initial": 96,
+  "boundary_rule": "argmin on |dx|=R or |dy|=R -> rerun with R'=2R; boundary=true if still on edge",
+  "tie_break": "lexicographic min of (err, |dx|+|dy|, |dx|, |dy|, dx, dy)",
+  "gate_reused": "0.99 (Go gatePassed); this script does NOT modify gatePassed or similarityNormalized",
+  "positive_controls": "C1 real-data edge-shift of new.png; C2 synthetic noise; C0 S(0,0) must equal go report.json",
+  "scope": "diagnosis only: reported (dx,dy) are measurement results, NOT renderer constants"
+}

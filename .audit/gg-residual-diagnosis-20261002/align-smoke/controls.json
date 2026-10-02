@@ -1,0 +1,143 @@
+{
+  "c0_ruler": [
+    {
+      "scene": "box-detail",
+      "py_sim": 0.8784374903269025,
+      "go_sim": 0.8784374903269025,
+      "delta": 0.0
+    }
+  ],
+  "c0_pass": true,
+  "c1_c2_pass": true,
+  "c1_c2": [
+    {
+      "kind": "C1-real-data",
+      "scene": "box-detail",
+      "known_shift": [
+        0,
+        0
+      ],
+      "recovered": [
+        0,
+        0
+      ],
+      "exact": true,
+      "recovered_sim": 1.0,
+      "R": 12,
+      "inject_fault": "none",
+      "on_boundary": false
+    },
+    {
+      "kind": "C1-real-data",
+      "scene": "box-detail",
+      "known_shift": [
+        5,
+        -3
+      ],
+      "recovered": [
+        -5,
+        3
+      ],
+      "exact": true,
+      "recovered_sim": 0.994114931291076,
+      "R": 12,
+      "inject_fault": "none",
+      "on_boundary": false
+    },
+    {
+      "kind": "C1-real-data",
+      "scene": "box-detail",
+      "known_shift": [
+        -5,
+        3
+      ],
+      "recovered": [
+        5,
+        -3
+      ],
+      "exact": true,
+      "recovered_sim": 0.994114931291076,
+      "R": 12,
+      "inject_fault": "none",
+      "on_boundary": false
+    },
+    {
+      "kind": "C1-real-data",
+      "scene": "box-detail",
+      "known_shift": [
+        2,
+        10
+      ],
+      "recovered": [
+        -2,
+        -10
+      ],
+      "exact": true,
+      "recovered_sim": 0.9870121765681222,
+      "R": 12,
+      "inject_fault": "none",
+      "on_boundary": false
+    },
+    {
+      "kind": "C1-real-data",
+      "scene": "box-detail",
+      "known_shift": [
+        -11,
+        -10
+      ],
+      "recovered": [
+        11,
+        10
+      ],
+      "exact": true,
+      "recovered_sim": 0.9823871559565158,
+      "R": 12,
+      "inject_fault": "none",
+      "on_boundary": false
+    },
+    {
+      "kind": "C2-synthetic-noise",
+      "scene": null,
+      "known_shift": [
+        5,
+        5
+      ],
+      "recovered": [
+        -5,
+        -5
+      ],
+      "exact": true,
+      "R": 12,
+      "inject_fault": "none",
+      "on_boundary": false,
+      "recovered_sim": 0.9805167855020797
+    },
+    {
+      "kind": "C2-synthetic-noise",
+      "scene": null,
+      "known_shift": [
+        -5,
+        3
+      ],
+      "recovered": [
+        5,
+        -3
+      ],
+      "exact": true,
+      "R": 12,
+      "inject_fault": "none",
+      "on_boundary": false,
+      "recovered_sim": 0.9849431521093286
+    }
+  ],
+  "harness": {
+    "harness_path": "src/ggrender/pixel_test.go",
+    "repo_rel_source": "arknights_bot-measure-align (git worktree)",
+    "branch": "measure/align-ceiling",
+    "commit": "4584759e18fb9f4d17ba530b3d2cdf1bfb322c47",
+    "go_cmd": "cd src && go test ./ggrender/ -run TestGGPixelParity -count=1",
+    "go_log": "tmp/align-smoke\\gotest.log",
+    "produced_by": "gg harness only (RenderGGContext); yoga/skia 树未参与、未读取",
+    "inject_fault": "none"
+  }
+}

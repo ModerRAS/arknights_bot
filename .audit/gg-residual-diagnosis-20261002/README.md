@@ -99,3 +99,21 @@ strata/ strata2/ strata3/ ← task8 / task10 / task11 分层（均「未测」�
 ## 这个分支的职责
 
 **保存，不是参与。** 不合并、不改写。
+
+---
+
+## 路径映射表（2026-10-02 追加，供归档报告中的引用定位）
+
+归档报告里的引用写的是**量测树（`arkskadi_bot-measure-align`）中的原始路径**。对应关系：
+
+| 引用中的原始路径 | 归档内相对路径 |
+|---|---|
+| `.audit/align_ceiling.py` | **`align/align_ceiling.py`** |
+| `tmp/align/{instrument,report,controls}.json` | `align/*.json` |
+| `tmp/align-coarse/*` | `align-coarse/*` |
+| `tmp/align-smoke/*` | `align-smoke/*` |
+| `tmp/align-teeth/*` | `align-teeth/*` |
+| `tmp/residual/{instrument,ink_regions,controls}.json` | `residual/*.json` |
+| `tmp/residual/<sub>/…`（早前已归档） | `<sub>/…` |
+
+⚠️ **`align/align_ceiling.py` 是 `SYNTHESIS.md:827` 那条 `field_semantics_boundary_vs_probe_boundary` 定义的权威原件**（对应引用 `align_ceiling.py:327-328`）。此前该脚本**只被引用、从未归档**，共 11 处引用 / 4 个文件悬空；本次补入后闭合。
