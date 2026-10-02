@@ -40,7 +40,7 @@
 | 值 | 含义 | 命中 |
 |---|---|---|
 | `"none"` | **该轮跨多棵树、无单一基底** | `SYNTHESIS.md` / `task1` / `task3` |
-| `"b946661"` | 单树单基底（`arkskadi_bot-satori`） | `task2` |
+| `"b946661"` | 单树单基底（`arknights_bot-satori`） | `task2` |
 | `"4584759"` | 量测树单基底 | task4–task12 及全部仪器 |
 
 ```bash
