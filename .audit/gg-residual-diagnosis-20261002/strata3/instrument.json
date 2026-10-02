@@ -1,0 +1,115 @@
+{
+  "provenance": "pre-registered region-fill substrate + stratification (task11)",
+  "registered_at_utc": "2026-10-02T19:10:00Z",
+  "registered_before_any_run": true,
+
+  "why_new_substrate": "task10 唯一结论：ink 掩膜 range3>T_flat 标出的是边缘/纹理，不含物体内部平坦填充 ⇒ 厚实心区与细笔画不可分（PC4 方向反）。本轮换基质，不是重试失败输入（P12 允许）；**但也不允许为了让对照变绿而调基质参数**。",
+
+  "substrate": {
+    "definition": "颜色区域生长：像素按每通道量化 Q = floor(C / Q_step) * Q_step；量化后同色且 4-邻接的像素构成一个区域（区域生长在量化颜色空间上的闭包）。",
+    "why_this_sees_solid_interiors": "与 edge 掩膜的根本差别：edge 掩膜看『局部是否非平坦』，固体内部平坦 ⇒ 被排除；颜色区域按『颜色是否相同』聚合，固体内部与边缘同色 ⇒ **整块被包含**。这是换基质要解决的那一件事本身，不是调参。",
+    "Q_step": {
+      "value": 8, "unit": "每通道灰阶", "tag": "derived",
+      "derivation_chain": [
+        "下界：同色像素之间的噪声必须小于 Q_step，否则会被量化到不同格。实测（task10）平坦填充内部的 range3 = 0，即量化噪声为 0；渲染输出是 PNG，无 JPEG 抖动。",
+        "上界：不同物体之间的最小色阶必须大于 Q_step。本场景文本前景约 225、背景约 40，边框/装饰为中间灰；最小可辨色阶 >> 8。",
+        "取 8 远离两端。它是**量化步长**，不是可调分类阈值 —— 调它不会让任何对照变绿，只会改变分割粒度。"
+      ]
+    },
+    "connectivity": "4-邻接（不跨同色边界）。tag: derived —— 8-邻接会让对角相邻的同色格粘连，分割更碎。"
+  },
+
+  "substrate_validation_PC0": {
+    "position": "**对照集的前置项**：先证明新基质能看见固体内部，再谈它在上面的区分能力。本步在任何分层阈值被使用之前完成。",
+    "inputs": [
+      "S1 实心矩形 40x20 px（黑）置于平坦底色",
+      "S2 细线 1px（黑）横贯底色"
+    ],
+    "assertions": [
+      "S1 的矩形像素应构成**单一区域**，且该区域面积 / 几何面积 >= 0.95（证明整块被包含，不是只剩壳）",
+      "S1 的 SW >= 8 px；S2 的 SW <= 3 px（**厚薄可分** —— 这正是 task10 的 PC4 反着失败的那一条）",
+      "S2 的区域面积 <= 3 * 画布宽度（细线不该被当成大块）"
+    ],
+    "if_not": "基质验证失败 => 新基质**看不见固体内部** => 后续全部分层结论无效，产出未测。",
+    "note": "SW 在填充区域上的机理：A=wL, P=2L => SW=w；实心矩形 w x h：P=2(w+h), SW=wh/(w+h)。故 SW 在区域基质下**恢复为真实厚度**，这正 edge 基质丢掉的东西。"
+  },
+
+  "features": {
+    "SW": {
+      "definition": "SW = 2*A/P，A=区域像素数，P=四方向的边界穿越数（每方向独立计一次）。",
+      "unit": "px", "tag": "derived",
+      "derivation": "细长直条 A=wL,P≈2L => SW≈w；实心矩形 A=wh,P≈2(w+h) => SW≈wh/(w+h)。SW 恢复真实厚度。"
+    },
+    "LIN": {"definition": "第一主成分方差占比 λ1/(λ1+λ2)", "unit": "[0,1]", "tag": "derived",
+             "derivation": "直条 λ2≈0 ⇒ LIN→1；弥散团块两方向方差相当 ⇒ LIN 明显小于 1。"},
+    "FILL": {"definition": "A / (bbox_w * bbox_h)", "unit": "[0,1]", "tag": "derived",
+             "derivation": "实心矩形在自身 bbox 内铺满 ⇒ FILL≈1；斜线/环带在 bbox 内留白 ⇒ FILL<1。"},
+    "CC": {
+      "definition": "CC = 以该像素为中心的 32x32 窗口内**不同量化色格的数量**。",
+      "unit": "整数", "tag": "derived",
+      "derivation": "照片含大量不同颜色 ⇒ 窗口内落在许多不同量化格；平坦 UI 区域（文字/底色/单色边框）只有少数几个色格。这是**纹理**的可测签名，且不依赖连通域形状。"
+    }
+  },
+
+  "thresholds": {
+    "T_sw": {"value": 4.0, "unit": "px", "tag": "derived",
+             "derivation": "区域基质下 SW 就是真实厚度（PC0 会实测确认）。文本笔画 0.7-2.5 px；装饰实心条 >= 4 px。取 4.0 高于最粗文本笔画、低于任何可见装饰条。"},
+    "T_lin": {"value": 0.85, "unit": "无量纲", "tag": "derived",
+              "derivation": "直条 LIN>0.95；斜线/环带 LIN 明显更低。取 0.85 留出抗锯齿边缘带来的方差。"},
+    "C_img": {"value": 12, "unit": "量化色格数/32x32 窗口", "tag": "derived",
+              "derivation": "Q_step=8 ⇒ 32x32 窗口最多 32^3 种组合色，但平坦 UI 实测只有 2-4 格；照片每个 8x8 DCT 块附近就有十余种色。取 12 远离两端，由 PC3 实测校核。"},
+    "L_sep": {"value": "0.25 * W", "unit": "px（相对画布宽度）", "tag": "assumed",
+              "assumed_reason": "这是关于**模板设计**的假设：假定分隔线横跨容器宽度而字形不会。误判方向：短分隔线会被归入 glyph_edge。"}
+  },
+
+  "classes": {
+    "flat_bg": "差异像素落在**画布角落所在的区域**（背景区域）内 ⇒ 纯颜色/明度不符，无独立结构。",
+    "sep_decor": "SW <= T_sw 且 LIN >= T_lin 且 max(bbox) >= L_sep ⇒ 细、直、横跨容器。",
+    "glyph_edge": "SW <= T_sw 且 LIN >= T_lin 且 max(bbox) < L_sep ⇒ 细、直、短。",
+    "image_asset": "CC >= C_img ⇒ 纹理签名（照片/立绘）。",
+    "other": "不满足以上任何一条。**份额大即未测量，不是已归类；必须单列份额并说明。**"
+  },
+  "attribution": "每个差异像素按其所属区域归类；背景区域优先判 flat_bg。",
+
+  "controls": {
+    "PC0_substrate_validation": {"is_precondition": true, "see": "substrate_validation_PC0"},
+    "PC2_separator_regression": {
+      "note": "**回归护栏**。task10 成绩：SW 2.99 / LIN 1.0 / sep_decor 份额 1.0。新基质下若失败 => 新基质更差，不是更好。",
+      "expect": "长区域 SW 在 [0.5, 4.0] px 且 LIN >= 0.95 且 sep_decor 份额 >= 0.80"},
+    "PC5_flat_bias_regression": {
+      "note": "**回归护栏**。task10 成绩：flat_bg 份额 1.0。",
+      "expect": "flat_bg 份额 == 1.0"},
+    "PC4_solid_vs_thin": {
+      "note": "task10 反着失败的那一条（SW(1px)=2.98 > SW(4px)=2.00）的正向版。",
+      "expect": "SW(实心 40x20) > SW(1px 细线)，且实心区域 FILL >= 0.95"},
+    "PC1_text": {"expect": "glyph_edge 份额 >= 0.60；笔画区域 SW <= T_sw",
+                 "slack_reason": "0.60 而非 0.80：字体笔画在区域基质下会与相邻笔画/标点粘连成稍大的区域，这是分割粒度的固有后果，不是判据放松。"},
+    "PC3_image": {"expect": "image_asset 份额 >= 0.60；图像区 CC >= C_img",
+                  "note": "照片内平坦大块也进背景色系，故份额不可能到 1.0。"}
+  },
+
+  "carried_bias_specs": {
+    "task10": "ink 基质看不见实心填充 ⇒ 厚实心区与细笔画不可分",
+    "task8": "那把尺子系统性少报文本（文本对照 glyph_edge=0.0）⇒ 不能用于任何『文本不是主因』的否定结论",
+    "rule": "新尺子若在任一类别上给出 0，先查尺子再查场景"
+  },
+
+  "workflow": {
+    "P1_gate": "controls 先跑并通过才允许测量；移走输入 => REFUSED/exit=2/无产物；controls_pass=false => 同样 REFUSED。measure 阶段 stdout/stderr 0 字节。验牙齿第 7 次，两种拒绝模式都测。",
+    "P7_prime": "必填字段 d[\"k\"]，禁 .get()。",
+    "P7_double_prime": "聚合前 PRE-AGG n_diff=<N> + 断言非空。",
+    "P10": "对照未过时正确产出是『未测』；『未测』≠『已测得分散』。",
+    "P12": "禁止在既有失败输入上调阈值；允许换性质不同的新输入实例；**不允许为了让对照变绿而调基质参数**。",
+    "P16": "改多段文档后重列标题核对段数；P17 已发布编号不改；P18 正则比对须行锚定且先用已知行自检。"
+  },
+
+  "scope_note": "编解码项仍记在『已知未量化项』，本轮不排（只需 headhunt 一档 4.7×）。引用必须逐场景写，禁止跨场景相除。",
+
+  "forbidden": [
+    "从冻结基线图反推任何取值",
+    "改任何渲染代码 / 改计分代码 / commit / push / 新建工作树",
+    "在禁碰树 ark_nights_bot-satori-yoga-skia-go 上渲染或落产物",
+    "为了让对照变绿而调基质参数（Q_step / T_sw / C_img 等）",
+    "对照未过时给出任选一档的结论性表态"
+  ]
+}

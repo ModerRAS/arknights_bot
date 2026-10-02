@@ -1,0 +1,86 @@
+{
+  "provenance": "pre-registered discriminator (task6)",
+  "registered_at_utc": "2026-10-02T12:30:00Z",
+  "registered_before_any_run": true,
+  "scope": "只对 task5 判为 B_missing_block 的 5 行做机械判别：base / box-detail / enemy / lottery / operator。分类器与本判别器均为测量口径，不改任何渲染/计分代码。",
+
+  "P1_permanent_process": {
+    "rule": "验收（对照 + 阳性/阴性）先跑；通过之后才允许跑分类测量；分类输出在对照通过之前不许被任何人或任何进程读取。",
+    "structural_enforcement": "脚本分两个 stage。stage=controls 只跑判别器自身的对照并写 controls.json；stage=measure 先 json.load 读 controls.json，controls_pass != true 则 SystemExit 拒绝执行，且 measure 阶段不向 stdout/stderr 写任何一行分类结果，只写 result.json。",
+    "why": "上一轮 v4-v6 的修订发生在 14 行分类已打到 stderr 之后，于是「先看数后改对照」在结构上成为可能。本条把该路径堵死。"
+  },
+
+  "question": "task5 的内洞检测器（渲染侧纯色内洞）报出的 5 个洞，有几个是真的「基线有内容、渲染没画」？",
+
+  "region": {
+    "definition": "取 task5 report.json 中该场景 B_info.largest_hole 的 pixel_box（闭区间 [x0,y0,x1,y1]），整块矩形区域。",
+    "why_largest": "一个洞要么真要么假；同一场景多个命中先按能量最大者判，逐个命中见 hit_rows。"
+  },
+
+  "per_pixel_predicate": {
+    "definition": "在洞内逐像素比较 old.png 与 new.png：diff_px = Σ_c |O_c - N_c|（4 通道，同 pixel_test.go 口径）。",
+    "differs": "diff_px > 0",
+    "identical": "diff_px == 0",
+    "normalization": "frac_diff = differing_pixel_count / region_area；share = Σ_region diff_px / Σ_canvas diff_px（4 通道分母，与全项目口径一致）"
+  },
+
+  "decision_rule": {
+    "R1_area": {
+      "criterion": "frac_diff >= 0.50",
+      "rationale": "非拟合。真·缺失元素意味着该洞的**大部分面积**两侧不同（元素盖住了那块地方）；若只在小面积上不同，那更可能是边缘抗锯齿或邻近元素渗入，不构成「整块没画」。50% = 多数面积，是一个不依赖数据的自然分界。"
+    },
+    "R2_materiality": {
+      "criterion": "share >= 0.05",
+      "rationale": "非拟合。一个值得投工时的整块缺口，至少要占该场景总残差能量的 1/20；task4 实测过「前 1% 像素占残差能量」在弥散场景低至 2.78%、在有热区场景可达 20%，故 5% 是「明显高于弥散基线、又不苛刻」的界。5% 为声明常数。"
+    },
+    "verdict_rule": "real_target := R1_area AND R2_materiality；否则 false_positive，当场剔除。",
+    "conjunction_rationale": "两个必要条件都不可省：R1 排除「局部差异冒充整块缺失」，R2 排除「差异真实但量级上无关紧要」。"
+  },
+
+  "reported_but_not_decisive": {
+    "boss_centre_pixel_rule": "洞心单像素 old vs new 是否逐位不同（Boss 给定的方向干净的规则）。逐行报告，但**不作为判据** —— 单像素是本项目反复栽跟头的抽样口径（一次抽样定生死）。若与 verdict_rule 冲突，两列都报，并标 disagreement=true。",
+    "old_flatness_in_hole": "old 在洞内是否也平坦（tile 级 p99-p01<=2）。用于人读解释，不参与判定。"
+  },
+
+  "rate_definitions": {
+    "flag_level_false_positive_rate": "FP / B_flagged(=5)。这是**被标记行里**的假阳性比例。",
+    "scene_level_fpr_not_measurable": "真正的场景级 FPR（未标记的场景里有多少其实有洞）**无法测量** —— 未标记场景没有 ground truth 可比。本轮只报 flag-level FPR，并明确它不等于 detector 的召回/精确率。",
+    "expected_return_basis": "B 类的期望收益按**判定后存活数**算，不是按 5 算；与「能算出的上限否决一整类工时」同构。"
+  },
+
+  "sorting_rule": {
+    "class_order": "B 先于 C",
+    "within_B": "按机械判别后是否仍成立排序，**不许按集中度排序**。",
+    "why": "base 已演示「集中度高 != 真」；enemy 那个 44.92% 集中在单洞是 B 类最强的单点信号，但在机械判别跑完之前不许据此排第一。"
+  },
+
+  "controls": {
+    "POS_both_sides_differ": {
+      "input": "取 box 的 new.png，在内部刷一个与网格对齐的纯色块；同一块在 old.png 上刷**不同**颜色",
+      "expect": "判别器判 real_target",
+      "if_not": "判别器对已知真阳性不响 => 数字作废"
+    },
+    "NEG_both_sides_identical": {
+      "input": "同上，但 old 与 new 上刷**完全相同**的颜色",
+      "expect": "判别器判 false_positive",
+      "if_not": "判别器对已知假阳性不响 => 数字作废"
+    },
+    "NEG2_no_hole_at_all": {
+      "input": "未改动的 box",
+      "expect": "无内洞 => 不进入判别（无区域可判），返回 no_region 而非 true/false"
+    }
+  },
+
+  "wording_constraints_for_report": {
+    "allowed": "「分类器在数据前冻结」",
+    "forbidden": "「全流程预登记」—— v4-v6 发生在 14 行分类已打到 stderr 之后，该保证对整轮不再成立，只对分类器成立。",
+    "mandatory": "原披露保留在修订史里，不许删"
+  },
+
+  "forbidden": [
+    "从冻结基线图反推任何取值（本任务量的是残差性质）",
+    "改任何渲染代码 / 改 src/ggrender/pixel_test.go / 改任何计分代码 / commit / push",
+    "在禁碰树 arknights_bot-satori-yoga-skia-go 上渲染或落任何产物",
+    "在 controls 通过之前让任何分类结果到达 stdout/stderr"
+  ]
+}

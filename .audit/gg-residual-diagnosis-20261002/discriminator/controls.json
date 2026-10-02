@@ -1,0 +1,63 @@
+{
+  "instrument_provenance": "pre-registered discriminator (task6)",
+  "controls": [
+    {
+      "control": "POS_both_sides_differ",
+      "expect": true,
+      "observed": true,
+      "detail": {
+        "pixel_box": [
+          301,
+          154,
+          730,
+          373
+        ],
+        "area": 94600,
+        "differing_pixels": 94600,
+        "frac_diff": 1.0,
+        "share_of_canvas_residual": 0.17952,
+        "R1_area": true,
+        "R2_materiality": true,
+        "verdict_real_target": true,
+        "boss_centre_pixel_differs": true,
+        "boss_rule_says_real": true,
+        "disagreement": false,
+        "old_flat_in_hole": true
+      }
+    },
+    {
+      "control": "NEG_both_sides_identical",
+      "expect": false,
+      "observed": false,
+      "detail": {
+        "pixel_box": [
+          301,
+          154,
+          730,
+          373
+        ],
+        "area": 94600,
+        "differing_pixels": 0,
+        "frac_diff": 0.0,
+        "share_of_canvas_residual": 0.0,
+        "R1_area": false,
+        "R2_materiality": false,
+        "verdict_real_target": false,
+        "boss_centre_pixel_differs": false,
+        "boss_rule_says_real": false,
+        "disagreement": false,
+        "old_flat_in_hole": true
+      }
+    },
+    {
+      "control": "NEG2_no_hole_at_all",
+      "expect": null,
+      "observed": null,
+      "detail": {
+        "verdict_real_target": null,
+        "note": "no_region"
+      }
+    }
+  ],
+  "controls_pass": true
+}

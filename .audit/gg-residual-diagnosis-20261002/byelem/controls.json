@@ -1,0 +1,43 @@
+{
+  "instrument_provenance": "pre-registered (task12: declared-element decomposition ONLY)",
+  "controls": [
+    {
+      "control": "ORD1_containment",
+      "passed": true,
+      "expect": "declared box inside canvas (order/boundary, no threshold)",
+      "observed": {
+        "scene": "box",
+        "box": [
+          0.0,
+          7.5,
+          22.5,
+          0.0
+        ],
+        "canvas": [
+          1050,
+          536
+        ],
+        "inside": true
+      }
+    },
+    {
+      "control": "ORD2_frame_leak",
+      "passed": true,
+      "expect": "outside-box residual share strictly decreases when box grows",
+      "observed": {
+        "outside_small": 1.0,
+        "outside_grown": 0.9962
+      }
+    },
+    {
+      "control": "ORD3_empty_box_boundary",
+      "passed": true,
+      "expect": "empty box -> zero residual/area",
+      "observed": {
+        "residual": 0,
+        "area": 0
+      }
+    }
+  ],
+  "controls_pass": true
+}

@@ -1,0 +1,97 @@
+{
+  "provenance": "pre-registered (task12: declared-element decomposition ONLY)",
+  "registered_before_any_run": true,
+  "scope": "task12 只做声明元素分解；像素尺子/特征替换不在本轮。",
+  "declaration_source_finding": {
+    "measured": "全 ggrender 包中带声明出处标注（`.tmpl:NN` 或 `origin_source:`）的数值常量共 **9** 个，**全部位于 render.go L544-L579，即 headhunt 一个场景**。",
+    "consequence": "声明轴在 gg 树内**几乎完全没有布点**：9 个 C 类场景里只有 headhunt 存在机器可读的声明；其余 8 个场景的几何是普通字面量，无出处标注。",
+    "paths": [
+      "src/ggrender/render.go:541-585 (headhunt 出处常量)",
+      "template/Headhunt.tmpl:9,10,20,21,25 (对应声明)",
+      "src/ggrender/render.go:545,556 (hhPitch: NOT derivable)"
+    ]
+  },
+  "red_line": {
+    "rule": "『哪个元素最差』只允许由『我们画的 vs 声明的』得出；不允许由『我们画的 vs 基线的差异分布』得出。",
+    "division_of_labour": "**元素归属来自声明**（代码中随常量落盘的出处 + 对应 .tmpl 行）；**残差幅度来自『我们 vs 基线』**（这一项不可回避）。**不得用从基线读到的任何数值去决定元素『应该是什么』。**",
+    "forbidden_inference": "❌ 不得由『基线差异像素的聚类』反推元素框 —— 那正是红线本身。",
+    "if_baseline_needed_to_locate": "立刻停手上报。"
+  },
+  "P23_mechanism_statement": {
+    "statement": "**残差中落在一个声明元素框内的像素，必须全部来自该元素声明所覆盖的区域；若声明框之外仍存在成片残差，则说明该场景的元素归属轴不成立（框导错或漏导），而不是『别的元素坏了』。**",
+    "falsifiable": true,
+    "control_if_false": "ORD2_frame_leak：把元素框向外扩张后，框外残差份额应显著下降；若不降，说明框不是该残差的成因边界，机理被证伪。",
+    "controls_required": [
+      "ORD1_containment（序关系，无阈值）",
+      "ORD2_frame_leak（若陈述为假则响）",
+      "ORD3_empty_box（边界情形，无阈值）"
+    ]
+  },
+  "elements_derivable": [
+    {
+      "element": "headhunt card (.lh)",
+      "scene": "headhunt",
+      "declaration": "Headhunt.tmpl:25 .lh{width:95px}; :31 .lh .face{height:190px}; #main padding-left:25px (:10); .bg margin-top:130 (:20) + padding-top:100 (:20); .bg height:270 (:21)",
+      "constant_provenance": [
+        "render.go:548 hhCardW=95 <- .lh width:95px (Headhunt.tmpl:25)",
+        "render.go:549 hhCardTop=230 <- .bg margin-top:130 + padding-top:100 (Headhunt.tmpl:20)",
+        "render.go:550 hhCardH=270 <- .bg height:270px (Headhunt.tmpl:21)",
+        "render.go:553 hhFirstX=25.0 <- #main padding-left:25px (Headhunt.tmpl:10)"
+      ],
+      "box_css_px": [
+        25,
+        230,
+        95,
+        270
+      ],
+      "scale": 1.0,
+      "box_device_px": [
+        25,
+        230,
+        95,
+        270
+      ]
+    },
+    {
+      "element": "headhunt card pitch (第 2..10 张卡的位置)",
+      "scene": "headhunt",
+      "status": "位置不可从声明导出",
+      "evidence": "render.go:545 `card pitch 98.6667 <- NOT derivable from Headhunt.tmpl. See hhPitch below.`；render.go:556 `10 card left edges (888/9), not derived from Headhunt.tmpl.`",
+      "note": "**该档的既有实例，不是假设桶里有东西。**"
+    },
+    {
+      "element": "C 类其余 8 场景的全部元素",
+      "scene": "box/box-summary/card/depot/gacha/help/missing/recruit",
+      "status": "位置不可从声明导出",
+      "evidence": "全包仅 9 个出处标注常量且全在 headhunt（实测，见 declaration_source_finding）。",
+      "note": "普通字面量无出处标注 ⇒ 无法构成『我们画的 vs 声明的』比较。"
+    }
+  ],
+  "output_positioning": "本表为**像素类构成**，用作**声明轴分解的交叉核对**；**它不单独构成实现依据**，因为像素类不是可指名的目标。",
+  "forbidden": [
+    "从冻结基线图反推任何取值",
+    "用基线决定元素归属、元素框或元素『应该是什么』",
+    "由基线差异像素聚类反推元素框",
+    "改任何渲染/计分代码 / commit / push / 新建工作树",
+    "在禁碰树上渲染或落产物"
+  ],
+  "authoritative_wording": {
+    "note": "Boss 原句『只允许由我们画的 vs 声明的得出』按字面读会禁止使用基线幅度，而那在物理上不可能（缺口本身即以基线为参照的量）。**原句作废**，理由记此。",
+    "three_statements": [
+      "元素归属来自声明（模板 + 布局状态导出元素框）",
+      "残差幅度来自「我们 vs 基线」（把比较限制在该元素框内）—— 这一项不可回避",
+      "不得用从基线读到的任何数值，去决定任何元素「应该是什么」（位置、内容、颜色、尺寸一律不许）"
+    ],
+    "key": "前两句是分工，第三句才是红线。红线不是『不许碰基线』，是『不许让靶子变成答案』。"
+  },
+  "P19prime_order_relations": {
+    "ORD1_containment": "声明框必须落在画布内（无阈值）",
+    "ORD2_frame_leak": "框扩大后框外残差份额必须严格下降 —— 若不降，P23 机理陈述被证伪",
+    "ORD3_empty_box": "空框 ⇒ 框内残差为 0（边界情形，无阈值）"
+  },
+  "self_correction": {
+    "scanner_bug": "我第一版扫描器用单行正则解析 CSS，而模板是多行块（`.lh {` 与属性分行）⇒ 它**干净地报告 Headhunt 有 0 条几何规则**，而 render.go:548 明确引用 `.lh width:95px (Headhunt.tmpl:25)`。这是『尺子坏了但输出像通过』的实例。",
+    "fix": "改写为多行块解析后，Headhunt 的 `.lh{width:95px;height:190px}` 在**第 26 行**被找到（render.go 记的是 25 行，差 1 行：25 是选择器行，26 是属性行）。",
+    "count_correction": "template/ 实为 **20 个文件**（16 个 .tmpl + template/js/ 4 个），不是 17。"
+  }
+}

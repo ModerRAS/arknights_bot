@@ -1,0 +1,7 @@
+{
+  "provenance": "retroactive-migration",
+  "original_path": "C:/WorkSpace/Golang/.lead2-reports/task1-instrument-compare.md",
+  "measured_at": "cross-tree: arknights_bot-satori@b946661 + arknights_bot-satori-yoga-skia-go@3704262 + arknights_bot-gg-card-atomic@d939c38 (no single base; multi-tree read-only survey)",
+  "single_base": "none",
+  "measured_at_base": "cross-tree: b946661 + 3704262 + d939c38"
+}

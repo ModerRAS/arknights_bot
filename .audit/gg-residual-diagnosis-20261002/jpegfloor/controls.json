@@ -1,0 +1,127 @@
+{
+  "instrument_provenance": "pre-registered JPEG codec floor measurement (task9, v8 amended)",
+  "controls": [
+    {
+      "control": "POS_flat_no_detail",
+      "expect": "S_rt(all q) >= 0.999",
+      "observed": 1,
+      "passed": true,
+      "blocking": true,
+      "detail": {
+        "sim_by_q": {
+          "100": 1,
+          "70": 1,
+          "75": 1,
+          "80": 1,
+          "85": 1,
+          "90": 1,
+          "95": 1
+        },
+        "note": "纯色图往返不应产生残差；若这里报出残差说明量具坏"
+      }
+    },
+    {
+      "control": "POS_trend",
+      "expect": "low3 > high3",
+      "observed": {
+        "low3_min": 0.004083,
+        "high3_max": 0.001751
+      },
+      "passed": true,
+      "blocking": true,
+      "detail": {
+        "deficit_by_q": {
+          "100": 0.0,
+          "70": 0.009725,
+          "75": 0.004083,
+          "80": 0.004964,
+          "85": 0.001909,
+          "90": 0.001751,
+          "95": 0.001103
+        },
+        "note": "方向正确性；逐档严格单调不作为条件，因为 JPEG 量化表非嵌套"
+      }
+    },
+    {
+      "control": "POS_dynamic_range",
+      "expect": "deficit(q_min)-deficit(q_max) > 0.01",
+      "observed": 0.009725,
+      "passed": false,
+      "blocking": false,
+      "detail": {
+        "note": "**未满足**，如实记录。见 instrument amendment_v5：1px 棋盘并不被 JPEG 严重破坏（8x8 DCT 保留 DC），我的前提错了。该断言不阻塞本轮结论方向 —— 量具低报亏损只会让真实地板更高。"
+      }
+    },
+    {
+      "control": "CALIBRATION_against_harness",
+      "expect": "max|ruler - go_sim| < 1e-12 over 16 scenes",
+      "observed": 0.0,
+      "passed": true,
+      "blocking": true,
+      "detail": {
+        "n_scenes": 16,
+        "note": "口径同一/可复现；不等于敏感性，二者独立"
+      }
+    },
+    {
+      "control": "POS_sensitivity_white_noise",
+      "expect": "deficit(q_min) > 0.5",
+      "observed": 0.139233,
+      "passed": false,
+      "blocking": true,
+      "detail": {
+        "deficit_by_q": {
+          "70": 0.139233,
+          "75": 0.136468,
+          "80": 0.133924,
+          "85": 0.131849,
+          "90": 0.130311,
+          "95": 0.129401,
+          "100": 0.129104
+        },
+        "expectation_provenance": "estimated (instrument: derivation chain)",
+        "note": "敏感性属性，与上面的口径同一是**两个独立性质**"
+      }
+    },
+    {
+      "control": "POS_sensitivity_block_aligned",
+      "expect": "deficit(q_min) > 0.05",
+      "observed": 0.001471,
+      "passed": false,
+      "blocking": true,
+      "detail": {
+        "deficit_by_q": {
+          "70": 0.001471,
+          "75": 0.0,
+          "80": 0.0,
+          "85": 0.0,
+          "90": 0.0,
+          "95": 0.0,
+          "100": 0.0
+        },
+        "expectation_provenance": "estimated"
+      }
+    },
+    {
+      "control": "POS_sensitivity_local",
+      "expect": "deficit(q_min) > 0.001",
+      "observed": 0.000118,
+      "passed": false,
+      "blocking": true,
+      "detail": {
+        "deficit_by_q": {
+          "70": 0.000118,
+          "75": 8.8e-05,
+          "80": 2.9e-05,
+          "85": 2e-05,
+          "90": 2.9e-05,
+          "95": 0.0,
+          "100": 0.0
+        },
+        "expectation_provenance": "estimated",
+        "note": "局部灵敏度，最贴近真实渲染的相关性"
+      }
+    }
+  ],
+  "controls_pass": false
+}

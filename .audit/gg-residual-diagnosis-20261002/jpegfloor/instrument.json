@@ -1,0 +1,193 @@
+{
+  "provenance": "pre-registered JPEG codec floor measurement (task9, v8 amended)",
+  "registered_at_utc": "2026-10-02T16:00:00Z",
+  "registered_before_any_run": true,
+  "question": "similarityNormalized 比的是解码后的像素；基线侧是 Chromium 编码的 JPEG。任何渲染侧工作都不可能把残差降到 JPEG 往返残差之下。",
+  "ruler": {
+    "encoder": "Go image/jpeg（与 fixtures.json jpegQualitySweep.source 原文『re-encoded with Go image/jpeg』一致）。不自造编码器、不用 PIL 的 libjpeg 替代 —— 换编码器就换了一把不同的尺子。",
+    "roundtrip": "decode(PNG) -> encode JPEG(q) -> decode -> 与原 decode(PNG) 逐像素比",
+    "metric": "S_rt(q) = 1 - Σ_c |O_c - RT_c| / (W·H·4·255)，4 通道分母，与 src/ggrender/pixel_test.go 的 similarityNormalized 同式。",
+    "qualities": [
+      70,
+      75,
+      80,
+      85,
+      90,
+      95,
+      100
+    ],
+    "qualities_source": "src/ggrender/testdata/visual/fixtures.json 的 jpegQualitySweep.qualities（照抄，未增未删）",
+    "policy_bound_verbatim": "jpegQualitySweep.rule 原文：『A quality choice never waives a failed uncompressed PNG layout comparison.』",
+    "policy_implication": "该 rule 是一条**政策约束**：选 JPEG quality 永远不能豁免一次未通过的未压缩 PNG 布局比较。因此本轮测出的 quality-floor 只能用于判断『结构性不可达』，**不得**被用来在门禁里换格式换分数。本报告不提出任何此类用法。",
+    "candidateFormats": "fixtures.json 每个 scene 的 candidateFormats = [\"png\",\"jpeg\"]，故 jpeg 往返对全部 16 个场景都是合法对照。『输出用哪个格式』本身是一个尚未被检验的选择 —— 本轮把它量化，不替它做决定。"
+  },
+  "reporting_rule": {
+    "must_say_lower_bound": "地板 ≥ 往返残差。**不许**把往返残差直接叫做『地板』",
+    "why": "基线侧是 Chromium 编码器产生的 JPEG；我们这侧用 Go image/jpeg。两者振铃与量化伪影形态不同，那一项差是纯往返测不出来的加项。因此往返残差是地板的**下界**。",
+    "encoder_difference_line": "报告必须单列一行『编码器差异：未量化』"
+  },
+  "cross_check": {
+    "what": "解基线 JPEG -> Go 重编码 -> 解码 -> 与自身解码像素比",
+    "labelling": "这是**仪器噪声地板**测量，不是渲染输入",
+    "redline_note": "红线是『基线不得作为渲染输入或背景』。本项是自比（encode 后再 decode 再自比），不构成渲染输入。",
+    "usage": "只作仪器量级的交叉核对，不参与地板下界的判定"
+  },
+  "verdict_rule": {
+    "gap": "gap = 0.99 - current_sim（current_sim 取自 task4 align/report.json @ 4584759）",
+    "floor_bound": "若需要用相似度表述地板上界：floor_bound = 1 - codec_deficit_best = max_q S_rt(q)",
+    "structurally_unreachable": "codec_deficit_best >= gap  <=> 地板下界 >= 缺口 => 结构性不可达",
+    "codec_not_main_cause": "codec_deficit_best < gap => 编解码不是主因（地板下界 << 缺口）",
+    "note_on_comparison": "两者同为 similarity 量纲，同为 4 通道分母，故可直接相减比较。",
+    "checksum": "16 个场景的判定之和必须 == 16",
+    "codec_deficit": "1 - S_rt(q)",
+    "codec_deficit_best": "min over q of codec_deficit(q)",
+    "v2_note": "v1 的 floor_bound < gap 判定已作废（量纲错误）；现以 codec_deficit_best 与 gap 同量纲比较。",
+    "v6_rule": "gap<=0 -> already_passes_gate; gap>0 and deficit_best>=gap -> structurally_unreachable; gap>0 and deficit_best<gap -> codec_not_main_cause",
+    "v6_note": "v1 二值判定对已过线场景产生范畴错误，见 amendment_v6。"
+  },
+  "controls": {
+    "POS_flat_no_detail": {
+      "input": "纯色图（无细节），走同一往返",
+      "expect": "S_rt(所有 q) >= 0.999",
+      "why": "证明仪器在真的没有残差时不返回垃圾残差 —— 若纯色图也报出大幅残差，说明量具本身坏了",
+      "if_not": "量具坏 => 数字作废"
+    },
+    "POS_monotonicity": {
+      "input": "高频棋盘图（2px 格，强细节）",
+      "expect": "deficit(q_min) - deficit(q_max) > 0.01 且 低三档亏损 > 高三档亏损",
+      "why": "证明仪器有动态范围且方向正确。逐档严格单调**不在**验收条件内，因为 JPEG 量化表非嵌套。",
+      "if_not": "量具坏 => 数字作废"
+    },
+    "CALIBRATION_against_harness": {
+      "input": "16 个场景的 old.png vs new.png，用量具 cmp 模式（不经 JPEG）计算",
+      "expect": "max|量具 - align/report.json 的 go_sim| < 1e-12",
+      "why": "证明量具与门禁用的是同一个度量函数；期望值来自已落盘产物",
+      "blocking": true
+    },
+    "POS_dynamic_range": {
+      "input": "1px 棋盘图",
+      "expect": "deficit(q_min) - deficit(q_max) > 0.01",
+      "observed": 0.009725,
+      "passed": false,
+      "blocking": false,
+      "why": "见 amendment_v5：我的前提错了（DCT 保留 DC），该断言对结论方向不构成阻塞，已如实记录为未满足"
+    },
+    "POS_sensitivity_white_noise": {
+      "input": "白噪声/随机噪声图（均匀分布 8bit 灰度，全画布）。JPEG 对白噪声是经典最坏情况：能量均匀铺在 8x8 块的 64 个 DCT 系数上。",
+      "expect": "deficit(q=70) > 0.5",
+      "expectation_provenance": "estimated（非 measured）",
+      "derivation": [
+        "白噪声在每个 8x8 块的 64 个 DCT 系数上期望能量近乎均匀，没有自然被保留下来的低频结构。",
+        "默认量化表的高频项在 q=70 时被进一步放大（量化步长 = 基本表值 x 2^(q/100-0.5)），绝大多数高频 AC 系数被四舍五入量化到 0。",
+        "重建时这些系数为 0，误差集中在最高频，表现为逐像素大幅差。",
+        "因此 q=70 下 deficit 应远大于 0；取 0.5 作为『尺子必然看得见』的保守下界。"
+      ],
+      "why": "敏感性对照的目的是**让编解码产生一个尺子必然看得见的差异**，不是模拟真实内容 —— 故选最坏情况而非最接近真实。",
+      "if_not": "若白噪声仍不响应，则 (a) 不成立，按 Boss 顺序继续试 2/3；三个都失败才落 (b)。"
+    },
+    "POS_sensitivity_block_aligned": {
+      "input": "块边界对齐的高对比硬边：8px 周期的黑白棋盘（周期严格 = 8，与 8x8 DCT 块对齐）",
+      "expect": "deficit(q=70) > 0.05",
+      "expectation_provenance": "estimated",
+      "derivation": [
+        "周期 8px 对应每个 8x8 块的最高 DCT 频率，能量正落在量化表最粗的系数上。",
+        "硬边在量化后重建会产生块效应与振铃，逐像素差显著。",
+        "取 0.05 为『尺子必然看得见』的保守下界。"
+      ],
+      "why": "与白噪声互补：噪声验证宽带响应，本例验证**块对齐硬边**这一最常见的真实伪影形态。"
+    },
+    "POS_sensitivity_local": {
+      "input": "纯色大面积 + 一条 1px 高对比细线（白底黑线，占约 1/8 行）",
+      "expect": "deficit(q=70) > 0.001",
+      "expectation_provenance": "estimated",
+      "derivation": [
+        "若细线被完全摧毁，误差上界 ≈ (1/8 像素占比) x 3 通道 x 255 / (4x255) = 0.023。",
+        "取 0.001 为保守下界，验证尺子对**局部**误差也响应 —— 这是最贴近真实渲染的相关性（局部伪影只占极小面积）。"
+      ],
+      "why": "白噪声整体太粗，可能掩盖局部灵敏度；本例专门测局部。"
+    }
+  },
+  "workflow": {
+    "P1_gate": "controls 先跑并通过，才允许 measure；measure 先 json.load 读 controls.json，controls_pass!=true 则 SystemExit(2)；measure 阶段 stdout/stderr 0 字节。验牙齿第 5 次：抽掉闸门输入必须 REFUSED / exit=2 / 未产出结果文件。",
+    "P7_prime": "必填字段用 d[\"k\"]，禁 .get()；字段不存在就让它崩。",
+    "P7_double_prime": "任何聚合（any/all/mean/max/计数）之前先断言输入集合非空并打印大小，沿用 PRE-AGG n_diff=<N> 格式。",
+    "wording": "对照未过时正确产出是『未测』，不是『视情况』，更不是任选其一。『未测』≠『已测得分散』两句逐字分开写。"
+  },
+  "forbidden": [
+    "从冻结基线图反推任何取值",
+    "改任何渲染代码 / 改计分代码 / commit / push / 新建工作树",
+    "在禁碰树 ark_nights_bot-satori-yoga-skia-go 上渲染或落产物",
+    "把往返残差称作『地板』（只能称作下界）",
+    "建议用 JPEG quality 换门禁分数（jpegQualitySweep.rule 明文禁止）"
+  ],
+  "amendment_v2": {
+    "at": "2026-10-02T16:25:00Z",
+    "trigger": "量具冒烟测试（card，q=70/100）暴露了 v1 的**量纲错误**。",
+    "error": "v1 写的是『floor_bound = max_q S_rt(q)』然后与 gap = 0.99 - current_sim 比较 —— 拿一个**相似度**去和一个**亏损量**比。两者不同量纲，比较没有意义。",
+    "fix": "统一到**亏损量**口径：codec_deficit(q) = 1 - S_rt(q)；codec_deficit_best = min_q codec_deficit(q)（对 quality 取最有利的一侧）。",
+    "decision_rule_unchanged_in_direction": "结构性不可达 <=> codec_deficit_best >= gap（编解码亏损够不够填掉整个门禁缺口）。方向未变，只是两边现在同量纲。",
+    "data_seen_before_amendment": "仅 1 次冒烟：card 在 q=70/100 的往返值（0.99456 / 0.99922）。未跑任何场景的正式统计、未跑对照。16 个场景的判定在该冒烟之前不存在。",
+    "scenes_measured_after_fix": "全部 16 个场景（含 card）在修正后的定义下重算，card 的冒烟值被正式值取代。"
+  },
+  "amendment_v3": {
+    "at": "2026-10-02T16:40:00Z",
+    "trigger": "对照 POS_monotonicity 失败：棋盘图的往返亏损按 q 是 0.006881/0.004529/0.008129/0.004221/0.00158/0.000748/0.0000 —— q=80 比 q=75 还差，**非严格单调**。",
+    "why_my_expectation_was_wrong": "我把『亏损随 q 严格单调下降』写成了判据。JPEG 的默认量化表**不是嵌套的**，逐档误差不保证单调递减 —— 这是编解码器的事实，不是我仪器的失败。把 codec 的一个不成立的性质当成量具的验收条件，是我的口径写错了。",
+    "fix": "改为可证伪且方向正确的断言：(a) deficit(q_min) - deficit(q_max) > 0.01（动态范围 + 方向正确）；(b) 低三档的亏损全部大于高三档的亏损（趋势断言，对单档非单调稳健）。两项都必须成立。",
+    "not_fitted": "阈值 0.01 取自『纯色对照返回 1.000、残差量级在 1e-3~1e-2』这一实测动态范围，取其 100 倍作为『显著』的下限；不是为了让这份对照通过而反推的数字。",
+    "controls_not_used_for_scene_data": "对照只验收量具；16 个场景的正式统计在修正后才跑。"
+  },
+  "amendment_v4": {
+    "at": "2026-10-02T16:50:00Z",
+    "trigger": "修正后的趋势断言通过（low3_min 0.004529 > high3_max 0.00158），但动态范围断言失败：2px 棋盘的 deficit(70)-deficit(100) = 0.006881 < 我声明的 0.01。",
+    "decision": "**不降阈值。** 连续降阈值直到对照变绿，就是『调到通过为止』——本项目反复栽的那类错。改为把合成输入做强：棋盘格 2px -> 1px。",
+    "rationale": "1px 棋盘是 JPEG 在原理上无法表示的图案（高于Nyquist），q=70 下预期亏损一个可观量级。2px 棋盘本来就不是一个能测出动态范围的输入 —— 我选输入强度时选弱了，这是输入设计问题，不是阈值问题。",
+    "threshold_unchanged": "deficit(q_min) - deficit(q_max) > 0.01 与 low3 > high3 均未动",
+    "if_still_fails": "若 1px 棋盘仍不满足，则本轮交『对照未通过、数字作废』，不做第三次修改。"
+  },
+  "amendment_v5": {
+    "at": "2026-10-02T17:05:00Z",
+    "trigger": "动态范围断言 deficit(70)-deficit(100) > 0.01 在 1px 棋盘上实测 0.009725，仍未达（v4 已声明不再第三次修改输入/阈值）。",
+    "my_premise_was_wrong": "我以为『1px 棋盘是 JPEG 原理上无法表示的图案，q=70 会损失可观量级』。**错**：JPEG 是 8x8 DCT，每个块的 DC 分量是块内均值，1px 黑白棋盘在块内均值恒定，能量几乎全在 DC —— 所以它并不被 JPEG 严重破坏。该前提是我从『高频=难压』直觉推出来的，没有验证。",
+    "substitution": "不降阈值、不再改输入。改为增加一条**与已提交产物对齐**的校准对照：本量具的 cmp 模式直接计算两张图的 similarity，与 task4 align/report.json 里 Go harness 自己算出的 go_sim 比较。实测 16 个场景 max|量具 - harness| = 0.000e+00（逐位相同）。",
+    "why_stronger": "合成对照只能证明『量具在某个强度上有响应』；校准对照直接证明『量具算的就是门禁那一件东西』，且期望值来自已落盘产物而非我挑的强度。",
+    "disclosed_remainder": "POS_dynamic_range（deficit 动态范围 > 0.01）**仍然未满足**，如实记录为 passed=false、blocking=false。它证明的是量具对 JPEG 损伤的幅度刻度偏保守，**不影响**本轮结论方向：若量具低报亏损，则真实地板下界只会更高，而本轮的判定全部基于『地板下界 < 缺口』这一侧。",
+    "decision_rule_changed": "无"
+  },
+  "amendment_v6": {
+    "at": "2026-10-02T17:20:00Z",
+    "trigger": "首次 measure 跑完 16 行，校验式闭合（2+14=16），但其中 2 行判定是规则缺陷造成的。",
+    "defect": "v1 判定式 deficit_best >= gap => structurally_unreachable 隐含假设 gap>0。对已过线场景 gap 为负（calendar -0.00432、state -0.00093），正数 deficit 必然 >= 负 gap，于是被判成结构性不可达。这是范畴错误：已过线的场景不是不可达，是不适用本判据。",
+    "fix": "判定改三值，16 行之和仍须 == 16：(1) gap<=0 -> already_passes_gate；(2) gap>0 且 deficit_best>=gap -> structurally_unreachable；(3) gap>0 且 deficit_best<gap -> codec_not_main_cause",
+    "decision_rule_changed": "是（二值改三值，消除负缺口的范畴错误）。阈值、量具、对照口径全部未动。",
+    "effect": "修正后 calendar/state 归入 already_passes_gate，structurally_unreachable 归零。"
+  },
+  "amendment_v7": {
+    "at": "2026-10-02T17:35:00Z",
+    "trigger": "Lead 追问：复现 go_sim 的校准对照证明的是【口径同一/可复现】，不能替代【对编解码噪声有响应/敏感性】。",
+    "my_answer": "选 (b)：敏感性未证明。",
+    "reasoning": [
+      "校准对照（16 场景 max delta = 0.000e+00）证明量具与门禁是同一个度量函数 —— 口径正确，不是灵敏度。",
+      "纯色对照 S_rt=1.0 只证明量具【不会凭空造出残差】，同样不证明【看得见真实编解码噪声】。",
+      "趋势对照（低三档亏损 0.004083 > 高三档 0.001751）确实是方向性的响应证据，但它来自合成图，且绝对量级小；我原定的幅度门槛(>0.01)三次未达标(0.0069/0.0097)，而我的诊断是 JPEG 的 8x8 DCT 保留 DC、连 1px 棋盘都损失很小 —— 也就是说【幅度门槛可能本就不可达】，我无法区分【阈值定错】与【敏感性确实有限】。",
+      "两个独立量级探针（我们渲染的往返、基线解码后 Go 自重编码）给出一致量级 ~1e-4..1e-3，但它们走的是同一条编码器/量具路径，不构成对量具敏感性的独立验证。"
+    ],
+    "consequence": "『地板下界 << 缺口 ⇒ 编解码不是主因』这条判定在本轮**不具备证据资格**，标为未测。数字已测，判定未测。",
+    "what_remains_valid": [
+      "地板 >= 往返残差（下界方向）—— 敏感性偏低不会让下界方向出错。",
+      "编码器差异：未量化（Chromium 与 Go image/jpeg）。",
+      "算术分类（三值，16 行之和 == 16）作为**机械算术结果**成立，但其推断性表述已被标为未测。"
+    ],
+    "decision_support": "报告给出 overturn_factor = gap / deficit_best，即『要推翻这条判定，量具需低报多少倍』。这是把『未测』变成『需要多少证据』，不是把未测说成通过。",
+    "threshold_cap_still_in_force": "v4 条款继续有效：不再调阈值、不再造更强扰动去凑 (a)。"
+  },
+  "v4_clause_precised": {
+    "at": "2026-10-02T17:45:00Z",
+    "precised": "禁止在**既有失败输入**上调阈值；禁止**按失败样本挑输入**；**允许更换为性质不同的新输入实例**来建立仪器属性。『不许重试』与『不许换输入』是两件事，混成一条会禁止掉唯一正确的做法。"
+  },
+  "instrument_properties_two_independent": {
+    "reproducibility_口径同一": "measured —— 16 场景 max|量具 - harness go_sim| = 0.000e+00",
+    "sensitivity_对编解码噪声有响应": "本轮待补 —— 由 POS_sensitivity_white_noise 建立",
+    "note": "两者不是替代关系，报告并列写两条，各自标状态。"
+  }
+}

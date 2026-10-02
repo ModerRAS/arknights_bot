@@ -1,0 +1,393 @@
+{
+  "instrument_provenance": "pre-registered discriminator (task6)",
+  "rate_definition": "FP / B_flagged(=5)。这是**被标记行里**的假阳性比例。",
+  "B_flagged_before": 5,
+  "B_after": 4,
+  "survivors": [
+    "box-detail",
+    "enemy",
+    "lottery",
+    "operator"
+  ],
+  "false_positives": [
+    "base"
+  ],
+  "flag_level_false_positive_rate": 0.2,
+  "rows": [
+    {
+      "scene": "base",
+      "current_sim": 0.9707251279217189,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759e18fb9f4d17ba530b3d2cdf1bfb322c47",
+      "largest_hole": {
+        "pixel_box": [
+          897,
+          570,
+          1586,
+          721
+        ],
+        "area": 104880,
+        "differing_pixels": 26957,
+        "frac_diff": 0.25703,
+        "share_of_canvas_residual": 0.08199,
+        "R1_area": false,
+        "R2_materiality": true,
+        "verdict_real_target": false,
+        "boss_centre_pixel_differs": false,
+        "boss_rule_says_real": false,
+        "disagreement": false,
+        "old_flat_in_hole": false
+      },
+      "all_hits": [
+        {
+          "pixel_box": [
+            897,
+            570,
+            1586,
+            721
+          ],
+          "area": 104880,
+          "differing_pixels": 26957,
+          "frac_diff": 0.25703,
+          "share_of_canvas_residual": 0.08199,
+          "R1_area": false,
+          "R2_materiality": true,
+          "verdict_real_target": false,
+          "boss_centre_pixel_differs": false,
+          "boss_rule_says_real": false,
+          "disagreement": false,
+          "old_flat_in_hole": false,
+          "area_frac_of_canvas": 0.06862
+        },
+        {
+          "pixel_box": [
+            69,
+            570,
+            827,
+            721
+          ],
+          "area": 115368,
+          "differing_pixels": 22792,
+          "frac_diff": 0.19756,
+          "share_of_canvas_residual": 0.0607,
+          "R1_area": false,
+          "R2_materiality": true,
+          "verdict_real_target": false,
+          "boss_centre_pixel_differs": false,
+          "boss_rule_says_real": false,
+          "disagreement": false,
+          "old_flat_in_hole": false,
+          "area_frac_of_canvas": 0.07548
+        },
+        {
+          "pixel_box": [
+            897,
+            760,
+            1586,
+            873
+          ],
+          "area": 78660,
+          "differing_pixels": 9711,
+          "frac_diff": 0.12346,
+          "share_of_canvas_residual": 0.03399,
+          "R1_area": false,
+          "R2_materiality": false,
+          "verdict_real_target": false,
+          "boss_centre_pixel_differs": false,
+          "boss_rule_says_real": false,
+          "disagreement": false,
+          "old_flat_in_hole": false,
+          "area_frac_of_canvas": 0.05146
+        },
+        {
+          "pixel_box": [
+            138,
+            760,
+            827,
+            873
+          ],
+          "area": 78660,
+          "differing_pixels": 11801,
+          "frac_diff": 0.15003,
+          "share_of_canvas_residual": 0.04631,
+          "R1_area": false,
+          "R2_materiality": false,
+          "verdict_real_target": false,
+          "boss_centre_pixel_differs": false,
+          "boss_rule_says_real": false,
+          "disagreement": false,
+          "old_flat_in_hole": false,
+          "area_frac_of_canvas": 0.05146
+        }
+      ],
+      "n_hits": 4
+    },
+    {
+      "scene": "box-detail",
+      "current_sim": 0.8784374903269025,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759e18fb9f4d17ba530b3d2cdf1bfb322c47",
+      "largest_hole": {
+        "pixel_box": [
+          150,
+          209,
+          689,
+          263
+        ],
+        "area": 29700,
+        "differing_pixels": 29679,
+        "frac_diff": 0.99929,
+        "share_of_canvas_residual": 0.20254,
+        "R1_area": true,
+        "R2_materiality": true,
+        "verdict_real_target": true,
+        "boss_centre_pixel_differs": true,
+        "boss_rule_says_real": true,
+        "disagreement": false,
+        "old_flat_in_hole": false
+      },
+      "all_hits": [
+        {
+          "pixel_box": [
+            150,
+            209,
+            689,
+            263
+          ],
+          "area": 29700,
+          "differing_pixels": 29679,
+          "frac_diff": 0.99929,
+          "share_of_canvas_residual": 0.20254,
+          "R1_area": true,
+          "R2_materiality": true,
+          "verdict_real_target": true,
+          "boss_centre_pixel_differs": true,
+          "boss_rule_says_real": true,
+          "disagreement": false,
+          "old_flat_in_hole": false,
+          "area_frac_of_canvas": 0.14744
+        },
+        {
+          "pixel_box": [
+            120,
+            11,
+            689,
+            65
+          ],
+          "area": 31350,
+          "differing_pixels": 31328,
+          "frac_diff": 0.9993,
+          "share_of_canvas_residual": 0.12478,
+          "R1_area": true,
+          "R2_materiality": true,
+          "verdict_real_target": true,
+          "boss_centre_pixel_differs": true,
+          "boss_rule_says_real": true,
+          "disagreement": false,
+          "old_flat_in_hole": false,
+          "area_frac_of_canvas": 0.15563
+        },
+        {
+          "pixel_box": [
+            180,
+            77,
+            689,
+            131
+          ],
+          "area": 28050,
+          "differing_pixels": 28045,
+          "frac_diff": 0.99982,
+          "share_of_canvas_residual": 0.12672,
+          "R1_area": true,
+          "R2_materiality": true,
+          "verdict_real_target": true,
+          "boss_centre_pixel_differs": true,
+          "boss_rule_says_real": true,
+          "disagreement": false,
+          "old_flat_in_hole": false,
+          "area_frac_of_canvas": 0.13925
+        },
+        {
+          "pixel_box": [
+            150,
+            143,
+            689,
+            197
+          ],
+          "area": 29700,
+          "differing_pixels": 29668,
+          "frac_diff": 0.99892,
+          "share_of_canvas_residual": 0.20323,
+          "R1_area": true,
+          "R2_materiality": true,
+          "verdict_real_target": true,
+          "boss_centre_pixel_differs": true,
+          "boss_rule_says_real": true,
+          "disagreement": false,
+          "old_flat_in_hole": false,
+          "area_frac_of_canvas": 0.14744
+        }
+      ],
+      "n_hits": 4
+    },
+    {
+      "scene": "enemy",
+      "current_sim": 0.9195071737682478,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759e18fb9f4d17ba530b3d2cdf1bfb322c47",
+      "largest_hole": {
+        "pixel_box": [
+          41,
+          171,
+          942,
+          417
+        ],
+        "area": 222794,
+        "differing_pixels": 222768,
+        "frac_diff": 0.99988,
+        "share_of_canvas_residual": 0.44922,
+        "R1_area": true,
+        "R2_materiality": true,
+        "verdict_real_target": true,
+        "boss_centre_pixel_differs": true,
+        "boss_rule_says_real": true,
+        "disagreement": false,
+        "old_flat_in_hole": false
+      },
+      "all_hits": [
+        {
+          "pixel_box": [
+            41,
+            171,
+            942,
+            417
+          ],
+          "area": 222794,
+          "differing_pixels": 222768,
+          "frac_diff": 0.99988,
+          "share_of_canvas_residual": 0.44922,
+          "R1_area": true,
+          "R2_materiality": true,
+          "verdict_real_target": true,
+          "boss_centre_pixel_differs": true,
+          "boss_rule_says_real": true,
+          "disagreement": false,
+          "old_flat_in_hole": false,
+          "area_frac_of_canvas": 0.47467
+        },
+        {
+          "pixel_box": [
+            41,
+            19,
+            163,
+            132
+          ],
+          "area": 14022,
+          "differing_pixels": 14022,
+          "frac_diff": 1.0,
+          "share_of_canvas_residual": 0.02666,
+          "R1_area": true,
+          "R2_materiality": false,
+          "verdict_real_target": false,
+          "boss_centre_pixel_differs": true,
+          "boss_rule_says_real": true,
+          "disagreement": true,
+          "old_flat_in_hole": false,
+          "area_frac_of_canvas": 0.02987
+        }
+      ],
+      "n_hits": 2
+    },
+    {
+      "scene": "lottery",
+      "current_sim": 0.9835808689865397,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759e18fb9f4d17ba530b3d2cdf1bfb322c47",
+      "largest_hole": {
+        "pixel_box": [
+          61,
+          69,
+          609,
+          1586
+        ],
+        "area": 833382,
+        "differing_pixels": 445097,
+        "frac_diff": 0.53409,
+        "share_of_canvas_residual": 0.31847,
+        "R1_area": true,
+        "R2_materiality": true,
+        "verdict_real_target": true,
+        "boss_centre_pixel_differs": true,
+        "boss_rule_says_real": true,
+        "disagreement": false,
+        "old_flat_in_hole": false
+      },
+      "all_hits": [
+        {
+          "pixel_box": [
+            61,
+            69,
+            609,
+            1586
+          ],
+          "area": 833382,
+          "differing_pixels": 445097,
+          "frac_diff": 0.53409,
+          "share_of_canvas_residual": 0.31847,
+          "R1_area": true,
+          "R2_materiality": true,
+          "verdict_real_target": true,
+          "boss_centre_pixel_differs": true,
+          "boss_rule_says_real": true,
+          "disagreement": false,
+          "old_flat_in_hole": false,
+          "area_frac_of_canvas": 0.3394
+        }
+      ],
+      "n_hits": 1
+    },
+    {
+      "scene": "operator",
+      "current_sim": 0.7686553835330429,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759e18fb9f4d17ba530b3d2cdf1bfb322c47",
+      "largest_hole": {
+        "pixel_box": [
+          525,
+          600,
+          1424,
+          949
+        ],
+        "area": 315000,
+        "differing_pixels": 268099,
+        "frac_diff": 0.85111,
+        "share_of_canvas_residual": 0.20366,
+        "R1_area": true,
+        "R2_materiality": true,
+        "verdict_real_target": true,
+        "boss_centre_pixel_differs": true,
+        "boss_rule_says_real": true,
+        "disagreement": false,
+        "old_flat_in_hole": false
+      },
+      "all_hits": [
+        {
+          "pixel_box": [
+            525,
+            600,
+            1424,
+            949
+          ],
+          "area": 315000,
+          "differing_pixels": 268099,
+          "frac_diff": 0.85111,
+          "share_of_canvas_residual": 0.20366,
+          "R1_area": true,
+          "R2_materiality": true,
+          "verdict_real_target": true,
+          "boss_centre_pixel_differs": true,
+          "boss_rule_says_real": true,
+          "disagreement": false,
+          "old_flat_in_hole": false,
+          "area_frac_of_canvas": 0.14583
+        }
+      ],
+      "n_hits": 1
+    }
+  ]
+}

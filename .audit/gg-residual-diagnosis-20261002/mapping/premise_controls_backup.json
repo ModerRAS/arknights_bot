@@ -1,0 +1,23 @@
+{
+  "instrument_provenance": "pre-registered element-mapping criterion (task7, v2 amended)",
+  "controls": [
+    {
+      "control": "POS_shared_flat_fraction_measurable",
+      "expect": true,
+      "observed": true,
+      "detail": {
+        "shared_flat_frac_enemy": 0.3283
+      }
+    },
+    {
+      "control": "POS_flat_on_both_sides_but_colours_differ",
+      "expect": true,
+      "observed": true,
+      "detail": {
+        "note": "把 old 洞区改成另一种纯色后，两侧仍各自平坦；证明「平坦」不能推出「两侧相同」，也不能推出「未绘制」"
+      }
+    }
+  ],
+  "controls_pass": true,
+  "note": "premise-survey controls"
+}

@@ -1,0 +1,188 @@
+{
+  "provenance": "pre-registered feature family (task10, v2 amended after first control run)",
+  "registered_at_utc": "2026-10-02T18:10:00Z",
+  "registered_before_any_run": true,
+  "design_stage_error_blocking": {
+    "rule": "量纲错误 / 方向错误 / 上界当期望 —— 这三类必须在设计阶段被挡下，而不是阳性对照失败之后才发现。",
+    "how_enforced": [
+      "① 所有特征单位统一为像素或 [0,1] 无量纲比值；instrument 明列量纲，脚本 assert 单位一致。",
+      "② 对**单调性**单独设一条对照（笔宽 1px vs 4px），要求特征值同向单调 —— 挡住『方向写反』，且该对照不依赖任何设计假设。",
+      "③ 验收一律断言**特征值落在机理推导区间**（如 SW(1px 线) 应在 [0.7,1.6] px），**不再对下游聚合量拍期望**，从根上避免『把上界当期望』。",
+      "④ 每个阈值都带 derived/assumed 标签；assumed 项在报告里单列，不与 derived 混写。"
+    ],
+    "carried_over_bias": "上一把尺子系统性少报文本（文本对照 glyph_edge=0.0）。本尺子若在任一类别上给出 0，先查尺子再查场景。"
+  },
+  "features": {
+    "note": "全部在**渲染图 new.png** 上计算。基线不参与特征提取，只提供『哪里不一致』这一事实。",
+    "ink_mask": {
+      "definition": "ink := range3 > T_flat，range3 = 3x3 邻域亮度的 max-min。",
+      "unit": "bool",
+      "T_flat": 2,
+      "T_flat_tag": "derived",
+      "T_flat_derivation": "纯色填充内部的 8bit 量化抖动为 0；<=2 的容差用于吸收舍入而不吞掉真实边缘。与既有内洞检测器的 flat 判据取同一数值，使两台仪器在『平坦』上口径一致。"
+    },
+    "SW": {
+      "definition": "笔画宽度代理 SW = 2*A/P，A = 连通域像素数，P = 边界像素数（存在 4-邻域不属于本连通域的 ink 像素）。",
+      "unit": "px",
+      "SW_tag": "derived",
+      "SW_derivation": "对宽 w、长 L 的直条：A = wL，P ≈ 2L，故 SW ≈ 2wL/2L = w。对边长 s 的实心方块：A = s²，P ≈ 4s，故 SW ≈ s。故 SW 是『该结构的厚度』，与字体笔画宽度同量纲。",
+      "direction": "笔画越宽 SW 越大（单调），由 PC2 的 1px vs 4px 单调性对照验证。"
+    },
+    "LIN": {
+      "definition": "LIN = 连通域像素坐标的第一主成分方差占比 = λ1/(λ1+λ2)。",
+      "unit": "[0,1] 无量纲",
+      "LIN_tag": "derived",
+      "LIN_derivation": "直条（线、笔画）像素沿主轴排布，λ2≈0 ⇒ LIN→1；弥散团块两个方向方差相当 ⇒ LIN 明显小于 1。"
+    },
+    "FILL": {
+      "definition": "FILL = A / (bbox_w * bbox_h)。",
+      "unit": "[0,1] 无量纲",
+      "FILL_tag": "derived",
+      "FILL_derivation": "实心图片区域在自身 bbox 内几乎铺满 ⇒ FILL→1；字形笔画的 bbox 内大部分是背景 ⇒ FILL 明显小于 1。"
+    },
+    "ELONG": {
+      "definition": "ELONG = max(bbox_w, bbox_h) / min(bbox_w, bbox_h)。",
+      "unit": ">=1 无量纲",
+      "ELONG_tag": "derived",
+      "ELONG_derivation": "直条细长 ⇒ ELONG 大；团块近正方 ⇒ ELONG≈1。"
+    }
+  },
+  "thresholds": {
+    "T_sw": {
+      "value": 3.0,
+      "unit": "px",
+      "tag": "derived-with-assumed-final-link",
+      "derivation_chain": [
+        "文本 CJK 在 20-25px 字号下的笔画宽度约为 em 的 1/16 ~ 1/30 ⇒ 0.7 ~ 1.6 px（em=20px 时）。",
+        "拉丁 stem 约为 0.08~0.10 em ⇒ 1.6 ~ 2.5 px。",
+        "取 3.0 px 高于最粗的预期文本笔画，且低于任何实心区域（>=5px）。",
+        "**最后一环 assumed**：本仓实际字体 NotoSansHans-Regular.ttf 在 20-25px 下的真实笔画宽度未预先测量，它正是 PC1 要检验的对象。若 PC1 不过，优先怀疑这一环，而不是直接改阈值。"
+      ],
+      "value_ink": 5.0,
+      "value_ink_derivation": "= value(3.0, 真实笔画) + 2.0（range3 的 3x3 窗口向两侧各膨胀 1px，实测 1px线->3行、4px线->6行）"
+    },
+    "T_lin": {
+      "value": 0.85,
+      "unit": "无量纲",
+      "tag": "derived",
+      "derivation": "直条 λ2 接近 0 ⇒ LIN 接近 1（>0.95）；含锯齿起伏的笔画实测仍在 0.9 附近；弥散团块两个主成分方差相当 ⇒ 显著低于 0.85。取 0.85 作为中间分隔。"
+    },
+    "T_fill": {
+      "value": 0.6,
+      "unit": "无量纲",
+      "tag": "derived",
+      "derivation": "实心图片区域 FILL>0.8；字形笔画 bbox 的 FILL 实测在 0.2-0.4 量级。取 0.60 远离两端。"
+    },
+    "L_sep": {
+      "value": "0.25 * W",
+      "unit": "px（相对画布宽度）",
+      "tag": "assumed",
+      "assumed_reason": "这是关于**模板设计**的假设，不是关于渲染器或编解码的：假定分隔线横跨容器宽度，而字形不会。模板容器宽度在 fixtures 里可见（600-1200 CSS px，scale 1.5 ⇒ 900-1800 设备 px，约占画布宽度 0.5-0.8）。取 0.25*W 是保守的下限。",
+      "if_wrong": "若某些场景的分隔线不横跨，L_sep 判定会失效 —— 该场景的分隔线会被归入 glyph_edge。这是**声明在先的错误来源**，不是事后解释。"
+    }
+  },
+  "classes": {
+    "flat_bg": "差异像素不属于任何 ink 连通域（即落在平坦区）—— 纯颜色/明度不符。",
+    "sep_decor": "SW <= T_sw 且 LIN >= T_lin 且 max(bbox) >= L_sep —— 细、直、且横跨容器 ⇒ 分隔线/边框/装饰层。",
+    "glyph_edge": "SW <= T_sw 且 LIN >= T_lin 且 max(bbox) < L_sep —— 细、直、且短 ⇒ 字形笔画。",
+    "image_asset": "FILL >= T_fill 且 (SW > T_sw) —— 铺满且厚 ⇒ 图片素材区。",
+    "other": "归属到某个连通域但不满足以上任何一条。**这一栏是本项最大的陷阱：份额大即未测量，不是已归类。必须单独标出份额并说明它是什么。**"
+  },
+  "attribution": "每个差异像素：若落在某个 ink 连通域内 ⇒ 记为该连通域的类别；否则记 flat_bg。连通域由 8-邻接标注。",
+  "positive_controls": {
+    "PC1_glyph": {
+      "input": "仓库内真实字体 NotoSansHans-Regular.ttf 绘制多行文本（与真实渲染同字号 22px），残差扰动施加在**笔画带上**（构造保证：扰动只落在 text 的 ink 上）",
+      "expectation_on_feature": "文字连通域的 SW 落在 [0.7, 3.0] px（机理区间，见 T_sw 推导链）",
+      "expectation_on_class": "被判为 glyph_edge 的差异像素份额 >= 0.80",
+      "slack_reason": "0.80 而非 1.0：抗锯齿边缘像素可能粘连成不满足 LIN/长度的连通域。0.80 是声明的松弛量，不是拟合值。",
+      "if_not": "尺子对已知文本不响 => 产出未测，不许硬交表",
+      "sw_ink_range": [
+        2.5,
+        6.0
+      ]
+    },
+    "PC2_separator": {
+      "input": "纯色底 + 一条横跨全画布的 1px 黑线",
+      "expectation_on_feature": "该连通域 SW_ink 落在 [2.5, 4.0] px（真实 1px + 膨胀 2 + 抗锯齿裕度）且 LIN >= 0.95",
+      "expectation_on_class": "被判为 sep_decor 的差异像素份额 >= 0.80",
+      "if_not": "尺子对已知分隔线不响 => 产出未测",
+      "sw_ink_range": [
+        2.5,
+        4.0
+      ]
+    },
+    "PC3_image": {
+      "input": "把 assets/common/amiya.png 的一块贴到画布上，扰动施加在该块上",
+      "expectation_on_feature": "该连通域 FILL >= 0.60",
+      "expectation_on_class": "被判为 image_asset 的差异像素份额 >= 0.60",
+      "slack_reason": "素材内部有大片平坦区，贴图块的 ink 连通域可能不止一个，且部分平坦区落 flat_bg。"
+    },
+    "PC4_monotonicity_stroke_width": {
+      "input": "同一字体、同一排版，分别以 1px 描边与 4px 描边渲染两条同长度的横线",
+      "expectation": "4px 线连通域的 SW **大于** 1px 线的 SW",
+      "why": "这一条不依赖任何设计假设，纯粹检验『特征方向没写反』；上一轮的白噪声/棋盘教训正是方向与机理错误。"
+    },
+    "PC5_flat_bias": {
+      "input": "纯色色偏（无任何 ink）",
+      "expectation": "被判为 flat_bg 的差异像素份额 == 1.0",
+      "why": "证明尺子不会给平坦色偏编造结构类别。"
+    }
+  },
+  "workflow": {
+    "P1_gate": "controls 先跑并通过才允许测量；移走闸门输入 => REFUSED/exit=2/无产物；对照未过 => 同样 REFUSED；measure 阶段 stdout/stderr 0 字节。验牙齿第 6 次。",
+    "P7_prime": "必填字段用 d[\"k\"]，禁 .get()。",
+    "P7_double_prime": "聚合前先断言输入集合非空并打印大小（PRE-AGG n_diff=<N>）。",
+    "P10": "对照未过时正确产出是「未测」，不是任选一档结论。「未测」≠「已测得分散」两句逐字分开。",
+    "P12": "禁止在既有失败输入上调阈值；禁止按失败样本挑输入；允许更换为性质不同的新输入实例。",
+    "P16": "改动任何多段文档后，重新列出全部标题并核对段数与改前一致。"
+  },
+  "scope_note": "本轮不排编解码项（encoder_difference 未量化）—— 理由是性价比：翻转只需 headhunt 的 4.7×，为单场景的一档裕度花整轮不划算。该项记入『已知未量化项』，路径已通。引用编解码结果必须逐场景写，禁止跨场景相除。",
+  "forbidden": [
+    "从冻结基线图反推任何取值",
+    "改任何渲染代码 / 改计分代码 / commit / push / 新建工作树",
+    "在禁碰树 ark_nights_bot-satori-yoga-skia-go 上渲染或落产物",
+    "对照未过时给出任选一档的结论性表态"
+  ],
+  "amendment_v2": {
+    "at": "2026-10-02T18:40:00Z",
+    "trigger": "首轮 5 条对照全败。逐条诊断后，**没有一个是阈值问题**，是一个机制错误 + 两个代码 bug。",
+    "items": [
+      {
+        "id": "PC4/PC1/PC2",
+        "kind": "机制错误（最重要）",
+        "error": "ink 掩膜由 range3>2 得到，而 range3 用的是 3x3 邻域 —— 它把任何结构**向两侧各膨胀 1px**。实测两点：1px 线 -> ink 带 3 行；4px 线 -> ink 带 6 行。故 ink 上的 SW 比真实笔画宽多约 2px。",
+        "impact": "v1 的 T_sw=3.0 是按**真实笔画宽**推的，却拿去判**膨胀后**的 SW，量纲没错、基准错了 —— 于是 1px 线被判成 3px 笔画，越粗反而越不像细笔画（单调性反转）。",
+        "fix": "T_sw_ink = T_sw_true + 2 = 5.0 px，修正量由上面两点实测确认（+2），不是拍出来的。PC2 的 1px 线期望区间相应改为 [2.5, 4.0]（真实 1px + 膨胀 2 + 抗锯齿裕度）。"
+      },
+      {
+        "id": "PC4",
+        "kind": "代码 bug",
+        "error": "周长按『边界像素数』计，每个像素只算一次；细结构上下两侧都在外时被少算一半。",
+        "impact": "直接导致 SW(1px)=2.99 > SW(4px)=2.00 方向反转。",
+        "fix": "改为四个方向分别计**边界穿越数**（每个方向独立计一次），用 bincount 累加到各连通域。"
+      },
+      {
+        "id": "PC5/PC1",
+        "kind": "代码 bug",
+        "error": "差异像素落在 lab==0（不属于任何连通域）时被记为 -1 而不是 flat_bg。",
+        "impact": "纯色色偏的 flat_bg 份额被算成 0.0 —— 尺子给平坦色偏编造不出类别。",
+        "fix": "lab==0 -> flat_bg。"
+      },
+      {
+        "id": "PC3",
+        "kind": "机制错误",
+        "error": "用 ink 掩膜的 FILL（bbox 内非平坦像素占比）当『图片区域』判据。但 ink 掩膜**不包含图片里的平坦区域**，只含边缘与纹理；照片的 ink 组件因此天然稀疏（FILL 实测 0.254）。",
+        "error_nature": "这与上一轮『上界当期望』同族：我把『照片铺满自己的 bbox』这个直觉套到了 ink 掩膜上，而 ink 掩膜根本不代表照片本身。",
+        "fix_pending": "本轮不再改阈值 —— 该项的修复需要换特征（bbox 内**颜色多样性**），属于新特征族而非阈值调整。为避免连改多项，本轮就此停下并按 P10 产出。"
+      },
+      {
+        "id": "PC1/PC2 的期望区间来源",
+        "error": "脚本里把 SW 期望区间硬编码成 [0.7,3.0]/[0.7,1.6]（那是**真实笔画宽**的区间，却拿去判**膨胀后**的 SW）。",
+        "fix": "期望区间改为从 instrument 读取（PC1 [2.5,6.0]、PC2 [2.5,4.0]，均含 +2 膨胀）。脚本不再自带判据。"
+      }
+    ],
+    "threshold_changed": "T_sw 3.0 -> 5.0 px，且修正量来自实测的 +2 膨胀；其余阈值未动",
+    "P12_compliance": "未在既有失败输入上调阈值；两处修复来自机制诊断与代码 bug，不是把门槛改松。",
+    "PC3_status": "**未修复** —— 见 items[3]。这是本轮控制集失败的主因之一。"
+  }
+}

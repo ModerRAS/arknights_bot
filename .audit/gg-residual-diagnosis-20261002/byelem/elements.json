@@ -1,0 +1,300 @@
+{
+  "instrument_provenance": "pre-registered (task12: declared-element decomposition ONLY)",
+  "positioning": "本表为**像素类构成**，用作**声明轴分解的交叉核对**；**它不单独构成实现依据**，因为像素类不是可指名的目标。",
+  "three_statements": [
+    "元素归属来自声明（模板 + 布局状态导出元素框）",
+    "残差幅度来自「我们 vs 基线」（把比较限制在该元素框内）—— 这一项不可回避",
+    "不得用从基线读到的任何数值，去决定任何元素「应该是什么」（位置、内容、颜色、尺寸一律不许）"
+  ],
+  "n_derivable_boxes": 13,
+  "scenes_with_boxes": [
+    "box",
+    "card",
+    "headhunt",
+    "missing",
+    "recruit",
+    "state"
+  ],
+  "n_scenes_total": 16,
+  "n_scenes_without_any_box": 10,
+  "cross_scene_consistent": null,
+  "cross_scene_note": "只有 6/16 个场景存在静态可导出的元素框；且这些框的坐标基准是其定位祖先，本轮未实现祖先链解析 ⇒ 份额值不是画布坐标下的份额。**跨场景一致性本轮不出结论。**",
+  "rows": [
+    {
+      "scene": "box",
+      "template": "Box.tmpl",
+      "selector": ".profession",
+      "declared_line": 31,
+      "declared_props": {
+        "width": 15.0,
+        "top": 5.0
+      },
+      "device_box": [
+        0.0,
+        7.5,
+        22.5,
+        0.0
+      ],
+      "coordinate_basis": "relative to nearest positioned ancestor (CSS semantics); canvas-offset resolution NOT implemented this round",
+      "residual_inside": 0,
+      "residual_total": 100438415,
+      "residual_share": 0.0,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759e18fb9f4d17ba530b3d2cdf1bfb322c47"
+    },
+    {
+      "scene": "box",
+      "template": "Box.tmpl",
+      "selector": ".rarity",
+      "declared_line": 37,
+      "declared_props": {
+        "width": 40.0,
+        "top": 5.0
+      },
+      "device_box": [
+        0.0,
+        7.5,
+        60.0,
+        0.0
+      ],
+      "coordinate_basis": "relative to nearest positioned ancestor (CSS semantics); canvas-offset resolution NOT implemented this round",
+      "residual_inside": 0,
+      "residual_total": 100438415,
+      "residual_share": 0.0,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759e18fb9f4d17ba530b3d2cdf1bfb322c47"
+    },
+    {
+      "scene": "box",
+      "template": "Box.tmpl",
+      "selector": ".evolve",
+      "declared_line": 43,
+      "declared_props": {
+        "width": 40.0,
+        "top": 80.0
+      },
+      "device_box": [
+        0.0,
+        120.0,
+        60.0,
+        0.0
+      ],
+      "coordinate_basis": "relative to nearest positioned ancestor (CSS semantics); canvas-offset resolution NOT implemented this round",
+      "residual_inside": 0,
+      "residual_total": 100438415,
+      "residual_share": 0.0,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759e18fb9f4d17ba530b3d2cdf1bfb322c47"
+    },
+    {
+      "scene": "box",
+      "template": "Box.tmpl",
+      "selector": ".level",
+      "declared_line": 49,
+      "declared_props": {
+        "width": 20.0,
+        "left": 5.0
+      },
+      "device_box": [
+        7.5,
+        0.0,
+        30.0,
+        0.0
+      ],
+      "coordinate_basis": "relative to nearest positioned ancestor (CSS semantics); canvas-offset resolution NOT implemented this round",
+      "residual_inside": 0,
+      "residual_total": 100438415,
+      "residual_share": 0.0,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759e18fb9f4d17ba530b3d2cdf1bfb322c47"
+    },
+    {
+      "scene": "box",
+      "template": "Box.tmpl",
+      "selector": ".potential",
+      "declared_line": 59,
+      "declared_props": {
+        "width": 30.0,
+        "top": 100.0
+      },
+      "device_box": [
+        0.0,
+        150.0,
+        45.0,
+        0.0
+      ],
+      "coordinate_basis": "relative to nearest positioned ancestor (CSS semantics); canvas-offset resolution NOT implemented this round",
+      "residual_inside": 0,
+      "residual_total": 100438415,
+      "residual_share": 0.0,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759e18fb9f4d17ba530b3d2cdf1bfb322c47"
+    },
+    {
+      "scene": "card",
+      "template": "Card.tmpl",
+      "selector": ".level",
+      "declared_line": 106,
+      "declared_props": {
+        "width": 25.0,
+        "left": 15.0
+      },
+      "device_box": [
+        15.0,
+        0,
+        25.0,
+        0
+      ],
+      "coordinate_basis": "relative to nearest positioned ancestor (CSS semantics); canvas-offset resolution NOT implemented this round",
+      "residual_inside": 0,
+      "residual_total": 37459818,
+      "residual_share": 0.0,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759e18fb9f4d17ba530b3d2cdf1bfb322c47"
+    },
+    {
+      "scene": "headhunt",
+      "template": "Headhunt.tmpl",
+      "selector": "#main",
+      "declared_line": 7,
+      "declared_props": {
+        "width": 1024.0,
+        "height": 576.0,
+        "left": 25.0
+      },
+      "device_box": [
+        25.0,
+        0,
+        1024.0,
+        576.0
+      ],
+      "coordinate_basis": "relative to nearest positioned ancestor (CSS semantics); canvas-offset resolution NOT implemented this round",
+      "residual_inside": 18297272,
+      "residual_total": 18359804,
+      "residual_share": 0.99659,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759e18fb9f4d17ba530b3d2cdf1bfb322c47"
+    },
+    {
+      "scene": "missing",
+      "template": "Missing.tmpl",
+      "selector": ".profession",
+      "declared_line": 31,
+      "declared_props": {
+        "width": 15.0,
+        "top": 5.0
+      },
+      "device_box": [
+        0.0,
+        7.5,
+        22.5,
+        0.0
+      ],
+      "coordinate_basis": "relative to nearest positioned ancestor (CSS semantics); canvas-offset resolution NOT implemented this round",
+      "residual_inside": 0,
+      "residual_total": 71103685,
+      "residual_share": 0.0,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759e18fb9f4d17ba530b3d2cdf1bfb322c47"
+    },
+    {
+      "scene": "missing",
+      "template": "Missing.tmpl",
+      "selector": ".rarity",
+      "declared_line": 37,
+      "declared_props": {
+        "width": 40.0,
+        "top": 5.0
+      },
+      "device_box": [
+        0.0,
+        7.5,
+        60.0,
+        0.0
+      ],
+      "coordinate_basis": "relative to nearest positioned ancestor (CSS semantics); canvas-offset resolution NOT implemented this round",
+      "residual_inside": 0,
+      "residual_total": 71103685,
+      "residual_share": 0.0,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759e18fb9f4d17ba530b3d2cdf1bfb322c47"
+    },
+    {
+      "scene": "recruit",
+      "template": "Recruit.tmpl",
+      "selector": ".rarity",
+      "declared_line": 34,
+      "declared_props": {
+        "height": 20.0,
+        "left": 30.0
+      },
+      "device_box": [
+        45.0,
+        0.0,
+        0.0,
+        30.0
+      ],
+      "coordinate_basis": "relative to nearest positioned ancestor (CSS semantics); canvas-offset resolution NOT implemented this round",
+      "residual_inside": 0,
+      "residual_total": 83800591,
+      "residual_share": 0.0,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759e18fb9f4d17ba530b3d2cdf1bfb322c47"
+    },
+    {
+      "scene": "state",
+      "template": "State.tmpl",
+      "selector": "#campaign_recover_bg",
+      "declared_line": 105,
+      "declared_props": {
+        "width": 110.0,
+        "height": 25.0,
+        "left": 60.0
+      },
+      "device_box": [
+        60.0,
+        0,
+        110.0,
+        25.0
+      ],
+      "coordinate_basis": "relative to nearest positioned ancestor (CSS semantics); canvas-offset resolution NOT implemented this round",
+      "residual_inside": 0,
+      "residual_total": 5150175,
+      "residual_share": 0.0,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759e18fb9f4d17ba530b3d2cdf1bfb322c47"
+    },
+    {
+      "scene": "state",
+      "template": "State.tmpl",
+      "selector": "#trainee",
+      "declared_line": 184,
+      "declared_props": {
+        "width": 130.0,
+        "left": 922.0
+      },
+      "device_box": [
+        922.0,
+        0,
+        130.0,
+        0
+      ],
+      "coordinate_basis": "relative to nearest positioned ancestor (CSS semantics); canvas-offset resolution NOT implemented this round",
+      "residual_inside": 0,
+      "residual_total": 5150175,
+      "residual_share": 0.0,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759e18fb9f4d17ba530b3d2cdf1bfb322c47"
+    },
+    {
+      "scene": "state",
+      "template": "State.tmpl",
+      "selector": "#remain_secs_bg",
+      "declared_line": 190,
+      "declared_props": {
+        "width": 133.0,
+        "height": 25.0,
+        "left": 923.0
+      },
+      "device_box": [
+        923.0,
+        0,
+        133.0,
+        25.0
+      ],
+      "coordinate_basis": "relative to nearest positioned ancestor (CSS semantics); canvas-offset resolution NOT implemented this round",
+      "residual_inside": 0,
+      "residual_total": 5150175,
+      "residual_share": 0.0,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759e18fb9f4d17ba530b3d2cdf1bfb322c47"
+    }
+  ]
+}

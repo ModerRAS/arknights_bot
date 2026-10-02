@@ -1,0 +1,166 @@
+{
+  "instrument_provenance": "pre-registered element-mapping criterion (task7, v2 amended)",
+  "note": "per-tile constant colour ceiling; distinct from task5 global-constant ceiling",
+  "rows": [
+    {
+      "scene": "base",
+      "current_sim": 0.9707251279217189,
+      "sim_global_const": 0.970725,
+      "sim_per_tile_const": 0.971414,
+      "gain_over_current": 0.000689,
+      "reaches_gate_per_tile": false,
+      "tile_grid": 24,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759"
+    },
+    {
+      "scene": "box",
+      "current_sim": 0.8250372524631744,
+      "sim_global_const": 0.825037,
+      "sim_per_tile_const": 0.871487,
+      "gain_over_current": 0.04645,
+      "reaches_gate_per_tile": false,
+      "tile_grid": 24,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759"
+    },
+    {
+      "scene": "box-detail",
+      "current_sim": 0.8784374903269025,
+      "sim_global_const": 0.878437,
+      "sim_per_tile_const": 0.930078,
+      "gain_over_current": 0.05164,
+      "reaches_gate_per_tile": false,
+      "tile_grid": 24,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759"
+    },
+    {
+      "scene": "box-summary",
+      "current_sim": 0.8809750314141331,
+      "sim_global_const": 0.880975,
+      "sim_per_tile_const": 0.921625,
+      "gain_over_current": 0.04065,
+      "reaches_gate_per_tile": false,
+      "tile_grid": 24,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759"
+    },
+    {
+      "scene": "calendar",
+      "current_sim": 0.99432366536721,
+      "sim_global_const": 0.994324,
+      "sim_per_tile_const": 0.994397,
+      "gain_over_current": 7.3e-05,
+      "reaches_gate_per_tile": true,
+      "tile_grid": 24,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759"
+    },
+    {
+      "scene": "card",
+      "current_sim": 0.9601504863664215,
+      "sim_global_const": 0.96015,
+      "sim_per_tile_const": 0.963181,
+      "gain_over_current": 0.00303,
+      "reaches_gate_per_tile": false,
+      "tile_grid": 24,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759"
+    },
+    {
+      "scene": "depot",
+      "current_sim": 0.9235233358635896,
+      "sim_global_const": 0.923523,
+      "sim_per_tile_const": 0.944438,
+      "gain_over_current": 0.020915,
+      "reaches_gate_per_tile": false,
+      "tile_grid": 24,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759"
+    },
+    {
+      "scene": "enemy",
+      "current_sim": 0.9195071737682478,
+      "sim_global_const": 0.919507,
+      "sim_per_tile_const": 0.964144,
+      "gain_over_current": 0.044637,
+      "reaches_gate_per_tile": false,
+      "tile_grid": 24,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759"
+    },
+    {
+      "scene": "gacha",
+      "current_sim": 0.9025141429411271,
+      "sim_global_const": 0.902514,
+      "sim_per_tile_const": 0.937785,
+      "gain_over_current": 0.035271,
+      "reaches_gate_per_tile": false,
+      "tile_grid": 24,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759"
+    },
+    {
+      "scene": "headhunt",
+      "current_sim": 0.9702100415687936,
+      "sim_global_const": 0.97021,
+      "sim_per_tile_const": 0.972696,
+      "gain_over_current": 0.002486,
+      "reaches_gate_per_tile": false,
+      "tile_grid": 24,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759"
+    },
+    {
+      "scene": "help",
+      "current_sim": 0.839432182957432,
+      "sim_global_const": 0.839432,
+      "sim_per_tile_const": 0.904779,
+      "gain_over_current": 0.065347,
+      "reaches_gate_per_tile": false,
+      "tile_grid": 24,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759"
+    },
+    {
+      "scene": "lottery",
+      "current_sim": 0.9835808689865397,
+      "sim_global_const": 0.983581,
+      "sim_per_tile_const": 0.985725,
+      "gain_over_current": 0.002144,
+      "reaches_gate_per_tile": false,
+      "tile_grid": 24,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759"
+    },
+    {
+      "scene": "missing",
+      "current_sim": 0.8761380684114441,
+      "sim_global_const": 0.876138,
+      "sim_per_tile_const": 0.903319,
+      "gain_over_current": 0.02718,
+      "reaches_gate_per_tile": false,
+      "tile_grid": 24,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759"
+    },
+    {
+      "scene": "operator",
+      "current_sim": 0.7686553835330429,
+      "sim_global_const": 0.768655,
+      "sim_per_tile_const": 0.91834,
+      "gain_over_current": 0.149684,
+      "reaches_gate_per_tile": false,
+      "tile_grid": 24,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759"
+    },
+    {
+      "scene": "recruit",
+      "current_sim": 0.8860348978265186,
+      "sim_global_const": 0.886035,
+      "sim_per_tile_const": 0.89429,
+      "gain_over_current": 0.008255,
+      "reaches_gate_per_tile": false,
+      "tile_grid": 24,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759"
+    },
+    {
+      "scene": "state",
+      "current_sim": 0.9909337226595012,
+      "sim_global_const": 0.990934,
+      "sim_per_tile_const": 0.991084,
+      "gain_over_current": 0.00015,
+      "reaches_gate_per_tile": true,
+      "tile_grid": 24,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759"
+    }
+  ]
+}

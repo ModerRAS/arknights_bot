@@ -1,0 +1,100 @@
+{
+  "provenance": "pre-registered element-mapping criterion (task7, v2 amended)",
+  "registered_at_utc": "2026-10-02T12:40:00Z",
+  "registered_before_systematic_run": true,
+  "amendment_v2": {
+    "at": "2026-10-02T12:55:00Z",
+    "trigger": "对照 POS_flat_filled_region 在写定后立刻失败（observed=False），经查是我的对照期望写反了，而它暴露的是仪器缺陷：",
+    "defect": "is_empty 只看结构（ink_fraction）。一个**被正确渲染的纯色元素**（例如声明了 background-color 的 div）结构为零，会被判成「空」⇒ O1 会把一个画对了的纯色元素误报成「声明了没画」。",
+    "fix": "is_empty := (ink_fraction < T_empty) AND (众数色未命中任何声明色，容差 2)。即「既没有结构、颜色也不像任何声明色」才算空。",
+    "classification_rules_before_after": "O1/O2/O3 的结构不变，只是把单条件 ink_fraction<T_empty 换成两条件合取。",
+    "data_seen_before_amendment": "四个洞的渲染裁图肉眼判读（已在 v1 的 disclosure 里登记）；未运行过 measure 阶段，未见过任何 ink_fraction/modal_color 数值。"
+  },
+  "disclosure_reading_order": "四个洞的渲染裁图曾被肉眼看过（enemy/operator/box-detail/lottery），本 instrument 是在那次判读之后写定的。披露目的：让下一个人知道顺序。定量判据（下面的阈值与分类函数）不依赖那次判读；判读只影响了 actual_cause 的措辞小标签，不影响三种结局的判定规则。",
+  "P1_gate": {
+    "rule": "验收（对照）先跑，通过后才允许跑映射测量；映射输出在对照通过前不得出现在 stdout/stderr。",
+    "structural_enforcement": "--stage controls 先跑并写 controls.json；--stage measure 先 json.load 读 controls.json，controls_pass!=true 则 SystemExit(2)；measure 阶段只写 result.json，stdout/stderr 0 字节。",
+    "teeth_test_required": "必须实测一次「抽掉闸门输入 → 真的拒绝」，并把 exit code 写进报告。防御机制本身必须被证明会咬。"
+  },
+  "process_B": {
+    "rule": "读结构未知的 JSON 第一步先 dump 键名，不许凭直觉猜字段名。",
+    "applied": "本轮读 discriminator/result.json 前先 print 了 TOP KEYS / row keys / largest_hole keys。",
+    "why": "猜错的后果不是报错，而是一个看起来干净的 0。"
+  },
+  "inputs": {
+    "holes": "tmp/residual/discriminator/result.json @ 4584759（B_after=4 的 survivors）",
+    "render": "tmp/pixel-compare/<scene>/new.png",
+    "declarations_only": "template/<T>.tmpl 的 <style> 与 body；含其引用的共享样式表路径只做登记，不据以取值",
+    "scale": "manifest.json 的 scale（像素↔CSS 换算）",
+    "baseline_use": "基线图**不作为「该画什么」的来源**；仅在需要时作佐证，且必须标注 inferred。"
+  },
+  "measurements": {
+    "ink_fraction": {
+      "definition": "洞区内，若某像素的 3x3 邻域亮度极差 > T_ink_range(=2)，记为「含结构」像素。ink_fraction = 含结构像素数 / 洞区像素数。",
+      "meaning": "ink_fraction 高 ⇒ 洞区里有被画出来的东西 ⇒ 该洞不是「元素没画」。"
+    },
+    "modal_color": {
+      "definition": "洞区内出现次数最多的 RGB（众数色），及其占比 modal_share。",
+      "purpose": "与模板 <style> 里声明的颜色逐一比对，判断该区域是否被声明色填充。"
+    },
+    "declared_colors": {
+      "definition": "从 <style> 规则里抽出全部 #rgb/#rrggbb（以及常见具名色），去重。",
+      "match_tolerance": 2,
+      "meaning": "众数色命中某个声明色 ⇒ 该区域被声明色填充 ⇒ 对应元素在场；未命中任何声明色 ⇒ 填色来源不是声明里的任何一个。"
+    },
+    "declared_geometry_candidates": {
+      "definition": "从 <style> 与行内 style 抽出所有显式 width/height 的规则（按选择器归组），换算到像素（×scale）。候选匹配判据：|log(cand_w/hole_w)| 与 |log(cand_h/hole_h)| 均 ≤ log(2)，即两个维度都在洞的 [0.5x, 2x] 内。",
+      "why_factor_2": "洞的边界是 tile 对齐的（24 格网格），本身就有 ±1 格的量化误差；洞又常常是多个同构元素（卡片网格、表格行）的并集，其包围盒不等于单个元素。允许 2 倍的覆盖是承认这两点，而不是为了凑候选。",
+      "purpose": "回答「洞里该画什么」时，只允许引用这些候选的符号名/选择器/行号。"
+    },
+    "onerror_fallback": {
+      "definition": "模板中形如 onerror=\"this.src='assets/common/amiya.png'\" 的回退声明计数（按模板）；渲染侧量法：取 assets/common/amiya.png，按各声明媒体元素的渲染尺寸缩放后，在 new.png 上做归一化互相关，找匹配个数。",
+      "caveat": "匹配个数是**下界**（缩放/抗锯齿会削弱相关性）；报告只声称「检出 N 处」，不声称「精确等于 N」。"
+    }
+  },
+  "outcomes": {
+    "O1_有声明未渲染": {
+      "rule": "ink_fraction < T_empty(=0.02) 且 declared_geometry_candidates 非空。",
+      "meaning": "洞区基本是空的，且有声明元素的几何与它对得上 ⇒ 该声明元素在渲染里没画。"
+    },
+    "O2_声明中无对应元素_or_是别的东西": {
+      "rule": "ink_fraction >= T_empty(=0.02)（洞区里有被画出来的内容）**或** declared_geometry_candidates 为空。",
+      "meaning": "该洞**不是**「漏画元素」。细分标签 actual_cause 由 modal_color × declared_colors 的比对结果给出：declared_color_matched / not_any_declared_color / geometry_only_no_size_declared。",
+      "why_this_bucket_matters": "Boss 裁定：这一栏不许硬凑成「缺某元素」，否则下一步会去画一个本来就不该画的东西。"
+    },
+    "O3_无法判定": {
+      "rule": "洞区为空（ink_fraction < 0.02）**且** declared_geometry_candidates 为空 —— 既无法在声明里找到几何对得上的元素，也无法据此说它「不是元素」。",
+      "meaning": "举证不足。需要渲染器布局信息（gg 的 Element.X/Y/W/H）才能定位，此时标未举证。"
+    },
+    "checksum": "O1 + O2 + O3 == 4（B_after 的存活数）",
+    "is_empty_definition": "is_empty := (ink_fraction < T_empty) AND (modal_color 未命中任何声明色，容差 match_tolerance=2)。两条件缺一不可：只判结构会把「画对了的纯色元素」误当成空。",
+    "T_empty": 0.02,
+    "T_empty_rationale": "声明常数，含义是「一个区域若 2% 以上的像素含结构，它就不是空的」。tile 尺度上一个 41x19 的格只要有一行文字就远超 2%。"
+  },
+  "order": {
+    "sequence": [
+      "enemy",
+      "operator",
+      "box-detail",
+      "lottery"
+    ],
+    "lottery_last_reasons_two_independent": [
+      "阈值敏感：frac 0.5341 距 R1=0.50 仅 0.0341 裕度，R1 抬到 0.55 就翻假。引用它必须带裕度。",
+      "未结历史：legacy fixture 复现链路在本机非确定（12 次渲染 6 个 sha）。该非确定性**不影响 Go 渲染侧门禁测量** —— 门禁比的是 gg 输出 vs 磁盘冻结基线，与 legacy 抓取链路无关。两条必须分开写；不得因此把 lottery 整条踢出排期，否则下一个人会把「legacy 抓取非确定」误当成「门禁测量不可信」。"
+    ]
+  },
+  "forbidden": [
+    "从冻结基线图反推任何取值（洞的位置是残差测量，合法；洞里该画什么是设计事实，必须来自声明）",
+    "改任何渲染代码 / 改计分代码 / commit / push / 新建工作树",
+    "在禁碰树 ark_nights_bot-satori-yoga-skia-go 上渲染或落产物",
+    "在 controls 通过之前让任何映射结果到达 stdout/stderr"
+  ],
+  "premise_fix_task8": {
+    "at": "2026-10-02T15:25:00Z",
+    "from": "平坦 => 空（检测器说『这里本该有东西却没画』）",
+    "to": "平坦 => 沉默（检测器在此没有发言权）",
+    "code_change": "premise_survey.py 的内洞判定不再输出任何真值语义字段；改为 bucket='silent_not_painted'，内洞只作为『待查区域』输出。",
+    "scope": "B 类已闭合，本轮只修仪器、不重跑 B（没有新的洞假设）。",
+    "verification": "闸门验牙齿第 4 次：移走闸门输入必须 REFUSED/exit=2/无结果文件；measure 阶段 stdout/stderr 必须 0 字节。"
+  }
+}

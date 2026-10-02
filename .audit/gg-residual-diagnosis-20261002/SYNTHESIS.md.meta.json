@@ -1,0 +1,7 @@
+{
+  "provenance": "retroactive-migration",
+  "original_path": "C:/WorkSpace/Golang/.lead2-reports/SYNTHESIS-draft.md",
+  "measured_at": "feature/synthesis of tasks 1-12",
+  "single_base": "none",
+  "measured_at_base": "cross-tree: consolidate/gg-mainline@4584759 + arknights_bot-satori@b946661 + arknights_bot-satori-yoga-skia-go@3704262 + arknights_bot-gg-card-atomic@d939c38 (no single base; synthesis)"
+}

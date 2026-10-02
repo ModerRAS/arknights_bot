@@ -1,0 +1,557 @@
+{
+  "instrument_provenance": "pre-registered element-mapping criterion (task7, v2 amended)",
+  "outcome_counts": {
+    "O2_声明中无对应元素_or_是别的东西": 4
+  },
+  "checksum_outcomes_sum_equals_survivors": true,
+  "n_survivors": 4,
+  "rows": [
+    {
+      "scene": "enemy",
+      "template": "Enemy.tmpl",
+      "scale": 1.5,
+      "hole_pixel_box": [
+        41,
+        171,
+        942,
+        417
+      ],
+      "hole_css_box": [
+        27.3,
+        114.0,
+        601.3,
+        164.7
+      ],
+      "residual_share": 0.44922,
+      "frac_diff": 0.99988,
+      "frac_diff_margin_over_R1": 0.4999,
+      "ink_fraction": 0.10247,
+      "modal_color": [
+        40,
+        42,
+        43
+      ],
+      "modal_share": 0.9105,
+      "declared_colour_hits": [],
+      "n_declared_colours": 7,
+      "declared_geometry_candidates": [
+        {
+          "selector": "width: 656px;",
+          "line": 9,
+          "width_px": 984.0,
+          "height_px": null,
+          "match_w": true,
+          "match_h": false,
+          "raw": "width: 656px;"
+        },
+        {
+          "selector": "width: 656px;",
+          "line": 18,
+          "width_px": 984.0,
+          "height_px": null,
+          "match_w": true,
+          "match_h": false,
+          "raw": "width: 656px;"
+        },
+        {
+          "selector": "width: 656px;",
+          "line": 30,
+          "width_px": 984.0,
+          "height_px": null,
+          "match_w": true,
+          "match_h": false,
+          "raw": "width: 656px;"
+        }
+      ],
+      "n_candidates": 3,
+      "declared_media_elements": [
+        {
+          "tag": "img",
+          "line": 65,
+          "class_": null,
+          "id_": null,
+          "has_onerror_fallback": true,
+          "src": "{{.Pic}}"
+        }
+      ],
+      "stylesheets": [
+        {
+          "href": "/assets/css/common.css",
+          "line": 5
+        }
+      ],
+      "outcome": "O2_声明中无对应元素_or_是别的东西",
+      "actual_cause": "content_present_colour_matches_no_declaration",
+      "onerror_fallback": {
+        "declared_onerror_elements": 1,
+        "fallback_asset_exists": true,
+        "detected": 0,
+        "note": "模板尺寸超过画布，未检"
+      },
+      "hits": [
+        {
+          "pixel_box": [
+            41,
+            171,
+            942,
+            417
+          ],
+          "area": 222794,
+          "differing_pixels": 222768,
+          "frac_diff": 0.99988,
+          "share_of_canvas_residual": 0.44922,
+          "R1_area": true,
+          "R2_materiality": true,
+          "verdict_real_target": true,
+          "boss_centre_pixel_differs": true,
+          "boss_rule_says_real": true,
+          "disagreement": false,
+          "old_flat_in_hole": false,
+          "area_frac_of_canvas": 0.47467
+        },
+        {
+          "pixel_box": [
+            41,
+            19,
+            163,
+            132
+          ],
+          "area": 14022,
+          "differing_pixels": 14022,
+          "frac_diff": 1.0,
+          "share_of_canvas_residual": 0.02666,
+          "R1_area": true,
+          "R2_materiality": false,
+          "verdict_real_target": false,
+          "boss_centre_pixel_differs": true,
+          "boss_rule_says_real": true,
+          "disagreement": true,
+          "old_flat_in_hole": false,
+          "area_frac_of_canvas": 0.02987
+        }
+      ],
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759e18fb9f4d17ba530b3d2cdf1bfb322c47"
+    },
+    {
+      "scene": "operator",
+      "template": "Operator.tmpl",
+      "scale": 1.5,
+      "hole_pixel_box": [
+        525,
+        600,
+        1424,
+        949
+      ],
+      "hole_css_box": [
+        350.0,
+        400.0,
+        600.0,
+        233.3
+      ],
+      "residual_share": 0.20366,
+      "frac_diff": 0.85111,
+      "frac_diff_margin_over_R1": 0.3511,
+      "ink_fraction": 0.11992,
+      "modal_color": [
+        40,
+        40,
+        40
+      ],
+      "modal_share": 0.7511,
+      "declared_colour_hits": [],
+      "n_declared_colours": 20,
+      "declared_geometry_candidates": [
+        {
+          "selector": "width: 1200px;",
+          "line": 9,
+          "width_px": 1800.0,
+          "height_px": null,
+          "match_w": true,
+          "match_h": false,
+          "raw": "width: 1200px;"
+        },
+        {
+          "selector": "width: 300px;",
+          "line": 46,
+          "width_px": 450.0,
+          "height_px": null,
+          "match_w": true,
+          "match_h": false,
+          "raw": "width: 300px;"
+        },
+        {
+          "selector": "width: 600px;",
+          "line": 63,
+          "width_px": 900.0,
+          "height_px": null,
+          "match_w": true,
+          "match_h": false,
+          "raw": "width: 600px;"
+        },
+        {
+          "selector": "width: 600px;",
+          "line": 77,
+          "width_px": 900.0,
+          "height_px": null,
+          "match_w": true,
+          "match_h": false,
+          "raw": "width: 600px;"
+        },
+        {
+          "selector": "width: 600px;",
+          "line": 87,
+          "width_px": 900.0,
+          "height_px": null,
+          "match_w": true,
+          "match_h": false,
+          "raw": "width: 600px;"
+        }
+      ],
+      "n_candidates": 5,
+      "declared_media_elements": [
+        {
+          "tag": "img",
+          "line": 114,
+          "class_": null,
+          "id_": "painting",
+          "has_onerror_fallback": false,
+          "src": "{{.Painting}}"
+        },
+        {
+          "tag": "img",
+          "line": 148,
+          "class_": "potential",
+          "id_": null,
+          "has_onerror_fallback": false,
+          "src": "/assets/box/Potential_{{.Rank}}.png"
+        },
+        {
+          "tag": "img",
+          "line": 158,
+          "class_": null,
+          "id_": null,
+          "has_onerror_fallback": false,
+          "src": "/assets/box/{{.OP.Profession}}.png"
+        },
+        {
+          "tag": "img",
+          "line": 160,
+          "class_": null,
+          "id_": null,
+          "has_onerror_fallback": false,
+          "src": "/assets/box/Rarity_{{.OP.Rarity}}.png"
+        },
+        {
+          "tag": "img",
+          "line": 222,
+          "class_": null,
+          "id_": null,
+          "has_onerror_fallback": false,
+          "src": "{{.Icon}}"
+        },
+        {
+          "tag": "img",
+          "line": 235,
+          "class_": "skill",
+          "id_": null,
+          "has_onerror_fallback": true,
+          "src": "{{.Icon}}"
+        }
+      ],
+      "stylesheets": [
+        {
+          "href": "/assets/css/common.css",
+          "line": 5
+        }
+      ],
+      "outcome": "O2_声明中无对应元素_or_是别的东西",
+      "actual_cause": "content_present_colour_matches_no_declaration",
+      "onerror_fallback": {
+        "declared_onerror_elements": 1,
+        "fallback_asset_exists": true,
+        "detected": 0,
+        "note": "模板尺寸超过画布，未检"
+      },
+      "hits": [
+        {
+          "pixel_box": [
+            525,
+            600,
+            1424,
+            949
+          ],
+          "area": 315000,
+          "differing_pixels": 268099,
+          "frac_diff": 0.85111,
+          "share_of_canvas_residual": 0.20366,
+          "R1_area": true,
+          "R2_materiality": true,
+          "verdict_real_target": true,
+          "boss_centre_pixel_differs": true,
+          "boss_rule_says_real": true,
+          "disagreement": false,
+          "old_flat_in_hole": false,
+          "area_frac_of_canvas": 0.14583
+        }
+      ],
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759e18fb9f4d17ba530b3d2cdf1bfb322c47"
+    },
+    {
+      "scene": "box-detail",
+      "template": "BoxDetail.tmpl",
+      "scale": 1.5,
+      "hole_pixel_box": [
+        150,
+        209,
+        689,
+        263
+      ],
+      "hole_css_box": [
+        100.0,
+        139.3,
+        360.0,
+        36.7
+      ],
+      "residual_share": 0.20254,
+      "frac_diff": 0.99929,
+      "frac_diff_margin_over_R1": 0.4993,
+      "ink_fraction": 0.00354,
+      "modal_color": [
+        37,
+        39,
+        40
+      ],
+      "modal_share": 0.995,
+      "declared_colour_hits": [],
+      "n_declared_colours": 2,
+      "declared_geometry_candidates": [],
+      "n_candidates": 0,
+      "declared_media_elements": [
+        {
+          "tag": "img",
+          "line": 39,
+          "class_": null,
+          "id_": null,
+          "has_onerror_fallback": true,
+          "src": "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/"
+        },
+        {
+          "tag": "img",
+          "line": 40,
+          "class_": null,
+          "id_": null,
+          "has_onerror_fallback": false,
+          "src": "/assets/box/Evolve_{{.EvolvePhase}}.png"
+        },
+        {
+          "tag": "img",
+          "line": 41,
+          "class_": null,
+          "id_": null,
+          "has_onerror_fallback": false,
+          "src": "/assets/box/Potential_{{.PotentialRank}}.png"
+        },
+        {
+          "tag": "img",
+          "line": 45,
+          "class_": null,
+          "id_": null,
+          "has_onerror_fallback": false,
+          "src": "https://web.hycdn.cn/arknights/game/assets/char_skill/{{.Id}"
+        },
+        {
+          "tag": "img",
+          "line": 52,
+          "class_": null,
+          "id_": null,
+          "has_onerror_fallback": false,
+          "src": "https://web.hycdn.cn/arknights/game/assets/uniequip/type/ico"
+        }
+      ],
+      "stylesheets": [
+        {
+          "href": "/assets/css/common.css",
+          "line": 5
+        }
+      ],
+      "outcome": "O2_声明中无对应元素_or_是别的东西",
+      "actual_cause": "geometry_only_no_size_declared",
+      "onerror_fallback": {
+        "declared_onerror_elements": 1,
+        "fallback_asset_exists": true,
+        "probed_size_px": [
+          75,
+          75
+        ],
+        "best_normalised_correlation": 0.2727,
+        "detected": 0,
+        "note": "检出为下界；相关>0.90 记检出"
+      },
+      "hits": [
+        {
+          "pixel_box": [
+            150,
+            143,
+            689,
+            197
+          ],
+          "area": 29700,
+          "differing_pixels": 29668,
+          "frac_diff": 0.99892,
+          "share_of_canvas_residual": 0.20323,
+          "R1_area": true,
+          "R2_materiality": true,
+          "verdict_real_target": true,
+          "boss_centre_pixel_differs": true,
+          "boss_rule_says_real": true,
+          "disagreement": false,
+          "old_flat_in_hole": false,
+          "area_frac_of_canvas": 0.14744
+        },
+        {
+          "pixel_box": [
+            150,
+            209,
+            689,
+            263
+          ],
+          "area": 29700,
+          "differing_pixels": 29679,
+          "frac_diff": 0.99929,
+          "share_of_canvas_residual": 0.20254,
+          "R1_area": true,
+          "R2_materiality": true,
+          "verdict_real_target": true,
+          "boss_centre_pixel_differs": true,
+          "boss_rule_says_real": true,
+          "disagreement": false,
+          "old_flat_in_hole": false,
+          "area_frac_of_canvas": 0.14744
+        },
+        {
+          "pixel_box": [
+            180,
+            77,
+            689,
+            131
+          ],
+          "area": 28050,
+          "differing_pixels": 28045,
+          "frac_diff": 0.99982,
+          "share_of_canvas_residual": 0.12672,
+          "R1_area": true,
+          "R2_materiality": true,
+          "verdict_real_target": true,
+          "boss_centre_pixel_differs": true,
+          "boss_rule_says_real": true,
+          "disagreement": false,
+          "old_flat_in_hole": false,
+          "area_frac_of_canvas": 0.13925
+        },
+        {
+          "pixel_box": [
+            120,
+            11,
+            689,
+            65
+          ],
+          "area": 31350,
+          "differing_pixels": 31328,
+          "frac_diff": 0.9993,
+          "share_of_canvas_residual": 0.12478,
+          "R1_area": true,
+          "R2_materiality": true,
+          "verdict_real_target": true,
+          "boss_centre_pixel_differs": true,
+          "boss_rule_says_real": true,
+          "disagreement": false,
+          "old_flat_in_hole": false,
+          "area_frac_of_canvas": 0.15563
+        }
+      ],
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759e18fb9f4d17ba530b3d2cdf1bfb322c47"
+    },
+    {
+      "scene": "lottery",
+      "template": "Lottery.tmpl",
+      "scale": 1.5,
+      "hole_pixel_box": [
+        61,
+        69,
+        609,
+        1586
+      ],
+      "hole_css_box": [
+        40.7,
+        46.0,
+        366.0,
+        1012.0
+      ],
+      "residual_share": 0.31847,
+      "frac_diff": 0.53409,
+      "frac_diff_margin_over_R1": 0.0341,
+      "ink_fraction": 0.1088,
+      "modal_color": [
+        26,
+        26,
+        26
+      ],
+      "modal_share": 0.5452,
+      "declared_colour_hits": [
+        {
+          "rgb": [
+            26,
+            26,
+            26
+          ],
+          "decl": {
+            "hex": "#1A1A1A",
+            "line": 9,
+            "raw": "--container-bg: #1a1a1a;"
+          }
+        }
+      ],
+      "n_declared_colours": 10,
+      "declared_geometry_candidates": [],
+      "n_candidates": 0,
+      "declared_media_elements": [],
+      "stylesheets": [],
+      "outcome": "O2_声明中无对应元素_or_是别的东西",
+      "actual_cause": "declared_color_matched_content_present",
+      "onerror_fallback": {
+        "declared_onerror_elements": 0,
+        "fallback_asset_exists": true,
+        "probed_size_px": [
+          1350,
+          1350
+        ],
+        "best_normalised_correlation": 0.006,
+        "detected": 0,
+        "note": "检出为下界；相关>0.90 记检出"
+      },
+      "hits": [
+        {
+          "pixel_box": [
+            61,
+            69,
+            609,
+            1586
+          ],
+          "area": 833382,
+          "differing_pixels": 445097,
+          "frac_diff": 0.53409,
+          "share_of_canvas_residual": 0.31847,
+          "R1_area": true,
+          "R2_materiality": true,
+          "verdict_real_target": true,
+          "boss_centre_pixel_differs": true,
+          "boss_rule_says_real": true,
+          "disagreement": false,
+          "old_flat_in_hole": false,
+          "area_frac_of_canvas": 0.3394
+        }
+      ],
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759e18fb9f4d17ba530b3d2cdf1bfb322c47"
+    }
+  ]
+}

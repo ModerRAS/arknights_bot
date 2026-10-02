@@ -1,0 +1,925 @@
+{
+  "instrument_provenance": "pre-registered element-mapping criterion (task7, v2 amended)",
+  "note": "premise survey over all 16 manifest scenes",
+  "rows": [
+    {
+      "scene": "base",
+      "template": "Base.tmpl",
+      "current_sim": 0.9707251279217189,
+      "nonflat_frac_scene": 0.08046,
+      "flat_tile_frac_new": 0.6094,
+      "shared_flat_frac": 0.4774,
+      "n_interior_holes": 5,
+      "n_hits_Amin": 4,
+      "holes": [
+        {
+          "pixel_box": [
+            897,
+            570,
+            1586,
+            721
+          ],
+          "area_frac": 0.06862,
+          "min_dim": 0.16558,
+          "meets_Amin": true,
+          "frac_diff": 0.257,
+          "share": 0.082,
+          "R1R2_pass": false
+        },
+        {
+          "pixel_box": [
+            69,
+            570,
+            827,
+            721
+          ],
+          "area_frac": 0.07548,
+          "min_dim": 0.16558,
+          "meets_Amin": true,
+          "frac_diff": 0.1976,
+          "share": 0.0607,
+          "R1R2_pass": false
+        },
+        {
+          "pixel_box": [
+            897,
+            760,
+            1586,
+            873
+          ],
+          "area_frac": 0.05146,
+          "min_dim": 0.12418,
+          "meets_Amin": true,
+          "frac_diff": 0.1235,
+          "share": 0.034,
+          "R1R2_pass": false
+        },
+        {
+          "pixel_box": [
+            138,
+            760,
+            827,
+            873
+          ],
+          "area_frac": 0.05146,
+          "min_dim": 0.12418,
+          "meets_Amin": true,
+          "frac_diff": 0.15,
+          "share": 0.0463,
+          "R1R2_pass": false
+        }
+      ],
+      "colour_evidence": {
+        "new_modal": [
+          33,
+          38,
+          47
+        ],
+        "old_modal": [
+          33,
+          38,
+          47
+        ],
+        "new_matches_declared": true,
+        "old_matches_declared": true,
+        "new_hit": [
+          {
+            "rgb": [
+              33,
+              38,
+              47
+            ],
+            "decl": "border: 1px solid #21262f;",
+            "line": 16
+          },
+          {
+            "rgb": [
+              33,
+              38,
+              47
+            ],
+            "decl": "background-color: #21262f;",
+            "line": 20
+          }
+        ],
+        "old_hit": [
+          {
+            "rgb": [
+              33,
+              38,
+              47
+            ],
+            "decl": "border: 1px solid #21262f;",
+            "line": 16
+          },
+          {
+            "rgb": [
+              33,
+              38,
+              47
+            ],
+            "decl": "background-color: #21262f;",
+            "line": 20
+          }
+        ],
+        "verdict": "both_match_declaration"
+      },
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759"
+    },
+    {
+      "scene": "box",
+      "template": "Box.tmpl",
+      "current_sim": 0.8250372524631744,
+      "nonflat_frac_scene": 0.52597,
+      "flat_tile_frac_new": 0.1667,
+      "shared_flat_frac": 0.1146,
+      "n_interior_holes": 0,
+      "n_hits_Amin": 0,
+      "holes": [],
+      "colour_evidence": null,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759"
+    },
+    {
+      "scene": "box-detail",
+      "template": "BoxDetail.tmpl",
+      "current_sim": 0.8784374903269025,
+      "nonflat_frac_scene": 0.13533,
+      "flat_tile_frac_new": 0.5967,
+      "shared_flat_frac": 0.1067,
+      "n_interior_holes": 12,
+      "n_hits_Amin": 4,
+      "holes": [
+        {
+          "pixel_box": [
+            150,
+            209,
+            689,
+            263
+          ],
+          "area_frac": 0.14744,
+          "min_dim": 0.19713,
+          "meets_Amin": true,
+          "frac_diff": 0.9993,
+          "share": 0.2025,
+          "R1R2_pass": true
+        },
+        {
+          "pixel_box": [
+            120,
+            11,
+            689,
+            65
+          ],
+          "area_frac": 0.15563,
+          "min_dim": 0.19713,
+          "meets_Amin": true,
+          "frac_diff": 0.9993,
+          "share": 0.1248,
+          "R1R2_pass": true
+        },
+        {
+          "pixel_box": [
+            180,
+            77,
+            689,
+            131
+          ],
+          "area_frac": 0.13925,
+          "min_dim": 0.19713,
+          "meets_Amin": true,
+          "frac_diff": 0.9998,
+          "share": 0.1267,
+          "R1R2_pass": true
+        },
+        {
+          "pixel_box": [
+            150,
+            143,
+            689,
+            197
+          ],
+          "area_frac": 0.14744,
+          "min_dim": 0.19713,
+          "meets_Amin": true,
+          "frac_diff": 0.9989,
+          "share": 0.2032,
+          "R1R2_pass": true
+        }
+      ],
+      "colour_evidence": {
+        "new_modal": [
+          37,
+          39,
+          40
+        ],
+        "old_modal": [
+          46,
+          48,
+          49
+        ],
+        "new_matches_declared": false,
+        "old_matches_declared": true,
+        "new_hit": [],
+        "old_hit": [
+          {
+            "rgb": [
+              46,
+              48,
+              49
+            ],
+            "decl": "background-color: #2e3031;",
+            "line": 9
+          }
+        ],
+        "verdict": "renderer_used_non_declared_colour"
+      },
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759"
+    },
+    {
+      "scene": "box-summary",
+      "template": "BoxSummary.tmpl",
+      "current_sim": 0.8809750314141331,
+      "nonflat_frac_scene": 0.15009,
+      "flat_tile_frac_new": 0.4219,
+      "shared_flat_frac": 0.1198,
+      "n_interior_holes": 13,
+      "n_hits_Amin": 0,
+      "holes": [
+        {
+          "pixel_box": [
+            112,
+            420,
+            447,
+            479
+          ],
+          "area_frac": 0.02065,
+          "min_dim": 0.08299,
+          "meets_Amin": false,
+          "frac_diff": 1.0,
+          "share": 0.0213,
+          "R1R2_pass": false
+        },
+        {
+          "pixel_box": [
+            112,
+            150,
+            447,
+            179
+          ],
+          "area_frac": 0.01033,
+          "min_dim": 0.04149,
+          "meets_Amin": false,
+          "frac_diff": 1.0,
+          "share": 0.0137,
+          "R1R2_pass": false
+        },
+        {
+          "pixel_box": [
+            112,
+            240,
+            447,
+            269
+          ],
+          "area_frac": 0.01033,
+          "min_dim": 0.04149,
+          "meets_Amin": false,
+          "frac_diff": 1.0,
+          "share": 0.0129,
+          "R1R2_pass": false
+        },
+        {
+          "pixel_box": [
+            112,
+            330,
+            447,
+            359
+          ],
+          "area_frac": 0.01033,
+          "min_dim": 0.04149,
+          "meets_Amin": false,
+          "frac_diff": 1.0,
+          "share": 0.0106,
+          "R1R2_pass": false
+        }
+      ],
+      "colour_evidence": {
+        "new_modal": [
+          27,
+          29,
+          30
+        ],
+        "old_modal": [
+          46,
+          48,
+          49
+        ],
+        "new_matches_declared": false,
+        "old_matches_declared": true,
+        "new_hit": [],
+        "old_hit": [
+          {
+            "rgb": [
+              46,
+              48,
+              49
+            ],
+            "decl": "background-color: #2e3031;",
+            "line": 9
+          }
+        ],
+        "verdict": "renderer_used_non_declared_colour"
+      },
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759"
+    },
+    {
+      "scene": "calendar",
+      "template": "Calendar.tmpl",
+      "current_sim": 0.99432366536721,
+      "nonflat_frac_scene": 0.04269,
+      "flat_tile_frac_new": 0.6059,
+      "shared_flat_frac": 0.5556,
+      "n_interior_holes": 2,
+      "n_hits_Amin": 2,
+      "holes": [
+        {
+          "pixel_box": [
+            360,
+            804,
+            959,
+            1004
+          ],
+          "area_frac": 0.02585,
+          "min_dim": 0.12407,
+          "meets_Amin": true,
+          "frac_diff": 0.0142,
+          "share": 0.0153,
+          "R1R2_pass": false
+        },
+        {
+          "pixel_box": [
+            1080,
+            804,
+            1319,
+            1004
+          ],
+          "area_frac": 0.01034,
+          "min_dim": 0.08333,
+          "meets_Amin": true,
+          "frac_diff": 1.0,
+          "share": 0.0076,
+          "R1R2_pass": false
+        }
+      ],
+      "colour_evidence": {
+        "new_modal": [
+          255,
+          255,
+          255
+        ],
+        "old_modal": [
+          255,
+          255,
+          255
+        ],
+        "new_matches_declared": true,
+        "old_matches_declared": true,
+        "new_hit": [
+          {
+            "rgb": [
+              255,
+              255,
+              255
+            ],
+            "decl": "color: #ffffff;",
+            "line": 45
+          },
+          {
+            "rgb": [
+              255,
+              255,
+              255
+            ],
+            "decl": "color: #ffffff !important;",
+            "line": 147
+          }
+        ],
+        "old_hit": [
+          {
+            "rgb": [
+              255,
+              255,
+              255
+            ],
+            "decl": "color: #ffffff;",
+            "line": 45
+          },
+          {
+            "rgb": [
+              255,
+              255,
+              255
+            ],
+            "decl": "color: #ffffff !important;",
+            "line": 147
+          }
+        ],
+        "verdict": "both_match_declaration"
+      },
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759"
+    },
+    {
+      "scene": "card",
+      "template": "Card.tmpl",
+      "current_sim": 0.9601504863664215,
+      "nonflat_frac_scene": 0.59076,
+      "flat_tile_frac_new": 0.0851,
+      "shared_flat_frac": 0.059,
+      "n_interior_holes": 1,
+      "n_hits_Amin": 0,
+      "holes": [
+        {
+          "pixel_box": [
+            954,
+            90,
+            1006,
+            119
+          ],
+          "area_frac": 0.00173,
+          "min_dim": 0.04141,
+          "meets_Amin": false,
+          "frac_diff": 0.1918,
+          "share": 0.0,
+          "R1R2_pass": false
+        }
+      ],
+      "colour_evidence": {
+        "new_modal": [
+          48,
+          48,
+          48
+        ],
+        "old_modal": [
+          49,
+          49,
+          49
+        ],
+        "new_matches_declared": false,
+        "old_matches_declared": false,
+        "new_hit": [],
+        "old_hit": [],
+        "verdict": "neither_matches_declaration"
+      },
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759"
+    },
+    {
+      "scene": "depot",
+      "template": "Depot.tmpl",
+      "current_sim": 0.9235233358635896,
+      "nonflat_frac_scene": 0.06704,
+      "flat_tile_frac_new": 0.9022,
+      "shared_flat_frac": 0.4615,
+      "n_interior_holes": 0,
+      "n_hits_Amin": 0,
+      "holes": [],
+      "colour_evidence": null,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759"
+    },
+    {
+      "scene": "enemy",
+      "template": "Enemy.tmpl",
+      "current_sim": 0.9195071737682478,
+      "nonflat_frac_scene": 0.09117,
+      "flat_tile_frac_new": 0.6667,
+      "shared_flat_frac": 0.3283,
+      "n_interior_holes": 3,
+      "n_hits_Amin": 2,
+      "holes": [
+        {
+          "pixel_box": [
+            41,
+            171,
+            942,
+            417
+          ],
+          "area_frac": 0.47467,
+          "min_dim": 0.51782,
+          "meets_Amin": true,
+          "frac_diff": 0.9999,
+          "share": 0.4492,
+          "R1R2_pass": true
+        },
+        {
+          "pixel_box": [
+            41,
+            19,
+            163,
+            132
+          ],
+          "area_frac": 0.02987,
+          "min_dim": 0.125,
+          "meets_Amin": true,
+          "frac_diff": 1.0,
+          "share": 0.0267,
+          "R1R2_pass": false
+        },
+        {
+          "pixel_box": [
+            82,
+            171,
+            163,
+            265
+          ],
+          "area_frac": 0.0166,
+          "min_dim": 0.08333,
+          "meets_Amin": false,
+          "frac_diff": 0.9968,
+          "share": 0.0306,
+          "R1R2_pass": false
+        }
+      ],
+      "colour_evidence": {
+        "new_modal": [
+          40,
+          42,
+          43
+        ],
+        "old_modal": [
+          51,
+          51,
+          51
+        ],
+        "new_matches_declared": false,
+        "old_matches_declared": true,
+        "new_hit": [],
+        "old_hit": [
+          {
+            "rgb": [
+              50,
+              51,
+              50
+            ],
+            "decl": "background-color: #323332;",
+            "line": 8
+          },
+          {
+            "rgb": [
+              50,
+              51,
+              50
+            ],
+            "decl": "background-color: #323332 !important;",
+            "line": 15
+          }
+        ],
+        "verdict": "renderer_used_non_declared_colour"
+      },
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759"
+    },
+    {
+      "scene": "gacha",
+      "template": "Gacha.tmpl",
+      "current_sim": 0.9025141429411271,
+      "nonflat_frac_scene": 0.07024,
+      "flat_tile_frac_new": 0.4462,
+      "shared_flat_frac": 0.0816,
+      "n_interior_holes": 0,
+      "n_hits_Amin": 0,
+      "holes": [],
+      "colour_evidence": null,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759"
+    },
+    {
+      "scene": "headhunt",
+      "template": "Headhunt.tmpl",
+      "current_sim": 0.9702100415687936,
+      "nonflat_frac_scene": 0.54641,
+      "flat_tile_frac_new": 0.0521,
+      "shared_flat_frac": 0.033,
+      "n_interior_holes": 1,
+      "n_hits_Amin": 0,
+      "holes": [
+        {
+          "pixel_box": [
+            129,
+            120,
+            171,
+            167
+          ],
+          "area_frac": 0.00342,
+          "min_dim": 0.04099,
+          "meets_Amin": false,
+          "frac_diff": 0.39,
+          "share": 0.0001,
+          "R1R2_pass": false
+        }
+      ],
+      "colour_evidence": {
+        "new_modal": [
+          7,
+          7,
+          7
+        ],
+        "old_modal": [
+          8,
+          8,
+          8
+        ],
+        "new_matches_declared": false,
+        "old_matches_declared": false,
+        "new_hit": [],
+        "old_hit": [],
+        "verdict": "neither_matches_declaration"
+      },
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759"
+    },
+    {
+      "scene": "help",
+      "template": "Help.tmpl",
+      "current_sim": 0.839432182957432,
+      "nonflat_frac_scene": 0.081,
+      "flat_tile_frac_new": 0.2569,
+      "shared_flat_frac": 0.0312,
+      "n_interior_holes": 0,
+      "n_hits_Amin": 0,
+      "holes": [],
+      "colour_evidence": null,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759"
+    },
+    {
+      "scene": "lottery",
+      "template": "Lottery.tmpl",
+      "current_sim": 0.9835808689865397,
+      "nonflat_frac_scene": 0.12644,
+      "flat_tile_frac_new": 0.1042,
+      "shared_flat_frac": 0.0312,
+      "n_interior_holes": 2,
+      "n_hits_Amin": 1,
+      "holes": [
+        {
+          "pixel_box": [
+            61,
+            69,
+            609,
+            1586
+          ],
+          "area_frac": 0.3394,
+          "min_dim": 0.37271,
+          "meets_Amin": true,
+          "frac_diff": 0.5341,
+          "share": 0.3185,
+          "R1R2_pass": true
+        },
+        {
+          "pixel_box": [
+            854,
+            69,
+            1402,
+            137
+          ],
+          "area_frac": 0.01543,
+          "min_dim": 0.04139,
+          "meets_Amin": false,
+          "frac_diff": 0.0,
+          "share": 0.0,
+          "R1R2_pass": false
+        }
+      ],
+      "colour_evidence": {
+        "new_modal": [
+          26,
+          26,
+          26
+        ],
+        "old_modal": [
+          34,
+          34,
+          34
+        ],
+        "new_matches_declared": true,
+        "old_matches_declared": true,
+        "new_hit": [
+          {
+            "rgb": [
+              26,
+              26,
+              26
+            ],
+            "decl": "--container-bg: #1a1a1a;",
+            "line": 9
+          }
+        ],
+        "old_hit": [
+          {
+            "rgb": [
+              34,
+              34,
+              34
+            ],
+            "decl": "--cell-bg: #222222;",
+            "line": 10
+          }
+        ],
+        "verdict": "both_match_declaration"
+      },
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759"
+    },
+    {
+      "scene": "missing",
+      "template": "Missing.tmpl",
+      "current_sim": 0.8761380684114441,
+      "nonflat_frac_scene": 0.35306,
+      "flat_tile_frac_new": 0.4236,
+      "shared_flat_frac": 0.3385,
+      "n_interior_holes": 0,
+      "n_hits_Amin": 0,
+      "holes": [],
+      "colour_evidence": null,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759"
+    },
+    {
+      "scene": "operator",
+      "template": "Operator.tmpl",
+      "current_sim": 0.7686553835330429,
+      "nonflat_frac_scene": 0.15442,
+      "flat_tile_frac_new": 0.4583,
+      "shared_flat_frac": 0.0747,
+      "n_interior_holes": 7,
+      "n_hits_Amin": 1,
+      "holes": [
+        {
+          "pixel_box": [
+            525,
+            600,
+            1424,
+            949
+          ],
+          "area_frac": 0.14583,
+          "min_dim": 0.29167,
+          "meets_Amin": true,
+          "frac_diff": 0.8511,
+          "share": 0.2037,
+          "R1R2_pass": true
+        },
+        {
+          "pixel_box": [
+            975,
+            250,
+            1424,
+            299
+          ],
+          "area_frac": 0.01042,
+          "min_dim": 0.04167,
+          "meets_Amin": false,
+          "frac_diff": 1.0,
+          "share": 0.0111,
+          "R1R2_pass": false
+        },
+        {
+          "pixel_box": [
+            1575,
+            250,
+            1724,
+            299
+          ],
+          "area_frac": 0.00347,
+          "min_dim": 0.04167,
+          "meets_Amin": false,
+          "frac_diff": 1.0,
+          "share": 0.0008,
+          "R1R2_pass": false
+        },
+        {
+          "pixel_box": [
+            1575,
+            400,
+            1724,
+            449
+          ],
+          "area_frac": 0.00347,
+          "min_dim": 0.04167,
+          "meets_Amin": false,
+          "frac_diff": 1.0,
+          "share": 0.0002,
+          "R1R2_pass": false
+        }
+      ],
+      "colour_evidence": {
+        "new_modal": [
+          40,
+          40,
+          40
+        ],
+        "old_modal": [
+          40,
+          40,
+          40
+        ],
+        "new_matches_declared": false,
+        "old_matches_declared": false,
+        "new_hit": [],
+        "old_hit": [],
+        "verdict": "neither_matches_declaration"
+      },
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759"
+    },
+    {
+      "scene": "recruit",
+      "template": "Recruit.tmpl",
+      "current_sim": 0.8860348978265186,
+      "nonflat_frac_scene": 0.36471,
+      "flat_tile_frac_new": 0.4497,
+      "shared_flat_frac": 0.3003,
+      "n_interior_holes": 0,
+      "n_hits_Amin": 0,
+      "holes": [],
+      "colour_evidence": null,
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759"
+    },
+    {
+      "scene": "state",
+      "template": "State.tmpl",
+      "current_sim": 0.9909337226595012,
+      "nonflat_frac_scene": 0.12202,
+      "flat_tile_frac_new": 0.5139,
+      "shared_flat_frac": 0.4635,
+      "n_interior_holes": 5,
+      "n_hits_Amin": 4,
+      "holes": [
+        {
+          "pixel_box": [
+            450,
+            399,
+            854,
+            461
+          ],
+          "area_frac": 0.04581,
+          "min_dim": 0.12353,
+          "meets_Amin": true,
+          "frac_diff": 0.9999,
+          "share": 0.0663,
+          "R1R2_pass": true
+        },
+        {
+          "pixel_box": [
+            45,
+            399,
+            404,
+            461
+          ],
+          "area_frac": 0.04072,
+          "min_dim": 0.12353,
+          "meets_Amin": true,
+          "frac_diff": 0.9997,
+          "share": 0.0406,
+          "R1R2_pass": false
+        },
+        {
+          "pixel_box": [
+            450,
+            315,
+            854,
+            356
+          ],
+          "area_frac": 0.03054,
+          "min_dim": 0.08235,
+          "meets_Amin": true,
+          "frac_diff": 0.9998,
+          "share": 0.0604,
+          "R1R2_pass": true
+        },
+        {
+          "pixel_box": [
+            90,
+            315,
+            404,
+            356
+          ],
+          "area_frac": 0.02376,
+          "min_dim": 0.08235,
+          "meets_Amin": true,
+          "frac_diff": 0.9999,
+          "share": 0.0289,
+          "R1R2_pass": false
+        }
+      ],
+      "colour_evidence": {
+        "new_modal": [
+          39,
+          40,
+          41
+        ],
+        "old_modal": [
+          38,
+          40,
+          41
+        ],
+        "new_matches_declared": false,
+        "old_matches_declared": false,
+        "new_hit": [],
+        "old_hit": [],
+        "verdict": "neither_matches_declaration"
+      },
+      "produced_by": "src/ggrender/pixel_test.go @ 4584759"
+    }
+  ]
+}

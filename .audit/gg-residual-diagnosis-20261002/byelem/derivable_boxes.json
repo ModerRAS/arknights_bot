@@ -1,0 +1,155 @@
+{
+  "per_template": {
+    "Base.tmpl": 0,
+    "Box.tmpl": 5,
+    "BoxDetail.tmpl": 0,
+    "BoxSummary.tmpl": 0,
+    "Calendar.tmpl": 0,
+    "Card.tmpl": 1,
+    "Depot.tmpl": 0,
+    "Enemy.tmpl": 0,
+    "Gacha.tmpl": 0,
+    "Headhunt.tmpl": 1,
+    "Help.tmpl": 0,
+    "Lottery.tmpl": 0,
+    "Missing.tmpl": 2,
+    "Operator.tmpl": 0,
+    "Recruit.tmpl": 1,
+    "State.tmpl": 3
+  },
+  "elements": [
+    {
+      "template": "Box.tmpl",
+      "selector": ".profession",
+      "line": 31,
+      "props": {
+        "width": 15.0,
+        "top": 5.0
+      },
+      "position": "absolute"
+    },
+    {
+      "template": "Box.tmpl",
+      "selector": ".rarity",
+      "line": 37,
+      "props": {
+        "width": 40.0,
+        "top": 5.0
+      },
+      "position": "absolute"
+    },
+    {
+      "template": "Box.tmpl",
+      "selector": ".evolve",
+      "line": 43,
+      "props": {
+        "width": 40.0,
+        "top": 80.0
+      },
+      "position": "absolute"
+    },
+    {
+      "template": "Box.tmpl",
+      "selector": ".level",
+      "line": 49,
+      "props": {
+        "width": 20.0,
+        "left": 5.0
+      },
+      "position": "absolute"
+    },
+    {
+      "template": "Box.tmpl",
+      "selector": ".potential",
+      "line": 59,
+      "props": {
+        "width": 30.0,
+        "top": 100.0
+      },
+      "position": "absolute"
+    },
+    {
+      "template": "Card.tmpl",
+      "selector": ".level",
+      "line": 106,
+      "props": {
+        "width": 25.0,
+        "left": 15.0
+      },
+      "position": "absolute"
+    },
+    {
+      "template": "Headhunt.tmpl",
+      "selector": "#main",
+      "line": 7,
+      "props": {
+        "width": 1024.0,
+        "height": 576.0,
+        "left": 25.0
+      },
+      "position": "absolute"
+    },
+    {
+      "template": "Missing.tmpl",
+      "selector": ".profession",
+      "line": 31,
+      "props": {
+        "width": 15.0,
+        "top": 5.0
+      },
+      "position": "absolute"
+    },
+    {
+      "template": "Missing.tmpl",
+      "selector": ".rarity",
+      "line": 37,
+      "props": {
+        "width": 40.0,
+        "top": 5.0
+      },
+      "position": "absolute"
+    },
+    {
+      "template": "Recruit.tmpl",
+      "selector": ".rarity",
+      "line": 34,
+      "props": {
+        "height": 20.0,
+        "left": 30.0
+      },
+      "position": "absolute"
+    },
+    {
+      "template": "State.tmpl",
+      "selector": "#campaign_recover_bg",
+      "line": 105,
+      "props": {
+        "width": 110.0,
+        "height": 25.0,
+        "left": 60.0
+      },
+      "position": "absolute"
+    },
+    {
+      "template": "State.tmpl",
+      "selector": "#trainee",
+      "line": 184,
+      "props": {
+        "width": 130.0,
+        "left": 922.0
+      },
+      "position": "absolute"
+    },
+    {
+      "template": "State.tmpl",
+      "selector": "#remain_secs_bg",
+      "line": 190,
+      "props": {
+        "width": 133.0,
+        "height": 25.0,
+        "left": 923.0
+      },
+      "position": "absolute"
+    }
+  ]
+}

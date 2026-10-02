@@ -1,0 +1,124 @@
+{
+  "instrument_provenance": "pre-registered region-fill substrate + stratification (task11)",
+  "controls": [
+    {
+      "control": "PC0_substrate_validation_PRECONDITION",
+      "passed": true,
+      "expect": "新基质能区分 实心块 / 细线（在任何分层阈值之前）",
+      "observed": {
+        "checks": [
+          {
+            "name": "solid_region_is_whole_block",
+            "observed": 1.0,
+            "expect": ">=0.95",
+            "ok": true
+          },
+          {
+            "name": "solid_SW_ge_8",
+            "observed": 13.3333,
+            "expect": ">=8",
+            "ok": true
+          },
+          {
+            "name": "thin_SW_le_3",
+            "observed": 0.9972,
+            "expect": "<=3",
+            "ok": true
+          },
+          {
+            "name": "solid_SW_gt_thin_SW",
+            "observed": [
+              13.3333,
+              0.9972
+            ],
+            "expect": "solid > thin",
+            "ok": true
+          }
+        ],
+        "note": "solid 40x20 与 1px 细线在同一底色上"
+      }
+    },
+    {
+      "control": "PC5_flat_bias_REGRESSION",
+      "passed": true,
+      "expect": "flat_bg share == 1.0 (task10: 1.0)",
+      "observed": 1.0
+    },
+    {
+      "control": "PC2_separator_REGRESSION",
+      "passed": true,
+      "expect": "sep_decor share >= 0.80 (task10: 1.0)",
+      "observed": 1.0
+    },
+    {
+      "control": "PC4_solid_vs_thin",
+      "passed": true,
+      "expect": "SW(solid)>SW(thin) and FILL(solid)>=0.95",
+      "observed": {
+        "solid_SW": 13.3333,
+        "thin_SW": 0.9972,
+        "solid_FILL": 1.0
+      }
+    },
+    {
+      "control": "PC1_text",
+      "passed": false,
+      "expect": "glyph_edge share >= 0.60 and stroke SW <= T_sw",
+      "observed": {
+        "glyph_share": 0.0,
+        "shares": {
+          "flat_bg": 0.0,
+          "sep_decor": 0.0,
+          "glyph_edge": 0.0,
+          "image_asset": 1.0,
+          "other": 0.0
+        },
+        "n_glyph_regions": 0
+      }
+    },
+    {
+      "control": "RCD_separation_known_truth",
+      "passed": false,
+      "expect": "RCD(text synthetic) < T_rcd < RCD(photo synthetic)",
+      "observed": {
+        "rcd_text_median": 179.688,
+        "T_rcd": 132.436,
+        "rcd_photo_median": 97.61,
+        "separated": false,
+        "note": "T_rcd 由两个已知真值合成图的几何平均定义；对照断言分离，不断言 T 的数值"
+      }
+    },
+    {
+      "control": "PC3_image",
+      "passed": false,
+      "expect": "image_asset share >= 0.60 and CC >= C_img",
+      "observed": {
+        "image_share": 0.37261,
+        "shares": {
+          "flat_bg": 0.0,
+          "sep_decor": 0.0,
+          "glyph_edge": 0.06528,
+          "image_asset": 0.37261,
+          "other": 0.56211
+        },
+        "n_image_regions": 35,
+        "median_RCD": 500.0
+      }
+    },
+    {
+      "control": "P19prime_order_relation",
+      "passed": true,
+      "expect": "region count strictly increasing with texture layers (order only)",
+      "observed": {
+        "region_counts": [
+          1,
+          118372,
+          119460,
+          119669
+        ],
+        "monotone": true
+      }
+    }
+  ],
+  "controls_pass": false
+}

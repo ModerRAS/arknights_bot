@@ -1,0 +1,1463 @@
+{
+  "Base.tmpl": {
+    "n_lines": 510,
+    "css_geo": [
+      {
+        "selector": "#main",
+        "line": 7,
+        "props": {
+          "width": 1110.0
+        }
+      },
+      {
+        "selector": ".base",
+        "line": 12,
+        "props": {
+          "width": 550.0,
+          "height": 110.0,
+          "top": 5.0
+        }
+      },
+      {
+        "selector": ".avatar",
+        "line": 22,
+        "props": {
+          "width": 40.0
+        }
+      },
+      {
+        "selector": "h3",
+        "line": 25,
+        "props": {
+          "left": 10.0
+        }
+      },
+      {
+        "selector": "progress",
+        "line": 28,
+        "props": {
+          "width": 150.0,
+          "height": 3.0
+        }
+      },
+      {
+        "selector": "#labor",
+        "line": 36,
+        "props": {
+          "width": 100.0,
+          "height": 3.0
+        }
+      },
+      {
+        "selector": ".chars",
+        "line": 50,
+        "props": {
+          "left": 10.0
+        }
+      },
+      {
+        "selector": ".board",
+        "line": 53,
+        "props": {
+          "width": 20.0
+        }
+      },
+      {
+        "selector": ".skill",
+        "line": 60,
+        "props": {
+          "width": 30.0
+        }
+      }
+    ],
+    "inline_geo": [
+      {
+        "selector": "(inline)",
+        "line": 85,
+        "props": {
+          "width": 1105.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 123,
+        "props": {
+          "left": 10.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 128,
+        "props": {
+          "width": 1105.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 176,
+        "props": {
+          "left": 10.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 229,
+        "props": {
+          "left": 10.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 284,
+        "props": {
+          "left": 10.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 337,
+        "props": {
+          "left": 10.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 403,
+        "props": {
+          "left": 10.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 454,
+        "props": {
+          "left": 10.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 503,
+        "props": {
+          "left": 10.0
+        }
+      }
+    ],
+    "links_common_css": true
+  },
+  "Box.tmpl": {
+    "n_lines": 98,
+    "css_geo": [
+      {
+        "selector": "#main",
+        "line": 7,
+        "props": {
+          "width": 700.0
+        }
+      },
+      {
+        "selector": "#title",
+        "line": 16,
+        "props": {
+          "left": 25.0
+        }
+      },
+      {
+        "selector": ".operator_bg",
+        "line": 27,
+        "props": {
+          "width": 70.0,
+          "height": 140.0
+        }
+      },
+      {
+        "selector": ".profession",
+        "line": 31,
+        "props": {
+          "width": 15.0,
+          "top": 5.0
+        }
+      },
+      {
+        "selector": ".rarity",
+        "line": 37,
+        "props": {
+          "width": 40.0,
+          "top": 5.0
+        }
+      },
+      {
+        "selector": ".evolve",
+        "line": 43,
+        "props": {
+          "width": 40.0,
+          "top": 80.0
+        }
+      },
+      {
+        "selector": ".level",
+        "line": 49,
+        "props": {
+          "width": 20.0,
+          "left": 5.0
+        }
+      },
+      {
+        "selector": ".potential",
+        "line": 59,
+        "props": {
+          "width": 30.0,
+          "top": 100.0
+        }
+      },
+      {
+        "selector": ".name",
+        "line": 65,
+        "props": {
+          "width": 70.0
+        }
+      }
+    ],
+    "inline_geo": [],
+    "links_common_css": true
+  },
+  "BoxDetail.tmpl": {
+    "n_lines": 62,
+    "css_geo": [
+      {
+        "selector": "img",
+        "line": 17,
+        "props": {
+          "width": 50.0
+        }
+      }
+    ],
+    "inline_geo": [],
+    "links_common_css": true
+  },
+  "BoxSummary.tmpl": {
+    "n_lines": 120,
+    "css_geo": [
+      {
+        "selector": "#main",
+        "line": 7,
+        "props": {
+          "width": 900.0
+        }
+      },
+      {
+        "selector": "#label",
+        "line": 11,
+        "props": {
+          "height": 60.0
+        }
+      },
+      {
+        "selector": "#title",
+        "line": 16,
+        "props": {
+          "left": 25.0
+        }
+      },
+      {
+        "selector": ".operator",
+        "line": 36,
+        "props": {
+          "width": 40.0
+        }
+      }
+    ],
+    "inline_geo": [],
+    "links_common_css": true
+  },
+  "Calendar.tmpl": {
+    "n_lines": 226,
+    "css_geo": [
+      {
+        "selector": "#main",
+        "line": 8,
+        "props": {
+          "width": 1920.0,
+          "height": 1080.0
+        }
+      },
+      {
+        "selector": ".container .main",
+        "line": 49,
+        "props": {
+          "left": 15.0
+        }
+      },
+      {
+        "selector": ".dayTbody .dayTr",
+        "line": 95,
+        "props": {
+          "top": 1.0
+        }
+      },
+      {
+        "selector": ".dayThead",
+        "line": 161,
+        "props": {
+          "height": 40.0
+        }
+      },
+      {
+        "selector": ".dayThead .dayTd",
+        "line": 164,
+        "props": {
+          "height": 40.0
+        }
+      },
+      {
+        "selector": "#todayResource",
+        "line": 183,
+        "props": {
+          "top": 350.0
+        }
+      }
+    ],
+    "inline_geo": [],
+    "links_common_css": true
+  },
+  "Card.tmpl": {
+    "n_lines": 242,
+    "css_geo": [
+      {
+        "selector": "#main",
+        "line": 7,
+        "props": {
+          "width": 1280.0,
+          "height": 720.0
+        }
+      },
+      {
+        "selector": "#regTime",
+        "line": 16,
+        "props": {
+          "width": 132.0,
+          "left": 20.0,
+          "top": 20.0
+        }
+      },
+      {
+        "selector": "#avatar",
+        "line": 26,
+        "props": {
+          "width": 130.0,
+          "top": 13.0
+        }
+      },
+      {
+        "selector": "#nameCard",
+        "line": 31,
+        "props": {
+          "width": 638.0,
+          "height": 223.0
+        }
+      },
+      {
+        "selector": "#level",
+        "line": 38,
+        "props": {
+          "left": 30.0,
+          "top": 5.0
+        }
+      },
+      {
+        "selector": "#name",
+        "line": 47,
+        "props": {
+          "left": 200.0,
+          "top": 50.0
+        }
+      },
+      {
+        "selector": "#resume",
+        "line": 68,
+        "props": {
+          "width": 605.0,
+          "height": 70.0
+        }
+      },
+      {
+        "selector": "#assistChars",
+        "line": 78,
+        "props": {
+          "width": 605.0,
+          "height": 200.0
+        }
+      },
+      {
+        "selector": "#mainline, #equip",
+        "line": 89,
+        "props": {
+          "width": 605.0,
+          "height": 196.0
+        }
+      },
+      {
+        "selector": ".level",
+        "line": 106,
+        "props": {
+          "width": 25.0,
+          "left": 15.0
+        }
+      }
+    ],
+    "inline_geo": [
+      {
+        "selector": "(inline)",
+        "line": 121,
+        "props": {
+          "height": 720.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 123,
+        "props": {
+          "left": 20.0,
+          "top": 10.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 124,
+        "props": {
+          "left": 20.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 125,
+        "props": {
+          "width": 50.0,
+          "left": 20.0,
+          "top": 10.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 126,
+        "props": {
+          "left": 20.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 127,
+        "props": {
+          "left": 20.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 128,
+        "props": {
+          "top": 40.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 129,
+        "props": {
+          "left": 20.0,
+          "top": 10.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 130,
+        "props": {
+          "left": 20.0,
+          "top": 20.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 131,
+        "props": {
+          "left": 20.0,
+          "top": 10.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 140,
+        "props": {
+          "left": 20.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 141,
+        "props": {
+          "width": 160.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 144,
+        "props": {
+          "left": 20.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 145,
+        "props": {
+          "width": 320.0,
+          "left": 20.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 148,
+        "props": {
+          "width": 30.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 150,
+        "props": {
+          "width": 30.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 152,
+        "props": {
+          "width": 30.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 157,
+        "props": {
+          "left": 30.0,
+          "top": 30.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 161,
+        "props": {
+          "top": 8.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 165,
+        "props": {
+          "left": 200.0,
+          "top": 100.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 173,
+        "props": {
+          "width": 100.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 194,
+        "props": {
+          "width": 150.0,
+          "height": 150.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 195,
+        "props": {
+          "width": 130.0,
+          "left": 10.0,
+          "top": 2.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 197,
+        "props": {
+          "width": 50.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 199,
+        "props": {
+          "width": 40.0,
+          "left": 100.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 209,
+        "props": {
+          "left": 200.0,
+          "top": 30.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 212,
+        "props": {
+          "top": 30.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 223,
+        "props": {
+          "left": 40.0
+        }
+      }
+    ],
+    "links_common_css": true
+  },
+  "Depot.tmpl": {
+    "n_lines": 41,
+    "css_geo": [
+      {
+        "selector": "#main",
+        "line": 7,
+        "props": {
+          "width": 850.0
+        }
+      },
+      {
+        "selector": ".item",
+        "line": 11,
+        "props": {
+          "width": 80.0
+        }
+      },
+      {
+        "selector": ".icon",
+        "line": 17,
+        "props": {
+          "width": 75.0
+        }
+      },
+      {
+        "selector": ".count",
+        "line": 20,
+        "props": {
+          "top": 50.0
+        }
+      }
+    ],
+    "inline_geo": [],
+    "links_common_css": true
+  },
+  "Enemy.tmpl": {
+    "n_lines": 176,
+    "css_geo": [
+      {
+        "selector": "#main",
+        "line": 7,
+        "props": {
+          "width": 656.0
+        }
+      },
+      {
+        "selector": "#base",
+        "line": 17,
+        "props": {
+          "width": 656.0
+        }
+      },
+      {
+        "selector": ".level",
+        "line": 29,
+        "props": {
+          "width": 656.0
+        }
+      },
+      {
+        "selector": "img",
+        "line": 41,
+        "props": {
+          "width": 158.0
+        }
+      }
+    ],
+    "inline_geo": [],
+    "links_common_css": true
+  },
+  "Gacha.tmpl": {
+    "n_lines": 371,
+    "css_geo": [
+      {
+        "selector": "#main",
+        "line": 7,
+        "props": {
+          "width": 1000.0
+        }
+      },
+      {
+        "selector": ".title",
+        "line": 15,
+        "props": {
+          "top": 10.0
+        }
+      },
+      {
+        "selector": ".item",
+        "line": 21,
+        "props": {
+          "width": 300.0,
+          "height": 250.0,
+          "left": 20.0,
+          "top": 150.0
+        }
+      },
+      {
+        "selector": "#avg",
+        "line": 31,
+        "props": {
+          "left": 30.0
+        }
+      },
+      {
+        "selector": "#avg td",
+        "line": 39,
+        "props": {
+          "width": 150.0
+        }
+      },
+      {
+        "selector": "#header",
+        "line": 42,
+        "props": {
+          "height": 400.0
+        }
+      },
+      {
+        "selector": "#article table",
+        "line": 49,
+        "props": {
+          "width": 230.0,
+          "top": 20.0
+        }
+      },
+      {
+        "selector": "#article img",
+        "line": 55,
+        "props": {
+          "width": 100.0
+        }
+      },
+      {
+        "selector": ".chars",
+        "line": 58,
+        "props": {
+          "width": 465.0,
+          "left": 20.0,
+          "top": 40.0
+        }
+      },
+      {
+        "selector": "#footer",
+        "line": 75,
+        "props": {
+          "height": 269.0
+        }
+      },
+      {
+        "selector": "#now",
+        "line": 79,
+        "props": {
+          "left": 530.0,
+          "top": 190.0
+        }
+      }
+    ],
+    "inline_geo": [
+      {
+        "selector": "(inline)",
+        "line": 89,
+        "props": {
+          "left": 320.0,
+          "top": 50.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 90,
+        "props": {
+          "left": 250.0,
+          "top": 96.0
+        }
+      }
+    ],
+    "links_common_css": true
+  },
+  "Headhunt.tmpl": {
+    "n_lines": 54,
+    "css_geo": [
+      {
+        "selector": "#main",
+        "line": 7,
+        "props": {
+          "width": 1024.0,
+          "height": 576.0,
+          "left": 25.0
+        }
+      },
+      {
+        "selector": ".bg",
+        "line": 15,
+        "props": {
+          "height": 270.0,
+          "top": 130.0
+        }
+      },
+      {
+        "selector": ".lh",
+        "line": 26,
+        "props": {
+          "width": 95.0,
+          "height": 190.0
+        }
+      },
+      {
+        "selector": ".profession",
+        "line": 30,
+        "props": {
+          "top": 190.0
+        }
+      },
+      {
+        "selector": ".rarity",
+        "line": 34,
+        "props": {
+          "height": 20.0
+        }
+      }
+    ],
+    "inline_geo": [],
+    "links_common_css": true
+  },
+  "Help.tmpl": {
+    "n_lines": 150,
+    "css_geo": [
+      {
+        "selector": "#main",
+        "line": 7,
+        "props": {
+          "width": 660.0
+        }
+      },
+      {
+        "selector": ".banner img",
+        "line": 13,
+        "props": {
+          "top": 10.0
+        }
+      },
+      {
+        "selector": ".banner h1",
+        "line": 18,
+        "props": {
+          "left": 20.0
+        }
+      },
+      {
+        "selector": ".banner p",
+        "line": 24,
+        "props": {
+          "left": 20.0
+        }
+      },
+      {
+        "selector": ".label",
+        "line": 32,
+        "props": {
+          "top": 10.0
+        }
+      },
+      {
+        "selector": ".label img",
+        "line": 37,
+        "props": {
+          "height": 40.0
+        }
+      },
+      {
+        "selector": ".cmdType",
+        "line": 42,
+        "props": {
+          "left": 25.0
+        }
+      },
+      {
+        "selector": ".cmd",
+        "line": 48,
+        "props": {
+          "width": 150.0,
+          "left": 10.0,
+          "top": 15.0
+        }
+      },
+      {
+        "selector": ".cmd p",
+        "line": 59,
+        "props": {
+          "left": 5.0,
+          "top": 3.0
+        }
+      },
+      {
+        "selector": ".cmd svg",
+        "line": 64,
+        "props": {
+          "top": 3.0
+        }
+      }
+    ],
+    "inline_geo": [],
+    "links_common_css": true
+  },
+  "Lottery.tmpl": {
+    "n_lines": 249,
+    "css_geo": [
+      {
+        "selector": "#main",
+        "line": 32,
+        "props": {
+          "width": 900.0
+        }
+      },
+      {
+        "selector": ".box",
+        "line": 162,
+        "props": {
+          "width": 16.0,
+          "height": 16.0
+        }
+      }
+    ],
+    "inline_geo": [],
+    "links_common_css": false
+  },
+  "Missing.tmpl": {
+    "n_lines": 73,
+    "css_geo": [
+      {
+        "selector": "#main",
+        "line": 7,
+        "props": {
+          "width": 700.0
+        }
+      },
+      {
+        "selector": "#title",
+        "line": 16,
+        "props": {
+          "left": 25.0
+        }
+      },
+      {
+        "selector": ".operator_bg",
+        "line": 27,
+        "props": {
+          "width": 70.0,
+          "height": 140.0
+        }
+      },
+      {
+        "selector": ".profession",
+        "line": 31,
+        "props": {
+          "width": 15.0,
+          "top": 5.0
+        }
+      },
+      {
+        "selector": ".rarity",
+        "line": 37,
+        "props": {
+          "width": 40.0,
+          "top": 5.0
+        }
+      },
+      {
+        "selector": ".name",
+        "line": 43,
+        "props": {
+          "width": 70.0
+        }
+      }
+    ],
+    "inline_geo": [],
+    "links_common_css": true
+  },
+  "Operator.tmpl": {
+    "n_lines": 260,
+    "css_geo": [
+      {
+        "selector": "#main",
+        "line": 7,
+        "props": {
+          "width": 1200.0,
+          "height": 800.0
+        }
+      },
+      {
+        "selector": "#painting",
+        "line": 15,
+        "props": {
+          "height": 650.0
+        }
+      },
+      {
+        "selector": "#attr",
+        "line": 22,
+        "props": {
+          "top": 20.0
+        }
+      },
+      {
+        "selector": ".b",
+        "line": 26,
+        "props": {
+          "width": 100.0
+        }
+      },
+      {
+        "selector": ".w",
+        "line": 32,
+        "props": {
+          "width": 70.0
+        }
+      },
+      {
+        "selector": "#potential",
+        "line": 38,
+        "props": {
+          "top": 20.0
+        }
+      },
+      {
+        "selector": ".potential",
+        "line": 42,
+        "props": {
+          "width": 20.0
+        }
+      },
+      {
+        "selector": "#pb",
+        "line": 45,
+        "props": {
+          "width": 300.0
+        }
+      },
+      {
+        "selector": "#talent",
+        "line": 60,
+        "props": {
+          "width": 600.0,
+          "top": 20.0
+        }
+      },
+      {
+        "selector": "#bsk",
+        "line": 74,
+        "props": {
+          "width": 600.0
+        }
+      },
+      {
+        "selector": "#skill",
+        "line": 84,
+        "props": {
+          "width": 600.0
+        }
+      },
+      {
+        "selector": ".skill",
+        "line": 107,
+        "props": {
+          "width": 50.0
+        }
+      }
+    ],
+    "inline_geo": [
+      {
+        "selector": "(inline)",
+        "line": 154,
+        "props": {
+          "left": 10.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 157,
+        "props": {
+          "width": 75.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 198,
+        "props": {
+          "width": 100.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 216,
+        "props": {
+          "width": 100.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 241,
+        "props": {
+          "left": 5.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 243,
+        "props": {
+          "left": 5.0
+        }
+      },
+      {
+        "selector": "(inline)",
+        "line": 249,
+        "props": {
+          "left": 10.0
+        }
+      }
+    ],
+    "links_common_css": true
+  },
+  "Recruit.tmpl": {
+    "n_lines": 72,
+    "css_geo": [
+      {
+        "selector": "#main",
+        "line": 7,
+        "props": {
+          "width": 900.0
+        }
+      },
+      {
+        "selector": ".tag",
+        "line": 14,
+        "props": {
+          "height": 28.0
+        }
+      },
+      {
+        "selector": ".avatar",
+        "line": 27,
+        "props": {
+          "width": 100.0
+        }
+      },
+      {
+        "selector": ".profession",
+        "line": 30,
+        "props": {
+          "width": 30.0
+        }
+      },
+      {
+        "selector": ".rarity",
+        "line": 34,
+        "props": {
+          "height": 20.0,
+          "left": 30.0
+        }
+      }
+    ],
+    "inline_geo": [],
+    "links_common_css": true
+  },
+  "State.tmpl": {
+    "n_lines": 303,
+    "css_geo": [
+      {
+        "selector": "#main",
+        "line": 7,
+        "props": {
+          "width": 1092.0,
+          "height": 510.0
+        }
+      },
+      {
+        "selector": "#avatar",
+        "line": 14,
+        "props": {
+          "width": 54.0,
+          "left": 34.0,
+          "top": 34.0
+        }
+      },
+      {
+        "selector": "#name",
+        "line": 19,
+        "props": {
+          "left": 10.0,
+          "top": 45.0
+        }
+      },
+      {
+        "selector": "#ap_icon",
+        "line": 26,
+        "props": {
+          "top": 146.0
+        }
+      },
+      {
+        "selector": "#ap",
+        "line": 31,
+        "props": {
+          "left": 146.0,
+          "top": 50.0
+        }
+      },
+      {
+        "selector": "#complete",
+        "line": 37,
+        "props": {
+          "left": 145.0
+        }
+      },
+      {
+        "selector": "progress",
+        "line": 44,
+        "props": {
+          "width": 410.0,
+          "height": 11.0
+        }
+      },
+      {
+        "selector": "#lower_item",
+        "line": 52,
+        "props": {
+          "left": 460.0
+        }
+      },
+      {
+        "selector": "#lower_item svg",
+        "line": 60,
+        "props": {
+          "left": 30.0
+        }
+      },
+      {
+        "selector": "#lower_progress",
+        "line": 64,
+        "props": {
+          "left": 460.0
+        }
+      },
+      {
+        "selector": "#higher_item",
+        "line": 68,
+        "props": {
+          "left": 460.0,
+          "top": 28.0
+        }
+      },
+      {
+        "selector": "#higher_item svg",
+        "line": 76,
+        "props": {
+          "left": 30.0
+        }
+      },
+      {
+        "selector": "#higher_progress",
+        "line": 80,
+        "props": {
+          "left": 460.0
+        }
+      },
+      {
+        "selector": ".reward",
+        "line": 84,
+        "props": {
+          "left": 130.0
+        }
+      },
+      {
+        "selector": ".checked_in",
+        "line": 87,
+        "props": {
+          "left": 75.0
+        }
+      },
+      {
+        "selector": "#campaign_icon",
+        "line": 93,
+        "props": {
+          "left": 65.0
+        }
+      },
+      {
+        "selector": "#campaign",
+        "line": 98,
+        "props": {
+          "left": 75.0
+        }
+      },
+      {
+        "selector": "#campaign_recover_bg",
+        "line": 105,
+        "props": {
+          "width": 110.0,
+          "height": 25.0,
+          "left": 60.0
+        }
+      },
+      {
+        "selector": "#campaign_recover_time",
+        "line": 114,
+        "props": {
+          "left": 55.0
+        }
+      },
+      {
+        "selector": "#recruit_icon",
+        "line": 122,
+        "props": {
+          "left": 49.0,
+          "top": 65.0
+        }
+      },
+      {
+        "selector": "#recruit_title",
+        "line": 130,
+        "props": {
+          "left": 120.0,
+          "top": 62.0
+        }
+      },
+      {
+        "selector": "#recruit",
+        "line": 135,
+        "props": {
+          "left": 330.0,
+          "top": 62.0
+        }
+      },
+      {
+        "selector": "#tired_chars_icon",
+        "line": 140,
+        "props": {
+          "left": 49.0,
+          "top": 55.0
+        }
+      },
+      {
+        "selector": "#tired_chars_title",
+        "line": 144,
+        "props": {
+          "left": 115.0,
+          "top": 58.0
+        }
+      },
+      {
+        "selector": "#tired_chars",
+        "line": 149,
+        "props": {
+          "left": 325.0,
+          "top": 58.0
+        }
+      },
+      {
+        "selector": "#tradings_icon",
+        "line": 154,
+        "props": {
+          "left": 460.0
+        }
+      },
+      {
+        "selector": "#tradings_title",
+        "line": 159,
+        "props": {
+          "left": 520.0
+        }
+      },
+      {
+        "selector": "#tradings",
+        "line": 164,
+        "props": {
+          "left": 780.0
+        }
+      },
+      {
+        "selector": "#manufactures_icon",
+        "line": 169,
+        "props": {
+          "left": 460.0
+        }
+      },
+      {
+        "selector": "#manufactures_title",
+        "line": 174,
+        "props": {
+          "left": 520.0
+        }
+      },
+      {
+        "selector": "#manufactures",
+        "line": 179,
+        "props": {
+          "left": 780.0
+        }
+      },
+      {
+        "selector": "#trainee",
+        "line": 184,
+        "props": {
+          "width": 130.0,
+          "left": 922.0
+        }
+      },
+      {
+        "selector": "#remain_secs_bg",
+        "line": 190,
+        "props": {
+          "width": 133.0,
+          "height": 25.0,
+          "left": 923.0
+        }
+      },
+      {
+        "selector": "#remain_secs",
+        "line": 199,
+        "props": {
+          "left": 950.0
+        }
+      },
+      {
+        "selector": "#building_name",
+        "line": 207,
+        "props": {
+          "left": 945.0
+        }
+      }
+    ],
+    "inline_geo": [
+      {
+        "selector": "(inline)",
+        "line": 254,
+        "props": {
+          "left": 810.0
+        }
+      }
+    ],
+    "links_common_css": true
+  }
+}

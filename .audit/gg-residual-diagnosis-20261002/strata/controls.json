@@ -1,0 +1,54 @@
+{
+  "instrument_provenance": "pre-registered strata criterion (task8, v3 amended after two control failures)",
+  "controls": [
+    {
+      "control": "POS_text_edge_residual",
+      "expect": "glyph_edge>=0.90",
+      "observed": 0.0,
+      "passed": false,
+      "detail": {
+        "n_diff": 14288,
+        "shares": {
+          "flat_bg": 0.0,
+          "glyph_edge": 0.0,
+          "image_asset": 0.0,
+          "sep_decor": 0.96913,
+          "other": 0.03087
+        }
+      }
+    },
+    {
+      "control": "NEG_flat_colour_bias",
+      "expect": "flat_bg>=0.90",
+      "observed": 1.0,
+      "passed": true,
+      "detail": {
+        "n_diff": 36000,
+        "shares": {
+          "flat_bg": 1.0,
+          "glyph_edge": 0.0,
+          "image_asset": 0.0,
+          "sep_decor": 0.0,
+          "other": 0.0
+        }
+      }
+    },
+    {
+      "control": "NEG_image_resampling",
+      "expect": "dominant != glyph_edge",
+      "observed": "other",
+      "passed": true,
+      "detail": {
+        "n_diff": 23166,
+        "shares": {
+          "flat_bg": 0.10869,
+          "glyph_edge": 0.0,
+          "image_asset": 0.0,
+          "sep_decor": 0.37266,
+          "other": 0.51865
+        }
+      }
+    }
+  ],
+  "controls_pass": false
+}

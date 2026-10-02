@@ -1,0 +1,7 @@
+{
+  "provenance": "retroactive-migration",
+  "original_path": "C:/WorkSpace/Golang/.lead2-reports/task3-render-reuse.md",
+  "measured_at": "cross-tree: arknights_bot-gg-card-atomic@d939c38 + arknights_bot-satori-yoga-skia-go@3704262 (multi-tree read-only survey)",
+  "single_base": "none",
+  "measured_at_base": "cross-tree: d939c38 + 3704262"
+}

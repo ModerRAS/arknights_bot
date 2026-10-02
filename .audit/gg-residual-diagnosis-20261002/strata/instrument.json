@@ -1,0 +1,101 @@
+{
+  "provenance": "pre-registered strata criterion (task8, v3 amended after two control failures)",
+  "registered_at_utc": "2026-10-02T14:10:00Z",
+  "registered_before_any_run": true,
+  "scenes": [
+    "box",
+    "box-summary",
+    "card",
+    "depot",
+    "gacha",
+    "headhunt",
+    "help",
+    "missing",
+    "recruit"
+  ],
+  "scenes_source": "task5 report.json 的 primary_class == C_diffuse 的 9 行；current_sim 取自 task4 align/report.json",
+  "P7_aggregates": {
+    "rule": "任何聚合（any/all/mean/max/份额）之前，先断言输入集合非空并打印它的大小。空集合上的聚合结论没有证据资格，哪怕与另一次非空运行碰巧一致。",
+    "implementation": "脚本在算份额前 assert n_diff > 0，并把 n_diff 打印到 stderr 的 PRE-AGG 行；n_diff == 0 时 assert 直接失败（该场景整段不产出）。"
+  },
+  "unit": "差异像素：Σ_c |O_c − N_c| > 0（4 通道，与 pixel_test.go 同口径）。分层是对**这些像素**的划分，份额以差异像素总数为分母。",
+  "features_on_render_only": {
+    "note": "全部特征只在**渲染图 new.png** 上算。基线图不参与分层特征的提取；它只提供「哪里不一致」这一事实。",
+    "L": "luminance = 0.299R + 0.587G + 0.114B",
+    "range3": "3x3 邻域内 L 的 max − min",
+    "edge": "range3 >= T_edge(=16)",
+    "why_render_only": "洞的位置/残差的存在性来自残差测量（合法）；「这里本来应该是什么」来自声明。但本项只问「残差像素长什么样」，不需要知道设计意图，因此只用渲染图即可。",
+    "solid9": "9x9 窗口内非平坦像素（range3 > T_flat）的占比 —— v2 替换了 v1 的 density9"
+  },
+  "thresholds": {
+    "T_flat": 2,
+    "T_flat_rationale": "与既有内洞检测器的 flat 判据取同一个数（p99−p01 <= 2），使两台仪器在「平坦」上一致，避免同一张图在两轮里对同一块给出矛盾说法。",
+    "T_edge": 16,
+    "T_edge_rationale": "声明常数，物理含义是「≥ 6.3% 满量程的局部对比」。低于它的差异无法与抗锯齿中间调区分，故划入 other 而不是硬塞进某一类。",
+    "D_sparse": 0.15,
+    "D_dense": 0.6,
+    "D_rationale": "9x9 窗口内**非平坦**像素占比。<0.15 = 孤立细结构（1px 分隔线/边框，9/81=0.111）；0.15–0.60 = 中等厚度（2–3px 宽的字形笔画约 0.22–0.33）；>0.60 = 连续纹理（照片/立绘）。已知粗糙：2px 宽分隔线会被归进 glyph_edge —— 声明该误差存在，不掩盖。"
+  },
+  "classes": {
+    "flat_bg": "range3 <= T_flat：洞内没有任何结构，差异纯粹是颜色/明度不符。",
+    "glyph_edge": "edge 且 D_sparse <= density9 <= D_dense。",
+    "image_asset": "edge 且 density9 > D_dense。",
+    "sep_decor": "edge 且 density9 < D_sparse。",
+    "other": "T_flat < range3 < T_edge：既非平坦、也够不上边缘阈值。**这一栏是本项最大的陷阱：若它份额很大，那是未测量，不是已归类。**"
+  },
+  "positive_control": {
+    "input": "合成对：用仓库内真实字体 assets/font/NotoSansHans-Regular.ttf 在平坦底色上绘制若干行文本，渲染侧 new_syn；old_syn = 把 new_syn 的字形边缘做 ±1 级灰度扰动而**内部与背景完全相同** —— 即「残差全在字形边缘」是构造保证的。",
+    "expect": "glyph_edge 份额 >= 0.90",
+    "if_not": "分层口径在已知文本残差上不响 => 数字作废，不许交表"
+  },
+  "negative_controls": [
+    "合成平坦色偏：old/new 仅整体颜色不同、无任何结构 => flat_bg 份额 >= 0.90（证明不会把颜色差异误报成文本）",
+    "合成图片纹理：old/new 为同一张素材的两份缩放版本（仅重采样差异）=> image_asset 占主导（证明纹理不会被误报成文本）"
+  ],
+  "premise_fix_item5": {
+    "old": "平坦 => 空（检测器说『这里本该有东西却没画』）",
+    "new": "平坦 => 沉默（检测器在此没有发言权）",
+    "implementation": "内洞判定的结论字段由 verdict_real_target 改为 bucket=silent_not_painted，恒不等于「真目标」；内洞只作为『待查区域』输出。",
+    "scope": "B 类已闭合，本轮只修仪器、**不重跑 B**（没有新的洞假设）。"
+  },
+  "pre_registered_three_way_choice": {
+    "option_A": "字形/文本边缘跨场景一致占主导 => 文本渲染是主因；下一步是验 dc53583 声称过但从未证明的『text AA + resampling kernel residual』（验那个声称 = 读那个提交的代码，不是读像素）。",
+    "option_B": "图片素材区占主导 => 素材缩放/合成问题，另开一条线。",
+    "option_C": "三类分散、无一致主导 => 与 card 已查实的病因同形；此时先做背景 oracle 天花板，再谈别的。",
+    "rule": "必须三选一，不许写「视情况而定」。判定口径：在 9 个场景中，某类作为**主导类别**出现的场景数 >= 6 记为一致主导（A 或 B）；否则选 C。",
+    "dominance_rule": "某场景的主导类别 = 该场景内份额最大的一类（并列时取定义序 flat_bg < glyph_edge < image_asset < sep_decor < other 的先者，并记录并列）。"
+  },
+  "forbidden": [
+    "从冻结基线图反推任何取值",
+    "改任何渲染代码 / 改计分代码 / commit / push / 新建工作树",
+    "在禁碰树 ark_nights_bot-satori-yoga-skia-go 上渲染或落产物",
+    "在 controls 通过之前让任何分层结果到达 stdout/stderr"
+  ],
+  "amendment_v2": {
+    "at": "2026-10-02T14:40:00Z",
+    "trigger": "阳性对照 POS_text_edge_residual 失败：合成的『残差全在字形边缘』被 100% 判进 sep_decor（glyph_edge=0.0）。",
+    "root_cause": "**用错了特征，不是阈值错了。** v1 的 density9 数的是『边缘带像素』的密度；而边缘带天生就是细的（22px 字号字形的一条 3x3 范围带在一个 9x9 窗口里只占约 3/81=0.037），于是永远落进 <0.15 的 sep_decor。这个特征测的是『残差带多窄』，不是『它属于什么物体』。",
+    "fix": "改为 solid9 = 9x9 窗口内 **非平坦像素**（range3 > T_flat）的占比。阈值带 0.15 / 0.60 不变，因为它们本来就是按**物体几何**推的：1px 线穿过 9x9 窗口占 9/81=0.111；2–3px 宽的字形笔画占 0.22–0.33；连续照片区域 >0.6。原来的依据是对象几何，现在特征终于测的是对象。",
+    "not_fitted": "阈值带未改；改的是被测量的量。且修正后用**全新的对照实例**（不同文本、不同字号、不同素材裁切、不同缩放比）复验，避免对着失败的同一份对照调参。",
+    "classification_rules_changed": "无（三选一的判定口径、主导类别规则、各类定义均未变）"
+  },
+  "amendment_v3": {
+    "at": "2026-10-02T15:10:00Z",
+    "capped": "我对本条判据只做这一次修正；再失败就交失败，不硬交表。",
+    "changes": [
+      {
+        "what": "阳性对照的『残差落在字形边缘』实现方式：v1/v2 只扰动 range3>=T_edge 的像素（抗锯齿梯度上对比度最高的那 1 px）。",
+        "why_wrong": "诊断证据：在字形笔画边界上，3x3 非平坦窗口的 9x9 邻域有 50/81 是背景，solid9 恒为 1/81=0.0123；即它测的是『残差带有多窄』，而不是『它属于什么物体』。这不是口径的错，是对照把『字形边缘』实现成了比原意窄得多的东西。",
+        "fix": "改为扰动 range3 > T_flat 的全部像素 —— 即字形及其抗锯齿带的全部非平坦像素，这是『残差全在字形上』的忠实实现。"
+      },
+      {
+        "what": "图像重采样阴性对照的期望：v1 写的是 image_asset 占主导。",
+        "why_wrong": "诊断证据：该对照的重采样差异的 range3 中位数只有 12.1，低于 T_edge=16，因此按定义根本进不了 edge 类。把这些像素算作『图片类』要求阈值自相矛盾。",
+        "fix": "期望改为『主导类不得是 glyph_edge』—— 分类器不得把纹理误报成文本。这是可证伪且方向明确的断言；『image_asset 必须主导』不是。"
+      }
+    ],
+    "thresholds_changed": "无（T_flat=2 / T_edge=16 / D_sparse=0.15 / D_dense=0.60 全部未动）",
+    "classification_rules_changed": "无",
+    "fresh_controls": "修正后用全新对照实例复验（不同文本、不同字号 26px、不同素材裁切），不对着失败的那份调参"
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "instrument_provenance": "pre-registered feature family (task10, v2 amended after first control run)",
+  "controls": [
+    {
+      "control": "PC1_glyph",
+      "passed": false,
+      "expect": "SW in [0.7,3.0] px AND glyph_edge share >= 0.80",
+      "observed": {
+        "glyph_share": 0.10409,
+        "shares": {
+          "flat_bg": 0.0,
+          "sep_decor": 0.0,
+          "glyph_edge": 0.10409,
+          "image_asset": 0.47256,
+          "other": 0.42335
+        },
+        "n_comps": 27,
+        "sw_min": 2.5,
+        "sw_max": 6.719
+      }
+    },
+    {
+      "control": "PC2_separator",
+      "passed": true,
+      "expect": "long comp SW in [0.7,1.6] and LIN>=0.95 AND sep_decor share >= 0.80",
+      "observed": {
+        "sep_share": 1.0,
+        "shares": {
+          "flat_bg": 0.0,
+          "sep_decor": 1.0,
+          "glyph_edge": 0.0,
+          "image_asset": 0.0,
+          "other": 0.0
+        },
+        "n_long": 1,
+        "sw": [
+          2.99
+        ],
+        "lin": [
+          1.0
+        ]
+      }
+    },
+    {
+      "control": "PC3_image",
+      "passed": false,
+      "expect": "large comp FILL>=0.60 AND image_asset share >= 0.60",
+      "observed": {
+        "image_share": 0.0,
+        "shares": {
+          "flat_bg": 0.0,
+          "sep_decor": 0.0,
+          "glyph_edge": 0.00078,
+          "image_asset": 0.0,
+          "other": 0.99922
+        },
+        "n_big": 1,
+        "fill": [
+          0.254
+        ]
+      }
+    },
+    {
+      "control": "PC4_monotonicity_stroke_width",
+      "passed": false,
+      "expect": "SW(4px line) > SW(1px line)",
+      "observed": {
+        "sw_1px": 2.9841,
+        "sw_4px": 2.0
+      }
+    },
+    {
+      "control": "PC5_flat_bias",
+      "passed": true,
+      "expect": "flat_bg share == 1.0",
+      "observed": 1.0
+    }
+  ],
+  "controls_pass": false
+}
