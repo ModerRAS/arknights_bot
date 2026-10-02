@@ -134,12 +134,10 @@ strata/ strata2/ strata3/ ← task8 / task10 / task11 分层（均「未测」�
 | `tmp/residual/byelem/derivable_boxes.json` | `byelem/derivable_boxes.json` |
 | `tmp/pixel-compare/report.{json,md}` | `pixel-compare/report.*` ← **go harness 主产物** |
 | `tmp/<其余子目录>/*.log` | `<子目录>/*.log` |
+| `tmp/resolved/boxdetail.html` | `resolved/boxdetail.html` ← **task14 T1 数据的源头（rects.json 由它量出）** |
 | `.audit/<name>`（本轮新归档部分） | `audit-src/<name>` |
 
 ⚠️ **0 字节文件是本轮最重要的证据之一，已全部归档并配边车。**
 `mapping/measure_stdout.log`、`discriminator/measure_stderr.log` 等的空文件，
 就是「**闸门在对照未过时没有偷偷产出任何输出**」这句话的物证。
 **若按「空文件没用」的直觉跳过，归档就失去了这个判据的存在性证明。**
-
-⚠️ **一项已识别但未归档，等待裁定**：`tmp/resolved/boxdetail.html`（3664 B）——
-本批公式选中 53 项，其中此项**未包含在授权的 52 项内**，故暂扣。
