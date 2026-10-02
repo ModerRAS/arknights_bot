@@ -1296,14 +1296,30 @@ type OperatorInfo struct {
 }
 
 func SampleOperator() *OperatorInfo {
-	// 默认值取自冻结基线 images/operator.jpg（阿米娅）的人工转录，逐项可核。
-	// 出处定性：这些是浏览器从 prts.wiki 数据源收到的「值」，在 Boss 批准的边界内。
-	// 本轮没有、也不允许从该图反推任何「几何」——面板位置尺寸全部由模板 CSS 推出。
-	// 仓库内不存在阿米娅记录（git grep -F '精神融合' / '战术咏唱' / '合作协议'
-	// 在 265555f 均 exit=1 且无输出，尺子：同判据 grep -F '1742' 有命中），
-	// 故离线只能如此；真实数据通路见 OperatorInfo 的 TODO(game-data)。
+	// 出处（已订正）：本函数的取值来自已提交的仓库内 fixture 源码
+	// src/core/web/complex_props_export_test.go @ 8873add（2026-08-19），
+	// 那是 legacy 模板渲染时实际喂进去的数据，逐项吻合。
+	//
+	// 订正记录：本块原先声明「这些是浏览器从 prts.wiki 数据源收到的值」，
+	// 该声明不成立。重建 legacy fixture 服务后 15/16 场景与冻结基线逐字节
+	// 相同，证明该页用的是本地合成 fixture，不是 prts.wiki。
+	// 2026-09-29 的 OCR 转录（_operator_measure/step-3-diagnosis.json）
+	// 对除 Rarity 外的 22 项只是旁证，不是来源。
+	//
+	// Rarity 是唯一的例外，已改回 5：
+	//   - 合法来源 src/core/web/complex_props_export_test.go @ 8873add 写 "rarity": 5
+	//   - 实测 legacy 页面请求的是 /assets/box/Rarity_5.png
+	//   - 冻结图 OCR 读出的是「6 stars」
+	// 而 6 是 1a87476 从另一名干员（能天使）那一行平移过来的，不是为阿米娅
+	// 独立读出的。冻结图是 6 的唯一可得来源，因此 6 非法——合法性由来源决定，
+	// 不由能否复现基线决定。即使 6 画得更像，5 仍然正确。
+	//
+	// 由此产生的分数下降是正确结果：一个诚实的低分胜过一次非法的高分。
+	// Blast radius：Rarity 同时喂给 rarityColor(data.Rarity)（render.go:1346），
+	// 所以这次改动同时改变星级文本与稀有度配色，不是只改一个数字。
+	// 真实数据通路见 OperatorInfo 的 TODO(game-data)。
 	return &OperatorInfo{
-		Name: "阿米娅", Profession: "术师", Position: "远程位", Tag: "输出", Rarity: 6,
+		Name: "阿米娅", Profession: "术师", Position: "远程位", Tag: "输出", Rarity: 5,
 		// 模板 Operator.tmpl 没有 Desc 字段，基线本就没有干员描述，
 		// 所以留空而不是编一段——原先那段能天使描述是我们凭空造的，只会白丢像素。
 		Desc: "",
