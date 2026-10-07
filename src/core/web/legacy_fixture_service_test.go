@@ -155,13 +155,17 @@ func TestLegacyFixtureService(t *testing.T) {
 			c.HTML(http.StatusOK, page.template, page.props)
 		})
 	}
-	listener, err := net.Listen("tcp", "127.0.0.1:38126")
+	addr := os.Getenv("FIXTURE_ADDR")
+	if addr == "" {
+		addr = "127.0.0.1:38126"
+	}
+	listener, err := net.Listen("tcp", addr)
 	if err != nil {
 		t.Fatal(err)
 	}
 	server := &http.Server{Handler: router}
 	go func() { _ = server.Serve(listener) }()
-	if err := os.WriteFile(filepath.Join(out, "fixture-service.ready"), []byte("127.0.0.1:38126\n"), 0o644); err != nil {
+	if err := os.WriteFile(filepath.Join(out, "fixture-service.ready"), []byte(addr+"\n"), 0o644); err != nil {
 		t.Fatal(err)
 	}
 	stop := filepath.Join(out, "fixture-service.stop")
