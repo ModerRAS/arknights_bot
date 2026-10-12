@@ -287,14 +287,15 @@ func RenderCard(data *CardInfo) (*gg.Context, error) {
 // DepotData follows template/Depot.tmpl, whose only bindings are {{.Icon}} and
 // {{.Count}} inside a {{range .}} over the item list.
 //
-// Known data gap: the frozen baseline for this template shows 11 items, all
-// rendering Count "100000". The baseline was captured from the external
-// "isolated-template-minimal" fixture service, which is not in this repo, and
-// the real /depot handler (src/core/web/depot.go) would render any count >=10000
-// as "10万" -- so a literal "100000" cannot come from a real capture. This
-// fixture therefore carries 2 items and is NOT the baseline's data. The count
-// values were deliberately not back-filled by reading them off the baseline
-// image; doing so would fit the renderer to the frozen artifact.
+// SampleDepot carries the depot-minimal fixture values. Provenance:
+// feat/gg-render-canvas:src/core/web/static_props_export_test.go DepotFixture
+// = repeatStaticFixture(11, {Name:龙门币, Count:"100000", Icon:materialURL,
+// SortId:1}), an in-repo declaration, not a reading off the baseline image.
+// The literal "100000" bypasses the real handler's 万 formatting
+// (src/core/web/depot.go renders >=10000 as N万) because the isolated fixture
+// passes pre-formatted Count strings straight to the template. Icon resolves
+// offline to the pinned assets/depot/lmd.png capture asset -- the same file
+// the fixture URL names (see depotIconAsset provenance below).
 type DepotData struct{ Items []DepotItem }
 type DepotItem struct {
 	Name, Count, Icon string
@@ -302,7 +303,11 @@ type DepotItem struct {
 }
 
 func SampleDepot() *DepotData {
-	return &DepotData{Items: []DepotItem{{Name: "龙门币", Count: "100000", SortId: 1}, {Name: "作战记录", Count: "200", SortId: 2}}}
+	items := make([]DepotItem, 0, 11)
+	for i := 0; i < 11; i++ {
+		items = append(items, DepotItem{Name: "龙门币", Count: "100000", Icon: "https://media.prts.wiki/thumb/6/6a/%E9%81%93%E5%85%B7_%E5%B8%A6%E6%A1%86_%E9%BE%99%E9%97%A8%E5%B8%81.png/75px-%E9%81%93%E5%85%B7_%E5%B8%A6%E6%A1%86_%E9%BE%99%E9%97%A8%E5%B8%81.png", SortId: 1})
+	}
+	return &DepotData{Items: items}
 }
 
 // depotIconAsset loads assets/depot/lmd.png.
@@ -357,6 +362,15 @@ func RenderDepot(data *DepotData) (*gg.Context, error) {
 		countSize = 12  // css: .count { font-size: 12px }
 		countTop  = 50  // css: .count { margin-top: 50px }
 		countOver = 30  // css: .count { margin-right: -30px }
+		// spaceGap: .item boxes are inline-flex in an inline formatting context
+		// and the template keeps newlines/indentation around {{range}}/.item/
+		// {{end}}, so a collapsed whitespace node sits between every two
+		// items. #main declares no font-size, so the browser default 16px
+		// applies; the shipped font's U+0020 advance is 224/1000 em (the same
+		// figure the calendar renderer cites), i.e. 3.584px per gap. Pitch is
+		// therefore 80+3.584=83.584, not 80. Cross-check only: 83.584*1.5 =
+		// 125.38 device px against harness row pitch, subpixel agreement.
+		spaceGap = 3.584
 		// derived-css: .item { display:inline-flex } wraps at the container edge.
 		cols = mainW / itemW
 		// derived-css: .count is position:absolute, so it is out of flow and the
@@ -376,7 +390,8 @@ func RenderDepot(data *DepotData) (*gg.Context, error) {
 
 	for i, it := range data.Items {
 		// template-declared: {{range .}} emits one .item per element.
-		x := (i % cols) * itemW
+		// x steps by itemW+spaceGap (whitespace nodes, see spaceGap note).
+		x := float64(i%cols) * (float64(itemW) + spaceGap)
 		y := (i / cols) * rowPitch
 
 		// An empty Icon must never reach FetchImage; fall back to the pinned
@@ -387,7 +402,7 @@ func RenderDepot(data *DepotData) (*gg.Context, error) {
 				img = remote
 			}
 		}
-		dc.DrawImage(ScaleContain(img, iconW, iconW), x+iconInset, y)
+		dc.DrawImage(ScaleContain(img, iconW, iconW), int(x+float64(iconInset)+0.5), y)
 
 		// .count is absolutely positioned, so align-items:center gives it the
 		// item's horizontal centre as its static position; margin-right:-30px
@@ -396,7 +411,7 @@ func RenderDepot(data *DepotData) (*gg.Context, error) {
 		// so the plate is the text box itself.
 		setFont(dc, countSize)
 		tw, _ := dc.MeasureString(it.Count)
-		bgX := float64(x) + (float64(itemW)-tw)/2 + countOver
+		bgX := x + (float64(itemW)-tw)/2 + countOver
 		bgY := float64(y) + countTop
 		dc.SetRGBA255(0, 0, 0, 128) // css: .count { background-color: rgba(0,0,0,0.5) }
 		dc.DrawRectangle(bgX, bgY, tw, countSize)
