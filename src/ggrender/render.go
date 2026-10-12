@@ -295,69 +295,152 @@ type Detail struct {
 }
 type BoxDetailList struct{ Items []Detail }
 
+// SampleBoxDetail carries the box-detail-minimal fixture values. Provenance:
+// feat/gg-render-canvas:src/core/web/static_props_export_test.go
+// BoxDetailFixture (in-repo declaration): 2 Amiya rows (90/80, evo2, pot5/4,
+// 1+3 skills, 1+2 equips of type "original").
 func SampleBoxDetail() []Detail {
 	return []Detail{
-		{Name: "闪灵", Id: "char_1001_amiya_1", Rarity: 5, Level: 80, EvolvePhase: 2, PotentialRank: 5, Skills: []Skill{{Id: "sk1", Level: 10}, {Id: "sk2", Level: 10}}, Equips: []Equip{}},
-		{Name: "史尔特尔", Id: "char_1002_amiya_1", Rarity: 6, Level: 90, EvolvePhase: 2, PotentialRank: 6, Skills: []Skill{{Id: "sk3", Level: 10}}, Equips: []Equip{{Id: "eq1", Level: 3}}},
-		{Name: "能天使", Id: "char_1003_amiya_1", Rarity: 6, Level: 90, EvolvePhase: 2, PotentialRank: 6, Skills: []Skill{{Id: "sk4", Level: 10}, {Id: "sk5", Level: 10}}, Equips: []Equip{{Id: "eq2", Level: 3}, {Id: "eq3", Level: 2}}},
-		{Name: "星熊", Id: "char_1004_amiya_1", Rarity: 6, Level: 85, EvolvePhase: 2, PotentialRank: 4, Skills: []Skill{{Id: "sk6", Level: 10}}, Equips: []Equip{}},
+		{Name: "阿米娅", Id: "char_002_amiya#1", Rarity: 5, Level: 90, EvolvePhase: 2, PotentialRank: 5, Skills: []Skill{{Id: "skcom_magic_rage[3]", Level: 10}}, Equips: []Equip{{Id: "original", Level: 1}}},
+		{Name: "阿米娅", Id: "char_002_amiya#1", Rarity: 5, Level: 80, EvolvePhase: 2, PotentialRank: 4, Skills: []Skill{{Id: "skcom_magic_rage[3]", Level: 10}, {Id: "skchr_amiya_2", Level: 9}, {Id: "skchr_amiya_3", Level: 8}}, Equips: []Equip{{Id: "original", Level: 2}, {Id: "original", Level: 3}}},
 	}
+}
+
+// boxDetailVendor loads a manifest-mapped capture file from assets/boxdetail.
+// Provenance per file (shas verified on copy): avatar e95afb7b (BoxDetail
+// avatar), skill 54ee21a6 (BoxDetail skill), equip 3680ff6e (BoxDetail equip).
+// Same vendored-capture class as depot lmd.png; render never reads baseline/.
+func boxDetailVendor(name string) (image.Image, error) {
+	return LoadImage(AssetPath("boxdetail/" + name))
+}
+
+// boxDetailSkillIcon resolves a skill icon: the skillID value contains raw
+// brackets no HTTP client sends, so it loads its manifest-mapped vendored
+// file; other IDs go to hycdn; amiya is the template's onerror last resort.
+func boxDetailSkillIcon(id string) image.Image {
+	if id == "skcom_magic_rage[3]" {
+		if img, err := boxDetailVendor("boxdetail-skill-amiya.png"); err == nil {
+			return img
+		}
+	}
+	if img, err := fetch("https://web.hycdn.cn/arknights/game/assets/char_skill/" + id + ".png"); err == nil {
+		return img
+	}
+	img, _ := LoadImage(AssetPath("common/amiya.png"))
+	return img
+}
+
+// boxDetailEquipIcon resolves a module icon: "original" loads its
+// manifest-mapped vendored file; other IDs go to hycdn uniequip URLs.
+func boxDetailEquipIcon(id string) image.Image {
+	if id == "original" {
+		if img, err := boxDetailVendor("boxdetail-equip-original.png"); err == nil {
+			return img
+		}
+	}
+	if img, err := fetch("https://web.hycdn.cn/arknights/game/assets/uniequip/type/icon/" + id + ".png"); err == nil {
+		return img
+	}
+	img, _ := LoadImage(AssetPath("common/amiya.png"))
+	return img
 }
 
 func RenderBoxDetail(data []Detail) (*gg.Context, error) {
-	const mainW = 900
-	const cardH = 155
-	const pad = 10
-	mainH := pad + len(data)*cardH + pad
+	const mainW, mainH = 481, 186
 	dc := gg.NewContext(mainW, mainH)
-	FillBackground(dc, 27, 29, 30)
-	for i, d := range data {
-		y := pad + i*cardH
-		fillRoundedCard(dc, float64(pad), float64(y), float64(mainW-2*pad), float64(cardH-10), 8, 12)
-		// avatar placeholder rect
-		dc.SetRGB255(80, 80, 90)
-		dc.DrawRoundedRectangle(float64(pad+10), float64(y+10), 90, 90, 6)
-		dc.Fill()
-		setFont(dc, 20)
+	FillBackground(dc, 46, 48, 49) // #main{background-color:#2e3031}
+	// Column content widths from declarations: avatar 50 + name; evolve 50;
+	// potential 50; skills n*50; equips n*50. Plus td 1px side padding each
+	// and 2px cellspacing on 6 edges; excess split evenly (auto-lite).
+	maxSkills, maxEquips := 0, 0
+	for _, d := range data {
+		if len(d.Skills) > maxSkills {
+			maxSkills = len(d.Skills)
+		}
+		if len(d.Equips) > maxEquips {
+			maxEquips = len(d.Equips)
+		}
+	}
+	setFont(dc, 16)
+	nameW, _ := measure(dc, "阿米娅")
+	colContent := []float64{50 + nameW, 50, 50, float64(maxSkills) * 50, float64(maxEquips) * 50}
+	sumMin := 10.0
+	for _, w := range colContent {
+		sumMin += w
+	}
+	excess := (float64(mainW) - 12 - sumMin) / 5
+	colX := [6]float64{2}
+	for i := 0; i < 5; i++ {
+		colX[i+1] = colX[i] + colContent[i] + 2 + excess
+	}
+	// Header row: th bold centered (double-drawn, accepted 600 technique).
+	headerH := 16*notoNormalLineBox + 2
+	setFont(dc, 16)
+	dc.SetRGB255(255, 255, 255)
+	headers := []string{"干员", "等级", "潜能", "技能", "模组"}
+	for i, h := range headers {
+		w, _ := measure(dc, h)
+		cx := (colX[i] + 1 + colX[i+1] - 1) / 2
+		drawString(dc, h, cx-w/2+0.45, 2+1+(headerH-2-16)/2+16*0.8)
+		drawString(dc, h, cx-w/2, 2+1+(headerH-2-16)/2+16*0.8)
+	}
+	y := 2 + headerH + 2
+	for _, d := range data {
+		rowH := 50.0 + 16*notoNormalLineBox + 2
+		mid := func(top, h, ch float64) float64 { return top + (h-ch)/2 }
+		// Avatar (vendored capture, remote fallback) + name, middle.
+		av, aerr := boxDetailVendor("boxdetail-avatar-amiya.png")
+		if aerr != nil {
+			av = FetchImage(baseAvatarURL(d.Id), AssetPath("common/amiya.png"))
+		}
+		ax := colX[0] + 1
+		ay := y + mid(0, rowH-2, 50)
+		dc.DrawImage(ScaleExact(av, 50, 50), int(ax), int(ay))
+		setFont(dc, 16)
 		dc.SetRGB255(255, 255, 255)
-		drawString(dc, d.Name, float64(pad+115), float64(y+30))
-		ev := tryLocal(fmt.Sprintf("box/Evolve_%d.png", d.EvolvePhase))
-		dc.DrawImage(ScaleExact(ev, 22, 22), pad+115, y+40)
-		pot := tryLocal(fmt.Sprintf("box/Potential_%d.png", d.PotentialRank))
-		dc.DrawImage(ScaleExact(pot, 22, 22), pad+145, y+40)
-
-		sx := pad + 115
-		sy := y + 78
-		setFont(dc, 13)
-		dc.SetRGB255(200, 210, 230)
-		drawString(dc, "技能", float64(sx), float64(sy))
-		skx := sx + 40
-		for _, s := range d.Skills {
-			dc.SetRGB255(60, 70, 80)
-			dc.DrawRoundedRectangle(float64(skx), float64(sy-22), 30, 30, 4)
-			dc.Fill()
-			setFont(dc, 11)
-			dc.SetRGB255(230, 230, 230)
-			drawStringAnchored(dc, "Lv"+itoa(s.Level), float64(skx+15), float64(sy+14), 0.5, 0.5)
-			skx += 42
+		drawString(dc, d.Name, ax+50, ay+(50-16)/2+16*0.8)
+		// Evolve icon + LV stacked column, middle.
+		evx := colX[1] + 1 + (colX[2]-1-(colX[1]+1)-50)/2
+		ey := y + mid(0, rowH-2, 50+16*notoNormalLineBox)
+		if ev := cardAsset("box/Evolve_" + itoa(d.EvolvePhase) + ".png"); ev != nil {
+			eb := ev.Bounds()
+			dc.DrawImage(ScaleExact(ev, 50, 50*eb.Dy()/eb.Dx()), int(evx), int(ey))
 		}
-		ey := y + 118
-		dc.SetRGB255(200, 210, 230)
-		setFont(dc, 13)
-		drawString(dc, "模组", float64(sx), float64(ey))
-		ekx := sx + 40
-		for _, e := range d.Equips {
-			dc.SetRGB255(60, 70, 80)
-			dc.DrawRoundedRectangle(float64(ekx), float64(ey-22), 30, 30, 4)
-			dc.Fill()
-			setFont(dc, 11)
-			dc.SetRGB255(230, 230, 230)
-			drawStringAnchored(dc, "Lv"+itoa(e.Level), float64(ekx+15), float64(ey+14), 0.5, 0.5)
-			ekx += 42
+		drawString(dc, "LV"+itoa(d.Level), evx, ey+50+16*0.8)
+		// Potential icon, middle.
+		potx := colX[2] + 1 + (colX[3]-1-(colX[2]+1)-50)/2
+		if pot := cardAsset("box/Potential_" + itoa(d.PotentialRank) + ".png"); pot != nil {
+			dc.DrawImage(ScaleExact(pot, 50, 50), int(potx), int(y+mid(0, rowH-2, 50)))
 		}
+		// Skills + equips flow with whitespace gaps, middle bands.
+		skillsW := float64(len(d.Skills))*50 + float64(len(d.Skills)-1)*3.584
+		skx := colX[3] + 1 + (colX[4]-1-(colX[3]+1)-skillsW)/2
+		sky := y + mid(0, rowH-2, 50+16*notoNormalLineBox)
+		for k, s := range d.Skills {
+			sx := skx + float64(k)*(50+3.584)
+			dc.DrawImage(ScaleExact(boxDetailSkillIcon(s.Id), 50, 50), int(sx), int(sky))
+			setFont(dc, 16)
+			dc.SetRGB255(255, 255, 255)
+			drawString(dc, "LV"+itoa(s.Level), sx, sky+50+16*0.8)
+		}
+		equipsW := float64(len(d.Equips))*50 + float64(len(d.Equips)-1)*3.584
+		exx := colX[4] + 1 + (colX[5]-1-(colX[4]+1)-equipsW)/2
+		exy := y + mid(0, rowH-2, 50+16*notoNormalLineBox)
+		for k, e := range d.Equips {
+			ex := exx + float64(k)*(50+3.584)
+			eq := boxDetailEquipIcon(e.Id)
+			eb := eq.Bounds()
+			dc.DrawImage(ScaleExact(eq, 50, 50*eb.Dy()/eb.Dx()), int(ex), int(exy))
+			setFont(dc, 16)
+			dc.SetRGB255(255, 255, 255)
+			drawString(dc, "LV"+itoa(e.Level), ex, exy+50+16*0.8)
+		}
+		y += rowH + 2
 	}
 	return ScaleToManifest(dc, 722, 279), nil
 }
+
+// BoxSummary
 
 // BoxSummary
 
