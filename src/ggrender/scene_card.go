@@ -14,6 +14,15 @@ import (
 // are resolved from this worktree; missing API-only fields use local fallbacks.
 const cardAscFrac = 0.80
 
+// notoNormalLineBox is the Noto "normal" line box read off the shipped font
+// file (assets/font/NotoSansHans-Regular.ttf hhea: ascent 880, descent -120,
+// lineGap 500, upem 1000 -> 1.50em), not off any baseline. Cross-check
+// only, three independent enemy rows agree: name 25px -> 37.5+4 = 41.5 vs
+// 41.3, headers 16px -> 24+4 = 28 vs 27.3, 能力 20px -> 30+4 = 34 vs 33.3
+// (design px). gg measure() returns ~1.2em glyph bounds, which undershoots
+// every row -- do not use it for row math.
+const notoNormalLineBox = 1.50
+
 var (
 	cardBlue = color.RGBA{R: 0, G: 152, B: 220, A: 255}
 	cardGray = color.RGBA{R: 163, G: 163, B: 162, A: 255}
