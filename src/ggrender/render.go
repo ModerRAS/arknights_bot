@@ -1706,69 +1706,156 @@ type Cmd struct {
 	IsBind           bool
 }
 
+// SampleHelp carries the help-minimal fixture values. Provenance:
+// feat/gg-render-canvas:src/core/web/static_props_export_test.go HelpFixture
+// (in-repo declaration): 6 private + 36 public + 9 admin commands.
 func SampleHelp() *HelpData {
-	h := &HelpData{}
-	h.Private = []Cmd{{Cmd: "/bind", Desc: "绑定角色", Param: ""}, {Cmd: "/unbind", Desc: "解绑角色", Param: ""}, {Cmd: "/cancel", Desc: "取消操作", Param: ""}}
-	h.Public = []Cmd{
-		{Cmd: "/help", Desc: "使用说明", Param: ""},
-		{Cmd: "/box", Desc: "我的干员", Param: ""},
-		{Cmd: "/state", Desc: "当前状态", Param: ""},
-		{Cmd: "/card", Desc: "我的名片", Param: ""},
-		{Cmd: "/base", Desc: "基建信息", Param: ""},
-		{Cmd: "/gacha", Desc: "抽卡记录", Param: ""},
-		{Cmd: "/depot", Desc: "我的仓库", Param: ""},
-		{Cmd: "/calendar", Desc: "活动日历", Param: ""},
-		{Cmd: "/recruit", Desc: "公招计算", Param: ""},
-		{Cmd: "/headhunt", Desc: "寻访模拟", Param: ""},
+	return &HelpData{
+		Private: []Cmd{
+			{Cmd: "/bind", Desc: "绑定角色", Param: "", IsBind: false},
+			{Cmd: "/unbind", Desc: "解绑角色", Param: "", IsBind: true},
+			{Cmd: "/cancel", Desc: "取消操作", Param: "", IsBind: false},
+			{Cmd: "/reset_token", Desc: "重设token", Param: "", IsBind: true},
+			{Cmd: "/import_gacha", Desc: "导入抽卡记录", Param: "", IsBind: true},
+			{Cmd: "/export_gacha", Desc: "导出抽卡记录", Param: "", IsBind: true},
+		},
+		Public: []Cmd{
+			{Cmd: "/help", Desc: "使用说明", Param: "", IsBind: false},
+			{Cmd: "/ping", Desc: "存活测试", Param: "", IsBind: false},
+			{Cmd: "/tag", Desc: "自定义群标签", Param: "标签", IsBind: false},
+			{Cmd: "/sign", Desc: "签到", Param: "", IsBind: true},
+			{Cmd: "/sign", Desc: "开启自动签到", Param: "auto", IsBind: true},
+			{Cmd: "/sign", Desc: "关闭自动签到", Param: "stop", IsBind: true},
+			{Cmd: "/sign", Desc: "全部通知", Param: "notify_all", IsBind: true},
+			{Cmd: "/sign", Desc: "仅失败时通知", Param: "notify_fail", IsBind: true},
+			{Cmd: "/sign", Desc: "仅成功时通知", Param: "notify_success", IsBind: true},
+			{Cmd: "/ap", Desc: "开启理智提醒", Param: "on", IsBind: true},
+			{Cmd: "/ap", Desc: "关闭理智提醒", Param: "off", IsBind: true},
+			{Cmd: "/ap", Desc: "设理智提醒阈值", Param: "thr [1-100]", IsBind: true},
+			{Cmd: "/state", Desc: "当前状态", Param: "", IsBind: true},
+			{Cmd: "/box", Desc: "我的干员(默认6星)", Param: "", IsBind: true},
+			{Cmd: "/box", Desc: "所有干员", Param: "all", IsBind: true},
+			{Cmd: "/box", Desc: "对应星级干员", Param: "5,6", IsBind: true},
+			{Cmd: "/box_detail", Desc: "干员详情(默认6星)", Param: "", IsBind: true},
+			{Cmd: "/box_detail", Desc: "对应星级干员", Param: "5", IsBind: true},
+			{Cmd: "/box_summary", Desc: "干员信息汇总", Param: "", IsBind: true},
+			{Cmd: "/missing", Desc: "未获取干员(默认6星)", Param: "", IsBind: true},
+			{Cmd: "/missing", Desc: "所有未获取干员", Param: "all", IsBind: true},
+			{Cmd: "/missing", Desc: "对应星级未获取干员", Param: "5,6", IsBind: true},
+			{Cmd: "/card", Desc: "我的名片", Param: "", IsBind: true},
+			{Cmd: "/base", Desc: "基建信息", Param: "", IsBind: true},
+			{Cmd: "/gacha", Desc: "抽卡记录", Param: "", IsBind: true},
+			{Cmd: "/operator", Desc: "干员查询", Param: "", IsBind: false},
+			{Cmd: "/skin", Desc: "干员皮肤查询", Param: "", IsBind: false},
+			{Cmd: "/enemy", Desc: "敌人查询", Param: "", IsBind: false},
+			{Cmd: "/report", Desc: "举报", Param: "", IsBind: false},
+			{Cmd: "/quiz", Desc: "云玩家检测", Param: "", IsBind: false},
+			{Cmd: "/quiz", Desc: "云玩家检测(困难)", Param: "h", IsBind: false},
+			{Cmd: "/redeem", Desc: "CDK兑换", Param: "[CDK]", IsBind: true},
+			{Cmd: "/headhunt", Desc: "寻访模拟", Param: "", IsBind: false},
+			{Cmd: "/recruit", Desc: "公招计算(图片附带)", Param: "", IsBind: false},
+			{Cmd: "/calendar", Desc: "活动日历", Param: "", IsBind: false},
+			{Cmd: "/depot", Desc: "我的仓库", Param: "", IsBind: true},
+		},
+		Admin: []Cmd{
+			{Cmd: "/news", Desc: "开启/关闭动态推送", Param: "", IsBind: false},
+			{Cmd: "/birthday", Desc: "开启/关闭生日推送", Param: "", IsBind: false},
+			{Cmd: "/request_mode", Desc: "切换群验证模式", Param: "", IsBind: false},
+			{Cmd: "/quiz", Desc: "开启云玩家检测", Param: "on", IsBind: false},
+			{Cmd: "/quiz", Desc: "关闭云玩家检测", Param: "off", IsBind: false},
+			{Cmd: "/headhunt", Desc: "开启寻访模拟", Param: "on", IsBind: false},
+			{Cmd: "/headhunt", Desc: "关闭寻访模拟", Param: "off", IsBind: false},
+			{Cmd: "/reg", Desc: "回复消息设置为群规", Param: "", IsBind: false},
+			{Cmd: "/welcome", Desc: "设置入群欢迎信息", Param: "文本", IsBind: false},
+		},
 	}
-	h.Admin = []Cmd{{Cmd: "/news", Desc: "动态推送", Param: ""}, {Cmd: "/birthday", Desc: "生日推送", Param: ""}}
-	return h
 }
 
-func RenderHelp(data *HelpData) (*gg.Context, error) {
-	const mainW = 990
-	// heights: header 200 + sections
-	privH := 40 + len(data.Private)*32
-	pubH := 40 + len(data.Public)*32
-	adminH := 40 + len(data.Admin)*32
-	mainH := 200 + privH + pubH + adminH + 60
-	dc := gg.NewContext(mainW, mainH)
-	FillBackground(dc, 46, 48, 49)
-	// banner placeholder
-	dc.SetRGB255(60, 62, 80)
-	dc.DrawRectangle(0, 0, float64(mainW), 140)
-	dc.Fill()
-	setFont(dc, 28)
+// drawHelpPerson approximates the 16px bootstrap person-circle glyphs used
+// for bind markers: outer ring + head dot, currentColor white.
+func drawHelpPerson(dc *gg.Context, x, y float64) {
 	dc.SetRGB255(255, 255, 255)
-	drawString(dc, "Arknights Bot · 使用说明", 30, 80)
-	setFont(dc, 14)
-	dc.SetRGB255(200, 220, 255)
-	drawString(dc, "基于森空岛数据的罗德岛助手", 30, 110)
-	y := 160
-	drawSection := func(title string, cmds []Cmd, yy int) int {
-		setFont(dc, 16)
-		dc.SetRGB255(120, 200, 220)
-		drawString(dc, title, 20, float64(yy))
-		yy += 20
-		for _, c := range cmds {
-			dc.SetRGBA255(255, 255, 255, 10)
-			RoundRect(dc, 20, float64(yy), float64(mainW-40), 28, 6)
-			setFont(dc, 13)
-			dc.SetRGB255(255, 230, 120)
-			drawString(dc, c.Cmd, 30, float64(yy+18))
-			dc.SetRGB255(200, 200, 200)
-			drawString(dc, c.Desc, 160, float64(yy+18))
-			if c.Param != "" {
-				dc.SetRGB255(160, 180, 200)
-				drawString(dc, c.Param, 300, float64(yy+18))
-			}
-			yy += 32
-		}
-		return yy + 10
+	dc.SetLineWidth(1.5)
+	dc.DrawCircle(x+8, y+8, 7)
+	dc.Stroke()
+	dc.DrawCircle(x+8, y+6, 2.2)
+	dc.Fill()
+}
+
+// RenderHelp draws Help.tmpl at design 660x1366 (990x2049 @1.5). Structure
+// (template-declared): banner.png (100% width, margin-top 10) with h1/p
+// overlays; .bg dark gradient + amiya cover block; per group a 40px label
+// bar with cmdType overlay, then 150px .cmd pills (15px/600, border 1px,
+// radius 10) floating 4 per row with two text lines + optional 16px bind
+// glyph. tr/pill box-shadows declared but not drawn (open item). The
+// person-circle glyphs render as ring+dot (stated approximation of the
+// bootstrap path data, illegible at 16px either way).
+func RenderHelp(data *HelpData) (*gg.Context, error) {
+	const mainW, mainH = 660, 1366
+	dc := gg.NewContext(mainW, mainH)
+	if bg := cardAsset("help/bg.jpg"); bg != nil {
+		dc.DrawImage(ScaleCover(bg, mainW, mainH), 0, 0)
 	}
-	y = drawSection("私聊指令", data.Private, y)
-	y = drawSection("群聊指令", data.Public, y)
-	y = drawSection("管理员指令", data.Admin, y)
+	// Banner: img 660x239 at y=10; h1 32px bold + bind-note p overlaid.
+	if banner := cardAsset("help/banner.png"); banner != nil {
+		bb := banner.Bounds()
+		bh := 660 * bb.Dy() / bb.Dx()
+		dc.DrawImage(ScaleExact(banner, 660, bh), 0, 10)
+	}
+	setFont(dc, 32)
+	dc.SetRGB255(255, 255, 255)
+	cardTextTop(dc, "使用说明", 20, 249-110)
+	drawHelpPerson(dc, 20, 196)
+	setFont(dc, 16)
+	drawString(dc, "为需要绑定角色的指令", 40, 196+15)
+	// .bg starts below the banner floats. CSS paints first-listed background
+	// on top: amiya.png first, then the rgba(0,0,0,0.8) gradient over it.
+	bgTop := 249.0
+	if amiya := cardAsset("help/amiya.png"); amiya != nil {
+		ab := amiya.Bounds()
+		ah := 660 * ab.Dy() / ab.Dx()
+		dc.DrawImage(ScaleExact(amiya, 660, ah), 0, int(bgTop))
+	}
+	dc.SetRGBA255(0, 0, 0, 204)
+	dc.DrawRectangle(0, bgTop, mainW, mainH-bgTop)
+	dc.Fill()
+	y := bgTop
+	drawGroup := func(title string, cmds []Cmd) {
+		y += 10
+		if label := cardAsset("help/label.png"); label != nil {
+			dc.DrawImage(ScaleExact(label, 660, 40), 0, int(y))
+		}
+		setFont(dc, 16)
+		dc.SetRGB255(255, 255, 255)
+		drawString(dc, title, 25, y+8+13)
+		y += 40
+		for i, c := range cmds {
+			px := 10.0 + float64(i%4)*160
+			py := y + 15 + float64(i/4)*68
+			dc.SetRGB255(255, 255, 255)
+			dc.SetLineWidth(1.5)
+			dc.DrawRoundedRectangle(px+0.75, py+0.75, 150-1.5, 53-1.5, 10)
+			dc.Stroke()
+			setFont(dc, 15)
+			line1 := c.Cmd
+			if c.Param != "" {
+				line1 += " " + c.Param
+			}
+			drawString(dc, line1, px+5, py+1+3+15.75)
+			if c.IsBind {
+				drawHelpPerson(dc, px+150-10-16, py+1+3+3)
+			}
+			drawString(dc, c.Desc, px+5, py+1+3+15.75+22.5)
+		}
+		rows := (len(cmds) + 3) / 4
+		if rows < 1 {
+			rows = 1
+		}
+		y += 15 + float64(rows)*53 + float64(rows-1)*15
+	}
+	drawGroup("私聊指令", data.Private)
+	drawGroup("普通指令", data.Public)
+	drawGroup("管理员指令", data.Admin)
 	return ScaleToManifest(dc, 990, 2049), nil
 }
 
