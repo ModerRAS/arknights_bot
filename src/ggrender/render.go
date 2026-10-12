@@ -1623,8 +1623,16 @@ func RenderLottery(data *LotteryData) (*gg.Context, error) {
 	dc.SetRGB255(0, 229, 255)
 	dc.DrawRectangle((W-tw)/2-4, 132, tw+8, 3)
 	dc.Fill()
-	// 10x10 grid (measured from baseline: x0=200 y0=189 pitch=136.5 cell=112)
-	const gridX, gridY, pitch, cell = 200.0, 189.0, 136.5, 112.0
+	// 10x10 grid from Lottery.tmpl declarations (scale 1.5, device px).
+	// Screenshot is the #main element (manifest bbox x=149 = page centering),
+	// so in-image x starts at the border box: border 1 + padding 40.
+	// gridX = (1+40)*1.5 = 61.5. Grid width 900: 10 cells + 9 gaps of 8 ->
+	// cell = (900-9*8)/10 = 82.8 CSS = 124.2 device; pitch = (82.8+8)*1.5.
+	// gridY: padding-top 40 + h1 line 28*1.5 + padding-bottom 10 + border 2
+	// + .header margin-bottom 30 = 124 CSS = 186 device. The old values
+	// (200/189/136.5/112, measured off the baseline image) pushed the whole
+	// grid ~one pitch right and clipped column 10 at the canvas edge.
+	const gridX, gridY, pitch, cell = 61.5, 186.0, 136.2, 124.2
 	byNum := make(map[int64]LotteryDetail, len(data.Details))
 	for _, d := range data.Details {
 		byNum[d.LotteryNumber] = d
