@@ -182,52 +182,97 @@ type BoxInfo struct {
 	Chars []Char
 }
 
+// SampleBox carries the box-minimal fixture values. Provenance:
+// feat/gg-render-canvas:src/core/web/static_props_export_test.go BoxFixture
+// (in-repo declaration): 测试博士 + 11 identical Amiya chars.
 func SampleBox() *BoxInfo {
-	profs := []string{"WARRIOR", "CASTER", "MEDIC", "PIONEER", "SNIPER", "SPECIAL", "SUPPORT", "TANK"}
-	chars := make([]Char, 0, 18)
-	for i := 0; i < 18; i++ {
-		r := 3 + i%4
+	chars := make([]Char, 0, 11)
+	for i := 0; i < 11; i++ {
 		chars = append(chars, Char{
-			SkinId:        fmt.Sprintf("char_%03d_amiya_%d", i, i%3+1),
-			Name:          fmt.Sprintf("干员%d", i+1),
-			Rarity:        r,
-			Profession:    profs[i%len(profs)],
-			Level:         30 + i%60,
-			EvolvePhase:   i % 3,
-			PotentialRank: i % 6,
+			CharId: "char_002_amiya", SkinId: "char_002_amiya#1", Name: "阿米娅",
+			Level: 90, EvolvePhase: 2, PotentialRank: 5, FavorPercent: 100,
+			Rarity: 5, Profession: "WARRIOR",
 		})
 	}
-	return &BoxInfo{Name: "博士的作战档案", Chars: chars}
+	return &BoxInfo{Name: "测试博士", Chars: chars}
+}
+
+// boxPortraitURL builds the URL exactly as Box.tmpl declares
+// (char_skin/portrait/{{urlquery .SkinId}}.png); offline fallback per the
+// template's onerror is assets/common/amiya.png. Both live URLs verified
+// reachable (hycdn 200, prts thumb 200), so the fallback is a safety net.
+func boxPortraitURL(skinID string) (string, string) {
+	return "https://web.hycdn.cn/arknights/game/assets/char_skin/portrait/" + url.QueryEscape(skinID) + ".png", AssetPath("common/amiya.png")
+}
+
+// drawBoxTile draws one 70x140 .operator tile per Box/Missing.tmpl.
+// Overlay geometry from display types + declared margins (all absolute
+// insertions share the static position right after the 70px img, except the
+// block-level .level/.name divs whose static position is below the img):
+// profession 15px at (+3,+5); rarity 40px at (+20,+5); evolve 40px at
+// (+20,+80); level 20px circle at (+5,+106); potential 30px at (+40,+100);
+// name bar 70x15 at (+0,+127) with 10px centered text. Missing omits the
+// evolve/level/potential row (its template has none).
+func drawBoxTile(dc *gg.Context, x, y float64, portraitURL, profession string, rarity, evolve, potential, level int, name string, detail bool) {
+	pURL, pFB := portraitURL, AssetPath("common/amiya.png")
+	if portraitURL == "" || len(portraitURL) < 8 || portraitURL[:8] != "https://" {
+		pURL, pFB = boxPortraitURL(portraitURL)
+	}
+	dc.DrawImage(ScaleExact(FetchImage(pURL, pFB), 70, 140), int(x), int(y))
+	if prof := cardAsset("box/" + profession + ".png"); prof != nil {
+		dc.DrawImage(ScaleExact(prof, 15, 15), int(x)+3, int(y)+5)
+	}
+	if rar := cardAsset("box/Rarity_" + itoa(rarity) + ".png"); rar != nil {
+		rb := rar.Bounds()
+		dc.DrawImage(ScaleExact(rar, 40, 40*rb.Dy()/rb.Dx()), int(x)+20, int(y)+5)
+	}
+	if detail {
+		if evo := cardAsset("box/Evolve_" + itoa(evolve) + ".png"); evo != nil {
+			eb := evo.Bounds()
+			dc.DrawImage(ScaleExact(evo, 40, 40*eb.Dy()/eb.Dx()), int(x)+20, int(y)+80)
+		}
+		dc.SetRGB255(0, 0, 0)
+		dc.DrawCircle(x+15, y+116, 10)
+		dc.Fill()
+		setFont(dc, 16)
+		dc.SetRGB255(255, 255, 255)
+		drawStringAnchored(dc, itoa(level), x+15, y+116, 0.5, 0.4)
+		if pot := cardAsset("box/Potential_" + itoa(potential) + ".png"); pot != nil {
+			dc.DrawImage(ScaleExact(pot, 30, 30), int(x)+40, int(y)+100)
+		}
+	}
+	dc.SetRGBA255(0, 0, 0, 179) // .name{background-color:rgba(0,0,0,0.7)}
+	dc.DrawRectangle(x, y+127, 70, 15)
+	dc.Fill()
+	setFont(dc, 10)
+	dc.SetRGB255(255, 255, 255)
+	drawStringAnchored(dc, name, x+35, y+134, 0.5, 0.5)
+}
+
+// drawBoxHeader draws the label.png bar (width 100%) with the 30px title
+// pulled up by margin-top:-55. label.png is 644x70 -> 700x76.09.
+func drawBoxHeader(dc *gg.Context, title string) float64 {
+	if label := cardAsset("help/label.png"); label != nil {
+		lb := label.Bounds()
+		lh := 700 * lb.Dy() / lb.Dx()
+		dc.DrawImage(ScaleExact(label, 700, lh), 0, 0)
+	}
+	labelH := 700.0 * 70 / 644
+	setFont(dc, 30)
+	dc.SetRGB255(255, 255, 255)
+	cardTextTop(dc, title, 25, labelH-55)
+	return labelH
 }
 
 func RenderBox(data *BoxInfo) (*gg.Context, error) {
 	const mainW = 700
-	tileW, tileH := 70, 140
-	cols := 10
-	rows := (len(data.Chars) + cols - 1) / cols
-	if rows < 1 {
-		rows = 1
-	}
-	labelH := 60
-	gridTop := labelH + 10
-	mainH := gridTop + rows*tileH + 20
-	dc := gg.NewContext(mainW, mainH)
-	FillBackground(dc, 46, 48, 49)
-	// label bar
-	dc.SetRGB255(60, 62, 64)
-	dc.DrawRectangle(0, 0, float64(mainW), float64(labelH))
-	dc.Fill()
-	setFont(dc, 28)
-	dc.SetRGB255(255, 255, 255)
-	drawString(dc, data.Name, 25, float64(labelH)-20)
+	dc := gg.NewContext(mainW, 357) // content 76.09+280 = 356.09, snapped 357
+	FillBackground(dc, 46, 48, 49)  // #main{background-color:#2e3031}
+	labelH := drawBoxHeader(dc, "Dr "+data.Name)
 	for i, c := range data.Chars {
-		x := (i % cols) * tileW
-		y := gridTop + (i/cols)*tileH
-		DrawPortraitTile(dc, x, y, tileW, tileH, "", c.Profession, c.Rarity, c.Level, c.Name)
-		if c.EvolvePhase > 0 {
-			ev := tryLocal(fmt.Sprintf("box/Evolve_%d.png", c.EvolvePhase))
-			dc.DrawImage(ScaleExact(ev, 24, 24), x+tileW-26, y+tileH/2)
-		}
+		x := float64((i % 10) * 70) // .operator{float:left}, 10 per 700px row
+		y := labelH + float64(i/10)*140
+		drawBoxTile(dc, x, y, c.SkinId, c.Profession, c.Rarity, c.EvolvePhase, c.PotentialRank, c.Level, c.Name, true)
 	}
 	return ScaleToManifest(dc, 1050, 536), nil
 }
@@ -742,37 +787,26 @@ type MissingInfo struct {
 	Chars []MissingChar
 }
 
+// SampleMissing carries the missing-minimal fixture values. Provenance:
+// feat/gg-render-canvas:src/core/web/static_props_export_test.go
+// MissingFixture (in-repo declaration): 测试博士 + 11 Amiya thumbs.
 func SampleMissing() *MissingInfo {
-	chars := make([]MissingChar, 0, 12)
-	for i := 0; i < 12; i++ {
-		chars = append(chars, MissingChar{SkinId: fmt.Sprintf("char_%03d_x_%d", i, i%3+1), Name: fmt.Sprintf("缺失%d", i+1), Rarity: 3 + i%4, Profession: "WARRIOR"})
+	chars := make([]MissingChar, 0, 11)
+	for i := 0; i < 11; i++ {
+		chars = append(chars, MissingChar{SkinId: "https://media.prts.wiki/a/a0/%E5%8D%8A%E8%BA%AB%E5%83%8F_%E9%98%BF%E7%B1%B3%E5%A8%85_1.png?image_process=format,webp/quality,Q_90", Name: "阿米娅", Rarity: 5, Profession: "WARRIOR"})
 	}
-	return &MissingInfo{Name: "博士 的未拥有干员", Chars: chars}
+	return &MissingInfo{Name: "测试博士", Chars: chars}
 }
 
 func RenderMissing(data *MissingInfo) (*gg.Context, error) {
 	const mainW = 700
-	tileW, tileH := 70, 140
-	cols := 10
-	rows := (len(data.Chars) + cols - 1) / cols
-	if rows < 1 {
-		rows = 1
-	}
-	labelH := 60
-	gridTop := labelH + 10
-	mainH := gridTop + rows*tileH + 20
-	dc := gg.NewContext(mainW, mainH)
-	FillBackground(dc, 46, 48, 49)
-	dc.SetRGB255(60, 62, 64)
-	dc.DrawRectangle(0, 0, float64(mainW), float64(labelH))
-	dc.Fill()
-	setFont(dc, 26)
-	dc.SetRGB255(255, 255, 255)
-	drawString(dc, data.Name, 25, float64(labelH)-18)
+	dc := gg.NewContext(mainW, 357)
+	FillBackground(dc, 46, 48, 49) // #main{background-color:#2e3031}
+	labelH := drawBoxHeader(dc, "Dr "+data.Name+"(未获取)")
 	for i, c := range data.Chars {
-		x := (i % cols) * tileW
-		y := gridTop + (i/cols)*tileH
-		DrawPortraitTile(dc, x, y, tileW, tileH, c.SkinId, c.Profession, c.Rarity, 0, c.Name)
+		x := float64((i % 10) * 70)
+		y := labelH + float64(i/10)*140
+		drawBoxTile(dc, x, y, c.SkinId, c.Profession, c.Rarity, 0, 0, 0, c.Name, false)
 	}
 	return ScaleToManifest(dc, 1050, 536), nil
 }
