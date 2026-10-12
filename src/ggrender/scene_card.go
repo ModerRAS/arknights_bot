@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"image"
 	"image/color"
+	"net/url"
 	"sort"
 	"time"
 
@@ -70,6 +71,51 @@ func cardTextSpacedCenter(dc *gg.Context, s string, cx, cy, spacing float64) {
 		drawString(dc, string(r), x, cy)
 		x += adv[i] + spacing
 	}
+}
+
+// cardFade scales alpha, keeping RGB (for the nation Flag -1 dimming).
+func cardFade(src image.Image, opacity uint8) image.Image {
+	if src == nil {
+		return nil
+	}
+	b := src.Bounds()
+	out := image.NewRGBA(image.Rect(0, 0, b.Dx(), b.Dy()))
+	for y := 0; y < b.Dy(); y++ {
+		for x := 0; x < b.Dx(); x++ {
+			r, g, bl, a := src.At(b.Min.X+x, b.Min.Y+y).RGBA()
+			out.SetRGBA(x, y, color.RGBA{R: uint8(r >> 8), G: uint8(g >> 8), B: uint8(bl >> 8), A: uint8(uint32(a>>8) * uint32(opacity) / 255)})
+		}
+	}
+	return out
+}
+
+// cardSecretaryMask applies Card.tmpl's declared mask
+// (-webkit-mask: linear-gradient(0deg, transparent, #fff 50%)): alpha ramps
+// 0 at the bottom edge to 1 at mid-height, opaque above.
+func cardSecretaryMask(src image.Image) image.Image {
+	if src == nil {
+		return nil
+	}
+	b := src.Bounds()
+	w, h := b.Dx(), b.Dy()
+	out := image.NewRGBA(image.Rect(0, 0, w, h))
+	for y := 0; y < h; y++ {
+		a := 1.0
+		if y > h/2 {
+			a = float64(h-y) / float64(h/2)
+		}
+		for x := 0; x < w; x++ {
+			r, g, bl, al := src.At(b.Min.X+x, b.Min.Y+y).RGBA()
+			out.SetRGBA(x, y, color.RGBA{R: uint8(r >> 8), G: uint8(g >> 8), B: uint8(bl >> 8), A: uint8(float64(uint32(al>>8)) * a)})
+		}
+	}
+	return out
+}
+// cardSkinURL builds the assist avatar URL exactly as Card.tmpl declares
+// (char_skin/avatar/{{urlquery .SkinID}}.png); offline it falls back per the
+// template's onerror to assets/common/amiya.png.
+func cardSkinURL(skinID string) (string, string) {
+	return "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/" + url.QueryEscape(skinID) + ".png", AssetPath("common/amiya.png")
 }
 
 // cardMaskAlpha removes the white background from the bundled fallback art.
@@ -143,9 +189,17 @@ func RenderCard(data *CardInfo) (*gg.Context, error) {
 	if bg := cardAsset("card/bg.png"); bg != nil {
 		dc.DrawImage(ScaleExact(bg, W, H), 0, 0)
 	}
-
-	// Secretary is an API-only field in the reduced fixture. The bundled Amiya
-	// art keeps the layout useful while remaining deterministic and offline.
+	// Secretary painting: the fixture URL is fixture-cache.invalid (dead), but
+	// the capture manifest records aliasing it to prts 立绘_阿米娅_1.png for
+	// targets:["Card Secretary"] (sha4f1fbd58 verified on copy) -- the same
+	// capture-rescued class as depot lmd.png: copied to assets/, render never
+	// reads testdata/visual/baseline/. Drawn at left:5% (=64), max-height:720
+	// (1024 source renders 720x720 at y=0), with the declared -webkit-mask:
+	// linear-gradient(0deg, transparent, #fff 50%) as a bottom-half ramp.
+	// The template declares no onerror fallback here.
+	if sec, serr := LoadImage(AssetPath("card/card-secretary-1024.png")); serr == nil {
+		dc.DrawImage(ScaleExact(cardSecretaryMask(sec), 720, 720), 64, 0)
+	}
 
 	// Left column.
 	dc.SetColor(cardBlue)
@@ -205,11 +259,39 @@ func RenderCard(data *CardInfo) (*gg.Context, error) {
 	dc.SetRGB255(255, 255, 255)
 	setFont(dc, 55)
 	cardTextTop(dc, itoa(data.CharCnt), 20, 519)
+	// Nation flags: 320px div, imgs 30px wide with template-newline gaps.
+	// Flag 1 renders the drop-shadow silhouette trick (blue copy at place),
+	// -1 renders at opacity 0.2, 0 renders plain. Row tops below the 55px
+	// CharCnt line box (55x1.5).
+	nx := 20.0
+	for _, n := range data.NationList {
+		if flag := cardAsset("card/" + n.Name + ".png"); flag != nil {
+			fb := flag.Bounds()
+			fh := 30 * fb.Dy() / fb.Dx()
+			switch {
+			case n.Flag == 1:
+				dc.DrawImage(ScaleExact(cardTint(flag, cardBlue, 255), 30, fh), int(nx), 602)
+			case n.Flag == -1:
+				dc.DrawImage(ScaleExact(cardFade(flag, 51), 30, fh), int(nx), 602)
+			default:
+				dc.DrawImage(ScaleExact(flag, 30, fh), int(nx), 602)
+			}
+			nx += 30 + 3.584
+		}
+	}
 
 	// Right name card. The negative float margin in the HTML clips its top.
 	const nameCardY = -41.0
 	if nameCard := cardAsset("card/name_card_short.png"); nameCard != nil {
 		dc.DrawImage(nameCard, 642, nameCardY)
+	}
+	// headicon_back.png at top:30 left:30 inside the name card, intrinsic size.
+	if headBack := cardAsset("card/headicon_back.png"); headBack != nil {
+		dc.DrawImage(headBack, 642+30, int(nameCardY)+30)
+	}
+	// #avatar{width:130px;left:-112px;top:13px} with onerror amiya fallback.
+	if av := FetchImage(data.Avatar, AssetPath("common/amiya.png")); av != nil {
+		dc.DrawImage(ScaleExact(av, 130, 130), 642-112, int(nameCardY)+13)
 	}
 	if levelBG := cardAsset("card/level_bg.png"); levelBG != nil {
 		dc.DrawImage(levelBG, 676, nameCardY+3)
@@ -252,14 +334,39 @@ func RenderCard(data *CardInfo) (*gg.Context, error) {
 	setFont(dc, 13)
 	cardTextTopCenter(dc, "SUPPORT UNIT", 728, 360)
 	if assistBack := cardAsset("card/back_end.png"); assistBack != nil {
-		for i := 0; i < 3; i++ {
+		for i := range data.AssistChars {
 			dc.DrawImage(assistBack, 782+i*154, 264)
 		}
 	}
-	if assistAvatar := cardMaskAlpha(cardAsset("common/amiya.png")); assistAvatar != nil {
-		for i := 0; i < 3; i++ {
-			dc.DrawImage(ScaleExact(assistAvatar, 130, 130), 792+i*154, 266)
+	// Assist operators from data: portrait (remote, amiya fallback per
+	// template onerror), spec-max badge, evolve icon, LV badge. Template
+	// geometry: 150px cell; avatar 130 wide at left:10 top:2; spec badge
+	// 50 wide at right:5 top:0; evolve icon 40 wide at left:100 bottom:20;
+	// .level{width:25px;padding:3px;left:15px;top:0} with 10px LV + number.
+	for i, ac := range data.AssistChars {
+		if i > 2 {
+			break
 		}
+		cx, cy := 782+i*154, 264
+		aURL, aFB := cardSkinURL(ac.SkinID)
+		dc.DrawImage(ScaleExact(FetchImage(aURL, aFB), 130, 130), cx+10, cy+2)
+		if ac.IsSpecMax {
+			if spec := cardAsset("card/spec_max_icon.png"); spec != nil {
+				sb := spec.Bounds()
+			sh := 50 * sb.Dy() / sb.Dx()
+				dc.DrawImage(ScaleExact(spec, 50, sh), cx+150-5-50, cy)
+			}
+		}
+		if evo := cardAsset("card/Evolve_" + itoa(ac.EvolvePhase) + ".png"); evo != nil {
+			eb := evo.Bounds()
+			eh := 40 * eb.Dy() / eb.Dx()
+				dc.DrawImage(ScaleExact(evo, 40, eh), cx+100, cy+150-20-eh)
+			}
+		setFont(dc, 10)
+		dc.SetRGB255(255, 255, 255)
+		cardTextTopCenter(dc, "LV", float64(cx+15+12), float64(cy))
+		setFont(dc, 17)
+		cardTextTop(dc, itoa(ac.Level), float64(cx+15), float64(cy+12))
 	}
 
 	// Module statistics panel. Fine-grained counts are unavailable in CardInfo;
@@ -268,7 +375,8 @@ func RenderCard(data *CardInfo) (*gg.Context, error) {
 	dc.SetRGBA255(0, 0, 0, 153)
 	RoundRect(dc, modX, modY, 605, 196, 15)
 	if moduleBG := cardAsset("card/module_collection_bg.png"); moduleBG != nil {
-		dc.DrawImage(moduleBG, 656, 442)
+		mb := moduleBG.Bounds()
+		dc.DrawImage(moduleBG, int(modX+605-mb.Dx()), int(modY))
 	}
 	if moduleIcon := cardAsset("card/module_collection_bg_icon.png"); moduleIcon != nil {
 		dc.DrawImage(cardTint(moduleIcon, color.RGBA{R: 255, G: 255, B: 255, A: 255}, 77), modX+40, modY+14)
@@ -278,8 +386,8 @@ func RenderCard(data *CardInfo) (*gg.Context, error) {
 		value int
 	}{
 		{"总收集模组", data.EquipCnt},
-		{"STAGE3模组", 0},
-		{"拥有模组干员", 0},
+		{"STAGE3模组", data.EquipStage3Cnt},
+		{"拥有模组干员", data.EquipOperatorCnt},
 	}
 	for i, stat := range stats {
 		x := modX + 92 + float64(i)*168

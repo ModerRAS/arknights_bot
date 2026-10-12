@@ -539,7 +539,15 @@ func RenderEnemy(data *Enemy) (*gg.Context, error) {
 	hline(yy, 2)
 	yy += 2
 	picH := 158.0
-	pic := FetchImage(data.Pic, AssetPath("common/amiya.png"))
+	// Portrait bytes: the fixture's prts URL 404s today (verified live), but
+	// the capture manifest records serving these exact bytes for it
+	// (targets:["Enemy pic"], sha34e239ab verified on copy), vendored to
+	// assets/ per the depot lmd precedent. Template fallback (amiya) applies
+	// only if the vendored file itself is missing.
+	pic, perr := LoadImage(AssetPath("enemy/enemy-originium-slug-158.png"))
+	if perr != nil {
+		pic = FetchImage(data.Pic, AssetPath("common/amiya.png"))
+	}
 	dc.DrawImage(ScaleExact(pic, 158, 158), int(colX[0]+1+(colW[0]-2-158)/2), int(yy+1))
 	setFont(dc, 16)
 	descW, _ := measure(dc, data.Desc)
@@ -1374,18 +1382,47 @@ func RenderBase(data *BaseInfo) (*gg.Context, error) {
 }
 
 // Card
+type CardNation struct {
+	Name string
+	Flag int64 // 1 highlighted, 0 plain, -1 dimmed
+}
+type CardAssist struct {
+	Name        string
+	SkinID      string
+	Level       int
+	EvolvePhase int
+	IsSpecMax   bool
+}
 type CardInfo struct {
 	Name, Uid, ServerName, Resume                             string
 	Level, RegTime                                            int
-	MainStageProgress, Avatar, SecretaryName, SecretaryEnName string
-	CharCnt, FurnitureCnt, SkinCnt, EquipCnt                  int
+	MainStageProgress, Avatar, Secretary                     string
+	SecretaryName, SecretaryEnName                            string
+	CharCnt, FurnitureCnt, SkinCnt                            int
+	EquipCnt, EquipStage3Cnt, EquipOperatorCnt                int
+	NationList                                                []CardNation
+	AssistChars                                               []CardAssist
 }
 
+// SampleCard carries the card-minimal fixture values. Provenance:
+// feat/gg-render-canvas:src/core/web/complex_props_export_test.go
+// visualComplexCardFixture (in-repo declaration). RegTime 1704067200 renders
+// 2024-01-01; assists carry real SkinIDs (remote, amiya fallback offline).
 func SampleCard() *CardInfo {
 	return &CardInfo{
-		Name: "博士", Uid: "10000001", ServerName: "官服", Resume: "罗德岛的博士，今日也在努力。",
-		Level: 120, RegTime: 1620000000, MainStageProgress: "12-18", Avatar: "", SecretaryName: "阿米娅", SecretaryEnName: "Amiya",
-		CharCnt: 280, FurnitureCnt: 320, SkinCnt: 120, EquipCnt: 80,
+		Name: "冻结博士", Uid: "10000001", ServerName: "官服", Resume: "稳定基线签名",
+		Level: 120, RegTime: 1704067200, MainStageProgress: "14-21",
+		Avatar: "https://fixture-cache.invalid/card/player-avatar.png",
+		Secretary: "https://fixture-cache.invalid/card/secretary-painting.png",
+		SecretaryName: "阿米娅", SecretaryEnName: "Amiya",
+		CharCnt: 289, FurnitureCnt: 100, SkinCnt: 88,
+		EquipCnt: 46, EquipStage3Cnt: 12, EquipOperatorCnt: 23,
+		NationList: []CardNation{{Name: "rhodes", Flag: 1}, {Name: "lungmen", Flag: 0}, {Name: "yan", Flag: -1}},
+		AssistChars: []CardAssist{
+			{Name: "阿米娅", SkinID: "char_002_amiya#1", Level: 90, EvolvePhase: 2, IsSpecMax: true},
+			{Name: "能天使", SkinID: "char_103_angel#1", Level: 90, EvolvePhase: 2, IsSpecMax: false},
+			{Name: "德克萨斯", SkinID: "char_102_texas#1", Level: 80, EvolvePhase: 2, IsSpecMax: true},
+		},
 	}
 }
 
