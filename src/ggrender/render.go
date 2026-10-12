@@ -436,64 +436,152 @@ type Enemy struct {
 	Levels                                                     []EnemyLevel
 }
 
+// SampleEnemy carries the enemy-minimal fixture values. Provenance:
+// feat/gg-render-canvas:src/core/web/complex_props_export_test.go
+// visualComplexEnemyFixture (in-repo declaration): 源石虫 with prts pic URL,
+// race 感染生物 / 普通 / 近战 / 地面, markup ability, and 2 full levels.
+// Levels are kept for fidelity but fall beyond the 318-high manifest viewport
+// (same clipping contract as base), so this renderer draws the #base table.
 func SampleEnemy() *Enemy {
 	return &Enemy{
-		Name: "霜星", Pic: "", Desc: "雪怪小队领袖，擅长冰属性法术。", EnemyRace: "人类", EnemyLevel: "精英", AttackType: "法术", Motion: "地面",
-		Ability: "攻击造成法术伤害，并施加寒冷。",
-		Levels:  []EnemyLevel{{HP: "12000", ATK: "850", DEF: "300", Res: "40", Talent: "攻击范围内我方单位移动速度降低。", Skills: []EnemySkill{{Name: "冰封", SpInit: "10", SpCost: "30", Desc: "对范围内单位造成大量法术伤害并冻结。"}}}},
+		Name: "源石虫", Pic: "https://media.prts.wiki/3/3e/%E5%A4%B4%E5%83%8F_%E6%95%B5%E4%BA%BA_%E6%BA%90%E7%9F%B3%E8%99%AB.png", Desc: "拥有较高防御力的感染生物。", EnemyRace: "感染生物", EnemyLevel: "普通", AttackType: "近战", Motion: "地面",
+		Ability: "<span>免疫沉默</span>",
+		Levels: []EnemyLevel{
+			{Desc: "标准个体", AttackType: "近战", Motion: "地面", HpRecovery: "0", HP: "5000", ATK: "400", DEF: "500", Res: "20", ATKRadius: "1.1", Weight: "2", MoveSpeed: "0.8", Interval: "1.5", DamageRes: "0", ElementRes: "0", Ridicule: "0", Point: "1", Abnormal: "无", Talent: "<b>生命低于50%时防御提升</b>", Skills: []EnemySkill{{Name: "啃噬", SpInit: "<span>0</span>", SpCost: "<span>5</span>", Desc: "对目标造成 <i>物理伤害</i>"}}},
+			{Desc: "强化个体", AttackType: "近战", Motion: "地面", HpRecovery: "0", HP: "8000", ATK: "600", DEF: "700", Res: "30", ATKRadius: "1.1", Weight: "3", MoveSpeed: "0.8", Interval: "1.5", DamageRes: "10", ElementRes: "0", Ridicule: "1", Point: "2", Abnormal: "晕眩抗性", Talent: "<b>攻击力提升</b>", Skills: []EnemySkill{{Name: "啃噬+", SpInit: "<span>0</span>", SpCost: "<span>4</span>", Desc: "造成更高 <i>物理伤害</i>"}}},
+		},
 	}
 }
 
+// RenderEnemy draws template/Enemy.tmpl's #base table at the manifest design
+// canvas 656x318 (984x477 @1.5). Per-level tables fall beyond the viewport and
+// clip, same contract as base.
+//
+// Structure notes (all template-declared):
+//   - {{.Ability}} sits in a bare <tr> with no <td>, so the HTML parser
+//     foster-parents it BEFORE the table: plain 16px text at top-left.
+//     Markup is stripped the way enemyProps/templateText does server-side.
+//   - #main{width:656px}, #base{width:656px;border-spacing:0} with separate
+//     1px cell borders: outer 1px, interior doubled 2px lines.
+//   - No table-layout declaration, so columns follow auto layout. Implemented
+//     as auto-lite: min from content (col1 = 158px img + 2 padding, others one
+//     CJK char measured in the shipped font), excess split evenly. A stated
+//     approximation of Blink's distribution, not a fitted constant.
+//   - td padding is the 1px cellpadding default (no CSS override); img width
+//     is the declared 158px; pic tops the cell, desc is middle-aligned.
+//   - Line boxes come from the shipped font via measure(); baselines use the
+//     in-repo 0.80 ascent fraction precedent (scene_card.go cardAscFrac).
 func RenderEnemy(data *Enemy) (*gg.Context, error) {
-	const mainW = 656
-	const pad = 16
-	headerH := 160
-	levelH := 260
-	mainH := headerH + len(data.Levels)*levelH + 40
-	if mainH < 400 {
-		mainH = 400
-	}
+	const mainW, mainH = 656, 318
 	dc := gg.NewContext(mainW, mainH)
-	FillBackground(dc, 27, 29, 30)
-	// pic placeholder
-	dc.SetRGB255(70, 70, 80)
-	dc.DrawRoundedRectangle(float64(pad), float64(pad), 120, 120, 8)
-	dc.Fill()
-	setFont(dc, 22)
+	FillBackground(dc, 0x32, 0x33, 0x32)
+	setFont(dc, 16)
 	dc.SetRGB255(255, 255, 255)
-	drawString(dc, data.Name, 150, 40)
-	setFont(dc, 14)
-	dc.SetRGB255(200, 200, 200)
-	drawString(dc, StripHTML(data.Desc), 150, 70)
-	info := fmt.Sprintf("种族:%s  等级:%s  攻击:%s  移动:%s", data.EnemyRace, data.EnemyLevel, data.AttackType, data.Motion)
-	drawString(dc, info, 150, 95)
-	y := headerH
-	for _, lv := range data.Levels {
-		fillRoundedCard(dc, float64(pad), float64(y), float64(mainW-2*pad), float64(levelH-10), 8, 15)
-		row := func(label, val string, ry float64) {
-			setFont(dc, 14)
-			dc.SetRGB255(150, 150, 150)
-			drawString(dc, label, float64(pad+10), ry)
-			dc.SetRGB255(230, 230, 230)
-			drawString(dc, val, float64(pad+110), ry)
-		}
-		row("HP", lv.HP, float64(y+24))
-		row("ATK", lv.ATK, float64(y+46))
-		row("DEF", lv.DEF, float64(y+68))
-		row("RES", lv.Res, float64(y+90))
-		setFont(dc, 13)
-		dc.SetRGB255(180, 220, 200)
-		drawString(dc, "特性: "+StripHTML(lv.Talent), float64(pad+10), float64(y+120))
-		drawString(dc, "能力: "+StripHTML(data.Ability), float64(pad+10), float64(y+142))
-		sy := float64(y + 170)
-		for _, sk := range lv.Skills {
-			setFont(dc, 13)
-			dc.SetRGB255(230, 210, 150)
-			drawString(dc, fmt.Sprintf("技能 %s (技力%s/%s): %s", sk.Name, sk.SpInit, sk.SpCost, StripHTML(sk.Desc)), float64(pad+10), sy)
-			sy += 22
-		}
-		y += levelH
+	drawString(dc, StripHTML(data.Ability), 0, 17)
+	tableTop := 24.0
+	setFont(dc, 16)
+	minCh, _ := measure(dc, "测")
+	colW := [8]float64{160, minCh, minCh, minCh, minCh, minCh, minCh, minCh}
+	sumMin := 0.0
+	for _, w := range colW {
+		sumMin += w
 	}
+	excess := (656 - 16 - sumMin) / 8
+	for i := range colW {
+		colW[i] += excess
+	}
+	colX := [9]float64{}
+	colX[0] = 1
+	for i := 0; i < 8; i++ {
+		colX[i+1] = colX[i] + colW[i]
+	}
+	border := func() { dc.SetRGB255(0x59, 0x58, 0x58) }
+	hline := func(yy float64, w float64) {
+		border()
+		dc.DrawRectangle(0, yy, 656, w)
+		dc.Fill()
+	}
+	vlines := func(top, h float64, edges []float64) {
+		border()
+		dc.DrawRectangle(0, top, 1, h)
+		dc.Fill()
+		dc.DrawRectangle(655, top, 1, h)
+		dc.Fill()
+		for _, e := range edges {
+			dc.DrawRectangle(e-1, top, 2, h)
+			dc.Fill()
+		}
+	}
+	centerText := func(s string, size float64, cx, top, boxH float64, bold bool) {
+		setFont(dc, size)
+		w, h := measure(dc, s)
+		dc.SetRGB255(255, 255, 255)
+		// 600-declared texts with only Regular shipped: Chromium synthesizes
+		// the weight. Double-draw at +0.45 design px (calendar lesson: fixed
+		// 0.6 overshoots small text, so this stays an experiment knob).
+		if bold {
+			drawString(dc, s, cx-w/2+0.45, top+boxH/2+h*(cardAscFrac-0.5))
+		}
+		drawString(dc, s, cx-w/2, top+boxH/2+h*(cardAscFrac-0.5))
+	}
+	// enemyLineBox is the Noto "normal" line box read off the SHIPPED font
+	// file (assets/font/NotoSansHans-Regular.ttf hhea: ascent 880,
+	// descent -120, lineGap 500, upem 1000 -> (880+120+500)/1000 = 1.50em),
+	// not off the baseline. Cross-check only, three independent rows agree:
+	// name 25px -> 37.5+4 = 41.5 vs 41.3, headers 16px -> 24+4 = 28 vs 27.3,
+	// 能力 20px -> 30+4 = 34 vs 33.3 (design px). gg measure() returns
+	// ~1.2em glyph bounds, which undershoots every row and empties the
+	// bottom of the canvas -- do not use it for row math.
+	const enemyLineBox = 1.50
+	lineH := func(size float64) float64 {
+		return size * enemyLineBox
+	}
+	yy := tableTop
+	hline(yy, 1)
+	yy++
+	nh := lineH(25) + 2
+	centerText(data.Name, 25, 328, yy+1, nh-2, true)
+	vlines(yy, nh, nil)
+	yy += nh
+	hline(yy, 2)
+	yy += 2
+	picH := 158.0
+	pic := FetchImage(data.Pic, AssetPath("common/amiya.png"))
+	dc.DrawImage(ScaleExact(pic, 158, 158), int(colX[0]+1+(colW[0]-2-158)/2), int(yy+1))
+	setFont(dc, 16)
+	descW, _ := measure(dc, data.Desc)
+	descCx := (colX[1] + 1 + 653) / 2
+	dc.SetRGB255(255, 255, 255)
+	drawString(dc, data.Desc, descCx-descW/2, yy+1+picH/2+8)
+	vlines(yy, picH+2, []float64{colX[1]})
+	yy += picH + 2
+	hline(yy, 2)
+	yy += 2
+	headers := []string{"种类", "地位级别", "攻击方式", "行动方式"}
+	values := []string{data.EnemyRace, data.EnemyLevel, data.AttackType, data.Motion}
+	pedges := []float64{colX[2], colX[4], colX[6]}
+	hh := lineH(16) + 2
+	for i := 0; i < 4; i++ {
+		cx := (colX[2*i] + 1 + colX[2*i+2] - 1) / 2
+		centerText(headers[i], 16, cx, yy+1, hh-2, false)
+	}
+	vlines(yy, hh, pedges)
+	yy += hh
+	hline(yy, 2)
+	yy += 2
+	for i := 0; i < 4; i++ {
+		cx := (colX[2*i] + 1 + colX[2*i+2] - 1) / 2
+		centerText(values[i], 16, cx, yy+1, hh-2, false)
+	}
+	vlines(yy, hh, pedges)
+	yy += hh
+	hline(yy, 2)
+	yy += 2
+	capH := lineH(20) + 2
+	centerText("能力", 20, 328, yy+1, capH-2, true)
+	vlines(yy, capH, nil)
+	yy += capH
+	hline(yy, 1)
 	return ScaleToManifest(dc, 984, 477), nil
 }
 
