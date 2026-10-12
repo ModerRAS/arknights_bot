@@ -462,91 +462,127 @@ type BoxSummary struct {
 	MissingChars                                                                         []MissingChar
 }
 
+// SampleBoxSummary carries the box-summary-minimal fixture values.
+// Provenance: feat/gg-render-canvas:src/core/web/static_props_export_test.go
+// BoxSummaryFixture (in-repo declaration). Char counts stay STRINGS
+// ("60/100" renders whole; atoi would zero them). 24 missing Amiyas.
 func SampleBoxSummary() *BoxSummary {
 	return &BoxSummary{
-		Name: "博士的干员总览", AllCharCnt: "120", Star6CharCnt: "40", Star5CharCnt: "50", Star4CharCnt: "30",
-		AllEvolvePhase2Cnt: 80, Star6EvolvePhase2Cnt: 35, Star5EvolvePhase2Cnt: 35, Star4EvolvePhase2Cnt: 10,
-		AllSkill10Cnt: 70, Star6Skill10Cnt: 30, Star5Skill10Cnt: 30, Star4Skill10Cnt: 10,
-		AllSkill9Cnt: 90, Star6Skill9Cnt: 38, Star5Skill9Cnt: 40, Star4Skill9Cnt: 12,
-		AllSkill8Cnt: 100, Star6Skill8Cnt: 40, Star5Skill8Cnt: 45, Star4Skill8Cnt: 15,
-		AllEquipStage3Cnt: 50, Star6EquipStage3Cnt: 30, Star5EquipStage3Cnt: 18, Star4EquipStage3Cnt: 2,
-		AllEquipStage2Cnt: 80, Star6EquipStage2Cnt: 38, Star5EquipStage2Cnt: 30, Star4EquipStage2Cnt: 12,
-		AllEquipStage1Cnt: 100, Star6EquipStage1Cnt: 40, Star5EquipStage1Cnt: 40, Star4EquipStage1Cnt: 20,
-		MissingChars: []MissingChar{
-			{SkinId: "char_2001_x_1", Name: "乌有", Rarity: 6, Profession: "WARRIOR"},
-			{SkinId: "char_2002_x_1", Name: "傀影", Rarity: 6, Profession: "CASTER"},
-			{SkinId: "char_2003_x_1", Name: "温蒂", Rarity: 6, Profession: "PIONEER"},
-			{SkinId: "char_2004_x_1", Name: "煌", Rarity: 6, Profession: "WARRIOR"},
-			{SkinId: "char_2005_x_1", Name: "阿", Rarity: 5, Profession: "MEDIC"},
-		},
+		Name: "测试博士", AllCharCnt: "60/100", Star6CharCnt: "20/50", Star5CharCnt: "25/30", Star4CharCnt: "15/20",
+		AllEvolvePhase2Cnt: 40, Star6EvolvePhase2Cnt: 18, Star5EvolvePhase2Cnt: 15, Star4EvolvePhase2Cnt: 7,
+		AllSkill10Cnt: 30, Star6Skill10Cnt: 15, Star5Skill10Cnt: 10, Star4Skill10Cnt: 5,
+		AllSkill9Cnt: 20, Star6Skill9Cnt: 10, Star5Skill9Cnt: 8, Star4Skill9Cnt: 2,
+		AllSkill8Cnt: 10, Star6Skill8Cnt: 5, Star5Skill8Cnt: 4, Star4Skill8Cnt: 1,
+		AllEquipStage3Cnt: 12, Star6EquipStage3Cnt: 6, Star5EquipStage3Cnt: 4, Star4EquipStage3Cnt: 2,
+		AllEquipStage2Cnt: 8, Star6EquipStage2Cnt: 4, Star5EquipStage2Cnt: 3, Star4EquipStage2Cnt: 1,
+		AllEquipStage1Cnt: 4, Star6EquipStage1Cnt: 2, Star5EquipStage1Cnt: 1, Star4EquipStage1Cnt: 1,
+		MissingChars: func() []MissingChar {
+			m := make([]MissingChar, 0, 24)
+			for i := 0; i < 24; i++ {
+				m = append(m, MissingChar{SkinId: "https://media.prts.wiki/a/a0/%E5%8D%8A%E8%BA%AB%E5%83%8F_%E9%98%BF%E7%B1%B3%E5%A8%85_1.png?image_process=format,webp/quality,Q_90", Name: "阿米娅", Rarity: 5, Profession: "WARRIOR"})
+			}
+			return m
+		}(),
 	}
 }
 
+// RenderBoxSummary draws BoxSummary.tmpl at design 900x482 (1350x723 @1.5).
+// Structure (template-declared): label.png header (#label height 60, title
+// 30px at margin-top -55; floats clear below the bar so the table starts at
+// 60); table width 100% with border-spacing 20x5 (cols (900-5*20)/4 = 200);
+// header th + 8 metric rows (flex div space-between, 10px side margins, 1px
+// bottom borders); missing th + justified 40px portrait rows (last line
+// natural gaps). Char counts stay strings ("60/100" renders whole).
+// Portraits: the fixture URL names the half-body thumb, but rendered tiles
+// behave square (row budget + face framing both prove it) and the manifest
+// also maps amiya-avatar.webp (180x180, BoxSummary target) -- the vendored
+// square file is drawn, remote thumb as fallback, amiya last.
 func RenderBoxSummary(data *BoxSummary) (*gg.Context, error) {
-	const mainW = 900
-	headerH := 60
-	tableTop := headerH + 10
-	rowH := 34
-	rows := 8
-	tableH := rows * rowH
-	missingTop := tableTop + tableH + 20
-	cols := 10
-	mrows := (len(data.MissingChars) + cols - 1) / cols
-	if mrows < 1 {
-		mrows = 1
-	}
-	mtileH := 140
-	mainH := missingTop + mrows*mtileH + 30
+	const mainW, mainH = 900, 482
 	dc := gg.NewContext(mainW, mainH)
-	FillBackground(dc, 27, 29, 30)
-	dc.SetRGB255(60, 62, 64)
-	dc.DrawRectangle(0, 0, float64(mainW), float64(headerH))
-	dc.Fill()
-	setFont(dc, 26)
+	FillBackground(dc, 46, 48, 49) // #main{background-color:#2e3031}
+	if label := cardAsset("help/label.png"); label != nil {
+		dc.DrawImage(ScaleExact(label, 900, 60), 0, 0)
+	}
+	setFont(dc, 30)
 	dc.SetRGB255(255, 255, 255)
-	drawString(dc, data.Name, 25, 40)
-	headers := []string{"指标", "总览", "6星", "5星", "4星"}
-	colX := []float64{20, 300, 460, 600, 740}
-	setFont(dc, 15)
-	dc.SetRGB255(180, 200, 220)
-	for i, h := range headers {
-		drawString(dc, h, colX[i], float64(tableTop)+20)
+	cardTextTop(dc, "Dr "+data.Name, 25, 60-55)
+	const colW = 200.0 // (900-5*20)/4
+	colX := func(i int) float64 { return 20 + float64(i)*(colW+20) }
+	setFont(dc, 16)
+	dc.SetRGB255(255, 255, 255)
+	y := 60.0 + 5 // top border-spacing, then header row
+	ths := []string{"全部干员", "六星干员", "五星干员", "四星干员"}
+	for i, h := range ths {
+		w, _ := measure(dc, h)
+		cx := colX(i) + 1 + (colW-2)/2
+		drawString(dc, h, cx-w/2+0.45, y+1+(24-16)/2+16*0.8)
+		drawString(dc, h, cx-w/2, y+1+(24-16)/2+16*0.8)
 	}
-	metrics := []struct {
-		name              string
-		total, s6, s5, s4 int
-	}{
-		{"干员数", atoiSafe(data.AllCharCnt), atoiSafe(data.Star6CharCnt), atoiSafe(data.Star5CharCnt), atoiSafe(data.Star4CharCnt)},
-		{"精英2", data.AllEvolvePhase2Cnt, data.Star6EvolvePhase2Cnt, data.Star5EvolvePhase2Cnt, data.Star4EvolvePhase2Cnt},
-		{"技能10", data.AllSkill10Cnt, data.Star6Skill10Cnt, data.Star5Skill10Cnt, data.Star4Skill10Cnt},
-		{"技能9", data.AllSkill9Cnt, data.Star6Skill9Cnt, data.Star5Skill9Cnt, data.Star4Skill9Cnt},
-		{"技能8", data.AllSkill8Cnt, data.Star6Skill8Cnt, data.Star5Skill8Cnt, data.Star4Skill8Cnt},
-		{"模组3", data.AllEquipStage3Cnt, data.Star6EquipStage3Cnt, data.Star5EquipStage3Cnt, data.Star4EquipStage3Cnt},
-		{"模组2", data.AllEquipStage2Cnt, data.Star6EquipStage2Cnt, data.Star5EquipStage2Cnt, data.Star4EquipStage2Cnt},
-		{"模组1", data.AllEquipStage1Cnt, data.Star6EquipStage1Cnt, data.Star5EquipStage1Cnt, data.Star4EquipStage1Cnt},
+	y += 16*notoNormalLineBox + 2 + 5
+	metrics := [][5]string{
+		{"招募干员数量", data.AllCharCnt, data.Star6CharCnt, data.Star5CharCnt, data.Star4CharCnt},
+		{"精英阶段2干员", itoa(data.AllEvolvePhase2Cnt), itoa(data.Star6EvolvePhase2Cnt), itoa(data.Star5EvolvePhase2Cnt), itoa(data.Star4EvolvePhase2Cnt)},
+		{"专精三技能数量", itoa(data.AllSkill10Cnt), itoa(data.Star6Skill10Cnt), itoa(data.Star5Skill10Cnt), itoa(data.Star4Skill10Cnt)},
+		{"专精二技能数量", itoa(data.AllSkill9Cnt), itoa(data.Star6Skill9Cnt), itoa(data.Star5Skill9Cnt), itoa(data.Star4Skill9Cnt)},
+		{"专精一技能数量", itoa(data.AllSkill8Cnt), itoa(data.Star6Skill8Cnt), itoa(data.Star5Skill8Cnt), itoa(data.Star4Skill8Cnt)},
+		{"三级模组数量", itoa(data.AllEquipStage3Cnt), itoa(data.Star6EquipStage3Cnt), itoa(data.Star5EquipStage3Cnt), itoa(data.Star4EquipStage3Cnt)},
+		{"二级模组数量", itoa(data.AllEquipStage2Cnt), itoa(data.Star6EquipStage2Cnt), itoa(data.Star5EquipStage2Cnt), itoa(data.Star4EquipStage2Cnt)},
+		{"一级模组数量", itoa(data.AllEquipStage1Cnt), itoa(data.Star6EquipStage1Cnt), itoa(data.Star5EquipStage1Cnt), itoa(data.Star4EquipStage1Cnt)},
 	}
-	for ri, m := range metrics {
-		ry := float64(tableTop) + float64(ri)*float64(rowH) + float64(rowH) - 6
-		if ri%2 == 0 {
-			fillRoundedCard(dc, 15, float64(tableTop)+float64(ri)*float64(rowH)+4, float64(mainW-30), float64(rowH)-4, 4, 10)
+	for _, m := range metrics {
+		setFont(dc, 16)
+		dc.SetRGB255(255, 255, 255)
+		for i := 0; i < 4; i++ {
+			drawString(dc, m[0], colX(i)+1+10, y+1+(24-16)/2+16*0.8)
+			vw, _ := measure(dc, m[i+1])
+			drawString(dc, m[i+1], colX(i)+colW-1-10-vw, y+1+(24-16)/2+16*0.8)
 		}
-		setFont(dc, 14)
-		dc.SetRGB255(220, 220, 220)
-		drawString(dc, m.name, colX[0], ry)
-		dc.SetRGB255(230, 230, 230)
-		drawString(dc, itoa(m.total), colX[1], ry)
-		dc.SetRGB255(240, 180, 40)
-		drawString(dc, itoa(m.s6), colX[2], ry)
-		dc.SetRGB255(170, 110, 220)
-		drawString(dc, itoa(m.s5), colX[3], ry)
-		dc.SetRGB255(90, 160, 230)
-		drawString(dc, itoa(m.s4), colX[4], ry)
+		for i := 0; i < 4; i++ {
+			dc.DrawRectangle(colX(i), y+24+2, colW, 1)
+			dc.Fill()
+		}
+		y += 16*notoNormalLineBox + 2 + 1 + 5
 	}
-	SectionTitle(dc, "缺失干员", 20, float64(missingTop)-6)
-	for i, c := range data.MissingChars {
-		x := (i % cols) * 70
-		y := missingTop + (i/cols)*mtileH
-		DrawPortraitTile(dc, x, y, 70, mtileH, c.SkinId, c.Profession, c.Rarity, 0, c.Name)
+	// Missing th + portraits. td spans all columns; portraits flow with
+	// justify spread on full lines, natural gaps on the last line.
+	setFont(dc, 16)
+	dc.SetRGB255(255, 255, 255)
+	mw, _ := measure(dc, "未招募干员")
+	drawString(dc, "未招募干员", 450-mw/2+0.45, y+1+(24-16)/2+16*0.8)
+	drawString(dc, "未招募干员", 450-mw/2, y+1+(24-16)/2+16*0.8)
+	y += 16*notoNormalLineBox + 2 + 5
+	missImg, merr := LoadImage(AssetPath("boxsummary/amiya-avatar.webp"))
+	if merr != nil {
+		thumbURL := ""
+		if len(data.MissingChars) > 0 {
+			thumbURL = data.MissingChars[0].SkinId
+		}
+		missImg = FetchImage(thumbURL, AssetPath("common/amiya.png"))
+	}
+	lineW := 900.0 - 40 - 2
+	py := y + 1
+	perLine := int((lineW + 3.584) / (40 + 3.584)) // 19 by wrap math, not choice
+	if perLine < 1 {
+		perLine = 1
+	}
+	for start := 0; start < len(data.MissingChars); start += perLine {
+		end := start + perLine
+		if end > len(data.MissingChars) {
+			end = len(data.MissingChars)
+		}
+		n := end - start
+		gap := 3.584
+		if end < len(data.MissingChars) && n > 1 {
+			gap = (lineW - float64(n)*40) / float64(n-1)
+		}
+		xx := 21.0
+		for k := start; k < end; k++ {
+			_ = data.MissingChars[k]
+			dc.DrawImage(ScaleExact(missImg, 40, 40), int(xx), int(py))
+			xx += 40 + gap
+		}
+		py += 40 + inlineStrutDrop
 	}
 	return ScaleToManifest(dc, 1350, 723), nil
 }

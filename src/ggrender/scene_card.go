@@ -24,6 +24,12 @@ const cardAscFrac = 0.80
 // every row -- do not use it for row math.
 const notoNormalLineBox = 1.50
 
+// inlineStrutDrop is the extra stack per wrapped line of image tiles: the
+// line strut (body-default 16px, Noto normal 1.5em) hangs Noto descent
+// 120/1000*16 = 1.92 plus half-leading (24-16)/2 = 4 below the tile
+// baseline, i.e. 5.92px. Derivation shared with recruit subPitch 105.92.
+const inlineStrutDrop = 5.92
+
 var (
 	cardBlue = color.RGBA{R: 0, G: 152, B: 220, A: 255}
 	cardGray = color.RGBA{R: 163, G: 163, B: 162, A: 255}
