@@ -41,3 +41,29 @@
 
 ## 复算路径
 `png/`(legacy 捕获) → `goenc/main.go`(Go 编码) → `goj/`(98 张)；聚合 json 与原始产物互相可指。
+
+## failing 14 场景整幅并排（2026-10-12，代码 consolidate/gg-mainline @ 1c4e82b）
+- 每行左 = 冻结基线 old.png（只读比对），右 = 本分支 gg 渲染 new.png；行标签 sim 来自 harness `report.json`，生成时读入、非手抄。
+- 过门禁的 `calendar` / `state` 不在此列；14 张全是 `passed=false`，14+2==16。
+
+### `failed-1.png`
+- `lottery` 1473x1667 sim 0.98358 fail
+- `base` 1665x918 sim 0.97073 fail
+- `headhunt` 1049x576 sim 0.97021 fail
+- `card` 1280x720 sim 0.96015 fail
+
+### `failed-2.png`
+- `depot` 1275x234 sim 0.92352 fail
+- `enemy` 984x477 sim 0.91951 fail
+- `box-summary` 1350x723 sim 0.88098 fail
+- `box-detail` 722x279 sim 0.87844 fail
+
+### `failed-3.png`
+- `missing` 1050x536 sim 0.87614 fail
+- `help` 990x2049 sim 0.83943 fail
+- `box` 1050x536 sim 0.82504 fail
+- `gacha` 1500x1323 sim 0.90251 fail
+
+### `failed-4.png`
+- `operator` 1800x1200 sim 0.76866 fail
+- `recruit` 1350x534 sim 0.88603 fail
