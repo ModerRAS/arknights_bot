@@ -111,6 +111,7 @@ func cardSecretaryMask(src image.Image) image.Image {
 	}
 	return out
 }
+
 // cardSkinURL builds the assist avatar URL exactly as Card.tmpl declares
 // (char_skin/avatar/{{urlquery .SkinID}}.png); offline it falls back per the
 // template's onerror to assets/common/amiya.png.
@@ -353,15 +354,15 @@ func RenderCard(data *CardInfo) (*gg.Context, error) {
 		if ac.IsSpecMax {
 			if spec := cardAsset("card/spec_max_icon.png"); spec != nil {
 				sb := spec.Bounds()
-			sh := 50 * sb.Dy() / sb.Dx()
+				sh := 50 * sb.Dy() / sb.Dx()
 				dc.DrawImage(ScaleExact(spec, 50, sh), cx+150-5-50, cy)
 			}
 		}
 		if evo := cardAsset("card/Evolve_" + itoa(ac.EvolvePhase) + ".png"); evo != nil {
 			eb := evo.Bounds()
 			eh := 40 * eb.Dy() / eb.Dx()
-				dc.DrawImage(ScaleExact(evo, 40, eh), cx+100, cy+150-20-eh)
-			}
+			dc.DrawImage(ScaleExact(evo, 40, eh), cx+100, cy+150-20-eh)
+		}
 		setFont(dc, 10)
 		dc.SetRGB255(255, 255, 255)
 		cardTextTopCenter(dc, "LV", float64(cx+15+12), float64(cy))

@@ -1394,14 +1394,14 @@ type CardAssist struct {
 	IsSpecMax   bool
 }
 type CardInfo struct {
-	Name, Uid, ServerName, Resume                             string
-	Level, RegTime                                            int
-	MainStageProgress, Avatar, Secretary                     string
-	SecretaryName, SecretaryEnName                            string
-	CharCnt, FurnitureCnt, SkinCnt                            int
-	EquipCnt, EquipStage3Cnt, EquipOperatorCnt                int
-	NationList                                                []CardNation
-	AssistChars                                               []CardAssist
+	Name, Uid, ServerName, Resume              string
+	Level, RegTime                             int
+	MainStageProgress, Avatar, Secretary       string
+	SecretaryName, SecretaryEnName             string
+	CharCnt, FurnitureCnt, SkinCnt             int
+	EquipCnt, EquipStage3Cnt, EquipOperatorCnt int
+	NationList                                 []CardNation
+	AssistChars                                []CardAssist
 }
 
 // SampleCard carries the card-minimal fixture values. Provenance:
@@ -1412,8 +1412,8 @@ func SampleCard() *CardInfo {
 	return &CardInfo{
 		Name: "冻结博士", Uid: "10000001", ServerName: "官服", Resume: "稳定基线签名",
 		Level: 120, RegTime: 1704067200, MainStageProgress: "14-21",
-		Avatar: "https://fixture-cache.invalid/card/player-avatar.png",
-		Secretary: "https://fixture-cache.invalid/card/secretary-painting.png",
+		Avatar:        "https://fixture-cache.invalid/card/player-avatar.png",
+		Secretary:     "https://fixture-cache.invalid/card/secretary-painting.png",
 		SecretaryName: "阿米娅", SecretaryEnName: "Amiya",
 		CharCnt: 289, FurnitureCnt: 100, SkinCnt: 88,
 		EquipCnt: 46, EquipStage3Cnt: 12, EquipOperatorCnt: 23,
