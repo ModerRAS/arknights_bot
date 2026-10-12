@@ -5,6 +5,7 @@ import (
 	"image"
 	"math"
 	"net/url"
+	"time"
 
 	"github.com/fogleman/gg"
 )
@@ -1583,115 +1584,257 @@ func SampleCard() *CardInfo {
 // DepotData/DepotItem/SampleDepot/RenderDepot moved to src/ggrender/depot.go
 
 // Gacha
+type GachaPool struct {
+	PoolName  string
+	PoolCount int
+}
+type GachaChar struct {
+	PoolName, CharName, Avatar string
+	Rarity                     int64
+	IsNew                      bool
+	Ts                         int64
+}
+type GachaStar6 struct {
+	Name, Avatar, PoolName string
+	Ts                     int64
+	Count                  int
+	IsNew                  bool
+}
 type GachaData struct {
 	Name                              string
 	Total, Star6, Star5, Star4, Star3 int
 	Avg6, Avg5, Avg4, Avg3            float64
-	Chars                             []struct {
-		PoolName, CharName string
-		Rarity             int64
-		IsNew              bool
+	BegTime, EndTime                  int64 // ms, rendered via timestampToTime
+	FooterDate                        string
+	PoolCount                         []GachaPool
+	Chars                             []GachaChar
+	Star6Info                         []GachaStar6
+}
+
+// SampleGacha carries the gacha-minimal fixture values. Provenance:
+// feat/gg-render-canvas legacyGachaFixture (in-repo declaration): 基线博士,
+// 10 pulls, 2/2/3/3 stars, avgs 5/5/3.33/3.33, ms timestamps, pools 甲6/乙4,
+// 2 new chars + 2 star6 infos. FooterDate is the frozen capture clock
+// (capture-clock-erratum.json gacha entry 1787070547 -> 2026年08月19日
+// Asia/Shanghai); getNow() must never run in the harness (gacha advance).
+func SampleGacha() *GachaData {
+	return &GachaData{
+		Name: "基线博士", Total: 10, Star6: 2, Star5: 2, Star4: 3, Star3: 3,
+		Avg6: 5, Avg5: 5, Avg4: 3.33, Avg3: 3.33,
+		BegTime: 1736856000000, EndTime: 1736942400000,
+		FooterDate: "2026年08月19日",
+		PoolCount:  []GachaPool{{PoolName: "测试卡池甲", PoolCount: 6}, {PoolName: "测试卡池乙", PoolCount: 4}},
+		Chars: []GachaChar{
+			{PoolName: "测试卡池甲", CharName: "阿米娅", Avatar: "https://media.prts.wiki/3/36/%E5%A4%B4%E5%83%8F_%E9%98%BF%E7%B1%B3%E5%A8%85.png?image_process=format,webp/quality,Q_90", Rarity: 5, IsNew: true, Ts: 1736856000000},
+			{PoolName: "测试卡池乙", CharName: "能天使", Avatar: "https://media.prts.wiki/a/ad/%E5%A4%B4%E5%83%8F_%E8%83%BD%E5%A4%A9%E4%BD%BF.png?image_process=format,webp/quality,Q_90", Rarity: 4, IsNew: false, Ts: 1736942400000},
+		},
+		Star6Info: []GachaStar6{
+			{Name: "阿米娅", Avatar: "https://media.prts.wiki/3/36/%E5%A4%B4%E5%83%8F_%E9%98%BF%E7%B1%B3%E5%A8%85.png?image_process=format,webp/quality,Q_90", Ts: 1736856000000, Count: 5, IsNew: true, PoolName: "测试卡池甲"},
+			{Name: "能天使", Avatar: "https://media.prts.wiki/a/ad/%E5%A4%B4%E5%83%8F_%E8%83%BD%E5%A4%A9%E4%BD%BF.png?image_process=format,webp/quality,Q_90", Ts: 1736942400000, Count: 5, IsNew: false, PoolName: "测试卡池乙"},
+		},
 	}
 }
 
-func SampleGacha() *GachaData {
-	g := &GachaData{Name: "博士的寻访记录", Total: 120, Star6: 6, Star5: 18, Star4: 50, Star3: 46, Avg6: 20.0, Avg5: 6.6, Avg4: 2.4, Avg3: 2.6}
-	names := []string{"能天使", "银灰", "艾雅法拉", "星熊", "塞雷娅", "闪灵", "夜莺", "斯卡蒂", "陈", "推进之王"}
-	for i, n := range names {
-		r := int64(5)
-		if i%3 == 0 {
-			r = 4
-		}
-		if i%5 == 0 {
-			r = 3
-		}
-		g.Chars = append(g.Chars, struct {
-			PoolName, CharName string
-			Rarity             int64
-			IsNew              bool
-		}{PoolName: "常驻", CharName: n, Rarity: r, IsNew: i%4 == 0})
+// gachaClock formats ms timestamps in Asia/Shanghai exactly like the
+// template's timestampToTime (full) / formatDate (date) JS helpers.
+func gachaClock(ms int64, withTime bool) string {
+	loc, err := time.LoadLocation("Asia/Shanghai")
+	if err != nil {
+		loc = time.FixedZone("CST", 8*60*60)
 	}
-	return g
+	t := time.UnixMilli(ms).In(loc)
+	if withTime {
+		return t.Format("2006-01-02 15:04:05")
+	}
+	return t.Format("2006-01-02")
 }
 
 func RenderGacha(data *GachaData) (*gg.Context, error) {
-	const mainW = 900
-	headerH := 90
-	statsH := 120
-	charsH := 20 * 74
-	mainH := headerH + statsH + charsH + 40
+	const mainW, mainH = 1000, 882
 	dc := gg.NewContext(mainW, mainH)
-	FillBackground(dc, 27, 29, 30)
-	// header
-	dc.SetRGB255(45, 48, 55)
-	dc.DrawRectangle(0, 0, float64(mainW), float64(headerH))
-	dc.Fill()
-	setFont(dc, 24)
-	dc.SetRGB255(255, 255, 255)
-	drawString(dc, data.Name, 25, 52)
-	setFont(dc, 14)
-	dc.SetRGB255(180, 200, 220)
-	drawString(dc, fmt.Sprintf("共 %d 抽 · 6星%d 5星%d 4星%d 3星%d", data.Total, data.Star6, data.Star5, data.Star4, data.Star3), 25, 74)
-	// stats avg
-	y := headerH + 16
-	stats := []struct {
-		label string
-		val   float64
-		cnt   int
+	// Header bg exact asset.
+	if header := cardAsset("gacha/header.png"); header != nil {
+		dc.DrawImage(header, 0, 0)
+	}
+	dc.SetRGB255(0xee, 0xee, 0xee)
+	setFont(dc, 32)
+	cardTextTop(dc, data.Name, 320, 50)
+	// Second h1 is absolute too: sequential from x=250 at the same baseline.
+	period := fmt.Sprintf("共%d抽", data.Total)
+	setFont(dc, 32)
+	pw, _ := measure(dc, period)
+	drawString(dc, period, 250, 96+38)
+	dates := fmt.Sprintf("(%s——%s)", gachaClock(data.BegTime, true), gachaClock(data.EndTime, true))
+	setFont(dc, 23)
+	drawString(dc, dates, 250+pw, 96+38)
+	// Three .item boxes: 300x250, inline-block with ml 20 + newline gaps.
+	itemX := func(i int) float64 { return 20 + float64(i)*(300+20+3.584) }
+	itemTitles := []string{"星级分布", "星级分布", "卡池分布(最近10个)"}
+	for i := 0; i < 3; i++ {
+		dc.SetRGB255(0x1f, 0x1e, 0x1e)
+		dc.DrawRoundedRectangle(itemX(i), 150, 300, 250, 20)
+		dc.Fill()
+		setFont(dc, 20)
+		dc.SetRGB255(0xee, 0xee, 0xee)
+		drawStringAnchored(dc, itemTitles[i], itemX(i)+150, 150+10+15, 0.5, 0.5)
+	}
+	// Pie (item 0): slices from echarts data (start 90deg, clockwise) with
+	// declared colors; labels off; legend vertical at left/top:45.
+	pieCx, pieCy, pieR := itemX(0)+187.5, 150.0+140.0, 79.0
+	pieVals := []struct {
+		v       int
+		r, g, b int
 	}{
-		{"6星", data.Avg6, data.Star6}, {"5星", data.Avg5, data.Star5}, {"4星", data.Avg4, data.Star4}, {"3星", data.Avg3, data.Star3},
+		{data.Star6, 244, 110, 30}, {data.Star5, 247, 171, 55},
+		{data.Star4, 161, 53, 246}, {data.Star3, 109, 116, 126},
 	}
-	x := 20
-	for _, s := range stats {
-		dc.SetRGBA255(255, 255, 255, 12)
-		RoundRect(dc, float64(x), float64(y), 200, 80, 8)
-		setFont(dc, 14)
-		dc.SetRGB255(180, 200, 220)
-		drawStringAnchored(dc, s.label, float64(x+100), float64(y+24), 0.5, 0.5)
-		setFont(dc, 22)
-		dc.SetRGB255(255, 240, 120)
-		drawStringAnchored(dc, fmt.Sprintf("%.1f", s.val), float64(x+100), float64(y+52), 0.5, 0.5)
-		setFont(dc, 11)
-		dc.SetRGB255(200, 200, 200)
-		drawStringAnchored(dc, fmt.Sprintf("(%d)", s.cnt), float64(x+100), float64(y+68), 0.5, 0.5)
-		x += 220
+	pieTotal := 0
+	for _, p := range pieVals {
+		pieTotal += p.v
 	}
-	y += 110
-	// chars list
+	ang := -math.Pi / 2
+	for _, p := range pieVals {
+		if p.v <= 0 || pieTotal <= 0 {
+			continue
+		}
+		sweep := 2 * math.Pi * float64(p.v) / float64(pieTotal)
+		dc.MoveTo(pieCx, pieCy)
+		dc.DrawArc(pieCx, pieCy, pieR, ang, ang+sweep)
+		dc.ClosePath()
+		dc.SetRGB255(p.r, p.g, p.b)
+		dc.Fill()
+		ang += sweep
+	}
 	setFont(dc, 14)
-	dc.SetRGB255(200, 220, 200)
-	drawString(dc, "最近获得", 20, float64(y))
-	y += 20
-	for i, ch := range data.Chars {
-		if i >= 20 {
-			break
+	legends := []struct {
+		label   string
+		r, g, b int
+	}{
+		{"6星", 244, 110, 30}, {"5星", 247, 171, 55},
+		{"4星", 161, 53, 246}, {"3星", 109, 116, 126},
+	}
+	for i, lg := range legends {
+		ly := 150.0 + 40 + 45 + float64(i)*(14*1.5+18)
+		dc.SetRGB255(lg.r, lg.g, lg.b)
+		dc.DrawRectangle(itemX(0)+8, ly, 8, 8)
+		dc.Fill()
+		dc.SetRGB255(255, 255, 255)
+		pct := 0.0
+		if pieTotal > 0 {
+			pct = float64(pieVals[i].v) * 100 / float64(pieTotal)
 		}
-		yy := y + i*74
-		fillRoundedCard(dc, 20, float64(yy), float64(mainW-40), 64, 8, 10)
-		// avatar
-		dc.SetRGB255(80, 80, 90)
-		dc.DrawCircle(50, float64(yy+32), 22)
-		dc.Fill()
-		setFont(dc, 14)
-		dc.SetRGB255(255, 255, 255)
-		drawString(dc, ch.CharName, 80, float64(yy+24))
-		setFont(dc, 12)
-		dc.SetRGB255(180, 200, 220)
-		drawString(dc, ch.PoolName, 80, float64(yy+44))
-		// rarity color bar
-		r, g, b := rarityColor(int(ch.Rarity + 1))
-		dc.SetRGB255(r, g, b)
-		dc.DrawRectangle(float64(mainW-80), float64(yy+20), 50, 24)
-		dc.Fill()
-		setFont(dc, 12)
-		dc.SetRGB255(255, 255, 255)
-		drawStringAnchored(dc, fmt.Sprintf("%d★", ch.Rarity+1), float64(mainW-55), float64(yy+32), 0.5, 0.5)
-		if ch.IsNew {
-			setFont(dc, 10)
-			dc.SetRGB255(255, 80, 80)
-			drawString(dc, "NEW", float64(mainW-140), float64(yy+32))
+		drawString(dc, fmt.Sprintf("%s  %.2f%%", lg.label, pct), itemX(0)+20, ly+12)
+	}
+	// Avg table (item 1): rows block-margin 15 apart (collapsed), 150px tds.
+	setFont(dc, 16)
+	dc.SetRGB255(0xee, 0xee, 0xee)
+	avgRows := [][2]string{
+		{fmt.Sprintf("%d个6星", data.Star6), fmt.Sprintf("%v抽/个", data.Avg6)},
+		{fmt.Sprintf("%d个5星", data.Star5), fmt.Sprintf("%v抽/个", data.Avg5)},
+		{fmt.Sprintf("%d个4星", data.Star4), fmt.Sprintf("%v抽/个", data.Avg4)},
+		{fmt.Sprintf("%d个3星", data.Star3), fmt.Sprintf("%v抽/个", data.Avg3)},
+	}
+	ay := 150.0 + 40 + 15
+	for _, r := range avgRows {
+		drawString(dc, r[0], itemX(1)+30, ay+19)
+		drawString(dc, r[1], itemX(1)+30+150, ay+19)
+		ay += 16 * notoNormalLineBox
+	}
+	// Bar chart (item 2): horizontal bars, first pool at bottom (echarts
+	// category default), bar color is the echarts default blue (no itemStyle
+	// declared), white value labels right of bars. Positions approximate.
+	bx := itemX(2)
+	maxV := 1
+	for _, p := range data.PoolCount {
+		if p.PoolCount > maxV {
+			maxV = p.PoolCount
 		}
 	}
+	plotX0, plotX1 := bx+110, bx+270
+	setFont(dc, 14)
+	for i, p := range data.PoolCount {
+		by := 150.0 + 40 + 30 + float64(len(data.PoolCount)-1-i)*90
+		dc.SetRGB255(255, 255, 255)
+		drawStringAnchored(dc, p.PoolName, plotX0-8, by+20, 1, 0.5)
+		blen := float64(p.PoolCount) / float64(maxV) * (plotX1 - plotX0)
+		dc.SetRGB255(0x54, 0x70, 0xc6)
+		dc.DrawRectangle(plotX0, by, blen, 44)
+		dc.Fill()
+		dc.SetRGB255(255, 255, 255)
+		drawString(dc, itoa(p.PoolCount), plotX0+blen+6, by+30)
+	}
+	dc.SetRGB255(255, 255, 255)
+	dc.SetLineWidth(1.5)
+	dc.DrawLine(plotX0, 150+40+10, plotX0, 150+40+200)
+	dc.Stroke()
+	// Article: bg band with two .chars panels (465 wide, inline-table with
+	// newline gaps, margin-top 40). Each panel: 20px title + 230px tables
+	// side by side (avatar 100 + text col), footer pinned at 613.
+	dc.SetRGB255(0x0c, 0x0d, 0x0c) // #article{background-color:#0c0d0c}
+	dc.DrawRectangle(0, 400, mainW, 613-400)
+	dc.Fill()
+	panelX := func(i int) float64 { return 20 + float64(i)*(465+3.584) }
+	panelTitles := []string{"新获得干员(至多显示20个)", "获得六星干员(至多显示20个)"}
+	charLists := []struct {
+		name, avatar, pool string
+		ts                 int64
+		isNew              bool
+		count              int // 花费抽, star6 panel only (-1 = empty row)
+	}{}
+	_ = charLists
+	drawCharTable := func(tx, ty float64, name, avatar, pool string, ts int64, isNew bool, count int) {
+		av := FetchImage(avatar, AssetPath("common/amiya.png"))
+		dc.DrawImage(ScaleExact(av, 100, 100), int(tx), int(ty))
+		setFont(dc, 16)
+		dc.SetRGB255(0xee, 0xee, 0xee)
+		drawString(dc, name, tx+100, ty+19)
+		if isNew {
+			setFont(dc, 10)
+			dc.SetRGB255(255, 0, 0) // .new{color:red}
+			nw, _ := measure(dc, name)
+			drawString(dc, "New", tx+100+nw, ty+8)
+		}
+		setFont(dc, 15)
+		dc.SetRGB255(0xee, 0xee, 0xee)
+		drawString(dc, gachaClock(ts, false), tx+100, ty+19+22)
+		drawString(dc, pool, tx+100, ty+19+44)
+		if count >= 0 {
+			drawString(dc, fmt.Sprintf("花费%d抽", count), tx+100, ty+19+66)
+		}
+	}
+	for pi := 0; pi < 2; pi++ {
+		px := panelX(pi)
+		dc.SetRGB255(0x1f, 0x1e, 0x1e)
+		dc.DrawRoundedRectangle(px, 440, 465, 140, 20)
+		dc.Fill()
+		setFont(dc, 20)
+		dc.SetRGB255(0xee, 0xee, 0xee)
+		drawStringAnchored(dc, panelTitles[pi], px+465.0/2, 440+10+15, 0.5, 0.5)
+		for k := 0; k < 2; k++ {
+			tx := px + float64(k)*(230+3.584)
+			ty := 440.0 + 40
+			if pi == 0 {
+				if k >= len(data.Chars) {
+					continue
+				}
+				c := data.Chars[k]
+				drawCharTable(tx, ty, c.CharName, c.Avatar, c.PoolName, c.Ts, c.IsNew, -1)
+			} else {
+				if k >= len(data.Star6Info) {
+					continue
+				}
+				s := data.Star6Info[k]
+				drawCharTable(tx, ty, s.Name, s.Avatar, s.PoolName, s.Ts, s.IsNew, s.Count)
+			}
+		}
+	}
+	// Footer: exact asset at manifest-pinned top + frozen clock date text.
+	if footer := cardAsset("gacha/footer.png"); footer != nil {
+		dc.DrawImage(footer, 0, 613)
+	}
+	setFont(dc, 32)
+	dc.SetRGB255(0xee, 0xee, 0xee)
+	drawString(dc, data.FooterDate, 530, 613+190+26)
 	return ScaleToManifest(dc, 1500, 1323), nil
 }
 
