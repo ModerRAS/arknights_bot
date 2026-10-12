@@ -191,11 +191,23 @@ func RenderCalendar(data *CalendarData) (*gg.Context, error) {
 	dc.DrawStringAnchored("星期三", asideW/2, 55, 0.5, 0.5)
 
 	// todayResource begins at 350px in the template.
+	// That margin is BELOW the header, not from the aside top: this code draws
+	// the two header lines at baselines y=30/55, so header bottom ~= 60.
+	// resTop = 60 + 350 = 410. The old code used 350 absolute and put every
+	// line ~60 CSS px (= 90 device px) too high.
+	// Titles are <h5> (UA 0.83em x 19.2px ~= 16px, bold by default);
+	// bodies are div 15px regular. Repo ships only Regular, no bold face.
+	// No double-draw: any 2x draw jumps titles-zone ink 3135 -> ~4085
+	// (baseline 3260) and drops the zone score, so single-draw stays.
+	resTop := 60.0 + 350
+	setFont(dc, 16)
+	dc.DrawString("资源关卡开放", 20, resTop+19)
 	setFont(dc, 15)
-	dc.DrawString("资源关卡开放", 20, 350+19)
-	dc.DrawString("经验书、技能书、碳", 20, 350+19+35)
-	dc.DrawString("芯片关卡开放", 20, 350+19+93)
-	dc.DrawString("近卫、特种、辅助、先锋", 20, 350+19+93+35)
+	dc.DrawString("经验书、技能书、碳", 20, resTop+19+35)
+	setFont(dc, 16)
+	dc.DrawString("芯片关卡开放", 20, resTop+19+93)
+	setFont(dc, 15)
+	dc.DrawString("近卫、特种、辅助、先锋", 20, resTop+19+93+35)
 
 	// Main content has 15px horizontal padding and a 40px weekday header.
 	mainX := asideW + 15
