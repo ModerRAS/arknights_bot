@@ -1,0 +1,6 @@
+# 变异检测「恢复原状」的对照指纹
+# 工作树 CRLF 字节 sha256（变异前 pristine、恢复后一致）:
+e22a303dfb91ec5eccc17de0f43b46aa601dbb9ccaea9f3136c4e5f172c90d84 *src/ggrender/pixel_test.go
+# 该内容在 git 中的 blob（aa88012:src/ggrender/pixel_test.go，仓库内 LF 存储）:
+743ff48bf570cae43794f17460b1c9d7862f7ac1
+# 恢复时实测: cmp -s pristine <file> -> exit 0（逐字节一致）

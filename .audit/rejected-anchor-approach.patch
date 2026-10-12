@@ -1,0 +1,80 @@
+diff --git a/src/ggrender/pixel_test.go b/src/ggrender/pixel_test.go
+index 5bd34ab..6f4a387 100644
+--- a/src/ggrender/pixel_test.go
++++ b/src/ggrender/pixel_test.go
+@@ -53,6 +53,56 @@ type manifestFile struct {
+ 	} `json:"entries"`
+ }
+ 
++// ---------------------------------------------------------------------------
++// 信任锚：冻结 Playwright 基线 16 张图的 sha256 期望值
++// ---------------------------------------------------------------------------
++//
++// 信任锚的真实形态是「**测试内的字面常量 + git 审查**」，**不是**密码学外部锚点。
++// 任何能改这个文件的人也能改这张表，所以本表提供的是「改动必须出现在 git diff
++// 里」的可见性与成本，不是不可伪造性。凡是声称本表能密码学证明基线未被换过的
++// 说法都是错的。真正的外部锚点只能由 Boss 在本表之外的渠道（签名 tag / 评审记录）
++// 另行建立。
++//
++// 为什么不用 manifest.json 自带的 templateTreeSHA256 / assetTreeSHA256：
++//
++//  1. 覆盖范围不对题。那两个字段的算法在 4bda363:src/cmd/visual-regression/main.go
++//     的 treeSHA256() 里：filepath.WalkDir 递归收集目录下**全部**文件，
++//     sort.Strings 后把每行 `相对路径\x00<该文件内容的 hex sha256>\n` 喂进 sha256。
++//     它的两个根是 <repoRoot>/template 与 <repoRoot>/assets ——
++//     **完全不覆盖 baseline/images/*.jpg**，即「基线图有没有被换过」这个问题它们
++//     结构上就答不了。
++//  2. 实测不可复现。用上述算法逐 commit 重算 feat/satori-renderer 的 473 个
++//     commit：templateTree 出现 69 种互不相同的值、assetTree 21 种，
++//     与 manifest 里那两个字面量**零交集**（4bda363 / 8873add / 8873add^ / 本树 HEAD
++//     也都对不上）。即那两个字面量的来源已不可考。
++//
++// 把那两个字面量钉成常量只会锁住两个与「基线是否被换过」无关的字段，
++// 属于给人虚假的安全感，故不做。下面这张表才是真正对题的锚。
++//
++// 本表覆盖的 16 个 id 与 manifest entries 的 id 一一对应；已核对
++// feat/gg-render-card-atomic / fix/harness-bbox-zero-guard / feat/gg-render-lists /
++// feat/gg-render-depot-state 上 baseline/images 的 git blob 摘要完全相同
++// （e724975f381d251b70583df29ed42fc537570e057c6ede87a7a3c7baeaa6c539），
++// 故本表可跨 gg 分支复用。
++var frozenBaselineSHA256 = map[string]string{
++	"base":        "3a82d70486f9da3a2c48261cc9f2bdd6c498ef31b3ba5260b519400c81495011",
++	"box":         "cf10f5d37fe6c3738eb19b77e3761861a5cda8d4448cc50b333d25ace4c1c8d9",
++	"box-detail":  "047ad057ac193e97aed8ff3442ad29f8505b8cbdbf575837456e1fbd82e6e457",
++	"box-summary": "6a4633e048410f14271b0b6728d14d4307c2b32af7411c5446a72cea8624f071",
++	"calendar":    "80f31c1cfb132ff3781a3d940120cfdd31acf26aa1baf0e96c5fa75e68c4b00b",
++	"card":        "75fea0acb6d2e20f52107a9310bc66e2e6228fa01811dc66445917a32d8de2a2",
++	"depot":       "d09c01dbd30062e6f876f0bc3af79d6458f0f4f698699d46250280a225cd98d7",
++	"enemy":       "7aae46ad6d8292139bf20d0032e2638bee920637e7de479d807fa5890fa6909b",
++	"gacha":       "b037cf55e967c61db80507ebcba9b55416f4b4aab5876d546a803ce117a131dc",
++	"headhunt":    "879933afa3b94a80c08d37e0d8e053729639df59f01e47658944e48699434cf8",
++	"help":        "43bcdee8554827959fb26b79196d57657f9ee4c85b04fa0354227bef49d9615b",
++	"lottery":     "9f5588be88606af58fc86807bf734a45a51ecd205bdcd8bd72b0d295fba7f9c7",
++	"missing":     "cc58fea684f3c1a9fc879da163cf50e9438753b3ebcb7ecf3a5ef3b2f8a8ca47",
++	"operator":    "2c2834c7e048ca29ba4d2aa7e34487a6005408cb4c345c229cf3be690ce2b1e5",
++	"recruit":     "4a01136f4b12e9a17458998ec67d4285c73b1990fbaff7e11fef735c06fb5ffc",
++	"state":       "2c3d37795bacf18c04d84b3ed72c2ef6532a4f2b9d25d629cb9555da0a721872",
++}
++
+ // unified similarity: 1 - sum(|dR|+|dG|+|dB|+|dA|)/(w*h*4*255)
+ func similarityNormalized(old, new *image.RGBA) (float64, [4]int) {
+ 	w, h := old.Bounds().Dx(), old.Bounds().Dy()
+@@ -225,6 +275,18 @@ func TestGGPixelParity(t *testing.T) {
+ 		if hashOldHex != ent.Sha256 {
+ 			t.Fatalf("manifest hash gate 失败 %s: 文件 %s sha %s != manifest %s", scene, baselineAbs, hashOldHex, ent.Sha256)
+ 		}
++		// 信任锚：期望值取自本文件的独立常量表，不读 manifest。
++		// 「换掉 baseline 图 + 同步改 manifest 里的 sha256」这条绕过只会被这里拦下 ——
++		// 上面的 manifest hash gate 是自证（文件与 manifest 同改即可），这里不是。
++		frozenWant, anchored := frozenBaselineSHA256[scene]
++		if !anchored {
++			t.Fatalf("信任锚缺口: 常量表没有场景 %s 的期望 sha256（常量表必须覆盖与 manifest entries 相同的 16 个场景）", scene)
++		}
++		if !strings.EqualFold(frozenWant, hashOldHex) {
++			t.Fatalf("信任锚失配 %s: baseline %s 实际 sha256=%s, 本文件独立常量=%s\n"+
++				"冻结 Playwright 基线已被替换（或常量表被同改）。重抓基线必须由 Boss 裁决后同时更新本常量表与 manifest，禁止单边修改。",
++				scene, baselineAbs, hashOldHex, frozenWant)
++		}
+ 		// 解码 old (JPEG)
+ 		imgOld, err := jpeg.Decode(bytes.NewReader(oldBytes))
+ 		if err != nil {
