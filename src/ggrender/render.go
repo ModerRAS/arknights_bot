@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"image"
 	"math"
+	"net/url"
 
 	"github.com/fogleman/gg"
 )
@@ -900,20 +901,96 @@ type BaseInfo struct {
 	}
 }
 
+// baseAvatarURL builds the portrait URL exactly as Base.tmpl declares
+// (char_skin/avatar/{{urlquery .Avatar}}.png). Offline it resolves to the
+// template's own onerror fallback assets/common/amiya.png -- the same image
+// the browser would show, not a gray placeholder the template never draws.
+func baseAvatarURL(avatar string) string {
+	return "https://web.hycdn.cn/arknights/game/assets/char_skin/avatar/" + url.QueryEscape(avatar) + ".png"
+}
+
+// drawBaseMood reproduces the 20x20 AP mood svg declared on every char row in
+// Base.tmpl: circle + face in #e42e20 (AP<=0), #f0ab22 (AP<100), #3cd627
+// (AP>=100). Geometry from the declared path data (48 viewBox), not measured.
+func drawBaseMood(dc *gg.Context, ap int, x, y, s float64) {
+	var r, g, b int
+	switch {
+	case ap <= 0:
+		r, g, b = 0xe4, 0x2e, 0x20
+	case ap < 100:
+		r, g, b = 0xf0, 0xab, 0x22
+	default:
+		r, g, b = 0x3c, 0xd6, 0x27
+	}
+	k := s / 48.0
+	dc.SetRGB255(r, g, b)
+	dc.SetLineWidth(4 * k)
+	const seg = 40
+	for i := 0; i < seg; i++ {
+		a0 := 2 * math.Pi * float64(i) / seg
+		a1 := 2 * math.Pi * float64(i+1) / seg
+		dc.DrawLine(x+(24+20*math.Cos(a0))*k, y+(24+20*math.Sin(a0))*k, x+(24+20*math.Cos(a1))*k, y+(24+20*math.Sin(a1))*k)
+	}
+	line := func(x0, y0, x1, y1 float64) {
+		dc.DrawLine(x+x0*k, y+y0*k, x+x1*k, y+y1*k)
+	}
+	if ap <= 0 {
+		line(19, 18, 15, 22)
+		line(15, 18, 19, 22)
+		line(33, 18, 29, 22)
+		line(29, 18, 33, 22)
+	} else {
+		line(31, 18, 31, 19)
+		line(17, 18, 17, 19)
+	}
+	dc.Stroke()
+	if ap <= 0 {
+		dc.DrawRoundedRectangle(x+20*k, y+28*k, 8*k, 8*k, 4*k)
+		dc.Stroke()
+	} else {
+		var mouth [5][2]float64
+		if ap < 100 {
+			mouth = [5][2]float64{{31, 31}, {27, 28}, {24, 27.5}, {21, 28}, {17, 31}}
+		} else {
+			mouth = [5][2]float64{{31, 31}, {27, 34}, {24, 35}, {21, 34}, {17, 31}}
+		}
+		for i := 0; i < 4; i++ {
+			line(mouth[i][0], mouth[i][1], mouth[i+1][0], mouth[i+1][1])
+		}
+		dc.Stroke()
+	}
+}
+
+// SampleBase carries the base-minimal fixture values. Provenance: the payload
+// mirrors feat/gg-render-canvas:src/core/web/complex_props_export_test.go
+// visualComplexBaseFixture ("mirror the approved Temp complex_fixtures.go
+// payloads"). Every value below is identical to that in-repo declaration:
+// labor 42/99, 1 dorm (Lv5/20000/Exusiai), 1 trading (Lv3/贵金属订单 3/3/Texas),
+// 1 manufacture (Lv3/赤金 1/3/Siege), 1 power (Lv3/270/Saria), meeting board
+// [1,7] sharing (Kal'tsit), hire refresh 3 (SilverAsh), training skill
+// skchr_amiya_3 SLevel 10 (Eyjafjalla). Previous values were a different,
+// larger invented dataset (2 dorms, 108/120 labor, ...) that overflowed the
+// 612-high viewport and matched nothing.
 func SampleBase() *BaseInfo {
 	b := &BaseInfo{Name: "博士的基建"}
-	b.Labor.Cur = 108
-	b.Labor.Total = 120
+	b.Labor.Cur = 42
+	b.Labor.Total = 99
 	b.Control.Level = 5
-	b.Control.Chars = []BaseChar{{Name: "阿米娅"}, {Name: "凯尔希"}, {Name: "煌"}}
+	b.Control.Chars = []BaseChar{{Name: "阿米娅", Avatar: "char_002_amiya#1", AP: 0}}
+	b.Dorms = []struct {
+		Level   int
+		Chars   []BaseChar
+		Comfort int
+	}{
+		{Level: 5, Chars: []BaseChar{{Name: "能天使", Avatar: "char_103_angel#1", AP: 50}}, Comfort: 20000},
+	}
 	b.Tradings = []struct {
 		Level      int
 		Chars      []BaseChar
 		Cur, Total int
 		Strategy   string
 	}{
-		{Level: 3, Chars: []BaseChar{{Name: "能天使"}, {Name: "德克萨斯"}}, Cur: 3, Total: 5, Strategy: "贵金属订单"},
-		{Level: 3, Chars: []BaseChar{{Name: "拉普兰德"}}, Cur: 2, Total: 5, Strategy: "源石订单"},
+		{Level: 3, Chars: []BaseChar{{Name: "德克萨斯", Avatar: "char_102_texas#1", AP: 100}}, Cur: 3, Total: 3, Strategy: "贵金属订单"},
 	}
 	b.Manufactures = []struct {
 		Level       int
@@ -921,36 +998,26 @@ func SampleBase() *BaseInfo {
 		Cur, Total  int
 		Item, Speed string
 	}{
-		{Level: 3, Chars: []BaseChar{{Name: "夜烟"}, {Name: "远山"}}, Cur: 10, Total: 20, Item: "中级作战记录", Speed: "120%"},
-		{Level: 3, Chars: []BaseChar{{Name: "砾"}}, Cur: 8, Total: 20, Item: "赤金", Speed: "100%"},
+		{Level: 3, Chars: []BaseChar{{Name: "推进之王", Avatar: "char_112_siege#1", AP: 0}}, Cur: 1, Total: 3, Item: "赤金", Speed: "130%"},
 	}
 	b.Powers = []struct {
 		Level int
 		Chars []BaseChar
 		Power int
 	}{
-		{Level: 3, Chars: []BaseChar{{Name: "格雷伊"}}, Power: 270},
-		{Level: 3, Chars: []BaseChar{{Name: "清流"}}, Power: 270},
+		{Level: 3, Chars: []BaseChar{{Name: "塞雷娅", Avatar: "char_202_demkni#1", AP: 50}}, Power: 270},
 	}
 	b.Meeting.Level = 3
-	b.Meeting.Chars = []BaseChar{{Name: "诗怀雅"}}
-	b.Meeting.Board = []int{1, 2, 3}
+	b.Meeting.Chars = []BaseChar{{Name: "凯尔希", Avatar: "char_003_kalts#1", AP: 100}}
+	b.Meeting.Board = []int{1, 7}
 	b.Meeting.Sharing = true
 	b.Hire.Level = 3
-	b.Hire.Chars = []BaseChar{{Name: "陈"}}
-	b.Hire.Refresh = 2
+	b.Hire.Chars = []BaseChar{{Name: "银灰", Avatar: "char_172_svrash#1", AP: 0}}
+	b.Hire.Refresh = 3
 	b.Training.Level = 3
-	b.Training.Chars = []BaseChar{{Name: "赫拉格"}, {Name: "华法琳"}}
-	b.Training.Skill = "阿米娅-奇美拉"
-	b.Training.SLevel = 2
-	b.Dorms = []struct {
-		Level   int
-		Chars   []BaseChar
-		Comfort int
-	}{
-		{Level: 5, Chars: []BaseChar{{Name: "星熊"}, {Name: "塞雷娅"}}, Comfort: 5000},
-		{Level: 5, Chars: []BaseChar{{Name: "夜莺"}}, Comfort: 4800},
-	}
+	b.Training.Chars = []BaseChar{{Name: "艾雅法拉", Avatar: "char_180_amgoat#1", AP: 50}}
+	b.Training.Skill = "skchr_amiya_3"
+	b.Training.SLevel = 10
 	return b
 }
 
@@ -1003,8 +1070,13 @@ func RenderBase(data *BaseInfo) (*gg.Context, error) {
 	// assets/css/common.css declares #main height); it is the viewport the capture was
 	// taken at, so content below it is clipped.
 	const mainW, mainH = 1110, 612
-	const cardW, wideW = 550, 1105      // C01 css 13 / C09 declared 85,128
-	const cardH, gapY = 110, 5          // C02 css 14 / C07 css 19
+	const cardW, wideW = 550, 1105 // C01 css 13 / C09 declared 85,128
+	// C02 css 14 declares .base{height:110px} with the UA default content-box:
+	// the 1px border (C04 css 16) sits OUTSIDE the content box, so the border
+	// box is 112 tall and the row pitch is 112+5=117, not 115. Drawing the
+	// border inside a 110 box shrank every card 2px and drifted the bottom
+	// rows ~10px up (edge-measured pitch 175 device = 117 design).
+	const cardH, gapY = 112, 5          // C02 css 14 + content-box border / C07 css 19
 	const cardR = 15                    // C03 css 15: .base{border-radius:15px}
 	var cardBg = [3]int{33, 38, 47}     // C08 css 20: .base{background-color:#21262f}
 	var cardBorder = [3]int{33, 38, 47} // C04 css 16: .base{border:1px solid #21262f}
@@ -1128,19 +1200,37 @@ func RenderBase(data *BaseInfo) (*gg.Context, error) {
 		if ic.text != "" || len(ic.boards) > 0 || ic.skill != "" {
 			drawIcon(px, w, py, ic)
 		}
-		// D07 css 51: .chars{margin-left:10px}. The per-char span at 143/196/251/…
-		// is display:inline-grid holding a 40px portrait plus a progress.ap.
-		// D14/F09/F10/E01-E03/F12 are all \u2298: BaseChar now carries Avatar/AP, but
-		// SampleBase() feeds names only, so the harness still renders this row as the
-		// declared slot is not yet drawn. Do not read this as "portraits are done".
+		// D07 css 51: .chars{margin-left:10px}. Per-char span is
+		// display:inline-grid: an inline-flex row (40px portrait + 20px AP
+		// mood svg + name, vertically centered) with the progress.ap bar
+		// below spanning the row width. No gray placeholder circle exists in
+		// the template; portraits resolve per the declared onerror fallback.
+		setFont(dc, 16)
 		for i, c := range chars {
-			ax := px + charsML + 16 + float64(i)*70
-			dc.SetRGB255(90, 90, 100)
-			dc.DrawCircle(ax, py+72, 16)
-			dc.Fill()
-			setFont(dc, 10)
+			x0 := px + charsML + float64(i)*70
+			rowTop := py + 52
+			port := FetchImage(baseAvatarURL(c.Avatar), AssetPath("common/amiya.png"))
+			// Square slot: avatar sources are square thumbs (cf. .avatar 180x180
+			// use elsewhere); cover-crop the fallback into the slot instead of
+			// stretching it.
+			dc.DrawImage(ScaleCover(port, 40, 40), int(x0), int(rowTop))
+			drawBaseMood(dc, c.AP, x0+40, rowTop+10, 20)
 			dc.SetRGB255(255, 255, 255)
-			drawStringAnchored(dc, c.Name, ax, py+100, 0.5, 0.5)
+			drawString(dc, c.Name, x0+60, rowTop+26)
+			// progress.ap: Base.tmpl css declares progress{width:150px;height:3px}
+			// with a white -webkit-progress-value. Fixed 150x3, not row width.
+			dc.SetRGB255(85, 85, 85)
+			dc.DrawRectangle(x0, rowTop+44, 150, 3)
+			dc.Fill()
+			if c.AP > 0 {
+				frac := float64(c.AP) / 100.0
+				if frac > 1 {
+					frac = 1
+				}
+				dc.SetRGB255(255, 255, 255)
+				dc.DrawRectangle(x0, rowTop+44, 150*frac, 3)
+				dc.Fill()
+			}
 		}
 	}
 
