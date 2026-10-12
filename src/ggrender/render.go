@@ -2165,78 +2165,228 @@ func RenderLottery(data *LotteryData) (*gg.Context, error) {
 }
 
 // Operator
+// Operator shapes mirror the enemy-tested fixture vocabulary.
+type OperatorPotential struct {
+	Rank int
+	Desc string
+}
+type OperatorTalent struct {
+	Evolve, Name, Desc string
+}
+type OperatorBuilding struct {
+	Evolve, Icon, Name, Desc string
+}
+type OperatorSkill struct {
+	Icon, Name, Desc, SkillRange string
+	SpType                       []string
+	SpInit, SpCost, Duration     string
+}
+type OperatorBranch struct {
+	Name, Pic, Desc string
+}
+type OperatorStat struct {
+	Name, Code, NameEn, Profession, Logo, Tags string
+	Rarity                                     int
+	HP, ATK, DEF, Res, Interval, ReDeploy      string
+	Block, Cost                                string
+}
 type OperatorInfo struct {
-	Name, Profession, Position, Tag string
-	Rarity                          int
-	Desc                            string
-	Stats                           map[string]string
+	Painting, AttackRange string
+	Op                    OperatorStat
+	Branch                OperatorBranch
+	Potentials            []OperatorPotential
+	Talents               []OperatorTalent
+	Buildings             []OperatorBuilding
+	Skills                []OperatorSkill
 }
 
+// SampleOperator carries the operator-minimal fixture values. Provenance:
+// feat/gg-render-canvas:src/core/web/complex_props_export_test.go
+// visualComplexOperatorFixture (in-repo declaration): Amiya, markup
+// stripped the way operatorProps/templateText does server-side.
 func SampleOperator() *OperatorInfo {
 	return &OperatorInfo{
-		Name: "能天使", Profession: "狙击", Position: "远程", Tag: "输出", Rarity: 6,
-		Desc:  "高效的速射狙击干员，能迅速消灭空中与轻甲单位。",
-		Stats: map[string]string{"HP": "1560", "ATK": "620", "DEF": "145", "RES": "0", "Cost": "12", "Block": "1", "ASPD": "快"},
+		Painting: "https://fixture-cache.invalid/operator/amiya-painting.png", AttackRange: "□",
+		Op: OperatorStat{
+			Name: "阿米娅", Code: "R001", NameEn: "Amiya", Profession: "CASTER",
+			Logo: "罗德岛", Tags: "远程位 输出", Rarity: 5,
+			HP: "1742", ATK: "699", DEF: "121", Res: "10", Interval: "1.6s",
+			ReDeploy: "70s", Block: "1", Cost: "18",
+		},
+		Branch:     OperatorBranch{Name: "中坚术师", Pic: "https://fixture-cache.invalid/operator/profession-branch.png", Desc: "攻击造成法术伤害"},
+		Potentials: []OperatorPotential{{Rank: 1, Desc: "部署费用-1"}, {Rank: 2, Desc: "再部署时间-4秒"}},
+		Talents:    []OperatorTalent{{Evolve: "精英化1", Name: "精神融合", Desc: "攻击力 +10%"}},
+		Buildings:  []OperatorBuilding{{Evolve: "精英化0", Icon: "https://fixture-cache.invalid/operator/building-skill-icon.png", Name: "合作协议", Desc: "控制中枢内线索搜集速度提升"}},
+		Skills:     []OperatorSkill{{Icon: "https://fixture-cache.invalid/operator/skill-icon.png", Name: "战术咏唱", Desc: "攻击力提升", SkillRange: "□", SpType: []string{"自动回复"}, SpInit: "0", SpCost: "45", Duration: "30"}},
 	}
 }
 
+// RenderOperator draws Operator.tmpl at design 1200x800 (1800x1200 @1.5).
+// Structure (template-declared): bg cover; painting (height 650, bottom 0,
+// left 5%) from the shared capture bytes (manifest maps the same 立绘 file
+// to Operator Painting as to Card Secretary: one vendored file, no copy);
+// left attr table (b 100 black / w 70 #efeeef, spacing 0) + potential table;
+// bottom-left pb/names block anchored at bottom 5%; right-floated 600px
+// talent/bsk/skill tables (12px translucent rows). Skill/building icons load
+// manifest-mapped vendored files (fixture URLs dead); template onerror amiya
+// applies to the skill icon only. Painting/tables order keeps translucents
+// blending over the art.
 func RenderOperator(data *OperatorInfo) (*gg.Context, error) {
-	const mainW = 1200
-	const mainH = 800
+	const mainW, mainH = 1200, 800
 	dc := gg.NewContext(mainW, mainH)
-	FillBackground(dc, 27, 29, 30)
+	// bg cover (replaces a fitted draw: pure cover math from asset dims).
 	if bg, err := LoadImage(AssetPath("operator/bg.png")); err == nil {
-		// template/Operator.tmpl gives #main a 1200x800 box with background-size:cover. Fitting the
-		// art to the 800x700 design canvas (cover: 1024x576 -> 1244x700 at x=-222) and letting
-		// ScaleToManifest stretch it to 1800x1200 reproduces the frozen baseline background better
-		// than fitting cover to the 1800x1200 output space first (measured per-region, see report).
-		dc.DrawImage(ScaleExact(bg, 1244, 700), -222, 0)
+		b := bg.Bounds()
+		s := math.Max(float64(mainW)/float64(b.Dx()), float64(mainH)/float64(b.Dy()))
+		dc.DrawImage(ScaleExact(bg, int(float64(b.Dx())*s+0.5), int(float64(b.Dy())*s+0.5)), 0, 0)
 	}
-	// top bar
-	dc.SetRGB255(45, 48, 55)
-	dc.DrawRectangle(0, 0, float64(mainW), 110)
+	if paint, err := LoadImage(AssetPath("card/card-secretary-1024.png")); err == nil {
+		dc.DrawImage(ScaleExact(paint, 650, 650), 60, mainH-650)
+	}
+	rowText := func(s string, size float64, x, y, rowH float64, r, g, b int, bold bool) {
+		setFont(dc, size)
+		w, _ := measure(dc, s)
+		dc.SetRGB255(r, g, b)
+		if bold {
+			drawString(dc, s, x+0.45, y+(rowH-size)/2+size*0.8)
+		}
+		drawString(dc, s, x, y+(rowH-size)/2+size*0.8)
+		_ = w
+	}
+	// Left: attr table (3x6, rows 26) + potential table.
+	y := 20.0
+	attrs := [][2]string{
+		{"最大生命值", data.Op.HP}, {"攻击力", data.Op.ATK}, {"防御力", data.Op.DEF},
+		{"法抗", data.Op.Res}, {"攻击间隔", data.Op.Interval}, {"再部署时间", data.Op.ReDeploy},
+		{"阻挡数", data.Op.Block}, {"部署费用", data.Op.Cost}, {"所属", data.Op.Logo},
+	}
+	for r := 0; r < 3; r++ {
+		for c := 0; c < 3; c++ {
+			a := attrs[r*3+c]
+			bx := float64(c) * 170
+			dc.SetRGB255(0, 0, 0)
+			dc.DrawRectangle(bx, y, 100, 26)
+			dc.Fill()
+			dc.SetRGB255(0xef, 0xee, 0xef)
+			dc.DrawRectangle(bx+100, y, 70, 26)
+			dc.Fill()
+			rowText(a[0], 16, bx+1, y, 26, 255, 255, 255, false)
+			rowText(a[1], 16, bx+101, y, 26, 0, 0, 0, false)
+		}
+		y += 26
+	}
+	// Potential table (tinted) with black header.
+	y += 20
+	potW := 300.0
+	dc.SetRGBA255(239, 238, 239, 102)
+	dc.DrawRectangle(0, y, potW, 26+float64(len(data.Potentials))*26)
 	dc.Fill()
-	// avatar
-	dc.SetRGB255(80, 80, 90)
-	dc.DrawRoundedRectangle(20, 20, 80, 80, 10)
+	dc.SetRGB255(0, 0, 0)
+	dc.DrawRectangle(0, y, potW, 26)
 	dc.Fill()
+	rowText("潜能提升", 16, 1, y, 26, 255, 255, 255, false)
+	y += 26
+	for _, p := range data.Potentials {
+		if pot := cardAsset("box/Potential_" + itoa(p.Rank) + ".png"); pot != nil {
+			dc.DrawImage(ScaleExact(pot, 20, 20), 1, int(y+3))
+		}
+		rowText(p.Desc, 16, 24, y, 26, 0, 0, 0, false)
+		y += 26
+	}
+	// Bottom-left block anchored at bottom 5% (40px).
+	pbTop := float64(mainH-40) - (75 + 30 + 25 + 40) - (48 + 30)
+	if prof := cardAsset("box/" + data.Op.Profession + ".png"); prof != nil {
+		dc.DrawImage(ScaleExact(prof, 75, 75), 10, int(pbTop))
+	}
+	if rar := cardAsset("box/Rarity_" + itoa(data.Op.Rarity) + ".png"); rar != nil {
+		rb := rar.Bounds()
+		dc.DrawImage(ScaleExact(rar, 150, 150*rb.Dy()/rb.Dx()), 10+75, int(pbTop))
+	}
 	setFont(dc, 24)
-	dc.SetRGB255(255, 255, 255)
-	drawString(dc, data.Name, 120, 50)
-	setFont(dc, 14)
-	dc.SetRGB255(180, 200, 220)
-	drawString(dc, fmt.Sprintf("%s · %s · %s · %d★", data.Profession, data.Position, data.Tag, data.Rarity), 120, 74)
-	// rarity bar
-	r, g, b := rarityColor(data.Rarity)
-	dc.SetRGB255(r, g, b)
-	dc.DrawRectangle(float64(mainW-120), 20, 100, 28)
+	dc.SetRGB255(0, 0, 0) // pb cells carry no color: body-default black
+	drawString(dc, data.Branch.Name, 10+75, pbTop+75+24)
+	rowText(data.Op.Tags, 16, 10, pbTop+75+30, 26, 0, 0, 0, false)
+	rowText(data.Branch.Desc, 14, 10, pbTop+75+30+26, 26, 0, 0, 0, false)
+	namesTop := pbTop + 75 + 30 + 26 + 26
+	setFont(dc, 32)
+	dc.SetRGB255(0, 0, 0)
+	drawString(dc, data.Op.Name, 10, namesTop+26)
+	setFont(dc, 20)
+	drawString(dc, data.AttackRange, 200, namesTop+22)
+	dc.SetRGB255(0, 0, 0)
+	dc.DrawRectangle(10, namesTop+48, 70, 24)
 	dc.Fill()
-	setFont(dc, 14)
 	dc.SetRGB255(255, 255, 255)
-	drawStringAnchored(dc, fmt.Sprintf("%d ★", data.Rarity), float64(mainW-70), 34, 0.5, 0.5)
-	// desc
-	y := 140
-	fillRoundedCard(dc, 20, float64(y), float64(mainW-40), 80, 10, 14)
-	setFont(dc, 13)
-	dc.SetRGB255(200, 220, 200)
-	drawString(dc, StripHTML(data.Desc), 30, float64(y+30))
-	// stats grid 2 cols
-	y = 250
-	keys := []string{"HP", "ATK", "DEF", "RES", "Cost", "Block", "ASPD"}
-	cols := 3
-	tileW := (mainW - 40) / cols
-	tileH := 70
-	for i, k := range keys {
-		x := (i%cols)*tileW + 20
-		yy := y + (i/cols)*tileH
-		dc.SetRGBA255(255, 255, 255, 10)
-		RoundRect(dc, float64(x+4), float64(yy), float64(tileW-8), 60, 8)
+	drawString(dc, data.Op.Code, 14, namesTop+48+19)
+	setFont(dc, 20)
+	dc.SetRGB255(0, 0, 0)
+	drawString(dc, data.Op.NameEn, 120, namesTop+48+19)
+	// Right float div: 600px tables stacked with mt 20 on talent.
+	rx := float64(mainW - 600)
+	ry := 20.0
+	tableHead := func(title string) {
+		dc.SetRGB255(0, 0, 0)
+		dc.DrawRectangle(rx, ry, 600, 24)
+		dc.Fill()
+		rowText(title, 14, rx+4, ry, 24, 255, 255, 255, false)
+		ry += 24
+	}
+	tintRow := func(h float64) {
+		dc.SetRGBA255(176, 177, 177, 179)
+		dc.DrawRectangle(rx, ry, 600, h)
+		dc.Fill()
+	}
+	tableHead("天赋")
+	for _, t := range data.Talents {
+		tintRow(30)
+		rowText(t.Evolve, 12, rx+4, ry, 30, 0, 0, 0, false)
+		rowText(t.Name, 12, rx+120, ry, 30, 0, 0, 0, true)
+		rowText(t.Desc, 12, rx+260, ry, 30, 0, 0, 0, false)
+		ry += 30
+	}
+	tableHead("基建技能")
+	for _, bs := range data.Buildings {
+		tintRow(40)
+		rowText(bs.Evolve, 12, rx+4, ry, 40, 0, 0, 0, false)
+		if bicon, err := LoadImage(AssetPath("operator/operator-building-36.png")); err == nil {
+			dc.DrawImage(ScaleExact(bicon, 36, 36), int(rx+100), int(ry+2))
+		}
+		rowText(bs.Name, 12, rx+150, ry, 40, 0, 0, 0, false)
+		rowText(bs.Desc, 12, rx+260, ry, 40, 0, 0, 0, false)
+		ry += 40
+	}
+	for _, sk := range data.Skills {
+		dc.SetRGBA255(63, 63, 62, 252)
+		dc.DrawRectangle(rx, ry, 600, 110)
+		dc.Fill()
+		if sicon, err := LoadImage(AssetPath("operator/operator-skill-128.png")); err == nil {
+			dc.DrawImage(ScaleExact(sicon, 50, 50), int(rx+10), int(ry+8))
+		}
 		setFont(dc, 12)
-		dc.SetRGB255(160, 180, 200)
-		drawStringAnchored(dc, k, float64(x+tileW/2), float64(yy+22), 0.5, 0.5)
-		setFont(dc, 18)
-		dc.SetRGB255(255, 255, 255)
-		drawStringAnchored(dc, data.Stats[k], float64(x+tileW/2), float64(yy+44), 0.5, 0.5)
+		sx := rx + 80
+		for _, sp := range sk.SpType {
+			w, _ := measure(dc, sp)
+			dc.SetRGB255(255, 255, 255)
+			drawString(dc, sp, sx, ry+22)
+			sx += w + 10
+		}
+		pill := func(s string, x float64) float64 {
+			setFont(dc, 12)
+			w, _ := measure(dc, s)
+			dc.SetRGB255(0x80, 0x80, 0x80)
+			RoundRect(dc, x, ry+8, w+10, 20, 3)
+			dc.SetRGB255(255, 255, 255)
+			drawString(dc, s, x+5, ry+23)
+			return w + 10 + 5
+		}
+		sx += pill(fmt.Sprintf("技力%s/%s", sk.SpInit, sk.SpCost), sx)
+		if sk.Duration != "" {
+			pill(fmt.Sprintf("持续时间%ss", sk.Duration), sx)
+		}
+		rowText(sk.Desc, 12, rx+80, ry+40, 30, 255, 255, 255, false)
+		rowText(sk.Name, 12, rx+80, ry+72, 26, 255, 255, 255, false)
+		rowText(sk.SkillRange, 16, rx+520, ry, 110, 255, 255, 255, false)
+		ry += 110
 	}
 	return ScaleToManifest(dc, 1800, 1200), nil
 }
