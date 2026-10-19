@@ -2325,11 +2325,16 @@ func RenderOperator(data *OperatorInfo) (*gg.Context, error) {
 	// Right float div: 600px tables stacked with mt 20 on talent.
 	rx := float64(mainW - 600)
 	ry := 20.0
+	// Header tds declare opacity:0.8 inline (Operator.tmpl talent/bsk
+	// headers), so both fill and title text composite at alpha 204.
+	// Geometry matches rowText(title,14,rx+4,ry,24): only alpha changes.
 	tableHead := func(title string) {
-		dc.SetRGB255(0, 0, 0)
+		dc.SetRGBA255(0, 0, 0, 204)
 		dc.DrawRectangle(rx, ry, 600, 24)
 		dc.Fill()
-		rowText(title, 14, rx+4, ry, 24, 255, 255, 255, false)
+		setFont(dc, 14)
+		dc.SetRGBA255(255, 255, 255, 204)
+		drawString(dc, title, rx+4, ry+(24-14)/2+14*0.8)
 		ry += 24
 	}
 	tintRow := func(h float64) {
