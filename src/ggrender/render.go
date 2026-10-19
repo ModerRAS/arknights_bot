@@ -2344,11 +2344,11 @@ func RenderOperator(data *OperatorInfo) (*gg.Context, error) {
 	}
 	tableHead("天赋")
 	for _, t := range data.Talents {
-		tintRow(30)
-		rowText(t.Evolve, 12, rx+4, ry, 30, 0, 0, 0, false)
-		rowText(t.Name, 12, rx+162.1, ry, 30, 0, 0, 0, true)
-		rowText(t.Desc, 12, rx+342.3, ry, 30, 0, 0, 0, false)
-		ry += 30
+		tintRow(20)
+		rowText(t.Evolve, 12, rx+4, ry, 20, 0, 0, 0, false)
+		rowText(t.Name, 12, rx+162.1, ry, 20, 0, 0, 0, true)
+		rowText(t.Desc, 12, rx+342.3, ry, 20, 0, 0, 0, false)
+		ry += 20
 	}
 	tableHead("基建技能")
 	for _, bs := range data.Buildings {
