@@ -2346,8 +2346,8 @@ func RenderOperator(data *OperatorInfo) (*gg.Context, error) {
 	for _, t := range data.Talents {
 		tintRow(30)
 		rowText(t.Evolve, 12, rx+4, ry, 30, 0, 0, 0, false)
-		rowText(t.Name, 12, rx+120, ry, 30, 0, 0, 0, true)
-		rowText(t.Desc, 12, rx+260, ry, 30, 0, 0, 0, false)
+		rowText(t.Name, 12, rx+162.1, ry, 30, 0, 0, 0, true)
+		rowText(t.Desc, 12, rx+342.3, ry, 30, 0, 0, 0, false)
 		ry += 30
 	}
 	tableHead("基建技能")
@@ -2355,10 +2355,10 @@ func RenderOperator(data *OperatorInfo) (*gg.Context, error) {
 		tintRow(40)
 		rowText(bs.Evolve, 12, rx+4, ry, 40, 0, 0, 0, false)
 		if bicon, err := LoadImage(AssetPath("operator/operator-building-36.png")); err == nil {
-			dc.DrawImage(ScaleExact(bicon, 36, 36), int(rx+100), int(ry+2))
+			dc.DrawImage(ScaleExact(bicon, 36, 36), int(rx+93.2), int(ry+2))
 		}
-		rowText(bs.Name, 12, rx+150, ry, 40, 0, 0, 0, false)
-		rowText(bs.Desc, 12, rx+260, ry, 40, 0, 0, 0, false)
+		rowText(bs.Name, 12, rx+171.6, ry, 40, 0, 0, 0, false)
+		rowText(bs.Desc, 12, rx+274.8, ry, 40, 0, 0, 0, false)
 		ry += 40
 	}
 	for _, sk := range data.Skills {
