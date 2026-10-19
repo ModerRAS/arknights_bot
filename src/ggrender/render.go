@@ -2264,10 +2264,11 @@ func RenderOperator(data *OperatorInfo) (*gg.Context, error) {
 		for c := 0; c < 3; c++ {
 			a := attrs[r*3+c]
 			bx := float64(c) * 170
-			dc.SetRGB255(0, 0, 0)
+			// template .b/.w carry opacity:0.8 (Operator.tmpl); blend over bg.
+			dc.SetRGBA255(0, 0, 0, 204)
 			dc.DrawRectangle(bx, y, 100, 26)
 			dc.Fill()
-			dc.SetRGB255(0xef, 0xee, 0xef)
+			dc.SetRGBA255(0xef, 0xee, 0xef, 204)
 			dc.DrawRectangle(bx+100, y, 70, 26)
 			dc.Fill()
 			rowText(a[0], 16, bx+1, y, 26, 255, 255, 255, false)
