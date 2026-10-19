@@ -2346,7 +2346,7 @@ func RenderOperator(data *OperatorInfo) (*gg.Context, error) {
 	for _, t := range data.Talents {
 		tintRow(20)
 		rowText(t.Evolve, 12, rx+4, ry, 20, 0, 0, 0, false)
-		rowText(t.Name, 12, rx+162.1, ry, 20, 0, 0, 0, true)
+		rowText(t.Name, 12, rx+162.1, ry, 20, 0, 0, 0, false)
 		rowText(t.Desc, 12, rx+342.3, ry, 20, 0, 0, 0, false)
 		ry += 20
 	}
